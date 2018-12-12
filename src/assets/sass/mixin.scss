@@ -2,6 +2,7 @@ $blue: #4879E6;
 $bc: #e4e4e4;
 $fc:#fff;
 $DB:#DBDBDB;
+$familyMedium: 'PingFangSC-Medium, sans-serif';
 
 // 背景图片地址和大小
 @mixin bis($url) {
@@ -16,12 +17,18 @@ $DB:#DBDBDB;
   background-size: 150% 100%;
 }
 
+//圆角
 @mixin borderRadius($radius) {
   -webkit-border-radius: $radius;
   -moz-border-radius: $radius;
   -ms-border-radius: $radius;
   -o-border-radius: $radius;
   border-radius: $radius;
+}
+
+// 边框
+@mixin  borderStyle( $color) {
+  border:1px  solid $color;
 }
 
 //定位全屏
@@ -46,12 +53,7 @@ $DB:#DBDBDB;
   transform: translateY(-50%);
 }
 
-// flex版本 上下左右居中
-@mixin flexCenter {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 
 //定位左右居中
 @mixin cl {
@@ -82,4 +84,17 @@ $DB:#DBDBDB;
   display: flex;
   justify-content: $type;
 
+}
+
+// flex版本 上下左右居中
+@mixin flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// flex版本 换行
+@mixin flexwrap($type: wrap ){
+  display: flex;
+  flex-wrap:$type
 }
