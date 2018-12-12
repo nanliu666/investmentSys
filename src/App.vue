@@ -1,16 +1,17 @@
 <template>
   <div id="app">
-    1111
     <router-view/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
-}
+  name: "App"
+};
 </script>
-
-<style>
-/* import './assets/css/reset.css' */
+<style lang="scss">
+@import "../src/assets/sass/common.scss";
+#app {
+  height: 100%;
+}
 </style>

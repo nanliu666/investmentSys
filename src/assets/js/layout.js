@@ -14,6 +14,7 @@
     var rem = width * 100 / designWidth;
     document.getElementsByTagName("body")[0].style.height = height + 'px'
     remStyle.innerHTML = 'html{font-size:' + rem + 'px;}';
+    console.log(remStyle)
   }
 
 
