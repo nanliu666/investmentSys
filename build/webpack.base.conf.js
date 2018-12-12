@@ -95,5 +95,7 @@ let webpackCofig =  {
 }
 
 module.exports = vuxLoader.merge(webpackCofig, {
-  plugins: ['vux-ui']
+  plugins: [{
+    name: 'vux-ui'
+  }]
 })
