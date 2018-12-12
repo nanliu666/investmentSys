@@ -27,8 +27,8 @@ $familyMedium: 'PingFangSC-Medium, sans-serif';
 }
 
 // 边框
-@mixin  borderStyle( $color) {
-  border:1px  solid $color;
+@mixin borderStyle($color) {
+  border: 1px solid $color;
 }
 
 //定位全屏
@@ -93,8 +93,20 @@ $familyMedium: 'PingFangSC-Medium, sans-serif';
   align-items: center;
 }
 
-// flex版本 换行
-@mixin flexwrap($type: wrap ){
+// flex版本 左右居中
+@mixin flexWCenter {
   display: flex;
-  flex-wrap:$type
+  justify-content: center;
+}
+
+// flex版本 上下居中
+@mixin flexHCenter {
+  display: flex;
+  align-items: center;
+}
+
+// flex版本 换行
+@mixin flexwrap($type: wrap) {
+  display: flex;
+  flex-wrap: $type
 }
