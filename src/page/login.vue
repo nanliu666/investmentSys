@@ -5,20 +5,20 @@
         <div class="login-title">欢迎登陆移动招商平台</div>
         <ul>
           <li>
-            <img src="../assets/images/手机.png" alt>
+            <img src="../assets/images/手机@3x.png" alt>
             <input type="number" required placeholder="请输入账号">
           </li>
           <li>
-            <img src="../assets/images/padlock-1.png" alt>
+            <img src="../assets/images/padlock-1@3x.png" alt>
             <input type="number" required placeholder="请输入密码">
           </li>
         </ul>
-        <button type="submit">登陆</button>
+        <button type="submit">登录</button>
         <div class="forget-password">忘记密码</div>
       </section>
     </div>
     <footer class="bottom">
-      <img src="../assets/images/分组.png" alt>
+      <img src="../assets/images/分组@3x.png" alt>
     </footer>
   </div>
 </template>
@@ -42,14 +42,14 @@ export default {};
       padding: 0 1rem;
 
       .login-title {
-        @include sc(0.8rem, $blue);
-        padding: 3rem 0 1.4rem;
+        @include sc(1.1rem, $blue);
+        padding: 2rem 0 1.4rem;
       }
       ul {
         position: relative;
         padding: 0 0.8rem;
         background-color: $fc;
-        box-shadow: 0 0 14px 0 #6089d2;
+        box-shadow: 0 0 14px 0 rgba(96, 137, 210, 0.17);
         &::before {
           position: absolute;
           top: -10px;
@@ -70,6 +70,7 @@ export default {};
           @include fj(flex-start);
           img {
             margin-right: 18px;
+            max-width: 16px;
           }
           input {
             border-left: 1px solid #888888;
@@ -81,7 +82,7 @@ export default {};
         }
 
         li:first-child {
-          border-bottom: 1px solid #ccc;
+          border-bottom: 1px solid rgba(236, 236, 236, 1);
         }
       }
 
@@ -91,7 +92,7 @@ export default {};
         border-radius: 1rem;
         margin: 1.3rem 0 0.8rem 0;
         background: linear-gradient(#3899ff, #4a74e2);
-        box-shadow: 0 2px 14px 0 #6089D2;
+        box-shadow: 0 2px 14px 0 rgba(96, 137, 210, 0.17);
         @include sc(18px, $fc);
       }
       .forget-password {
@@ -104,6 +105,9 @@ export default {};
     @include cl;
     height: 2.3rem;
     margin-top: -2.3rem;
+    img {
+      max-height: 20px;
+    }
   }
 }
 </style>
