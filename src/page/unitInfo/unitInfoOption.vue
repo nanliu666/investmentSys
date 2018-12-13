@@ -36,17 +36,18 @@ export default {
   .option-title {
     @include sc(16px, #1e1e1e);
     margin-bottom: 17px;
-    margin-left: 8px;
   }
   section {
     @include flexwrap(wrap);
     div {
-      padding: 7px 28px;
-      margin: 8px;
+      padding: .4rem 1.4rem;
       background-color: $fc;
       @include borderStyle(#ececec);
       font-family: $familyMedium;
       @include sc(15px, #888888);
+      &:nth-child(2n+1) {
+        margin: .2rem .2rem .2rem 0;
+      }
     }
   }
 }

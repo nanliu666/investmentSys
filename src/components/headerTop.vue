@@ -1,18 +1,26 @@
 <template>
   <div class="header">
     <section class="header-goback">
-      <img src="../assets/images/返回@3x.png" alt="">
+      <img src="../assets/images/返回@3x.png" alt>
     </section>
     <section class="header-title">
       <span class="header-text">选择项目</span>
-      <span><img src="@/assets/images/下拉@3x.png" alt=""></span>
+      <span class="header-row">
+        <img src="@/assets/images/下拉@3x.png" alt>
+      </span>
     </section>
+
   </div>
 </template>
 
 
 <script>
-export default {};
+export default {
+  data() {
+    return {};
+  },
+  methods: {}
+};
 </script>
 
 <style scoped lang="scss">
@@ -20,26 +28,29 @@ export default {};
 .header {
   display: flex;
   background-color: $fc;
+  padding: .2rem 1rem;
   .header-goback {
-    margin-left: 20px;
     display: flex;
     @include flexHCenter;
     img {
-      max-width: .8rem;
-      max-height: .8rem;
+      max-width: 0.8rem;
+      max-height: 0.8rem;
     }
-
   }
   .header-title {
     @include flexWCenter;
     width: 100%;
     .header-text {
       font-family: $familyMedium;
-      @include sc(17px, #030303)
+      @include sc(17px, #030303);
     }
-    img {
-      max-width: 11px;
-      max-height: 6px;
+    .header-row {
+      @include flexCenter;
+      margin: 0 .1rem;
+      img {
+        max-width: 11px;
+        max-height: 6px;
+      }
     }
   }
 }
