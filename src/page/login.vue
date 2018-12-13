@@ -5,7 +5,6 @@
         <div class="login-title">欢迎登陆移动招商平台</div>
         <ul>
           <li>
-            11
             <img src="../assets/images/手机@3x.png" alt>
             <input type="number" required placeholder="请输入账号">
           </li>
