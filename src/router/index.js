@@ -13,15 +13,17 @@ export default new Router({
       name: 'login',
       component: components.login
     },
-    //单元信息
+    //单元信息选择
     {
       path: '/unit',
       name: 'unitOption',
       component: components.unitOption,
-      // children: [
-      //   path: '',
-      //   component: components.login
-      // ],
-    }
+    },
+    //单元信息所有
+    {
+      path: '/unitAll',
+      name: 'unitAll',
+      component: components.unitAll,
+    },
   ]
 })

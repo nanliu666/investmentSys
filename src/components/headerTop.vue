@@ -4,7 +4,7 @@
       <img src="../assets/images/返回@3x.png" alt>
     </section>
     <section class="header-title">
-      <span class="header-text">选择项目</span>
+      <span class="header-text">{{headerText}}</span>
       <span class="header-row">
         <img src="@/assets/images/下拉@3x.png" alt>
       </span>
@@ -19,7 +19,8 @@ export default {
   data() {
     return {};
   },
-  methods: {}
+  methods: {},
+  props: ['headerText'],
 };
 </script>
 
