@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="top">
-      <section>
+      <section :style="{backgroundImage: 'url('+bgc+')'}">
         <div class="login-title">欢迎登陆移动招商平台</div>
         <ul>
           <li>
@@ -25,7 +25,13 @@
 
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      bgc: require("../assets/images/背景@3x.png") // 修复背景无法获取
+    };
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -35,78 +41,78 @@ export default {};
   height: 100%;
   .top {
     height: 100%;
-    padding-bottom: 2.3rem;
+    padding-bottom: 88px;
     section {
       height: 50%;
-      @include bis150("../assets/images/背景@3x.png");
-      padding: 0 1rem;
-
+      padding: 0 40px;
+      background-repeat: no-repeat;
+      background-size: 150% 100%;
       .login-title {
-        @include sc(1.1rem, $blue);
-        padding: 2rem 0 1.4rem;
+        @include sc(44px, $blue);
+        padding: 130px 0 56px;
       }
       ul {
         position: relative;
-        padding: 0 0.8rem;
         background-color: $fc;
-        box-shadow: 0 0 14px 0 rgba(96, 137, 210, 0.17);
+        box-shadow: 0 0 28px 0 rgba(96, 137, 210, 0.17); /*px*/
+        height: 246px;
         &::before {
           position: absolute;
-          top: -10px;
+          top: -10px; /*px*/
           height: 0;
           width: 0;
           left: 30%;
-          margin-left: -10px;
+          margin-left: -10px; /*px*/
           content: " ";
           border-bottom: 10px solid $fc;
-          border-left: 10px solid transparent;
-          border-right: 10px solid transparent;
+          border-left: 10px solid transparent; /*no*/
+          border-right: 10px solid transparent; /*no*/
         }
 
         li {
           position: relative;
-          height: 2.6rem;
+          height: 50%;
           @include flexCenter;
           @include fj(flex-start);
           img {
-            margin-right: 18px;
-            max-width: 16px;
+            margin: 0 36px;
+            max-width: 32px;
           }
           input {
-            border-left: 1px solid #888888;
-            padding-left: 12px;
+            border-left: 1px solid #888888; /*no*/
+            padding-left: 24px;
             &::-webkit-input-placeholder {
-              @include sc(15px, $DB);
+              @include sc(30px, $DB);
             }
           }
         }
 
         li:first-child {
-          border-bottom: 1px solid rgba(236, 236, 236, 1);
+          border-bottom: 1px solid rgba(236, 236, 236, 1); /*no*/
         }
       }
 
       button {
         width: 100%;
-        height: 2rem;
-        border-radius: 1rem;
-        margin: 1.3rem 0 0.8rem 0;
+        height: 88px;
+        border-radius: 44px;
+        margin: 66px 0 20px;
         background: linear-gradient(#3899ff, #4a74e2);
-        box-shadow: 0 2px 14px 0 rgba(96, 137, 210, 0.17);
-        @include sc(18px, $fc);
+        box-shadow: 0 4px 28px 0 rgba(96, 137, 210, 0.17);
+        @include sc(36px, $fc);
       }
       .forget-password {
-        @include sc(14px, #666666);
-        cursor:pointer;
+        @include sc(28px, #666666);
+        cursor: pointer;
       }
     }
   }
   .bottom {
     @include cl;
-    height: 2.3rem;
-    margin-top: -2.3rem;
+    height: 88px;
+    margin-top: -88px;
     img {
-      max-height: 20px;
+      max-height: 40px;
     }
   }
 }
