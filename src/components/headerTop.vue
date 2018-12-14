@@ -27,16 +27,18 @@ export default {
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
 .header {
+  position: fixed;
   display: flex;
+  width: 100%;
   background-color: $fc;
-  padding: .2rem 1rem;
-  box-shadow: 0 2px 7px  0 rgba(126, 158, 230, 0.15);
+  padding: 20px 40px;
+  box-shadow: 0 4px 14px  0 rgba(126, 158, 230, 0.15);
   .header-goback {
     display: flex;
     @include flexHCenter;
     img {
-      max-width: 0.8rem;
-      max-height: 0.8rem;
+      max-width: 14px;
+      max-height: 26px;
     }
   }
   .header-title {
@@ -44,14 +46,15 @@ export default {
     width: 100%;
     .header-text {
       font-family: $familyMedium;
-      @include sc(17px, #030303);
+      font-size: 34px;/*px*/
+      color: #030303;
     }
     .header-row {
       @include flexCenter;
-      margin: 0 .1rem;
+      margin: 18px 8px;
       img {
-        max-width: 11px;
-        max-height: 6px;
+        max-width: 26px;
+        max-height: 11px;
       }
     }
   }

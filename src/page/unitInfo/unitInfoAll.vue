@@ -189,16 +189,17 @@ export default {
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
 .uintInfoAll {
-  margin-bottom: 2.2rem;
+  margin-bottom: 100px;
+  padding-top: 60px;
   .uintOne {
     background-color: $fc;
-    padding: 0.87rem;
+    padding: 40px;
     padding-right: 0;
-    margin-bottom: 0.2rem;
+    margin-bottom: 20px;
     .uintFloor {
       width: 10%;
       float: left;
-      @include sc(22px, #888);
+      @include sc(44px, #888);
       font-family: $familyMedium;
     }
     .unitRoom {
@@ -208,11 +209,10 @@ export default {
       div {
         @include flexCenter;
         width: 20%;
-        padding: 0.22rem 0.65rem;
-        margin-left: 0.43rem;
-        margin-bottom: 0.2rem;
+        padding: 10px 30px;
+        margin: 0 0 20px 20px;
         background-color: #78caff;
-        @include sc(15px, $fc);
+        @include sc(30px, $fc);
         font-family: $familyMedium;
       }
       .rented {
@@ -233,29 +233,30 @@ export default {
   position: fixed;
   bottom: 0;
   width: 100%;
-  padding: 0.39rem 0.78rem;
-  height: 2.1rem;
+  padding: 18px 37px;
+  height: 96px;
   background-color: $fc;
   box-shadow: 0 -2px 7px 0 rgba(126, 158, 230, 0.15);
   .rente-pater {
     font-family: $familyR;
     @include flexHCenter;
     .rente-text {
-      @include sc(15px, rgba(136, 136, 136, 1));
+      @include sc(30px, rgba(136, 136, 136, 1));
     }
     .rente-number {
-      @include sc(15px, #4879e6);
+      @include sc(30px, #4879e6);
     }
     .rente-pu {
-      @include sc(15px, rgb(66, 66, 66));
+      @include sc(30px, rgb(66, 66, 66));
     }
   }
   .joinfloor {
     @include borderStyle(rgba(72, 121, 230, 0.5));
-    height: 1.3rem;
-    border-radius: 0.75rem;
-    @include sc(14px, rgba(72, 121, 230, 1));
-    padding: 0.22rem 0.96rem;
+    @include flexHCenter;
+    height: 60px;
+    border-radius: 30px;
+    @include sc(30px, rgba(72, 121, 230, 1));
+    padding: 5px 20px;
   }
 }
 </style>
