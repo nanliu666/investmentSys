@@ -25,21 +25,21 @@ export default {
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
 .uintOption {
-  padding: 1.2rem 1rem 0;
+  padding: 160px 40px 0;
   .option-title {
-    @include sc(16px, #1e1e1e);
-    margin-bottom: 17px;
+    @include sc(16px*2, #1e1e1e);
+    margin-bottom: 17px*2;
   }
   .content {
     @include flexwrap(wrap);
     @include fj(space-between);
     div {
-      padding: 0.3rem 1.2rem;
-      margin: 0.25rem 0;
+      padding: 14px 54px;
+      margin: 12px 0;
       background-color: $fc;
       @include borderStyle(#ececec);
       font-family: $familyMedium;
-      @include sc(15px, #888888);
+      @include sc(30px, #888888);
     }
   }
 }
