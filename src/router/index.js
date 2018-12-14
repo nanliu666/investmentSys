@@ -25,5 +25,12 @@ export default new Router({
       name: 'unitAll',
       component: components.unitAll,
     },
+    //单元信息所有
+    {
+      path: '/reserve',
+      name: 'reserve',
+      component: components.reserve,
+    },
+
   ]
 })
