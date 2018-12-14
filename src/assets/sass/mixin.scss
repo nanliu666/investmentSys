@@ -2,7 +2,8 @@ $blue: #4879E6;
 $bc: #e4e4e4;
 $fc:#fff;
 $DB:#DBDBDB;
-$familyMedium: 'PingFangSC-Medium, sans-serif';
+$familyMedium: 'PingFangSC-Medium, sans-serif'; //苹方字体medium
+$familyR: 'PingFangSC-Semibold, sans-serif;'; //苹方字体Regular
 
 // 背景图片地址和大小
 @mixin bis($url) {

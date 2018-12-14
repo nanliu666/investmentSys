@@ -30,6 +30,7 @@ export default {
   display: flex;
   background-color: $fc;
   padding: .2rem 1rem;
+  box-shadow: 0 2px 7px  0 rgba(126, 158, 230, 0.15);
   .header-goback {
     display: flex;
     @include flexHCenter;
