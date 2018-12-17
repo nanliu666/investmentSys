@@ -50,6 +50,7 @@
           <button class="submit">预定</button>
           <button class="reserve">签约</button>
           <button class="losse">流失</button>
+          <button class="moveto">移交</button>
         </section>
       </form>
     </section>

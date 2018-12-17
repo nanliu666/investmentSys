@@ -43,6 +43,12 @@ export default new Router({
       name: 'businessDetail',
       component: components.businessDetail,
     },
+    //商机管理
+    {
+      path: '/businessList',
+      name: 'businessList',
+      component: components.businessList,
+    },
 
   ]
 })

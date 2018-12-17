@@ -29,7 +29,8 @@ $familyR: 'PingFangSC-Semibold, sans-serif;'; //苹方字体Regular
 
 // 边框
 @mixin borderStyle($color) {
-  border: 1px solid $color; /*no*/
+  border: 1px solid $color;
+  /*no*/
 }
 
 //定位全屏
@@ -76,7 +77,8 @@ $familyR: 'PingFangSC-Semibold, sans-serif;'; //苹方字体Regular
 
 //字体大小，颜色
 @mixin sc($size, $color) {
-  font-size: $size; /*px*/
+  font-size: $size;
+  /*px*/
   color: $color;
 }
 

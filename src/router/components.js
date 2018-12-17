@@ -5,6 +5,7 @@ const unitAll = resolve => require(['@/page/unitInfo/unitInfoALL'], resolve);
 const reserve = resolve => require(['@/page/unitInfo/reserve'], resolve);
 const businessAdd = resolve => require(['@/page/business/businessAdd'], resolve);
 const businessDetail = resolve => require(['@/page/business/businessDetail'], resolve);
+const businessList = resolve => require(['@/page/business/businessList'], resolve);
 
 export default {
   login,
@@ -13,4 +14,5 @@ export default {
   reserve,
   businessAdd,
   businessDetail,
+  businessList,
 }
