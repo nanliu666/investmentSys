@@ -1,6 +1,6 @@
 <template>
   <div class="reservePart">
-    <header-top headerText="预定"></header-top>
+    <header-top headerText="新增商机"></header-top>
     <section class="content">
       <div class="reseveTitle">
         <div class="danyuan">当前预定单元</div>
@@ -16,7 +16,7 @@
                 <span class="start">*</span>
               </label>
               <input type="text" placeholder="请选择客户" required>
-              <i class="iconfont  icon-youjiantou"></i>
+              <i class="iconfont icon-youjiantou"></i>
             </div>
             <div>
               <label for>手机号码</label>
@@ -25,22 +25,22 @@
           </section>
         </section>
         <section class="main">
-          <div class="cientInfo">订单详情</div>
+          <div class="cientInfo">商机信息</div>
           <section class="formInfo">
             <div>
-              <label for>下单日期</label>
+              <label for>商机来源</label>
               <input type="text" placeholder="请选择客户" required>
-            </div>
-            <div>
-              <label for>预定截止日期</label>
-              <input type="number" name id>
             </div>
             <div>
               <label for>总面积</label>
               <input type="number" name id>
             </div>
             <div>
-              <label for>定金</label>
+              <label for>预计成交金额</label>
+              <input type="number" name id>
+            </div>
+            <div>
+              <label for>紧急程度</label>
               <input type="number" name id>
             </div>
             <div>
@@ -49,19 +49,9 @@
             </div>
           </section>
         </section>
-        <section class="main">
-          <div class="cientInfo">附件</div>
-          <section class="formInfo upload">
-            <div>
-              <label for>附件</label>
-              <input type="file">
-              <button>上传</button>
-            </div>
-          </section>
-        </section>
+
         <section class="button">
-          <button class="save">保存</button>
-          <button class="submit">提交</button>
+          <button class="submit">保存</button>
         </section>
       </form>
     </section>
@@ -135,7 +125,7 @@ export default {
         .start {
           color: red;
         }
-        .icon-youjiantou{
+        .icon-youjiantou {
           position: absolute;
           right: 8px;
           @include wh(8px, 16px);
@@ -162,19 +152,12 @@ export default {
     .button {
       @include fj(space-around);
       button {
-        @include wh(320px, 88px);
+        @include wh(640px, 88px);
         @include sc(36px, $fc);
         @include borderRadius(44px);
         font-family: $familyMedium;
         margin-top: 40px;
         box-shadow: 0 4px 20px 0 rgba(96, 137, 210, 0.17);
-      }
-      .save {
-        background: linear-gradient(
-          to left,
-          rgba(120, 202, 255, 1),
-          rgba(55, 185, 255, 1)
-        );
       }
       .submit {
         background: linear-gradient(

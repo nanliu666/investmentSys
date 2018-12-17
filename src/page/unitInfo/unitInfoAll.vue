@@ -179,7 +179,7 @@ export default {
   methods: {
     onLoad() {
       apiUnitALL().then(res => {
-        // console.log(res.data.d);
+        console.log(JSON.parse(res.d.Data));
       });
     }
   }

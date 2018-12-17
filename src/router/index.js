@@ -31,6 +31,18 @@ export default new Router({
       name: 'reserve',
       component: components.reserve,
     },
+    //新增商机
+    {
+      path: '/businessAdd',
+      name: 'businessAdd',
+      component: components.businessAdd,
+    },
+    //商机详情
+    {
+      path: '/businessDetail',
+      name: 'businessDetail',
+      component: components.businessDetail,
+    },
 
   ]
 })
