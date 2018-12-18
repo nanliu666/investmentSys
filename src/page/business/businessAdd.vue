@@ -30,6 +30,7 @@
             <div>
               <label for>商机来源</label>
               <input type="text" placeholder="请选择客户" required>
+              <i class="iconfont icon-youjiantou"></i>
             </div>
             <div>
               <label for>总面积</label>
@@ -41,7 +42,9 @@
             </div>
             <div>
               <label for>紧急程度</label>
-              <input type="number" name id>
+              <!-- <input type="number" name id> -->
+              <popup></popup>
+              <i class="iconfont icon-youjiantou"></i>
             </div>
             <div>
               <label for>备注</label>
@@ -60,16 +63,35 @@
 
 <script>
 import headerTop from "@/components/headerTOP";
+import popup from "@/components/popup";
+import {
+  GetBizOpportunity,
+  GetBizOpportunityDetail,
+  GetBizopprtunityDropdown
+} from "@/axios/api";
 export default {
   name: "reserve",
   data() {
     return {};
   },
-  created() {},
+  created() {
+    this.onLoad()
+  },
   components: {
     headerTop,
+    popup
   },
-  methods: {}
+  methods: {
+    onLoad() {
+      var data = {
+        Bizopportunity: {},
+        Prospectid: 0
+      };
+      GetBizopprtunityDropdown(data).then(res => {
+        console.log(res);
+      });
+    }
+  }
 };
 </script>
 
