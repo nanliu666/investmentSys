@@ -141,7 +141,7 @@
 
 <script>
 import headerTop from "@/components/headerTOP";
-import { GetBizOpportunity, GetBizOpportunityDetail } from "@/axios/api";
+import { GetBizOpportunity, GetBizOpportunityDetail,GetBizopprtunityDropdown } from "@/axios/api";
 
 export default {
   name: "businessList",
@@ -163,10 +163,14 @@ export default {
         Bizopportunity: {},
         Prospectid: 1
       };
-      GetBizOpportunityDetail(data).then(res => {
-        const data = JSON.parse(JSON.parse(res.d.Data).Content);
-        console.log(data);
-      });
+      var data1 = {
+        Bizopportunity : {
+          Prospectid : 0
+        }
+      }
+      GetBizOpportunityDetail(data1).then(res => {
+        console.log(res)
+      })
     }
   }
 };

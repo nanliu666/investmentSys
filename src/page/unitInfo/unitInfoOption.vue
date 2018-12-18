@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header-top headerText="选择项目"></header-top>
+    <header-top headerText="选择项目" :hasRow="hasRow"></header-top>
     <section class="uintOption">
       <div class="option-title">我的项目</div>
       <section class="content">
@@ -16,8 +16,13 @@
 <script>
 import headerTop from "@/components/headerTOP";
 export default {
+  data() {
+    return {
+      hasRow: true
+    };
+  },
   components: {
-    headerTop,
+    headerTop
   }
 };
 </script>
@@ -27,8 +32,8 @@ export default {
 .uintOption {
   padding: 160px 40px 0;
   .option-title {
-    @include sc(16px*2, #1e1e1e);
-    margin-bottom: 17px*2;
+    @include sc(16px * 2, #1e1e1e);
+    margin-bottom: 17px * 2;
   }
   .content {
     @include flexwrap(wrap);

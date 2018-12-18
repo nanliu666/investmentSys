@@ -1,16 +1,25 @@
 <template>
   <div class="header">
-    <div class="header-top">
-      <section class="header-goback">
-        <img src="../assets/images/返回@3x.png" alt>
-      </section>
-      <section class="header-title">
-        <span class="header-text">{{headerText}}</span>
-        <span class="header-row">
-          <img class="row-img" src="@/assets/images/下拉@3x.png" alt>
+    <div class="header-main">
+      <section v-if="hasSEO" class="header-top">
+        <section class="header-goback">
+          <img src="../assets/images/返回@3x.png" alt>
+        </section>
+        <section class="header-title">
+          <span class="header-text">{{headerText}}</span>
+          <span class="header-row">
+            <img class="row-img" v-if="hasRow" src="@/assets/images/下拉@3x.png" alt>
+          </span>
+        </section>
+        <span v-if="hasSearch" @click="SEOChange">
+          <i class="iconfont icon-fangdajing"></i>
         </span>
       </section>
-      <span v-if="hasSearch"><i class="iconfont icon-fangdajing"></i></span>
+      <div v-if="searchClick" class="seoPart">
+        <input type="text" name id placeholder="请输入相关商机字段">
+        <i class="iconfont icon-fangdajing"></i>
+        <span @click="SEOChange">取消</span>
+      </div>
     </div>
     <section class="filter" v-if="hasState">
       <div>
@@ -30,7 +39,10 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      searchClick: false,
+      hasSEO: true
+    };
   },
   props: {
     headerText: {
@@ -40,11 +52,19 @@ export default {
     hasState: {
       type: Boolean
     },
+    hasRow: {
+      type: Boolean
+    }, //有箭头
     hasSearch: {
       type: Boolean
     }
   },
-  methods: {},
+  methods: {
+    SEOChange() {
+      this.searchClick = !this.searchClick;
+      this.hasSEO = !this.hasSEO;
+    }
+  },
   computed: {}
 };
 </script>
@@ -55,29 +75,53 @@ export default {
   position: fixed;
   width: 100%;
   background-color: $fc;
-  padding: 20px 40px;
   box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
-  .header-top {
-    @include fj(space-between);
-    .header-goback {
-      display: flex;
-      @include flexHCenter;
-      img {
-        max-width: 14px;
-        max-height: 26px;
+  .header-main {
+    padding: 20px 40px;
+    .header-top {
+      @include fj(space-between);
+      .header-goback {
+        display: flex;
+        @include flexHCenter;
+        img {
+          max-width: 14px;
+          max-height: 26px;
+        }
+      }
+      .header-title {
+        @include flexWCenter;
+        width: 100%;
+        .header-text {
+          font-family: $familyMedium;
+          font-size: 34px; /*px*/
+          color: #030303;
+        }
+        .header-row {
+          @include flexCenter;
+          margin: 18px 8px;
+        }
       }
     }
-    .header-title {
-      @include flexWCenter;
-      width: 100%;
-      .header-text {
-        font-family: $familyMedium;
-        font-size: 34px; /*px*/
-        color: #030303;
+    .seoPart {
+      //搜索框部分
+      @include flexHCenter;
+      @include fj(space-between);
+      position: relative;
+      height: 44px;
+      input {
+        @include borderStyle(rgb(204, 204, 204));
+        @include borderRadius(22px);
+        padding: 4px 10px;
+        width: 80%;
+        height: 100%;
       }
-      .header-row {
-        @include flexCenter;
-        margin: 18px 8px;
+      i {
+        position: absolute;
+        right: 150px;
+      }
+      span {
+        @include sc(32px, rgb(102, 153, 255));
+        margin-right: 20px;
       }
     }
   }
@@ -87,7 +131,8 @@ export default {
   }
   .filter {
     @include fj(space-around);
-    padding: 28px 0;
+    border-top: 1px solid rgb(228, 228, 228);
+    padding: 24px 0;
     div {
       span {
         //状态，项目文字
