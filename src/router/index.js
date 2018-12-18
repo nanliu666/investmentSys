@@ -13,6 +13,12 @@ export default new Router({
       name: 'login',
       component: components.login
     },
+    // 首页模块
+    {
+      path: '/',
+      name: 'index',
+      component: components.index
+    },
     //单元信息选择
     {
       path: '/unit',

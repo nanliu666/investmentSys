@@ -13,6 +13,23 @@ axios.defaults.timeout = 10000;
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 axios.defaults.headers.common['Authorization'] = 'Bearer 29ff4d69bd3243de951e79169ce193e3'; // token写死了
 
+//请求响应器
+axios.interceptors.response.use(
+  response => {
+    if (response.data.d && response.data.d !== undefined) {
+      const data = JSON.parse(response.data.d.Data)
+      if (response.data.d.Httpstatucode === 200) {
+        return Promise.resolve(data);
+      } else {
+        return Promise.reject(data);
+      }
+    }
+  },
+  error => {
+    // 错误处理
+  }
+)
+
 /**
  * get方法，对应get请求
  * @param {String} url [请求的url地址]
@@ -38,10 +55,9 @@ export function get(url, params) {
  */
 export function post(url, params) {
   return new Promise((resolve, reject) => {
-    // console.log(QS.stringify(params))
     axios.post(url, params)
       .then(res => {
-        resolve(res.data);
+        resolve(res);
       })
       .catch(err => {
         reject(err.data)

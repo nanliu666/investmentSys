@@ -2,7 +2,7 @@
   <div class="header">
     <div class="header-main">
       <section v-if="hasSEO" class="header-top">
-        <section class="header-goback">
+        <section class="header-goback" @click="goback">
           <img src="../assets/images/返回@3x.png" alt>
         </section>
         <section class="header-title">
@@ -63,6 +63,9 @@ export default {
     SEOChange() {
       this.searchClick = !this.searchClick;
       this.hasSEO = !this.hasSEO;
+    },
+    goback() {
+      this.$router.go(-1);
     }
   },
   computed: {}
