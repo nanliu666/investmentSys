@@ -8,12 +8,5 @@
     }],
     "stage-2"
   ],
-  "plugins": ["transform-vue-jsx", "transform-runtime", [
-    "component", // ellement-ui 按需引入
-    {
-      "libraryName": "element-ui",
-      "styleLibraryName": "theme-chalk"
-    }
-
-  ]]
+  "plugins": ["transform-vue-jsx", "transform-runtime"]
 }
