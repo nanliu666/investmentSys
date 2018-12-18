@@ -49,7 +49,6 @@
             </div>
           </section>
         </section>
-
         <section class="button">
           <button class="submit">保存</button>
         </section>
@@ -68,7 +67,7 @@ export default {
   },
   created() {},
   components: {
-    headerTop
+    headerTop,
   },
   methods: {}
 };
