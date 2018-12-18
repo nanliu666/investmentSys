@@ -3,12 +3,10 @@ import Vue from 'vue'
 import App from './App'
 import axios from 'axios'
 import router from './router'
-import './assets/js/flexble'
-import 'lib-flexible'
-
-// 按需引入element-ui
-import { Cascader } from 'element-ui'
-Vue.use(Cascader)
+// import './assets/js/flexble'
+// import 'lib-flexible'
+import { PopupPicker } from 'vux'
+Vue.component('popup-picker', PopupPicker)
 Vue.prototype.$http = axios
 
 
