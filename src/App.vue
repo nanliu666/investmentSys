@@ -10,6 +10,7 @@ export default {
 }
 </script>
 <style lang="scss">
+@import '@/assets/sass/common.scss';
 #app {
   height: 100%;
 }
