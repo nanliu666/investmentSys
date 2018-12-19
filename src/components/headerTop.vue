@@ -9,6 +9,7 @@
           <span v-if="unitOp">
             <popup-picker
               title="选择项目"
+              :columns="3"
               @click.native="unitLoadData"
               :data="sourceList"
               @on-change="onChange"
@@ -53,7 +54,7 @@ export default {
     return {
       searchClick: false,
       hasSEO: true,
-      sourceList: [["1", "2"], ["3", "4"], ["5", "6"]]
+      sourceList: []
     };
   },
   props: {
@@ -86,15 +87,38 @@ export default {
     },
     unitLoadData() {
       GetUnitinfoAll("").then(res => {
-        let [arr1, arr2, arr3] = [[],[],[],]
-        res.Content[0]
-        let Blocks = res.Content[0].Blocks
-        let Companys = res.Content[0].Companys
-        let Propertys = res.Content[0].Propertys
-        console.log(Propertys);
-        console.log(res.Content[0])
+        let arrTemp = []
+        let Blocks = res.Content[0].Blocks;
+        let Companys = res.Content[0].Companys;
+        let PropertyAreas = res.Content[0].PropertyAreas;
+        let Propertys = res.Content[0].Propertys;
+        //先处理公司
+        Companys.forEach((item, index) => {
+          let newObj = {};
+          newObj.name = item.Companyname;
+          newObj.value = item.Companyid.toString();
+          arrTemp.push(newObj);
+        });
+        Propertys.forEach((item, index) => {
+          let newObj = {};
+          newObj.name = item.Propertyname;
+          newObj.value = item.Propertyid.toString();
+          newObj.parent = item.Companyid.toString();
+          arrTemp.push(newObj);
+        });
+        PropertyAreas.forEach((item, index) => {
+          let newObj = {};
+          newObj.name = item.Areaname;
+          newObj.value = item.Areaid.toString();
+          newObj.parent = item.Propertyid.toString();
+          arrTemp.push(newObj);
+        });
+        this.sourceList = arrTemp
       });
     }
+  },
+  created() {
+    this.unitLoadData();
   },
   computed: {}
 };

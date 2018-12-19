@@ -1,12 +1,12 @@
 <template>
   <div>
-    <header-top headerText="选择项目" :hasRow="hasRow"></header-top>
+    <header-top  :hasRow="hasRow" :unitOp='unitOp'></header-top>
     <section class="uintOption">
       <div class="option-title">我的项目</div>
       <section class="content">
-        <div>恒大广场五期</div>
-        <div>恒大广场五期</div>
-        <div>恒大广场五期</div>
+        <div v-for="(item, index) in Propertys" :key="index">
+          <span>{{item.Propertyname}}</span>
+        </div>
       </section>
     </section>
   </div>
@@ -15,11 +15,25 @@
 
 <script>
 import headerTop from "@/components/headerTOP";
+import { GetPropertys } from "@/axios/api";
 export default {
   data() {
     return {
-      hasRow: true
+      hasRow: true,
+      unitOp: true,
+      Propertys: [], // 我的项目
     };
+  },
+  created() {
+    this.onLoad();
+  },
+  methods: {
+    onLoad() {
+      //拉取我的所有项目
+      GetPropertys({ Propertyid: 0 }).then(res => {
+        this.Propertys = res.Content;
+      });
+    }
   },
   components: {
     headerTop
@@ -30,7 +44,7 @@ export default {
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
 .uintOption {
-  padding: 160px 40px 0;
+  padding: 140px 40px 0;
   .option-title {
     @include sc(16px * 2, #1e1e1e);
     margin-bottom: 17px * 2;
@@ -42,9 +56,11 @@ export default {
       padding: 14px 54px;
       margin: 12px 0;
       background-color: $fc;
+      span {
+        font-family: $familyMedium;
+        @include sc(30px, #888888);
+      }
       @include borderStyle(#ececec);
-      font-family: $familyMedium;
-      @include sc(30px, #888888);
     }
   }
 }
