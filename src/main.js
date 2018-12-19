@@ -5,9 +5,11 @@ import axios from 'axios'
 import router from './router'
 // import './assets/js/flexble'
 // import 'lib-flexible'
+import _ from 'loadsh'
 import { PopupPicker } from 'vux'
 Vue.component('popup-picker', PopupPicker)
 Vue.prototype.$http = axios
+Vue.prototype._ = _
 
 
 new Vue({
