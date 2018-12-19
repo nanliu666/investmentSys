@@ -173,12 +173,12 @@ export default {
           Pagesize: 1
         }
       };
-      // GetBizOpportunity(Urlpara).then(res => {
-      //   console.log(JSON.parse(res.Content));
-      // });
-      GetBizopprtunityDropdown(data).then(res => {
-        console.log(res)
+      GetBizOpportunity(Urlpara).then(res => {
+        console.log(JSON.parse(res.Content));
       });
+      // GetBizopprtunityDropdown(data).then(res => {
+      //   console.log(res)
+      // });
     }
   }
 };
