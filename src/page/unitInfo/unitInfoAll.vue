@@ -166,7 +166,7 @@
 
 
 <script>
-import { apiUnitALL } from "@/axios/api";
+import { GetUnitinfoAll } from "@/axios/api";
 import headerTop from "@/components/headerTOP";
 export default {
   name: "unitALL",
@@ -178,7 +178,7 @@ export default {
   },
   methods: {
     onLoad() {
-      apiUnitALL().then(res => {
+      GetUnitinfoAll().then(res => {
         console.log(JSON.parse(res.d.Data));
       });
     }

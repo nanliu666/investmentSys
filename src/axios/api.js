@@ -1,6 +1,6 @@
 import { get, post } from './http'
 // 单元信息接口
-export const apiUnitALL = p => post('Unitinfo.asmx/GetUnitinfoAll', p); //获取当前用户所有单元信息
+export const GetUnitinfoAll = p => post('Unitinfo.asmx/GetUnitinfoAll', p); //获取当前用户所有单元信息
 export const GetCompanyies = p => post('Unitinfo.asmx/GetCompanyies', p); //获取当前用户所有公司信息
 export const GetPropertys = p => post('Unitinfo.asmx/GetPropertys', p); //获取当前用户所有项目信息
 export const GetPropertyAreas = p => post('Unitinfo.asmx/GetPropertyAreas', p); //获取当前用户所有分区信息

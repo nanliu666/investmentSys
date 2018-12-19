@@ -6,7 +6,15 @@
           <img src="../assets/images/返回@3x.png" alt>
         </section>
         <section class="header-title">
-          <span class="header-text">{{headerText}}</span>
+          <span v-if="unitOp">
+            <popup-picker
+              title="选择项目"
+              @click.native="unitLoadData"
+              :data="sourceList"
+              @on-change="onChange"
+            ></popup-picker>
+          </span>
+          <span v-if="headerText" class="header-text">{{headerText}}</span>
           <span class="header-row">
             <img class="row-img" v-if="hasRow" src="@/assets/images/下拉@3x.png" alt>
           </span>
@@ -37,19 +45,25 @@
 
 
 <script>
+// api
+import { GetUnitinfoAll } from "@/axios/api";
+
 export default {
   data() {
     return {
       searchClick: false,
-      hasSEO: true
+      hasSEO: true,
+      sourceList: [["1", "2"], ["3", "4"], ["5", "6"]]
     };
   },
   props: {
     headerText: {
-      type: String,
-      required: true
+      type: String
     },
     hasState: {
+      type: Boolean
+    },
+    unitOp: {
       type: Boolean
     },
     hasRow: {
@@ -64,8 +78,22 @@ export default {
       this.searchClick = !this.searchClick;
       this.hasSEO = !this.hasSEO;
     },
+    onChange(val) {
+      console.log(val);
+    },
     goback() {
       this.$router.go(-1);
+    },
+    unitLoadData() {
+      GetUnitinfoAll("").then(res => {
+        let [arr1, arr2, arr3] = [[],[],[],]
+        res.Content[0]
+        let Blocks = res.Content[0].Blocks
+        let Companys = res.Content[0].Companys
+        let Propertys = res.Content[0].Propertys
+        console.log(Propertys);
+        console.log(res.Content[0])
+      });
     }
   },
   computed: {}
