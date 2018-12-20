@@ -111,6 +111,11 @@ $familyR: 'PingFangSC-Semibold, sans-serif;'; //苹方字体Regular
   align-items: center;
 }
 
+@mixin fd($type) {
+  display: flex;
+  flex-direction: $type;
+}
+
 // flex版本 换行
 @mixin flexwrap($type: wrap) {
   display: flex;

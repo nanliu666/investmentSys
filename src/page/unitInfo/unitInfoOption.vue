@@ -1,10 +1,45 @@
 <template>
   <div>
-    <header-top headerText="项目选择" :hasRow="hasRow" :unitOp="unitOp"></header-top>
+    <header-top
+      class="header"
+      headerText="项目选择"
+      :hasRow="hasRow"
+      :unitOp="unitOp"
+      @click.native="maskshow"
+    ></header-top>
+    <div>
+      <popup v-model="maskShow" position="top">
+        <section class="nav">
+          <div>
+            <div
+              v-for="(item, index) in companys"
+              :key="index"
+              @click="getpropertys(index)"
+            >{{item.Companyname}}</div>
+          </div>
+          <div>
+            <div
+              v-for="(item, index) in selectPropertys"
+              :key="index"
+              @click="getAreas(index)"
+            >{{item.Propertyname}}</div>
+          </div>
+          <div>
+            <router-link
+              to="unitAll"
+              v-for="(item, index) in selectBlock"
+              :key="index"
+              @click="getBlock(index)"
+            >{{item.Blockname}}</router-link>
+          </div>
+        </section>
+      </popup>
+    </div>
+
     <section class="uintOption">
       <div class="option-title">我的项目</div>
       <section class="content">
-        <div v-for="(item, index) in Propertys" :key="index">
+        <div v-for="(item, index) in myPropertys" :key="index">
           <span @click="Property2all(index)">{{item.Blockname}}</span>
         </div>
       </section>
@@ -15,40 +50,104 @@
 
 <script>
 import headerTop from "@/components/headerTOP";
-import { GetPropertys,GetBlocks } from "@/axios/api";
+import { Popup } from "vux";
+import {
+  GetPropertys,
+  GetBlocks,
+  GetUnitByBlock,
+  GetUnitinfoAll,
+  GetPropertyAreas,
+  GetCompanyies
+} from "@/axios/api";
 export default {
   data() {
     return {
       hasRow: true,
       unitOp: true,
-      Propertys: [] // 我的项目
+      maskShow: false,
+      companys: [],
+      myPropertys: [], // 我的项目
+      selectPropertys: [],
+      selectPropertyarea: [],
+      selectBlock: []
     };
   },
+
   created() {
     this.onLoad();
   },
   methods: {
     onLoad() {
       GetBlocks({ Blockid: 0 }).then(res => {
-        this.Propertys = res.Content;
+        this.myPropertys = res.Content;
+      });
+      //获取公司 初始
+      GetCompanyies({ Companyid: 0 }).then(res => {
+        this.companys = res.Content;
       });
     },
+    // 获取项目
+    getpropertys(index) {
+      const companyID = this.companys[index].Companyid;
+      GetPropertys({ Propertyid: 0 }).then(res => {
+        let data = this._(res.Content)
+          .filter(function(item) {
+            return item.Companyid === companyID;
+          })
+          .value();
+        this.selectPropertys = data;
+      });
+    },
+    // 获取分区
+    getAreas(index) {
+      const areaID = this.selectPropertys[index].Propertyid;
+      GetPropertyAreas({ PropertyAreaid: 0 }).then(res => {
+        let data = this._(res.Content)
+          .filter(item => {
+            return item.Propertyid === areaID;
+          })
+          .value();
+        this.selectPropertyarea = data;
+      });
+      this.getBlock(index);
+    },
+
+    // 获取楼栋
+    getBlock(index) {
+      const areaID = this.selectPropertys[index].Propertyid;
+      GetBlocks({ Blockid: 0 }).then(res => {
+        let data = this._(res.Content)
+          .filter(item => {
+            return item.Propertyid === areaID;
+          })
+          .value();
+        this.selectBlock = data;
+      });
+    },
+
+    maskshow() {
+      this.maskShow = !this.maskShow;
+    },
     Property2all(index) {
-      let params =  this.Propertys[index];
+      let params = this.Propertys[index];
       this.$router.push({
         name: "unitAll",
-        params,
+        params
       });
     }
   },
   components: {
-    headerTop
+    headerTop,
+    Popup
   }
 };
 </script>
 
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
+.header {
+  z-index: 600;
+}
 .uintOption {
   padding: 140px 40px 0;
   .option-title {
@@ -67,6 +166,23 @@ export default {
         @include sc(30px, #888888);
       }
       @include borderStyle(#ececec);
+    }
+  }
+}
+.nav {
+  margin-top: 80px;
+  @include fj(space-around);
+  background-color: $fc;
+  div {
+    flex-grow: 1;
+    flex: 0 0 33.33%;
+    border-right: 1px solid #ccc; /*no*/
+    &:last-child {
+      border: 0;
+    }
+    div {
+      @include flexCenter;
+      padding: 10px;
     }
   }
 }
