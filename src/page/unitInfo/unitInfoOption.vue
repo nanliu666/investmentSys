@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header-top :hasRow="hasRow" :unitOp="unitOp"></header-top>
+    <header-top headerText="项目选择" :hasRow="hasRow" :unitOp="unitOp"></header-top>
     <section class="uintOption">
       <div class="option-title">我的项目</div>
       <section class="content">

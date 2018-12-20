@@ -6,15 +6,6 @@
           <img src="../assets/images/返回@3x.png" alt>
         </section>
         <section class="header-title">
-          <span v-if="unitOp">
-            <popup-picker
-              title="选择项目"
-              :columns="4"
-              @click.native="unitLoadData"
-              :data="sourceList"
-              @on-change="onChange"
-            ></popup-picker>
-          </span>
           <span v-if="headerText" class="header-text">{{headerText}}</span>
           <span class="header-row">
             <img class="row-img" v-if="hasRow" src="@/assets/images/下拉@3x.png" alt>
