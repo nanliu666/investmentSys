@@ -1,11 +1,11 @@
 <template>
   <div>
-    <header-top  :hasRow="hasRow" :unitOp='unitOp'></header-top>
+    <header-top :hasRow="hasRow" :unitOp="unitOp"></header-top>
     <section class="uintOption">
       <div class="option-title">我的项目</div>
       <section class="content">
         <div v-for="(item, index) in Propertys" :key="index">
-          <span>{{item.Propertyname}}</span>
+          <span @click="Property2all(index)">{{item.Blockname}}</span>
         </div>
       </section>
     </section>
@@ -15,13 +15,13 @@
 
 <script>
 import headerTop from "@/components/headerTOP";
-import { GetPropertys } from "@/axios/api";
+import { GetPropertys,GetBlocks } from "@/axios/api";
 export default {
   data() {
     return {
       hasRow: true,
       unitOp: true,
-      Propertys: [], // 我的项目
+      Propertys: [] // 我的项目
     };
   },
   created() {
@@ -29,9 +29,15 @@ export default {
   },
   methods: {
     onLoad() {
-      //拉取我的所有项目
-      GetPropertys({ Propertyid: 0 }).then(res => {
+      GetBlocks({ Blockid: 0 }).then(res => {
         this.Propertys = res.Content;
+      });
+    },
+    Property2all(index) {
+      let params =  this.Propertys[index];
+      this.$router.push({
+        name: "unitAll",
+        params,
       });
     }
   },

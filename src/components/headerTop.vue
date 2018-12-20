@@ -9,7 +9,7 @@
           <span v-if="unitOp">
             <popup-picker
               title="选择项目"
-              :columns="3"
+              :columns="4"
               @click.native="unitLoadData"
               :data="sourceList"
               @on-change="onChange"
@@ -80,14 +80,22 @@ export default {
       this.hasSEO = !this.hasSEO;
     },
     onChange(val) {
-      console.log(val);
+      let [Companyid, Propertyid, Areaid] = val;
+      this.$router.push({
+        name: "unitAll",
+        params: {
+          Companyid,
+          Propertyid,
+          Areaid
+        }
+      });
     },
     goback() {
       this.$router.go(-1);
     },
     unitLoadData() {
       GetUnitinfoAll("").then(res => {
-        let arrTemp = []
+        let arrTemp = [];
         let Blocks = res.Content[0].Blocks;
         let Companys = res.Content[0].Companys;
         let PropertyAreas = res.Content[0].PropertyAreas;
@@ -113,12 +121,20 @@ export default {
           newObj.parent = item.Propertyid.toString();
           arrTemp.push(newObj);
         });
-        this.sourceList = arrTemp
+        Blocks.map(item => {
+          let newObj = {};
+          newObj.name = item.Blockname;
+          newObj.value = item.Blockid.toString();
+          newObj.parent = item.Propertyid.toString();
+          arrTemp.push(newObj);
+        });
+        this.sourceList = arrTemp;
+        console.log(res.Content[0]);
       });
     }
   },
   created() {
-    this.unitLoadData();
+    // this.unitLoadData();
   },
   computed: {}
 };

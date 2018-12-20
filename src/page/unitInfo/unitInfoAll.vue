@@ -166,7 +166,7 @@
 
 
 <script>
-import { GetUnitinfoAll } from "@/axios/api";
+import { GetUnitByBlock, GetBlocks,GetPropertys } from "@/axios/api";
 import headerTop from "@/components/headerTOP";
 export default {
   name: "unitALL",
@@ -178,9 +178,19 @@ export default {
   },
   methods: {
     onLoad() {
-      GetUnitinfoAll().then(res => {
-        console.log(JSON.parse(res.d.Data));
+      // let data = {
+      //   Propertyid: this.$route.params.Propertyid
+      // }
+      // GetPropertys(data).then(res => {
+      //   console.log(res)
+      // })
+      let data = {
+        Blockid: 0
+      }
+      GetBlocks(data).then(res => {
+        console.log(res);
       });
+      console.log(this.$route.params)
     }
   }
 };
