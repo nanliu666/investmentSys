@@ -21,17 +21,7 @@
         <span @click="SEOChange">取消</span>
       </div>
     </div>
-    <section class="filter" v-if="hasState">
-      <div>
-        <span>状态</span>
-        <img class="row-img" src="@/assets/images/下拉@3x.png" alt>
-      </div>
-      <span class="decollator">|</span>
-      <div>
-        <span>项目</span>
-        <img class="row-img" src="@/assets/images/下拉@3x.png" alt>
-      </div>
-    </section>
+
   </div>
 </template>
 
@@ -136,12 +126,19 @@ export default {
 .header {
   position: fixed;
   width: 100%;
+  height: 100px;
+  @include flexHCenter;
+  @include fj(space-between);
+  padding: 0 20px;
   background-color: $fc;
   box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
   .header-main {
-    padding: 20px 40px;
+    @include fj(space-between);
+width: 100%;
+    // padding: 20px 40px;
     .header-top {
       @include fj(space-between);
+      width: 100%;
       .header-goback {
         display: flex;
         @include flexHCenter;
@@ -191,24 +188,7 @@ export default {
     max-width: 26px;
     max-height: 11px;
   }
-  .filter {
-    @include fj(space-around);
-    border-top: 1px solid rgb(228, 228, 228);
-    padding: 24px 0;
-    div {
-      span {
-        //状态，项目文字
-        @include sc(28px, rgba(30, 30, 30, 1));
-        font-family: $familyR;
-        margin-right: 12px;
-      }
-    }
-    .decollator {
-      //分隔符
-      @include wh(4px, 32px);
-      color: rgba(219, 219, 219, 1);
-    }
-  }
+
 }
 </style>
 
