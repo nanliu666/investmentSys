@@ -80,8 +80,7 @@ $familyR: 'PingFangSC-Semibold, sans-serif;'; //苹方字体Regular
 
 //字体大小，颜色
 @mixin sc($size, $color) {
-  font-size: $size;
-  /*px*/
+  font-size: $size;  /*px*/
   color: $color;
 }
 
@@ -111,6 +110,7 @@ $familyR: 'PingFangSC-Semibold, sans-serif;'; //苹方字体Regular
   align-items: center;
 }
 
+// 横排列，竖排
 @mixin fd($type) {
   display: flex;
   flex-direction: $type;
