@@ -1,60 +1,73 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import components from "./components"
+import App from '../App'
+const login = resolve => require(['@/page/login'], resolve);
+const home = resolve => require(['@/page/index'], resolve);
+//单元模块
+const unitOption = resolve => require(['@/page/unitInfo/unitInfoOption'], resolve);
+const unitAll = resolve => require(['@/page/unitInfo/unitInfoALL'], resolve);
 
-Vue.use(Router)
+//预定模块
+const reserve = resolve => require(['@/page/reserve/reserve'], resolve);
 
-export default new Router({
-  mode: 'history',
-  routes: [
-    // 登陆模块
+// 商机模块
+const businessAdd = resolve => require(['@/page/business/businessAdd'], resolve);
+const businessDetail = resolve => require(['@/page/business/businessDetail'], resolve);
+const businessList = resolve => require(['@/page/business/businessList'], resolve);
+
+export default [{
+  path: '/',
+  component: App, //顶层路由，对应index.html
+  children: [ //二级路由。对应App.vue
+    //地址为空时跳转home页面
+    {
+      path: '',
+      redirect: '/home'
+    },
+    //首页
+    {
+      path: '/home',
+      component: home
+    },
+    //登陆
     {
       path: '/login',
-      name: 'login',
-      component: components.login
-    },
-    // 首页模块
-    {
-      path: '/',
-      name: 'index',
-      component: components.index
+      component: login
     },
     //单元信息选择
     {
       path: '/unit',
       name: 'unitOption',
-      component: components.unitOption,
+      component: unitOption,
     },
     //单元信息所有
     {
       path: '/unitAll',
       name: 'unitAll',
-      component: components.unitAll,
+      component: unitAll,
     },
     //单元信息所有
     {
       path: '/reserve',
       name: 'reserve',
-      component: components.reserve,
+      component: reserve,
     },
     //新增商机
     {
       path: '/businessAdd',
       name: 'businessAdd',
-      component: components.businessAdd,
+      component: businessAdd,
     },
     //商机详情
     {
       path: '/businessDetail',
       name: 'businessDetail',
-      component: components.businessDetail,
+      component: businessDetail,
     },
     //商机管理
     {
       path: '/businessList',
       name: 'businessList',
-      component: components.businessList,
+      component: businessList,
     },
 
   ]
-})
+}]

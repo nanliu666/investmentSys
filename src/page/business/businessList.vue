@@ -4,7 +4,7 @@
     <section class="content">
       <section class="newBuiness">
         <div class="Btitle">新商机</div>
-        <li>
+        <router-link tag="li" to="businessDetail">
           <div class="top">
             <span>月亮湾二期 1506</span>
             <span class="new">新商机</span>
@@ -32,7 +32,7 @@
               <span class="text">2018-11-23</span>
             </div>
           </div>
-        </li>
+        </router-link>
       </section>
       <section class="newBuiness">
         <div class="Btitle">已报价</div>
