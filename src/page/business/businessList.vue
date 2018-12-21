@@ -1,134 +1,65 @@
 <template>
   <div class="businessListPart">
-    <header-top headerText="商机管理" :hasState="hasState" :hasSearch="hasSearch"></header-top>
+    <x-header :left-options="{backText: ''}" class="header">商机管理</x-header>
+    <section class="filter">
+      <div @click="openStatus">
+        <span>状态</span>
+        <img class="row-img" src="@/assets/images/下拉@3x.png" alt>
+        <section v-if="hasStatus" class="status">
+          <div
+            v-text="statusDetail[Item]"
+            v-for="(Item, index) in statusList"
+            :key="index"
+            @click.native="openStatus"
+          ></div>
+        </section>
+      </div>
+      <span class="decollator">|</span>
+      <div>
+        <span>项目</span>
+        <img class="row-img" src="@/assets/images/下拉@3x.png" alt>
+      </div>
+    </section>
     <section class="content">
-      <section class="newBuiness">
-        <div class="Btitle">新商机</div>
-        <router-link tag="li" to="businessDetail">
+      <section class="newBuiness" v-for="(Item, index) in statusList" :key="index">
+        <div class="Btitle" v-text="statusDetail[Item]"></div>
+        <router-link
+          tag="li"
+          to="businessDetail"
+          v-for="(item, index) in dataSource[Item]"
+          :key="index"
+        >
           <div class="top">
             <span>月亮湾二期 1506</span>
-            <span class="new">新商机</span>
+            <span
+              :class="getbusinessStatus(item.Recordstatus)"
+              v-text="statusDetail[item.Recordstatus]"
+            ></span>
           </div>
           <div class="bottom">
             <div class="client">
               <span>
                 <label>意向客户：</label>
-                <span class="text">张三</span>
+                <span class="text">{{item.Accountname}}</span>
               </span>
               <span class="phone">
                 <label>联系电话:</label>
-                <span class="text">13422565567</span>
+                <span class="text">{{item.Phone}}</span>
               </span>
             </div>
             <div class="trace">
               <span>
                 <label>跟踪次数:</label>
-                <span class="text">7</span>
+                <span class="text">{{item.Countfollowup}}</span>
               </span>
               <button class="lookRecord">查看记录</button>
             </div>
             <div>
               <label>最后接触日期：</label>
-              <span class="text">2018-11-23</span>
+              <span class="text">{{item.Lastdate}}</span>
             </div>
           </div>
         </router-link>
-      </section>
-      <section class="newBuiness">
-        <div class="Btitle">已报价</div>
-        <li>
-          <div class="top">
-            <span>月亮湾二期 1506</span>
-            <span class="offered">已报价</span>
-          </div>
-          <div class="bottom">
-            <div class="client">
-              <span>
-                <label>意向客户：</label>
-                <span class="text">张三</span>
-              </span>
-              <span class="phone">
-                <label>联系电话:</label>
-                <span class="text">13422565567</span>
-              </span>
-            </div>
-            <div class="trace">
-              <span>
-                <label>跟踪次数:</label>
-                <span class="text">7</span>
-              </span>
-              <button class="lookRecord">查看记录</button>
-            </div>
-            <div>
-              <label>最后接触日期：</label>
-              <span class="text">2018-11-23</span>
-            </div>
-          </div>
-        </li>
-      </section>
-      <section class="newBuiness">
-        <div class="Btitle">已签约</div>
-        <li>
-          <div class="top">
-            <span>月亮湾二期 1506</span>
-            <span class="reserve">已签约</span>
-          </div>
-          <div class="bottom">
-            <div class="client">
-              <span>
-                <label>意向客户：</label>
-                <span class="text">张三</span>
-              </span>
-              <span class="phone">
-                <label>联系电话:</label>
-                <span class="text">13422565567</span>
-              </span>
-            </div>
-            <div class="trace">
-              <span>
-                <label>跟踪次数:</label>
-                <span class="text">7</span>
-              </span>
-              <button class="lookRecord">查看记录</button>
-            </div>
-            <div>
-              <label>最后接触日期：</label>
-              <span class="text">2018-11-23</span>
-            </div>
-          </div>
-        </li>
-      </section>
-      <section class="newBuiness">
-        <div class="Btitle">已流失</div>
-        <li>
-          <div class="top">
-            <span>月亮湾二期 1506</span>
-            <span class="lost">已流失</span>
-          </div>
-          <div class="bottom">
-            <div class="client">
-              <span>
-                <label>意向客户：</label>
-                <span class="text">张三</span>
-              </span>
-              <span class="phone">
-                <label>联系电话:</label>
-                <span class="text">13422565567</span>
-              </span>
-            </div>
-            <div class="trace">
-              <span>
-                <label>跟踪次数:</label>
-                <span class="text">7</span>
-              </span>
-              <button class="lookRecord">查看记录</button>
-            </div>
-            <div>
-              <label>最后接触日期：</label>
-              <span class="text">2018-11-23</span>
-            </div>
-          </div>
-        </li>
       </section>
     </section>
     <section class="addNew">
@@ -140,7 +71,7 @@
 
 
 <script>
-import headerTop from "@/components/headerTOP";
+import { XHeader } from "vux";
 import {
   GetBizOpportunity,
   GetBizOpportunityDetail,
@@ -152,16 +83,47 @@ export default {
   data() {
     return {
       hasState: true,
-      hasSearch: true
+      hasSearch: true,
+      hasStatus: false,
+      statusList: [], // 状态
+      dataSource: [], // 数据源
+      statusDetail: {
+        Active: "新商机",
+        Lost: "已流失",
+        Signed: "已签约",
+        Quotation: "已报价",
+        Booked: "已预订 ",
+        INACTIVE: "已删除 ",
+        Used: "已使用"
+      }
     };
   },
   created() {
     this.onLoad();
   },
   components: {
-    headerTop
+    XHeader
   },
   methods: {
+    openStatus() {
+      this.hasStatus = !this.hasStatus;
+    },
+    getbusinessStatus(data) {
+      switch (data) {
+        case "Active":
+          this.businessStatus = "Active";
+          return this.businessStatus;
+          break;
+        case "Booked":
+          this.businessStatus = "Booked";
+          return this.businessStatus;
+          break;
+        case "Signed":
+          this.businessStatus = "Signed";
+          return this.businessStatus;
+          break;
+      }
+    },
     onLoad() {
       var data = {
         Bizopportunity: {},
@@ -170,15 +132,14 @@ export default {
       var Urlpara = {
         Urlpara: {
           Pageindex: 1,
-          Pagesize: 1
+          Pagesize: 10
         }
       };
       GetBizOpportunity(Urlpara).then(res => {
-        console.log(JSON.parse(res.Content));
+        let data = this._.groupBy(JSON.parse(res.Content), "Recordstatus");
+        this.statusList = Object.keys(data);
+        this.dataSource = data;
       });
-      // GetBizopprtunityDropdown(data).then(res => {
-      //   console.log(res)
-      // });
     }
   }
 };
@@ -187,8 +148,49 @@ export default {
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
 .businessListPart {
+  .header {
+    box-shadow: 0 0px 0px 0 #fff !important; //重叠头部
+  }
+  .filter {
+    background-color: #fff;
+    @include fd(row);
+    box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
+    padding: 10px 0;
+    div {
+      width: 50%;
+      @include flexCenter;
+      span {
+        //状态，项目文字
+        @include sc(28px, rgba(30, 30, 30, 1));
+        font-family: $familyR;
+        margin-right: 12px;
+      }
+    }
+    .row-img {
+      max-width: 26px;
+      max-height: 11px;
+    }
+    .decollator {
+      //分隔符
+      @include wh(4px, 32px);
+      color: rgba(219, 219, 219, 1);
+    }
+    //状态选择
+    .status {
+      position: absolute;
+      left: 0;
+      top: 146px;
+      width: 100%;
+      background-color: #fff;
+      @include fd(column);
+      div {
+        @include flexCenter;
+        padding: 10px;
+      }
+    }
+  }
   .content {
-    padding: 200px 40px 0;
+    padding: 10px 40px 0;
     .Btitle {
       margin-bottom: 12px;
       @include sc(28px, rgba(30, 30, 30, 1));
@@ -216,21 +218,23 @@ export default {
           font-family: $familyR;
         }
         //新商机
-        .new {
+        .Active {
           background: linear-gradient(
             to left,
             rgba(96, 229, 139, 1),
             rgba(10, 188, 108, 1)
           );
         }
-        .offered {
+        //签约
+        .Signed {
           background: linear-gradient(
             to left,
             rgba(40, 140, 241, 1),
             rgba(120, 202, 255, 1)
           );
         }
-        .reserve {
+        //预定
+        .Booked {
           background: linear-gradient(
             to left,
             rgba(123, 110, 240, 1),
@@ -305,5 +309,6 @@ export default {
   }
 }
 </style>
+
 
 
