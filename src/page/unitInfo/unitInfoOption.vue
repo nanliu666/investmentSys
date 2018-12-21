@@ -11,21 +11,22 @@
       <popup v-model="maskShow" position="top">
         <section class="nav">
           <div>
-            <div
+            <li
               v-for="(item, index) in companys"
               :key="index"
               @click="getpropertys(index)"
-            >{{item.Companyname}}</div>
+            >{{item.Companyname}}</li>
           </div>
           <div>
-            <div
+            <li
               v-for="(item, index) in selectPropertys"
               :key="index"
               @click="getAreas(index)"
-            >{{item.Propertyname}}</div>
+            >{{item.Propertyname}}</li>
           </div>
           <div>
             <router-link
+              tag="li"
               to="unitAll"
               v-for="(item, index) in selectBlock"
               :key="index"
@@ -129,7 +130,8 @@ export default {
       this.maskShow = !this.maskShow;
     },
     Property2all(index) {
-      let params = this.Propertys[index];
+      let params = this.myPropertys[index];
+      console.log(this.myPropertys[index]);
       this.$router.push({
         name: "unitAll",
         params
@@ -170,7 +172,7 @@ export default {
   }
 }
 .nav {
-  margin-top: 80px;
+  margin-top: 100px;
   @include fj(space-around);
   background-color: $fc;
   div {
@@ -180,7 +182,7 @@ export default {
     &:last-child {
       border: 0;
     }
-    div {
+    li {
       @include flexCenter;
       padding: 10px;
     }
