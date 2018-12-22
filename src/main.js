@@ -4,13 +4,16 @@ import routes from './router'
 import App from './App'
 import axios from 'axios'
 import _ from 'lodash'
-import FastClick from "fastclick"
+import * as filters from './assets/js/filters'
+import FastClick from "fastclick" // 解决点击延迟300ms
+import animate from 'animate.css'
 import {
   PopupPicker
 } from 'vux'
 Vue.component('popup-picker', PopupPicker)
 Vue.prototype.$http = axios
 Vue.prototype._ = _
+Vue.use(animate)
 
 // 解决点击延迟300ms
 if ('addEventListener' in document) {
@@ -18,6 +21,11 @@ if ('addEventListener' in document) {
       FastClick.attach(document.body);
   }, false);
 }
+
+//全局过滤器使用
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 
 //页面位置保存
 Vue.use(VueRouter)
