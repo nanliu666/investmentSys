@@ -2,22 +2,31 @@
   <div class="businessListPart">
     <x-header :left-options="{backText: ''}" class="header">商机管理</x-header>
     <section class="filter">
+      <div class="projectFilter">
+        <span>项目</span>
+
+        <!-- <img class="row-img" src="@/assets/images/下拉@3x.png" alt> -->
+      </div>
       <div @click="openStatus">
         <span>状态</span>
-        <img class="row-img" src="@/assets/images/下拉@3x.png" alt>
-        <section v-if="hasStatus" class="status">
-          <div
-            v-text="statusDetail[Item]"
-            v-for="(Item, index) in statusList"
-            :key="index"
-            @click.native="openStatus"
-          ></div>
-        </section>
-      </div>
-      <span class="decollator">|</span>
-      <div>
-        <span>项目</span>
-        <img class="row-img" src="@/assets/images/下拉@3x.png" alt>
+        <x-icon type="ios-arrow-down" size="25" v-if="!hasStatus"></x-icon>
+        <x-icon type="ios-arrow-up" size="25" v-if="hasStatus"></x-icon>
+        <!-- <img class="row-img" src="@/assets/images/下拉@3x.png" alt> -->
+        <!-- 选择状态 -->
+        <transition
+          name="custom-classes-transition"
+          enter-active-class="animated bounceInDown"
+          leave-active-class="animated bounceOutRight"
+        >
+          <section v-if="hasStatus" class="status">
+            <div
+              v-text="statusDetail[Item]"
+              v-for="(Item, index) in statusList"
+              :key="index"
+              @click.native="openStatus"
+            ></div>
+          </section>
+        </transition>
       </div>
     </section>
     <section class="content">
@@ -38,14 +47,14 @@
           </div>
           <div class="bottom">
             <div class="client">
-              <span>
+              <div>
                 <label>意向客户：</label>
                 <span class="text">{{item.Accountname}}</span>
-              </span>
-              <span class="phone">
+              </div>
+              <div class="phone">
                 <label>联系电话:</label>
                 <span class="text">{{item.Phone}}</span>
-              </span>
+              </div>
             </div>
             <div class="trace">
               <span>
@@ -56,13 +65,13 @@
             </div>
             <div>
               <label>最后接触日期：</label>
-              <span class="text">{{item.Lastdate}}</span>
+              <span class="text">{{item.Lastdate | dataFrm}}</span>
             </div>
           </div>
         </router-link>
       </section>
     </section>
-    <section class="addNew">
+    <section class="addNew" @click="addNew">
       <span>＋</span>
     </section>
     <section class="more">没有更多了</section>
@@ -72,6 +81,7 @@
 
 <script>
 import { XHeader } from "vux";
+
 import {
   GetBizOpportunity,
   GetBizOpportunityDetail,
@@ -108,6 +118,10 @@ export default {
     openStatus() {
       this.hasStatus = !this.hasStatus;
     },
+    //新增商机
+    addNew() {
+      this.$router.push({ name: "businessAdd" });
+    },
     getbusinessStatus(data) {
       switch (data) {
         case "Active":
@@ -139,6 +153,7 @@ export default {
         let data = this._.groupBy(JSON.parse(res.Content), "Recordstatus");
         this.statusList = Object.keys(data);
         this.dataSource = data;
+        // console.log(JSON.parse(res.Content));
       });
     }
   }
@@ -151,11 +166,15 @@ export default {
   .header {
     box-shadow: 0 0px 0px 0 #fff !important; //重叠头部
   }
+
   .filter {
     background-color: #fff;
     @include fd(row);
     box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
     padding: 10px 0;
+    .projectFilter {
+      border-right: 1px solid #ccc;
+    }
     div {
       width: 50%;
       @include flexCenter;
@@ -166,6 +185,20 @@ export default {
         margin-right: 12px;
       }
     }
+    //状态选择
+    .status {
+      position: absolute;
+      right: 0;
+      top: 146px;
+      width: 50%;
+      background-color: #fff;
+      @include fd(column);
+      div {
+        width: 100%;
+        @include flexCenter;
+        padding: 10px;
+      }
+    }
     .row-img {
       max-width: 26px;
       max-height: 11px;
@@ -174,19 +207,6 @@ export default {
       //分隔符
       @include wh(4px, 32px);
       color: rgba(219, 219, 219, 1);
-    }
-    //状态选择
-    .status {
-      position: absolute;
-      left: 0;
-      top: 146px;
-      width: 100%;
-      background-color: #fff;
-      @include fd(column);
-      div {
-        @include flexCenter;
-        padding: 10px;
-      }
     }
   }
   .content {
@@ -271,13 +291,10 @@ export default {
             border: 1px solid rgba(72, 121, 230, 1); /*no*/
             padding: 0px 26px;
           }
-          .phone {
-            margin-left: 86px;
-          }
         }
-        div:last-child {
-          margin-top: 40px;
-        }
+        // div:last-child {
+        //   margin-top: 40px;
+        // }
         .trace {
           display: flex;
           span {

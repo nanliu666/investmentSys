@@ -1,6 +1,12 @@
 <template>
   <div class="reservePart">
-    <header-top headerText="月亮湾 第二期1506"></header-top>
+    <x-header
+      :left-options="{backText: ''}"
+      :right-options="{showMore: true}"
+      class="header"
+      @on-click-more="showMenus = true"
+    >月亮湾 第二期1506</x-header>
+    <actionsheet :menus="menus" v-model="showMenus" show-cancel></actionsheet>
     <section class="content">
       <form action>
         <section class="main">
@@ -59,15 +65,32 @@
 
 
 <script>
-import headerTop from "@/components/headerTOP";
+import { GetBizOpportunityDetail } from "@/axios/api";
+import { XHeader, Actionsheet } from "vux";
 export default {
   name: "businessDetail",
   data() {
-    return {};
+    return {
+      menus: {
+        menu1: "删除",
+        menu2: "编辑"
+      },
+      showMenus: false
+    };
   },
-  created() {},
+  created() {
+    let data = {
+      Bizopportunity: {
+        Prospectid: 12
+      }
+    };
+    GetBizOpportunityDetail(data).then(res => {
+      console.log(JSON.parse(res.Bizopprtunity).Option);
+    });
+  },
   components: {
-    headerTop
+    XHeader,
+    Actionsheet
   },
   methods: {}
 };
@@ -77,7 +100,6 @@ export default {
 @import "src/assets/sass/mixin";
 .reservePart {
   .content {
-    padding-top: 90px;
     .reseveTitle {
       height: 160px;
       padding: 32px 40px;
