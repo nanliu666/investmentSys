@@ -19,19 +19,20 @@
           leave-active-class="animated bounceOutRight"
         >
           <section v-if="hasStatus" class="status">
-            <div
+            <a
               v-text="statusDetail[Item]"
               v-for="(Item, index) in statusList"
               :key="index"
               @click.native="openStatus"
-            ></div>
+              :href="'#anchor-'+index"
+            ></a>
           </section>
         </transition>
       </div>
     </section>
     <section class="content">
       <section class="newBuiness" v-for="(Item, index) in statusList" :key="index">
-        <div class="Btitle" v-text="statusDetail[Item]"></div>
+        <div class="Btitle" v-text="statusDetail[Item]" :id="'anchor-'+index"></div>
         <router-link
           tag="li"
           to="businessDetail"
@@ -193,7 +194,7 @@ export default {
       width: 50%;
       background-color: #fff;
       @include fd(column);
-      div {
+      a {
         width: 100%;
         @include flexCenter;
         padding: 10px;

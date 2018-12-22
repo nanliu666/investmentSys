@@ -13,6 +13,9 @@ const businessAdd = resolve => require(['@/page/business/businessAdd'], resolve)
 const businessDetail = resolve => require(['@/page/business/businessDetail'], resolve);
 const businessList = resolve => require(['@/page/business/businessList'], resolve);
 
+// 客户模块
+const clientList = resolve => require(['@/page/client/clientList'], resolve);
+
 export default [{
   path: '/',
   component: App, //顶层路由，对应index.html
@@ -67,6 +70,13 @@ export default [{
       path: '/businessList',
       name: 'businessList',
       component: businessList,
+    },
+
+    //客户列表
+    {
+      path: '/clientList',
+      name: 'clientList',
+      component: clientList,
     },
 
   ]

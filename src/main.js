@@ -17,8 +17,8 @@ Vue.use(animate)
 
 // 解决点击延迟300ms
 if ('addEventListener' in document) {
-  document.addEventListener('DOMContentLoaded', function() {
-      FastClick.attach(document.body);
+  document.addEventListener('DOMContentLoaded', function () {
+    FastClick.attach(document.body);
   }, false);
 }
 
@@ -34,6 +34,12 @@ const router = new VueRouter({
   mode: 'history',
   strict: process.env.NODE_ENV !== 'production',
   scrollBehavior(to, from, savedPosition) {
+    if (to.hash) {
+      // 模拟锚点滚动
+      return {
+        selector: to.hash
+      }
+    }
     if (savedPosition) {
       return savedPosition
     } else {
