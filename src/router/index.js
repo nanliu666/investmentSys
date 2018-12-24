@@ -61,7 +61,7 @@ export default [{
     },
     //商机详情
     {
-      path: '/businessDetail',
+      path: '/businessDetail/:id',
       name: 'businessDetail',
       component: businessDetail,
     },

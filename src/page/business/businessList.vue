@@ -4,7 +4,6 @@
     <section class="filter">
       <div class="projectFilter">
         <span>项目</span>
-
         <!-- <img class="row-img" src="@/assets/images/下拉@3x.png" alt> -->
       </div>
       <div @click="openStatus">
@@ -33,11 +32,10 @@
     <section class="content">
       <section class="newBuiness" v-for="(Item, index) in statusList" :key="index">
         <div class="Btitle" v-text="statusDetail[Item]" :id="'anchor-'+index"></div>
-        <router-link
-          tag="li"
-          to="businessDetail"
+        <li
           v-for="(item, index) in dataSource[Item]"
           :key="index"
+          @click="gotoDetail(item)"
         >
           <div class="top">
             <span>月亮湾二期 1506</span>
@@ -69,7 +67,7 @@
               <span class="text">{{item.Lastdate | dataFrm}}</span>
             </div>
           </div>
-        </router-link>
+        </li>
       </section>
     </section>
     <section class="addNew" @click="addNew">
@@ -118,6 +116,10 @@ export default {
   methods: {
     openStatus() {
       this.hasStatus = !this.hasStatus;
+    },
+    gotoDetail(item){
+      // 路由跳转
+      this.$router.push({name: 'businessDetail', params: {id: item.Prospectid}})
     },
     //新增商机
     addNew() {

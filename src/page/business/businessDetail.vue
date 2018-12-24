@@ -81,12 +81,13 @@ export default {
   created() {
     let data = {
       Bizopportunity: {
-        Prospectid: 12
+        Prospectid: 562
       }
-    };
+    }
     GetBizOpportunityDetail(data).then(res => {
       console.log(JSON.parse(res.Bizopprtunity).Option);
-    });
+    })
+    console.log(this.$route.params.id)
   },
   components: {
     XHeader,
