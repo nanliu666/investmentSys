@@ -1,6 +1,6 @@
 <template>
   <div>
-    <x-header :left-options="{backText: ''}" class="header">客户管理<a slot="right">搜索</a></x-header>
+    <x-header :left-options="{backText: ''}" class="header">客户管理<a class="add" slot="right">＋</a></x-header>
 
   </div>
 </template>
@@ -16,4 +16,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "src/assets/sass/mixin";
+.add {
+  font-size: 44px !important;
+  color: rgba(136, 136, 136, 1) !important;
+}
 </style>

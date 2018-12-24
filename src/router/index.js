@@ -15,6 +15,8 @@ const businessList = resolve => require(['@/page/business/businessList'], resolv
 
 // 客户模块
 const clientList = resolve => require(['@/page/client/clientList'], resolve);
+const clientAdd = resolve => require(['@/page/client/clientAdd'], resolve);
+const clientDetail = resolve => require(['@/page/client/clientDetail'], resolve);
 
 export default [{
   path: '/',
@@ -77,6 +79,18 @@ export default [{
       path: '/clientList',
       name: 'clientList',
       component: clientList,
+    },
+    //客户新增
+    {
+      path: '/clientAdd',
+      name: 'clientAdd',
+      component: clientAdd,
+    },
+    //客户详情
+    {
+      path: '/clientDetail',
+      name: 'clientDetail',
+      component: clientDetail,
     },
 
   ]
