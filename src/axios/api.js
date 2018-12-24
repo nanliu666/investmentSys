@@ -25,3 +25,9 @@ export const GetFollowUp = p => post('BizOpportunity.asmx/GetFollowUp', p); //�
 export const GetFollowupDropdown = p => post('BizOpportunity.asmx/GetFollowupDropdown', p); //获取跟踪信息下拉框
 export const GetFollowUpDetail = p => post('BizOpportunity.asmx/GetFollowUpDetail', p); //获取跟踪详情信息
 
+// 客户模块接口
+export const GetCustomer = p => post('CustomerMgmt.asmx/GetCustomer', p); //获取客户信息
+export const GetCustomerDetail = p => post('CustomerMgmt.asmx/GetCustomerDetail', p); //获取客户详细信息
+export const EditCustomer = p => post('CustomerMgmt.asmx/EditCustomer', p); //新增修改客户信息
+export const DeleteCustomer = p => post('CustomerMgmt.asmx/DeleteCustomer', p); //新增修改客户信息
+
