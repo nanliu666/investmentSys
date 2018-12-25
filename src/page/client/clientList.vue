@@ -2,7 +2,7 @@
   <div>
     <x-header :left-options="{backText: ''}" class="header">
       客户管理
-      <a class="add" slot="right">＋</a>
+      <a class="add" slot="right" @click="gotoAdd">＋</a>
     </x-header>
     <search
       @on-change="getResult"
@@ -10,12 +10,18 @@
       auto-scroll-to-top
       top="46px"
       ref="search"
-      @result-click="resultClick"
+      @on-cancel="searchCancel"
+      @on-focus="getFocus"
     ></search>
-    <section class="searchContent">
-      <div class="searchResult" >
+    <section class="searchContent" v-show="hasSearch">
+      <div class="searchResult">
         <div class="searchTitle">找到{{searchList.length}}个联系人</div>
-        <li class="searchMain" v-for="(item, index) in searchList" :key="index">
+        <li
+          class="searchMain"
+          v-for="(item, index) in searchList"
+          :key="index"
+          @click="getDeatil(item)"
+        >
           <span>{{item | strSubstring}}</span>
           <span>{{item}}</span>
         </li>
@@ -24,7 +30,12 @@
     <section class="clientMain" v-for="(Item, index) in actualAlphabetList" :key="index">
       <div class="navTo" :id="'anchor-'+ Item">{{Item}}</div>
       <section class="nameList">
-        <li class="nameLi" v-for="(item, index) in nameList[index]" :key="index">
+        <li
+          class="nameLi"
+          v-for="(item, index) in nameList[index]"
+          :key="index"
+          @click="getDeatil(item)"
+        >
           <span>{{item | strSubstring}}</span>
           <span>{{item}}</span>
         </li>
@@ -49,6 +60,8 @@ export default {
   name: "clientList",
   data() {
     return {
+      hasSearch: false,
+      clientAllData: [], // 客户所有的数据
       allNameList: [],
       nameList: [],
       searchList: [],
@@ -113,6 +126,7 @@ export default {
           nameArr1.push(item.Name);
         });
         this.allNameList = nameArr1;
+        this.clientAllData = JSON.parse(res.Content);
         nameArr.sort(function(a, b) {
           return a.toString().localeCompare(b);
         });
@@ -134,10 +148,30 @@ export default {
         this.searchList = this._.filter(this.allNameList, item => {
           return item.includes(val);
         });
+      } else if (val === "") {
+        this.searchList = [];
       }
     },
-    resultClick(item) {
-      console.log(item);
+    getFocus() {
+      this.hasSearch = !this.hasSearch;
+    },
+    searchCancel() {
+      this.searchList = [];
+      this.hasSearch = !this.hasSearch;
+    },
+    gotoAdd() {
+      //去新增联系人页面
+      this.$router.push({ name: "clientAdd" });
+    },
+    getDeatil(data) {
+      // 去联系人详情页面
+      let selectData = this._.filter(this.clientAllData, item => {
+        return item.Name === data;
+      });
+      this.$router.push({
+        name: "clientDetail",
+        params: { id: selectData[0].Accountid }
+      });
     }
   }
 };
