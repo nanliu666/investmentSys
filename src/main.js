@@ -6,10 +6,11 @@ import * as filters from './assets/js/filters'
 import _ from 'lodash' //loadsh待改进
 Vue.prototype._ = _
 import {
-  PopupPicker
+  PopupPicker,
+  ToastPlugin  //提示层用插件的形式
 } from 'vux'
 Vue.component('popup-picker', PopupPicker)
-
+Vue.use(ToastPlugin)
 // 解决点击延迟300ms
 if ('addEventListener' in document) {
   document.addEventListener('DOMContentLoaded', function (event) {
