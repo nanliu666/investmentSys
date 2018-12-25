@@ -1,0 +1,113 @@
+<template>
+  <div>
+    <x-header
+      :left-options="{backText: ''}"
+      class="header"
+      :right-options="{showMore: true}"
+      @on-click-more="showMenus = true"
+    >客户详情</x-header>
+    <group label-width="4.5em" label-margin-right="2em" label-align="right">
+      <cell title="客户姓名" :value="clientName" value-align="left"></cell>
+      <cell title="电话号码" :value="clientPhone" value-align="left"></cell>
+      <cell title="性别" :value="clientSex" value-align="left"></cell>
+      <cell title="客户性质" :value="clientType" value-align="left"></cell>
+      <cell title="备注" :value="clientRemark" value-align="left"></cell>
+    </group>
+    <actionsheet
+      v-model="showMenus"
+      :menus="menus"
+      @on-click-menu-editor="onEditor"
+      @on-click-menu-delete="onDelete"
+      show-cancel
+    ></actionsheet>
+    <alert v-model="alertShow">客户已有业务数据，不能删除！</alert>
+  </div>
+</template>
+
+<script>
+import { GetCustomerDetail, DeleteCustomer } from "@/axios/api";
+import { XHeader, Actionsheet, Group, Cell, Alert } from "vux";
+
+export default {
+  name: "clientDeatil",
+  components: {
+    XHeader,
+    Group,
+    Cell,
+    Alert,
+    Actionsheet
+  },
+  data() {
+    return {
+      alertShow: false,
+      clientDeatil: {}, //暂存当前客户所有数据
+      clientSex: "",
+      clientName: "",
+      clientPhone: "",
+      clientRemark: "",
+      clientType: "",
+      menus: {
+        editor: "编辑",
+        delete: "删除"
+      },
+      showMenus: false
+    };
+  },
+  created() {
+    this.onLoad();
+  },
+  methods: {
+    onLoad() {
+      let data = {
+        Customer: {
+          Accountid: this.$route.params.id
+        }
+      };
+      GetCustomerDetail(data).then(res => {
+        this.clientDeatil = res;
+        if (!!res) {
+          this.clientRemark = res.Datasource[0].Remark;
+          this.clientName = res.Datasource[0].Name;
+          this.clientPhone = res.Datasource[0].Phone;
+          const Sex = this._.filter(
+            res.Option.Dropdownsexid,
+            item => item.Value === res.Datasource[0].Sexid
+          )[0];
+          this.clientSex = !!JSON.stringify(Sex) ? Sex.Text : "";
+          const Type = this._.filter(
+            res.Option.Dropdowncustomertypeid,
+            item => item.Value === res.Datasource[0].Customertypeid
+          )[0];
+          this.clientType = !!JSON.stringify(Type) ? Type.Text : "";
+        }
+      });
+    },
+    // 编辑
+    onEditor() {
+      //todo 传入数据给新增
+      const clientDeatil = this.clientDeatil;
+      this.$router.push({ name: "clientAdd", params: { clientDeatil } });
+    },
+    // 删除
+    onDelete() {
+      const data = {
+        Accountid: this.clientDeatil.Datasource[0].Accountid
+      };
+      DeleteCustomer(data)
+        .then(res => {
+          console.log(res);
+          if (!!res) {
+            this.$router.push({ name: "clientList" });
+          }
+        })
+        .catch(err => {
+          this.alertShow = !this.alertShow;
+        });
+    }
+  }
+};
+</script>
+
+<style lang="sass" scoped>
+
+</style>
