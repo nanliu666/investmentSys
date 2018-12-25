@@ -27,6 +27,12 @@ let webpackCofig =  {
   entry: {
     app: './src/main.js'
   },
+  //优化外部插件的使用，比如moment
+  externals: {
+    'moment': 'moment',
+    'FastClick': 'FastClick',
+    // 'loadsh': 'loadsh',
+  },
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',

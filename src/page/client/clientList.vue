@@ -127,7 +127,6 @@ export default {
           // }
         });
         this.nameList = Object.values(A);
-        console.log(this.allNameList);
       });
     },
     getResult(val) {

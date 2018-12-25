@@ -2,7 +2,7 @@
  * 过滤器
  *
  */
-import moment from 'moment'
+// moment 开启cnd加速，不需要在这里import
 //格式化日期YYY-MM-DD
 let dataFrm = date => {
   return moment(date).format("YYYY-MM-DD")

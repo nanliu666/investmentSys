@@ -16,7 +16,6 @@
     "fastclick": "^1.0.6",
     "lib-flexible": "^0.3.2",
     "loadsh": "0.0.3",
-    "moment": "^2.23.0",
     "postcss-plugin-px2rem": "^0.8.1",
     "px2rem-loader": "^0.1.9",
     "vue": "^2.5.2",
