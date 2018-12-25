@@ -12,8 +12,15 @@ Vue.component('popup-picker', PopupPicker)
 
 // 解决点击延迟300ms
 if ('addEventListener' in document) {
-  document.addEventListener('DOMContentLoaded', function () {
-    FastClick.attach(document.body);
+  document.addEventListener('DOMContentLoaded', function (event) {
+    // 判断默认行为是否可以被禁用
+    if (event.cancelable) {
+      // 判断默认行为是否已经被禁用
+      if (!event.defaultPrevented) {
+        // event.preventDefault();
+        FastClick.attach(document.body);
+      }
+    }
   }, false);
 }
 

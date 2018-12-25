@@ -18,10 +18,10 @@ axios.interceptors.response.use(
   response => {
     if (response.data.d && response.data.d !== undefined) {
       const data = JSON.parse(response.data.d.Data)
-      if (response.data.d.Httpstatucode === 200) {
+      if (response.data.d.Success === true) {
         return Promise.resolve(data);
       } else {
-        return Promise.reject(data);
+        return Promise.reject(response); //增加对错误的处理改正
       }
     }
   },
