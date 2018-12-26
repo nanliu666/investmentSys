@@ -1,6 +1,10 @@
 <template>
   <div>
-    <x-header :left-options="{backText: ''}" class="header">客户新增</x-header>
+    <x-header
+      :left-options="{backText: '', preventGoBack: true}"
+      @on-click-back="goback"
+      class="header"
+    >客户新增</x-header>
     <group label-width="4.5em" label-margin-right="2em" label-align="right">
       <x-input title="客户姓名" placeholder="必填" v-model="clientName" required></x-input>
       <x-input
@@ -30,7 +34,10 @@
     <section class="button">
       <x-button class="submit" @click.native="submit" action-type="submit">保存</x-button>
     </section>
-    <!-- <toast v-model="hasToast" type="warn" :text="ToastText">请填入必填项</toast> -->
+    <!-- 警告框 -->
+    <confirm v-model="hasConfirm" title="警告" @on-cancel="onCancel" @on-confirm="onConfirm">
+      <p style="text-align:center;">您的数据还未保存，是否离开?</p>
+    </confirm>
   </div>
 </template>
 
@@ -43,6 +50,7 @@ import {
   PopupPicker,
   XTextarea,
   XButton,
+  Confirm,
   Toast
 } from "vux";
 
@@ -55,12 +63,14 @@ export default {
     XTextarea,
     Toast,
     XButton,
+    Confirm,
     XInput
   },
   data() {
     return {
       ToastText: "",
       hasToast: false,
+      hasConfirm: false,
       clientDeatil: {},
       clientName: "",
       clientPhone: "",
@@ -77,6 +87,18 @@ export default {
     this.onLoad();
   },
   methods: {
+    // 没有填完数据直接返回
+    goback() {
+      this.hasConfirm = !this.hasConfirm;
+    },
+    // 取消离开
+    onCancel() {
+      console.log("on cancel");
+    },
+    // 确定离开
+    onConfirm(msg) {
+      history.go(-1);
+    },
     onLoad() {
       const clientDeatil = this.$route.params.clientDeatil;
       if (!!clientDeatil) {
@@ -155,6 +177,7 @@ export default {
     submit() {
       let Customer = {};
       if (!!this.clientName || !!this.clientPhone) {
+        //必填项已经填了
         if (!!this.clientDeatil) {
           //编辑的数据
           Customer = {
@@ -184,17 +207,16 @@ export default {
         const data = { Customer };
         EditCustomer(data)
           .then(res => {
-            console.log(res);
             if (!!res) {
               this.$vux.toast.show({
                 //编辑和新增成功 toast
-                text: '成功',
+                text: "成功",
                 type: "success",
                 onHide() {
                   this.hasToast = !this.hasToast;
                 }
               });
-              this.$router.push({name: 'clientList'})
+              this.$router.push({ name: "clientList" });
             }
           })
           .catch(err => {

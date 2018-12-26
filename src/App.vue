@@ -1,6 +1,14 @@
 <template>
   <div id="app">
-    <router-view/>
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive">
+        <!-- 这里是会被缓存的视图组件，比如客户详情页面 -->
+      </router-view>
+    </keep-alive>
+
+    <router-view v-if="!$route.meta.keepAlive">
+      <!-- 这里是不被缓存的视图组件，比如客户列表/编辑页面 -->
+    </router-view>
   </div>
 </template>
 

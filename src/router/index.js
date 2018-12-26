@@ -91,6 +91,10 @@ export default [{
       path: '/clientDetail',
       name: 'clientDetail',
       component: clientDetail,
+      meta: {
+        keepAlive: true, //此组件需要被缓存
+        isBack: false
+      }
     },
 
   ]
