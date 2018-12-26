@@ -178,12 +178,6 @@ export default {
   },
   methods: {
     onLoad() {
-      // let data = {
-      //   Propertyid: this.$route.params.Propertyid
-      // }
-      // GetPropertys(data).then(res => {
-      //   console.log(res)
-      // })
       let data = {
         Blockid: 0
       }
