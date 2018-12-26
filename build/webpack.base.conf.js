@@ -31,7 +31,7 @@ let webpackCofig =  {
   externals: {
     'moment': 'moment',
     'FastClick': 'FastClick',
-    // 'loadsh': 'loadsh',
+    // 'loadsh': 'loadsh',  //放弃CDN引入loadsh
   },
   output: {
     path: config.build.assetsRoot,

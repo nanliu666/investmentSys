@@ -187,7 +187,7 @@ export default {
             console.log(res);
           })
           .catch(err => {
-            this.$vux.toast.show({
+            this.$vux.toast.show({ //新增姓名相同
               text: err.d.Message,
               type: "warn",
               onHide() {

@@ -3,11 +3,11 @@ import VueRouter from 'vue-router'
 import routes from './router'
 import App from './App'
 import * as filters from './assets/js/filters'
-import _ from 'lodash' //loadsh待改进
+import _ from './assets/js/lodash' //loadsh待改进
 Vue.prototype._ = _
 import {
   PopupPicker,
-  ToastPlugin  //提示层用插件的形式
+  ToastPlugin //提示层用插件的形式
 } from 'vux'
 Vue.component('popup-picker', PopupPicker)
 Vue.use(ToastPlugin)
