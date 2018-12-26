@@ -29,5 +29,8 @@ export default {
       @include sc(34px, rgba(3, 3, 3, 1));
     }
   }
+  .upwarp-tip {
+    background-color: red;
+  }
 }
 </style>
