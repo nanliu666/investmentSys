@@ -1,4 +1,7 @@
-import { get, post } from './http'
+import {
+  get,
+  post
+} from './http'
 // 单元信息接口
 export const GetUnitinfoAll = p => post('Unitinfo.asmx/GetUnitinfoAll', p); //获取当前用户所有单元信息
 export const GetCompanyies = p => post('Unitinfo.asmx/GetCompanyies', p); //获取当前用户所有公司信息
@@ -25,9 +28,12 @@ export const GetFollowUp = p => post('BizOpportunity.asmx/GetFollowUp', p); //�
 export const GetFollowupDropdown = p => post('BizOpportunity.asmx/GetFollowupDropdown', p); //获取跟踪信息下拉框
 export const GetFollowUpDetail = p => post('BizOpportunity.asmx/GetFollowUpDetail', p); //获取跟踪详情信息
 
-// 客户模块接口
+// 客户信息模块接口
 export const GetCustomer = p => post('CustomerMgmt.asmx/GetCustomer', p); //获取客户信息
 export const GetCustomerDetail = p => post('CustomerMgmt.asmx/GetCustomerDetail', p); //获取客户详细信息
 export const EditCustomer = p => post('CustomerMgmt.asmx/EditCustomer', p); //新增修改客户信息
 export const DeleteCustomer = p => post('CustomerMgmt.asmx/DeleteCustomer', p); //新增修改客户信息
 
+// 合同信息模块接口
+export const GetContractMgmt = p => post('ContractMgmt.asmx/GetContractMgmt', p); //获取合同列表信息
+export const GetContractMgmtDetail = p => post('ContractMgmt.asmx/GetContractMgmtDetail', p); //获取合同详情

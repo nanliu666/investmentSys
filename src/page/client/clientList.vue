@@ -55,7 +55,7 @@
 <script>
 import { XHeader, XButton, Search } from "vux";
 import { GetCustomer } from "@/axios/api";
-import { pinyinUtil } from "@/assets/js/pinyinUtil";
+import { pinyinUtil } from "@/assets/js/pinyinUtil"; //拼音首字母转化
 export default {
   name: "clientList",
   data() {
