@@ -18,6 +18,10 @@ const clientList = resolve => require(['@/page/client/clientList'], resolve);
 const clientAdd = resolve => require(['@/page/client/clientAdd'], resolve);
 const clientDetail = resolve => require(['@/page/client/clientDetail'], resolve);
 
+// 客户模块
+const contractDetail = resolve => require(['@/page/contract/contractDetail'], resolve);
+const contractList = resolve => require(['@/page/contract/contractList'], resolve);
+
 export default [{
   path: '/',
   component: App, //顶层路由，对应index.html
@@ -37,64 +41,76 @@ export default [{
       path: '/login',
       component: login
     },
-    //单元信息选择
+
+    //单元模块
     {
-      path: '/unit',
+      path: '/unit', //单元信息选择
       name: 'unitOption',
       component: unitOption,
     },
-    //单元信息所有
     {
-      path: '/unitAll',
+      path: '/unitAll', //单元信息所有
       name: 'unitAll',
       component: unitAll,
     },
-    //单元信息所有
+
+
+    //商机模块
     {
-      path: '/reserve',
-      name: 'reserve',
-      component: reserve,
-    },
-    //新增商机
-    {
-      path: '/businessAdd',
+      path: '/businessAdd', //新增商机
       name: 'businessAdd',
       component: businessAdd,
     },
-    //商机详情
     {
-      path: '/businessDetail/:id',
+      path: '/businessDetail/:id', //商机详情
       name: 'businessDetail',
       component: businessDetail,
     },
-    //商机管理
     {
-      path: '/businessList',
+      path: '/businessList', //商机管理
       name: 'businessList',
       component: businessList,
     },
 
-    //客户列表
+    //客户模块
     {
-      path: '/clientList',
+      path: '/clientList', //客户列表
       name: 'clientList',
       component: clientList,
     },
-    //客户新增
     {
-      path: '/clientAdd',
+      path: '/clientAdd', //客户新增
       name: 'clientAdd',
       component: clientAdd,
     },
-    //客户详情
+
     {
-      path: '/clientDetail',
+      path: '/clientDetail/:id', //客户详情
       name: 'clientDetail',
       component: clientDetail,
       meta: {
         keepAlive: true, //此组件需要被缓存
         isBack: false
       }
+    },
+
+    //合同模块
+    {
+      path: '/contractDetail/:id', //合同详情
+      name: 'contractDetail',
+      component: contractDetail,
+    },
+    {
+      path: '/contractList', //合同列表
+      name: 'contractList',
+      component: contractList,
+    },
+
+    //预定模块
+    {
+      path: '/reserve', //预定
+      name: 'reserve',
+      component: reserve,
     },
 
   ]
