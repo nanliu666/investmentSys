@@ -58,7 +58,7 @@
             </div>
             <div>
               <label>最后接触日期：</label>
-              <span class="text">{{item.Lastdate | dataFrm}}</span>
+              <span class="text">{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span>
             </div>
           </div>
         </li>
