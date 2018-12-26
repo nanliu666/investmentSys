@@ -262,7 +262,7 @@ export default {
   .alphabet {
     margin: 4px 0;
     @include flexCenter;
-    @include sc(30px, rgba(136, 136, 136, 1));
+    @include sc(24px, rgba(136, 136, 136, 1));
   }
 }
 </style>

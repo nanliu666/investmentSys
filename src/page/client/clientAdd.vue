@@ -174,7 +174,7 @@ export default {
             Accountid: 0,
             Name: this.clientName,
             Phone: this.clientPhone,
-            Sexid: this.SexSelect || 0, //有选择后=>有数据=>没有选择没有数据为0
+            Sexid: this.SexSelect || 0, //有数据=>没有选择没有数据为0
             Customertypeid: this.customSelect || 0, //没有选择为0
             Remark: this.remark
           };
@@ -185,16 +185,27 @@ export default {
         EditCustomer(data)
           .then(res => {
             console.log(res);
+            if (!!res) {
+              this.$vux.toast.show({
+                //编辑和新增成功 toast
+                text: '成功',
+                type: "success",
+                onHide() {
+                  this.hasToast = !this.hasToast;
+                }
+              });
+              this.$router.push({name: 'clientList'})
+            }
           })
           .catch(err => {
-            this.$vux.toast.show({ //新增姓名相同
+            this.$vux.toast.show({
+              //新增姓名相同
               text: err.d.Message,
               type: "warn",
               onHide() {
                 this.hasToast = !this.hasToast;
               }
             });
-            console.log(err.d.Message);
           });
       } else {
         //姓名、电话没填

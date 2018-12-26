@@ -50,7 +50,8 @@ export default {
         editor: "编辑",
         delete: "删除"
       },
-      showMenus: false
+      showMenus: false,
+      hasToast: false
     };
   },
   created() {
@@ -98,6 +99,14 @@ export default {
           console.log(res);
           if (!!res) {
             this.$router.push({ name: "clientList" });
+            this.$vux.toast.show({
+              //新增姓名相同
+              text: "删除成功",
+              type: "success",
+              onHide() {
+                this.hasToast = !this.hasToast;
+              }
+            });
           }
         })
         .catch(err => {
