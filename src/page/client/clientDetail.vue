@@ -6,12 +6,17 @@
       :right-options="{showMore: true}"
       @on-click-more="showMenus = true"
     >客户详情</x-header>
-    <group label-width="4.5em" label-margin-right="2em" label-align="right">
+    <group title="基本信息" label-width="4.5em" label-margin-right="2em" label-align="right">
       <cell title="客户姓名" :value="clientName" value-align="left"></cell>
       <cell title="电话号码" :value="clientPhone" value-align="left"></cell>
       <cell title="性别" :value="clientSex" value-align="left"></cell>
       <cell title="客户性质" :value="clientType" value-align="left"></cell>
       <cell title="备注" :value="clientRemark" value-align="left"></cell>
+    </group>
+    <group title="其他联系人" label-width="4.5em" label-margin-right="2em" label-align="right">
+      <cell title="姓名" :value="clientOtherName" value-align="left"></cell>
+      <cell title="性别" :value="clientOtherSex" value-align="left"></cell>
+      <cell title="电话号码" :value="clientOtherPhone" value-align="left"></cell>
     </group>
     <actionsheet
       v-model="showMenus"
@@ -46,6 +51,9 @@ export default {
       clientPhone: "",
       clientRemark: "",
       clientType: "",
+      clientOtherName: "",
+      clientOtherSex: "",
+      clientOtherPhone: "",
       menus: {
         editor: "编辑",
         delete: "删除"
@@ -57,7 +65,6 @@ export default {
   //todo 路由离开之前，详情页面会再次触发一次请求数据?怎么解决不清楚
   created() {
     this.isFirstEnter = true;
-    this.onLoad();
   },
   activated() {
     if (!this.$route.meta.isBack || this.isFirstEnter) {
@@ -99,6 +106,20 @@ export default {
             item => item.Value === res.Datasource[0].Customertypeid
           )[0];
           this.clientType = !!JSON.stringify(Type) ? Type.Text : "";
+
+          // 其他联系人
+          if (!!res.Datasource[0].Otherinfo) {
+            this.clientOtherName = res.Datasource[0].Otherinfo[0].Name;
+            this.clientOtherSex = res.Datasource[0].Otherinfo[0].Sexid;
+            const Sex = this._.filter(
+              res.Option.Dropdownsexid,
+              item => item.Value === res.Datasource[0].Otherinfo[0].Sexid
+            )[0];
+            this.clientOtherSex = !!JSON.stringify(Sex) ? Sex.Text : "";
+            this.clientOtherPhone = res.Datasource[0].Otherinfo[0].Mobilephone;
+          } else {
+            console.log("没有其他联系人=>", res.Datasource[0]);
+          }
         }
       });
     },
