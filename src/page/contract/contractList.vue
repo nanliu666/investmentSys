@@ -13,6 +13,18 @@
         <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus"></x-icon>
         <x-icon type="ios-arrow-up" size="25" v-show="hasStatus"></x-icon>
         <!-- 选择状态 -->
+        <transition
+          name="custom-classes-transition"
+          enter-active-class="animated bounceInDown"
+          leave-active-class="animated bounceOutRight"
+        >
+          <section v-if="hasStatus" class="status">
+            <!-- <div
+              v-for="(item, index) in statusDetail"
+              :key="index"
+            ></div> -->
+          </section>
+        </transition>
       </div>
     </section>
     <!--mescroll滚动区域的基本结构-->
@@ -102,7 +114,9 @@ export default {
         Execing: "执行中",
         Approved: "已审核",
         Tempsave: "暂存"
-      }
+      },
+      statusList: [],//状态列表
+
     };
   },
   components: {
