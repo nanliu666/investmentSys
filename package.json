@@ -11,9 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "animate.css": "^3.7.0",
     "axios": "^0.18.0",
-    "fastclick": "^1.0.6",
     "lib-flexible": "^0.3.2",
     "loadsh": "0.0.3",
     "mescroll.js": "^1.4.0",
