@@ -93,32 +93,48 @@ export default {
       GetCustomerDetail(data).then(res => {
         this.clientDeatil = res;
         if (!!res) {
-          this.clientRemark = res.Datasource[0].Remark;
-          this.clientName = res.Datasource[0].Name;
+          //存在联系人数据
+          this.clientRemark = res.Datasource[0].Remark; // 有备注显示备注，没有显示空
+          this.clientName = res.Datasource[0].Name; //姓名、电话一定存在
           this.clientPhone = res.Datasource[0].Phone;
           const Sex = this._.filter(
+            //如果没有选择性别，就是默认未定义
             res.Option.Dropdownsexid,
             item => item.Value === res.Datasource[0].Sexid
           )[0];
-          this.clientSex = !!JSON.stringify(Sex) ? Sex.Text : "";
+          this.clientSex = !!JSON.stringify(Sex) ? Sex.Text : ""; //加盟商，如果在新增的时候没有加入，就默认空
+
           const Type = this._.filter(
             res.Option.Dropdowncustomertypeid,
             item => item.Value === res.Datasource[0].Customertypeid
           )[0];
-          this.clientType = !!JSON.stringify(Type) ? Type.Text : "";
+          this.clientType = !!JSON.stringify(Type) ? Type.Text : ""; //加盟商，如果在新增的时候没有加入，就默认空
 
           // 其他联系人
           if (!!res.Datasource[0].Otherinfo) {
-            this.clientOtherName = res.Datasource[0].Otherinfo[0].Name;
-            this.clientOtherSex = res.Datasource[0].Otherinfo[0].Sexid;
+            //其他人的姓名没有显示为空
+            this.clientOtherName = res.Datasource[0].Otherinfo[0].Name
+              ? res.Datasource[0].Otherinfo[0].Name
+              : "";
+            // 其他人的电话，没有的时候显示为空
+            this.clientOtherPhone = res.Datasource[0].Otherinfo[0].Mobilephone
+              ? res.Datasource[0].Otherinfo[0].Mobilephone
+              : "";
+
+            const sexID = res.Datasource[0].Otherinfo[0].Sexid
+              ? res.Datasource[0].Otherinfo[0].Sexid
+              : 6502;
             const Sex = this._.filter(
               res.Option.Dropdownsexid,
-              item => item.Value === res.Datasource[0].Otherinfo[0].Sexid
+              item => item.Value === sexID
             )[0];
-            this.clientOtherSex = !!JSON.stringify(Sex) ? Sex.Text : "";
-            this.clientOtherPhone = res.Datasource[0].Otherinfo[0].Mobilephone;
+            //其他联系人的性别没有选择的时候，显示为未定义
+            this.clientOtherSex = Sex.Text;
           } else {
-            console.log("没有其他联系人=>", res.Datasource[0]);
+            // 没有其他联系人，姓名、电话显示为空，性别显示未定义
+            this.clientOtherName = "";
+            this.clientOtherPhone = "";
+            this.clientOtherSex = "未定义";
           }
         }
       });
