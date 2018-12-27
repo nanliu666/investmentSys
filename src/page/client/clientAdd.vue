@@ -55,6 +55,24 @@
     <confirm v-model="hasConfirm" title="警告" @on-cancel="onCancel" @on-confirm="onConfirm">
       <p style="text-align:center;">您的数据还未保存，是否离开?</p>
     </confirm>
+    <!-- 警告框 -->
+    <confirm
+      v-model="hasMustConfirm"
+      title="警告"
+      :show-cancel-button="false"
+      @on-confirm="onMustConfirm"
+    >
+      <p style="text-align:center;">请填入必选项</p>
+    </confirm>
+    <!-- 警告框 -->
+    <confirm
+      v-model="hasSameConfirm"
+      title="警告"
+      :show-cancel-button="false"
+      @on-confirm="onSameConfirm"
+    >
+      <p style="text-align:center;">新增姓名相同</p>
+    </confirm>
   </div>
 </template>
 
@@ -88,6 +106,8 @@ export default {
       ToastText: "",
       hasToast: false,
       hasConfirm: false,
+      hasMustConfirm: false,
+      hasSameConfirm: false,
       clientDeatil: {},
       clientName: "",
       clientPhone: "",
@@ -101,6 +121,7 @@ export default {
       clientOtherName: "", //其他联系人
       clientOtherPhone: "",
       clientOtherSex: [], //v-model用的
+      clientOtherContactid: "", //其他联系人的ID
       clientOtherSelectSex: "" //传递数据
     };
   },
@@ -120,61 +141,75 @@ export default {
     onConfirm(msg) {
       history.go(-1);
     },
+    // 必填项
+    onMustConfirm() {
+      this.hasMustConfirm = !this.hasMustConfirm;
+    },
+    onSameConfirm() {
+      this.hasSameConfirm = !this.hasSameConfirm;
+    },
     onLoad() {
       // 数据加载函数
       const clientDeatil = this.$route.params.clientDeatil;
-      console.log(clientDeatil);
+      console.log("传递过来的数据=>", clientDeatil);
       if (!!clientDeatil) {
-        //编辑
+        //编辑的时候
         this.clientDeatil = clientDeatil;
         this.clientName = clientDeatil.Datasource[0].Name;
         this.clientPhone = clientDeatil.Datasource[0].Phone;
         this.remark = clientDeatil.Datasource[0].Remark;
         //性别
+        const sexID = clientDeatil.Datasource[0].Sexid
+          ? clientDeatil.Datasource[0].Sexid
+          : 6502;
         const SexValue = clientDeatil.Option.Dropdownsexid.filter(item => {
-          return item.Value === clientDeatil.Datasource[0].Sexid;
+          //性别有没有选择
+          return item.Value === sexID;
         });
         this.SexValue.push(SexValue[0].Text);
         //客户性质
-        const customValue = clientDeatil.Option.Dropdowncustomertypeid.filter(
-          item => {
-            return item.Value === clientDeatil.Datasource[0].Customertypeid;
-          }
-        );
-        this.customValue.push(customValue[0].Text);
+        let customTemp = "";
+        if (clientDeatil.Datasource[0].Customertypeid === 0) {
+          customTemp = "";
+        } else {
+          let customValue = clientDeatil.Option.Dropdowncustomertypeid.filter(
+            item => {
+              return item.Value === clientDeatil.Datasource[0].Customertypeid;
+            }
+          );
+          customTemp = customValue[0].Text; //A为暂存，如果加盟商没有选择为空
+        }
+        this.customValue.push(customTemp);
+
+        //有其他联系人的时候加载的数据
         if (!!clientDeatil.Datasource[0].Otherinfo) {
-          //有其他联系人的时候加载的数据
-          this.clientOtherName = clientDeatil.Datasource[0].Otherinfo[0].Name;
-          this.clientOtherPhone =
-            clientDeatil.Datasource[0].Otherinfo[0].Mobilephone;
+          this.clientOtherName = clientDeatil.Datasource[0].Otherinfo[0].Name
+            ? clientDeatil.Datasource[0].Otherinfo[0].Name
+            : "";
+          this.clientOtherContactid = clientDeatil.Datasource[0].Otherinfo[0]
+            .Contactid
+            ? clientDeatil.Datasource[0].Otherinfo[0].Contactid
+            : "";
+          this.clientOtherPhone = clientDeatil.Datasource[0].Otherinfo[0]
+            .Mobilephone
+            ? clientDeatil.Datasource[0].Otherinfo[0].Mobilephone
+            : "";
+          const sexID = clientDeatil.Datasource[0].Otherinfo[0].Sexid
+            ? clientDeatil.Datasource[0].Otherinfo[0].Sexid
+            : 6502;
           const SexValue = clientDeatil.Option.Dropdownsexid.filter(item => {
-            return item.Value === clientDeatil.Datasource[0].Otherinfo[0].Sexid;
+            return item.Value === sexID;
           });
           this.clientOtherSex.push(SexValue[0].Text);
         } else {
           //没有其他联系人，其他联系人的数据跟着data定义的走
         }
-      } else {
-        //完全新增的时候，加载为空值
-        this.clientDeatil = "";
-        this.clientName = "";
-        this.clientPhone = "";
-        this.remark = "";
-        //性别
-        this.SexValue = [];
-        //客户性质
-        this.customValue = [];
-        //其他联系人 --姓名
-        this.clientOtherName = "";
-        //其他联系人 --电话号码
-        this.clientOtherPhone = "";
-        //其他联系人 --性别
-        this.clientOtherSex = [];
       }
     },
     onSexChange(val) {
       //联系人性别改变处理
-      if (!!this.clientDeatil) {
+      const clientDeatil = this.$route.params.clientDeatil;
+      if (!!clientDeatil) {
         //有数据传过来
         this.SexSelect = this.clientDeatil.Option.Dropdownsexid.filter(item => {
           return item.Text === val + "";
@@ -189,14 +224,15 @@ export default {
             this.SexSelect = 405;
             break;
           case "未定义":
-            this.SexSelect = 650;
+            this.SexSelect = 6502;
             break;
         }
       }
     },
     onOtherSexChange(val) {
       //  其他联系人性别改变
-      if (!!this.clientDeatil) {
+      const clientDeatil = this.$route.params.clientDeatil;
+      if (!!clientDeatil) {
         //有数据传过来
         this.clientOtherSelectSex = this.clientDeatil.Option.Dropdownsexid.filter(
           item => {
@@ -213,13 +249,14 @@ export default {
             this.clientOtherSelectSex = 405;
             break;
           case "未定义":
-            this.clientOtherSelectSex = 650;
+            this.clientOtherSelectSex = 6502;
             break;
         }
       }
     },
     onCustomChange(val) {
-      if (!!this.clientDeatil) {
+      const clientDeatil = this.$route.params.clientDeatil;
+      if (!!clientDeatil) {
         //有数据传过来
         this.customSelect = this.clientDeatil.Option.Dropdowncustomertypeid.filter(
           item => {
@@ -244,48 +281,55 @@ export default {
       //数据提交函数
       let Customer = {};
       let Otherinfo = [];
-      if (!!this.clientName || !!this.clientPhone) {
+      const clientDeatil = this.$route.params.clientDeatil;
+      if (!!this.clientName && !!this.clientPhone) {
         //必填项已经填了
-        if (!!this.clientDeatil) {
+        if (!!clientDeatil) {
           //编辑页面有数据传递过来
           Customer = {
-            Accountid: this.clientDeatil.Datasource[0].Accountid || 0,
+            Accountid: this.clientDeatil.Datasource[0].Accountid, //一定有ID和姓名、联系电话
             Name: this.clientName,
             Phone: this.clientPhone,
-            Sexid: this.SexSelect || this.clientDeatil.Datasource[0].Sexid || 0, //有选择后=>有数据=>没有选择没有数据为0
+            Sexid:
+              this.SexSelect || this.clientDeatil.Datasource[0].Sexid || 6502, //有选择后=>有数据=>没有选择没有数据显示未定义性别
             Customertypeid:
               this.customSelect ||
               this.clientDeatil.Datasource[0].Customertypeid ||
               0, //没有选择为0
             Remark: this.remark
           };
-          if (!!this.clientDeatil.Datasource[0].Otherinfo) {
-            // 有其他联系人，没有改变其他联系人/选择了其他联系人
-            console.log("有其他联系人");
+          if (!!clientDeatil.Datasource[0].Otherinfo) {
+            console.log(this.clientDeatil.Datasource[0].Otherinfo);
+            // 有其他联系人的数据，
+            // 没有改变其他联系人 -- 用带来的数据
+            // 选择了其他联系人 --用改变的数据
             Otherinfo = {
               Otherinfo: [
                 {
+                  Contactid: this.clientDeatil.Datasource[0].Otherinfo[0]
+                    .Contactid,
                   Name:
                     this.clientOtherName ||
-                    this.clientDeatil.Datasource[0].Otherinfo.Name,
+                    this.clientDeatil.Datasource[0].Otherinfo[0].Name,
                   Mobilephone:
                     this.clientOtherPhone ||
-                    this.clientDeatil.Datasource[0].Otherinfo.Mobilephone,
+                    this.clientDeatil.Datasource[0].Otherinfo[0].Mobilephone,
                   Sexid:
                     this.clientOtherSelectSex ||
-                    this.clientDeatil.Datasource[0].Otherinfo.Sexid
+                    this.clientDeatil.Datasource[0].Otherinfo[0].Sexid ||
+                    6502
                 }
               ]
             };
           } else {
-            // 没有其他联系人，而且还没选择其他联系人/选择了其他联系人
-            console.log("提交的时候没有其他联系人");
+            // 编辑页面数据，没有其他联系人
             Otherinfo = {
               Otherinfo: [
                 {
-                  Name: this.clientOtherName, //选择了
-                  Mobilephone: this.clientOtherPhone,
-                  Sexid: this.clientOtherSelectSex || 0
+                  Contactid: 0,
+                  Name: this.clientOtherName || 0,
+                  Mobilephone: this.clientOtherPhone || 0,
+                  Sexid: this.clientOtherSelectSex || 6502
                 }
               ]
             };
@@ -300,20 +344,20 @@ export default {
             Sexid: this.SexSelect || 0, //有选择操作=>没有选择为0
             Customertypeid: this.customSelect || 0, //没有选择为0
             Remark: this.remark,
-            // 其他联系人
             Otherinfo: [
               {
-                Name: this.clientOtherName || 0,
-                Mobilephone: this.clientOtherPhone || 0,
-                Sexid: this.clientOtherSelectSex || 0
+                Contactid: 0, //新增其他联系人，直接是0
+                Name: this.clientOtherName || "",
+                Mobilephone: this.clientOtherPhone || "",
+                Sexid: this.clientOtherSelectSex || 6502 //没选择性别，传递未定义
               }
             ]
           };
         }
 
-        //有数据才进入
         const data = { Customer };
-        console.log(Customer);
+        console.log("传递的参数=>", data);
+        console.log("传递的性别参数=>", this.clientOtherSelectSex);
         EditCustomer(data)
           .then(res => {
             if (!!res) {
@@ -329,24 +373,12 @@ export default {
             }
           })
           .catch(err => {
-            this.$vux.toast.show({
-              //新增姓名相同
-              text: err.d.Message,
-              type: "warn",
-              onHide() {
-                this.hasToast = !this.hasToast;
-              }
-            });
+            //姓名相同
+            this.hasSameConfirm = !this.hasSameConfirm;
           });
       } else {
         //姓名、电话没填
-        this.$vux.toast.show({
-          text: "请填入必填项",
-          type: "warn",
-          onHide() {
-            this.hasToast = !this.hasToast;
-          }
-        });
+        this.hasMustConfirm = !this.hasMustConfirm;
       }
     }
   }
