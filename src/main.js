@@ -5,12 +5,11 @@ import App from './App'
 import * as filters from './assets/js/filters'
 import _ from './assets/js/lodash' //loadsh待改进
 Vue.prototype._ = _
-import {
-  PopupPicker,
-  ToastPlugin, //提示层用插件的形式
-} from 'vux'
-Vue.component('popup-picker', PopupPicker)
+//暂时解决 vue-loader 打包太大
+import ToastPlugin from 'vux/src/plugins/toast/index.js'
+import PopupPicker from 'vux/src/components/popup-picker/index.vue'
 Vue.use(ToastPlugin)
+Vue.use(PopupPicker)
 // 解决点击延迟300ms
 if ('addEventListener' in document) {
   document.addEventListener('DOMContentLoaded', function (event) {
