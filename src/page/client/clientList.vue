@@ -118,6 +118,7 @@ export default {
         }
       };
       GetCustomer(data).then(res => {
+        // console.log(JSON.parse(res.Content))
         //对中文名字按照字母排序
         let nameArr = [];
         let nameArr1 = [];
