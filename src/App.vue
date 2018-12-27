@@ -29,8 +29,11 @@ export default {
       @include sc(34px, rgba(3, 3, 3, 1));
     }
   }
-  .upwarp-tip {
-    background-color: red;
+  //下拉刷新，上拉加载文字补充 ---fix px2rem
+  .downwarp-tip,
+  .upwarp-tip,
+  .upwarp-nodata {
+    @include sc(28px, rgba(136, 136, 136, 1));
   }
 }
 </style>
