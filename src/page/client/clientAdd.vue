@@ -5,7 +5,7 @@
       @on-click-back="goback"
       class="header"
     >客户新增</x-header>
-    <group label-width="4.5em" label-margin-right="2em" label-align="right">
+    <group title="基本信息" label-width="4.5em" label-margin-right="2em" label-align="right">
       <x-input title="客户姓名" placeholder="必填" v-model="clientName" required></x-input>
       <x-input
         title="电话号码"
@@ -30,6 +30,23 @@
         value-text-align="left"
       ></popup-picker>
       <x-textarea title="备注" v-model="remark" placeholder="请输入备注"></x-textarea>
+    </group>
+    <group title="其他联系人" label-width="4.5em" label-margin-right="2em" label-align="right">
+      <x-input title="客户姓名" placeholder="请填入其他联系人姓名" v-model="clientOtherName"></x-input>
+      <x-input
+        title="电话号码"
+        placeholder="请填入其他联系人电话"
+        v-model="clientOtherPhone"
+        type="number"
+        is-type="china-mobile"
+      ></x-input>
+      <popup-picker
+        title="性别"
+        :data="Sexlist"
+        v-model="clientOtherSex"
+        @on-change="onOtherSexChange"
+        value-text-align="left"
+      ></popup-picker>
     </group>
     <section class="button">
       <x-button class="submit" @click.native="submit" action-type="submit">保存</x-button>
@@ -76,11 +93,15 @@ export default {
       clientPhone: "",
       remark: "",
       Sexlist: [["男", "女", "未定义"]],
-      SexValue: [],
-      SexSelect: "",
+      SexValue: [], //v-model用的
+      SexSelect: "", // 传递数据
       customlist: [["加盟商", "品牌商", "其它类型"]],
       customValue: [],
-      customSelect: ""
+      customSelect: "",
+      clientOtherName: "", //其他联系人
+      clientOtherPhone: "",
+      clientOtherSex: [], //v-model用的
+      clientOtherSelectSex: "" //传递数据
     };
   },
   created() {
@@ -100,7 +121,9 @@ export default {
       history.go(-1);
     },
     onLoad() {
+      // 数据加载函数
       const clientDeatil = this.$route.params.clientDeatil;
+      console.log(clientDeatil);
       if (!!clientDeatil) {
         //编辑
         this.clientDeatil = clientDeatil;
@@ -119,8 +142,20 @@ export default {
           }
         );
         this.customValue.push(customValue[0].Text);
+        if (!!clientDeatil.Datasource[0].Otherinfo) {
+          //有其他联系人的时候加载的数据
+          this.clientOtherName = clientDeatil.Datasource[0].Otherinfo[0].Name;
+          this.clientOtherPhone =
+            clientDeatil.Datasource[0].Otherinfo[0].Mobilephone;
+          const SexValue = clientDeatil.Option.Dropdownsexid.filter(item => {
+            return item.Value === clientDeatil.Datasource[0].Otherinfo[0].Sexid;
+          });
+          this.clientOtherSex.push(SexValue[0].Text);
+        } else {
+          //没有其他联系人，其他联系人的数据跟着data定义的走
+        }
       } else {
-        //完全新增
+        //完全新增的时候，加载为空值
         this.clientDeatil = "";
         this.clientName = "";
         this.clientPhone = "";
@@ -129,15 +164,22 @@ export default {
         this.SexValue = [];
         //客户性质
         this.customValue = [];
+        //其他联系人 --姓名
+        this.clientOtherName = "";
+        //其他联系人 --电话号码
+        this.clientOtherPhone = "";
+        //其他联系人 --性别
+        this.clientOtherSex = [];
       }
     },
     onSexChange(val) {
-      //性别改变处理
+      //联系人性别改变处理
       if (!!this.clientDeatil) {
         //有数据传过来
         this.SexSelect = this.clientDeatil.Option.Dropdownsexid.filter(item => {
           return item.Text === val + "";
         })[0].Value;
+        return this.SexSelect;
       } else {
         switch (val + "") {
           case "男":
@@ -147,7 +189,31 @@ export default {
             this.SexSelect = 405;
             break;
           case "未定义":
-            this.SexSelect = 6502;
+            this.SexSelect = 650;
+            break;
+        }
+      }
+    },
+    onOtherSexChange(val) {
+      //  其他联系人性别改变
+      if (!!this.clientDeatil) {
+        //有数据传过来
+        this.clientOtherSelectSex = this.clientDeatil.Option.Dropdownsexid.filter(
+          item => {
+            return item.Text === val + "";
+          }
+        )[0].Value;
+        return this.clientOtherSelectSex;
+      } else {
+        switch (val + "") {
+          case "男":
+            this.clientOtherSelectSex = 406;
+            break;
+          case "女":
+            this.clientOtherSelectSex = 405;
+            break;
+          case "未定义":
+            this.clientOtherSelectSex = 650;
             break;
         }
       }
@@ -163,23 +229,25 @@ export default {
       } else {
         switch (val + "") {
           case "加盟商":
-            this.SexSelect = 5542;
+            this.customSelect = 5542;
             break;
           case "品牌商":
-            this.SexSelect = 5543;
+            this.customSelect = 5543;
             break;
           case "其他类型":
-            this.SexSelect = 5544;
+            this.customSelect = 5544;
             break;
         }
       }
     },
     submit() {
+      //数据提交函数
       let Customer = {};
+      let Otherinfo = [];
       if (!!this.clientName || !!this.clientPhone) {
         //必填项已经填了
         if (!!this.clientDeatil) {
-          //编辑的数据
+          //编辑页面有数据传递过来
           Customer = {
             Accountid: this.clientDeatil.Datasource[0].Accountid || 0,
             Name: this.clientName,
@@ -191,20 +259,61 @@ export default {
               0, //没有选择为0
             Remark: this.remark
           };
+          if (!!this.clientDeatil.Datasource[0].Otherinfo) {
+            // 有其他联系人，没有改变其他联系人/选择了其他联系人
+            console.log("有其他联系人");
+            Otherinfo = {
+              Otherinfo: [
+                {
+                  Name:
+                    this.clientOtherName ||
+                    this.clientDeatil.Datasource[0].Otherinfo.Name,
+                  Mobilephone:
+                    this.clientOtherPhone ||
+                    this.clientDeatil.Datasource[0].Otherinfo.Mobilephone,
+                  Sexid:
+                    this.clientOtherSelectSex ||
+                    this.clientDeatil.Datasource[0].Otherinfo.Sexid
+                }
+              ]
+            };
+          } else {
+            // 没有其他联系人，而且还没选择其他联系人/选择了其他联系人
+            console.log("提交的时候没有其他联系人");
+            Otherinfo = {
+              Otherinfo: [
+                {
+                  Name: this.clientOtherName, //选择了
+                  Mobilephone: this.clientOtherPhone,
+                  Sexid: this.clientOtherSelectSex || 0
+                }
+              ]
+            };
+          }
+          Object.assign(Customer, Otherinfo);
         } else {
           Customer = {
             //新增数据
             Accountid: 0,
             Name: this.clientName,
             Phone: this.clientPhone,
-            Sexid: this.SexSelect || 0, //有数据=>没有选择没有数据为0
+            Sexid: this.SexSelect || 0, //有选择操作=>没有选择为0
             Customertypeid: this.customSelect || 0, //没有选择为0
-            Remark: this.remark
+            Remark: this.remark,
+            // 其他联系人
+            Otherinfo: [
+              {
+                Name: this.clientOtherName || 0,
+                Mobilephone: this.clientOtherPhone || 0,
+                Sexid: this.clientOtherSelectSex || 0
+              }
+            ]
           };
         }
 
         //有数据才进入
         const data = { Customer };
+        console.log(Customer);
         EditCustomer(data)
           .then(res => {
             if (!!res) {
