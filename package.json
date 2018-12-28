@@ -19,6 +19,7 @@
     "px2rem-loader": "^0.1.9",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
+    "vuex": "^3.0.1",
     "vux": "^2.9.2"
   },
   "devDependencies": {
