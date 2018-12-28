@@ -60,12 +60,12 @@
             <label>租赁周期：</label>
             <span
               class="text"
-            >{{item.Defaultstartdate | dataFrm('YYYY-MM-DD')}}至{{item.Defaultexpirydate | dataFrm('YYYY-MM-DD')}}</span>
+            >{{item.Defaultstartdate | dataFrm('YYYY-MM-DD')}}&nbsp;至&nbsp;{{item.Defaultexpirydate | dataFrm('YYYY-MM-DD')}}</span>
           </div>
         </div>
       </li>
     </mescroll-vue>
-    <p id="NoData">暂无相关数据</p>
+    <p id="NoData" v-show="hasToast"></p>
   </div>
 </template>
 <script>
@@ -100,7 +100,7 @@ export default {
         empty: {
           //列表第一页无任何数据时,显示的空提示布局; 需配置warpId才显示
           warpId: "NoData", //父布局的id (1.3.5版本支持传入dom元素)
-          // icon: "./static/mescroll/mescroll-empty.png", //图标,默认null,支持网络图
+          icon: imgSrc, //图标,默认null,支持网络图
           tip: "暂无相关数据~" //提示
         }
       },
@@ -108,6 +108,7 @@ export default {
 
       hasSearch: false,
       hasStatus: false,
+      hasToast: false,
       statusDetail: {
         Active: "未提交",
         Submitted: "审批中",
@@ -122,7 +123,8 @@ export default {
         Approved: "已审核",
         Tempsave: "暂存"
       },
-      statusList: [] //状态列表
+      statusList: [], //状态列表
+      Filter: {}
     };
   },
   components: {
@@ -143,39 +145,33 @@ export default {
   },
   methods: {
     getStatus(key) {
-      const data = {
-        Urlpara: {
-          Pageindex: 1,
-          Pagesize: 10,
-          Filter: `Contractstatushow.=.${key}`
-        }
-      };
-      console.log(data);
-      // this.callback(data)
+      //点击状态，选择状态，自定义搜索字段
+      this.mescroll.resetUpScroll();
+      this.Filter = { Filter: `Contractstatushow.=.${key}` };
+      this.mescroll.resetUpScroll();
     },
     // mescroll组件初始化的回调,可获取到mescroll对象 (如果this.mescroll并没有使用到,可不用写mescrollInit)
     mescrollInit(mescroll) {
       this.mescroll = mescroll;
     },
-    // 状态查询回调
-    statusCallBack() {},
     // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
     upCallback(page, mescroll) {
-    console.log(arguments)
-
       // 上拉下拉不区分状态、项目请求
       const data = {
         Urlpara: {
           Pageindex: page.num,
-          Pagesize: page.size,
-          Filter: `Contractstatushow.=.Signed`
+          Pagesize: page.size
         }
       };
+      Object.assign(data.Urlpara, this.Filter);
       GetContractMgmt(data)
         .then(res => {
           // 请求的列表数据
           let arr = JSON.parse(res.Content);
           console.log(arr);
+          if (arr.length === 0) {
+            this.hasToast = !this.hasToast;
+          }
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表
@@ -289,6 +285,9 @@ export default {
       width: 100%;
       @include flexCenter;
       padding: 10px;
+      &:hover{
+        background-color: rgba(105, 167, 254, 1);
+      }
     }
   }
 }
@@ -446,6 +445,12 @@ export default {
 }
 .mescroll-totop {
   background-color: red;
+}
+#NoData {
+  position: absolute;
+  @include flexCenter;
+  height: 80%;
+  width: 100%;
 }
 </style>
 
