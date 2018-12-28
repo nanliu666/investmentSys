@@ -35,5 +35,12 @@ export default {
   .upwarp-nodata {
     @include sc(28px, rgba(136, 136, 136, 1));
   }
+  .icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+  }
 }
 </style>

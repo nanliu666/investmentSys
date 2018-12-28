@@ -12,7 +12,6 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {},
 
-    // Various Dev Server settings
     // host: '192.168.0.108', // 自己手机wifi IP地址
     host: '10.122.10.59', // 连接公司网线
     // host: '192.168.0.112', // 连接公司wifi

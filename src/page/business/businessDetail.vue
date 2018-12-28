@@ -83,11 +83,11 @@ export default {
       Bizopportunity: {
         Prospectid: 562
       }
-    }
+    };
     GetBizOpportunityDetail(data).then(res => {
       console.log(JSON.parse(res.Bizopprtunity).Option);
-    })
-    console.log(this.$route.params.id)
+    });
+    console.log(this.$route.params.id);
   },
   components: {
     XHeader,
