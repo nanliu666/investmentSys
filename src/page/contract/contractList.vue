@@ -19,29 +19,32 @@
           leave-active-class="animated bounceOutRight"
         >
           <section v-if="hasStatus" class="status">
-            <!-- <div
-              v-for="(item, index) in statusDetail"
-              :key="index"
-            ></div> -->
+            <a v-for="(value, key) in statusDetail" :key="key" @click="getStatus(key)">{{value}}</a>
           </section>
         </transition>
       </div>
     </section>
     <!--mescroll滚动区域的基本结构-->
-    <mescroll-vue ref="mescroll" :down="mescrollDown" :up="mescrollUp" @init="mescrollInit">
+    <mescroll-vue
+      class="mescroll"
+      ref="mescroll"
+      :down="mescrollDown"
+      :up="mescrollUp"
+      @init="mescrollInit"
+    >
       <!--内容...-->
       <li v-for="(item) in dataList" :key="item.Rentalid" @click="gotoDetail(item)">
         <div class="top">
-          <span>月亮湾二期 1506</span>
+          <span>{{item.Companyname}} {{item.Projectname}}</span>
           <span
             :class="getbusinessStatus(item.Contractstatushow)"
             v-text="statusDetail[item.Contractstatushow]"
-          >审批中</span>
+          ></span>
         </div>
         <div class="bottom">
           <div class="client">
             <div>
-              <label>客户：</label>
+              <label>签约客户：</label>
               <span class="text">{{item.Debtorname}}</span>
             </div>
             <div class="phone">
@@ -49,7 +52,7 @@
               <span class="text">￥{{item.Contractamt | formatNumber}}</span>
             </div>
             <div class="trace">
-              <label>面积:</label>
+              <label>面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;积:</label>
               <span class="text">{{item.Totalrentalarea}}M²</span>
             </div>
           </div>
@@ -62,6 +65,7 @@
         </div>
       </li>
     </mescroll-vue>
+    <p id="NoData">暂无相关数据</p>
   </div>
 </template>
 <script>
@@ -69,10 +73,12 @@ import { XHeader, Search } from "vux";
 import { GetContractMgmt } from "@/axios/api";
 // 引入下拉组件
 import MescrollVue from "mescroll.js/mescroll.vue";
+import imgSrc from "../../assets/images/gototop.png";
 export default {
   name: "contractList",
   data() {
     return {
+      hasGotop: true,
       mescroll: null, // mescroll实例对象
       mescrollDown: {}, //下拉刷新的配置. (如果下拉刷新和上拉加载处理的逻辑是一样的,则mescrollDown可不用写了)
       mescrollUp: {
@@ -83,17 +89,18 @@ export default {
           num: 0, //当前页 默认0,回调之前会加1; 即callback(page)会从1开始
           size: 10 //每页数据条数,默认10
         },
-        htmlNodata: '<p class="upwarp-nodata">亲,没有更多数据了~</p>',
+        htmlNodata: '<p class="upwarp-nodata">我也是有底线的~</p>',
         noMoreSize: 5, //如果列表已无数据,可设置列表总数大于5才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看
         toTop: {
           //回到顶部按钮
-          src: "./static/mescroll/mescroll-totop.png", //图片路径,默认null,支持网络图
+          src: imgSrc, //图片路径,默认null,支持网络图
+          warpClass: "mescroll-totop",
           offset: 1000 //列表滚动1000px才显示回到顶部按钮
         },
         empty: {
           //列表第一页无任何数据时,显示的空提示布局; 需配置warpId才显示
-          warpId: "xxid", //父布局的id (1.3.5版本支持传入dom元素)
-          icon: "./static/mescroll/mescroll-empty.png", //图标,默认null,支持网络图
+          warpId: "NoData", //父布局的id (1.3.5版本支持传入dom元素)
+          // icon: "./static/mescroll/mescroll-empty.png", //图标,默认null,支持网络图
           tip: "暂无相关数据~" //提示
         }
       },
@@ -115,8 +122,7 @@ export default {
         Approved: "已审核",
         Tempsave: "暂存"
       },
-      statusList: [],//状态列表
-
+      statusList: [] //状态列表
     };
   },
   components: {
@@ -136,17 +142,33 @@ export default {
     next();
   },
   methods: {
+    getStatus(key) {
+      const data = {
+        Urlpara: {
+          Pageindex: 1,
+          Pagesize: 10,
+          Filter: `Contractstatushow.=.${key}`
+        }
+      };
+      console.log(data);
+      // this.callback(data)
+    },
     // mescroll组件初始化的回调,可获取到mescroll对象 (如果this.mescroll并没有使用到,可不用写mescrollInit)
     mescrollInit(mescroll) {
       this.mescroll = mescroll;
     },
+    // 状态查询回调
+    statusCallBack() {},
     // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
     upCallback(page, mescroll) {
-      // 联网请求
+    console.log(arguments)
+
+      // 上拉下拉不区分状态、项目请求
       const data = {
         Urlpara: {
           Pageindex: page.num,
-          Pagesize: page.size
+          Pagesize: page.size,
+          Filter: `Contractstatushow.=.Signed`
         }
       };
       GetContractMgmt(data)
@@ -254,13 +276,16 @@ export default {
   }
   //状态选择
   .status {
+    @include borderStyle(#f4f6f8);
     position: absolute;
-    right: 0;
-    top: 146px;
+    z-index: 100;
+    right: 4px;
+    top: 154px;
     width: 50%;
     background-color: #fff;
     @include fd(column);
     a {
+      @include sc(28px, rgba(30, 30, 30, 1));
       width: 100%;
       @include flexCenter;
       padding: 10px;
@@ -418,6 +443,9 @@ export default {
       }
     }
   }
+}
+.mescroll-totop {
+  background-color: red;
 }
 </style>
 

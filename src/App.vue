@@ -35,12 +35,14 @@ export default {
   .upwarp-nodata {
     @include sc(28px, rgba(136, 136, 136, 1));
   }
-  .icon {
-    width: 1em;
-    height: 1em;
-    vertical-align: -0.15em;
-    fill: currentColor;
-    overflow: hidden;
+
+  .weui-input {
+    //覆盖input样式
+    color: #757575;
+  }
+  .weui-search-bar__label {
+    //覆盖搜索居中问题
+    @include flexCenter;
   }
 }
 </style>
