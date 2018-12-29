@@ -12,5 +12,6 @@ export default {
   groupBy: _.groupBy,
   filter: _.filter,
   chain: _.chain,
+  uniqBy: _.uniqBy,
   forEach: _.forEach
 }
