@@ -17,9 +17,9 @@ let formatNumber = (number, decimals = 2, dec_point = '.', thousands_sep = ',', 
   /*
    * 参数说明：
    * number：要格式化的数字
-   * decimals：保留几位小数
-   * dec_point：小数点符号
-   * thousands_sep：千分位符号
+   * decimals：保留几位小数 默认2位
+   * dec_point：小数点符号 默认为.
+   * thousands_sep：千分位符号 默认为,
    * roundtag:舍入参数，默认 "ceil" 向上取,"floor"向下取,"round" 四舍五入
    * */
   number = (number + '').replace(/[^0-9+-Ee.]/g, '');

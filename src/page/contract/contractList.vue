@@ -195,6 +195,7 @@ export default {
         }
       };
       console.log(requestData);
+      this.$router.push({name: 'contractDetail', params: {id: requestData.Contractmgmt.Rentalid,data:requestData}})
     },
     search() {
       this.hasSearch = !this.hasSearch;
