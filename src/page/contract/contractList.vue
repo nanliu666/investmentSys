@@ -90,7 +90,7 @@ export default {
           size: 10 //每页数据条数,默认10
         },
         htmlNodata: '<p class="upwarp-nodata">我也是有底线的~</p>',
-        noMoreSize: 5, //如果列表已无数据,可设置列表总数大于5才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看
+        noMoreSize: 1, //如果列表已无数据,可设置列表总数大于5才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看
         toTop: {
           //回到顶部按钮
           src: imgSrc, //图片路径,默认null,支持网络图
@@ -175,7 +175,7 @@ export default {
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表
-          this.dataList = this.dataList.concat(arr);
+          this.dataList = this._.uniqBy(this.dataList.concat(arr), "Rentalid");
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
             mescroll.endSuccess(arr.length);
@@ -285,7 +285,7 @@ export default {
       width: 100%;
       @include flexCenter;
       padding: 10px;
-      &:hover{
+      &:hover {
         background-color: rgba(105, 167, 254, 1);
       }
     }
