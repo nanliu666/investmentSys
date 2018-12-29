@@ -1,12 +1,6 @@
 <template>
   <div>
-    <header-top
-      class="header"
-      headerText="项目选择"
-      :hasRow="hasRow"
-      :unitOp="unitOp"
-      @click.native="maskshow"
-    ></header-top>
+    <x-header :left-options="{backText: ''}" class="header" @click.native="maskshow">星月湾第二期</x-header>
     <div>
       <popup v-model="maskShow" position="top">
         <section class="nav">
@@ -50,8 +44,7 @@
 
 
 <script>
-import headerTop from "@/components/headerTOP";
-import { Popup } from "vux";
+import { Popup, XHeader } from "vux";
 import {
   GetPropertys,
   GetBlocks,
@@ -91,7 +84,7 @@ export default {
     getpropertys(index) {
       const companyID = this.companys[index].Companyid;
       GetPropertys({ Propertyid: 0 }).then(res => {
-        let data = this._(res.Content)
+        let data = this._.chain(res.Content)
           .filter(function(item) {
             return item.Companyid === companyID;
           })
@@ -103,7 +96,7 @@ export default {
     getAreas(index) {
       const areaID = this.selectPropertys[index].Propertyid;
       GetPropertyAreas({ PropertyAreaid: 0 }).then(res => {
-        let data = this._(res.Content)
+        let data = this._.chain(res.Content)
           .filter(item => {
             return item.Propertyid === areaID;
           })
@@ -117,7 +110,7 @@ export default {
     getBlock(index) {
       const areaID = this.selectPropertys[index].Propertyid;
       GetBlocks({ Blockid: 0 }).then(res => {
-        let data = this._(res.Content)
+        let data = this._.chain(res.Content)
           .filter(item => {
             return item.Propertyid === areaID;
           })
@@ -139,7 +132,7 @@ export default {
     }
   },
   components: {
-    headerTop,
+    XHeader,
     Popup
   }
 };
@@ -151,7 +144,7 @@ export default {
   z-index: 600;
 }
 .uintOption {
-  padding: 140px 40px 0;
+  padding: 10px 40px 0;
   .option-title {
     @include sc(16px * 2, #1e1e1e);
     margin-bottom: 17px * 2;
@@ -172,7 +165,7 @@ export default {
   }
 }
 .nav {
-  margin-top: 100px;
+  margin-top: 80px;
   @include fj(space-around);
   background-color: $fc;
   div {

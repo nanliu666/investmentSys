@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header-top headerText="星月湾第二期"></header-top>
+    <x-header :left-options="{backText: ''}" class="header">星月湾第二期</x-header>
     <section class="uintInfoAll">
       <section class="uintOne clear">
         <div class="uintFloor">14F</div>
@@ -166,25 +166,25 @@
 
 
 <script>
-import { GetUnitByBlock, GetBlocks,GetPropertys } from "@/axios/api";
-import headerTop from "@/components/headerTOP";
+import { GetUnitByBlock, GetBlocks, GetPropertys } from "@/axios/api";
+import { XHeader } from "vux";
 export default {
   name: "unitALL",
   created() {
     this.onLoad();
   },
   components: {
-    headerTop
+    XHeader
   },
   methods: {
     onLoad() {
       let data = {
         Blockid: 0
-      }
+      };
       GetBlocks(data).then(res => {
         console.log(res);
       });
-      console.log(this.$route.params)
+      console.log(this.$route.params);
     }
   }
 };
@@ -194,7 +194,7 @@ export default {
 @import "src/assets/sass/mixin";
 .uintInfoAll {
   margin-bottom: 100px;
-  padding-top: 60px;
+  padding-top: 10px;
   .uintOne {
     background-color: $fc;
     padding: 40px;
