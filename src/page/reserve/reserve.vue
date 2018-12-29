@@ -1,6 +1,6 @@
 <template>
   <div class="reservePart">
-    <header-top headerText="预定"></header-top>
+    <x-header :left-options="{backText: ''}" class="header">预定</x-header>
     <section class="content">
       <div class="reseveTitle">
         <div class="danyuan">当前预定单元</div>
@@ -16,7 +16,7 @@
                 <span class="start">*</span>
               </label>
               <input type="text" placeholder="请选择客户" required>
-              <i class="iconfont  icon-youjiantou"></i>
+              <i class="iconfont icon-youjiantou"></i>
             </div>
             <div>
               <label for>手机号码</label>
@@ -70,7 +70,8 @@
 
 
 <script>
-import headerTop from "@/components/headerTOP";
+import { XHeader } from "vux";
+
 export default {
   name: "reserve",
   data() {
@@ -78,7 +79,7 @@ export default {
   },
   created() {},
   components: {
-    headerTop
+    XHeader
   },
   methods: {}
 };
@@ -88,7 +89,6 @@ export default {
 @import "src/assets/sass/mixin";
 .reservePart {
   .content {
-    padding-top: 90px;
     .reseveTitle {
       height: 160px;
       padding: 32px 40px;
@@ -135,7 +135,7 @@ export default {
         .start {
           color: red;
         }
-        .icon-youjiantou{
+        .icon-youjiantou {
           position: absolute;
           right: 8px;
           @include wh(8px, 16px);
