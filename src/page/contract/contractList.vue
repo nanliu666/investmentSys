@@ -6,10 +6,53 @@
     </x-header>
     <section class="filter">
       <div class="projectFilter">
-        <span>项目</span>
+        <span class="filterTitle" @click="openProjectStatus">项目</span>
+        <x-icon type="ios-arrow-down" size="25" v-show="!hasprojectStatus"></x-icon>
+        <x-icon type="ios-arrow-up" size="25" v-show="hasprojectStatus"></x-icon>
+        <popup v-model="hasprojectStatus" position="bottom" class="nav" :show-mask="showMask">
+          <div class="close" @click="openProjectStatus">
+            <i class="iconfont icon-guanbi"></i>
+          </div>
+          <section class="projectSelect">
+            <div class="selectTitle">请选择</div>
+            <div class="selectNav">
+              <span
+                :class="[!!companysSelect ? 'active' : '']"
+                @click="reselectCompany"
+              >{{companysSelect ? companysSelect : '选择公司'}}</span>
+              <span :class="[!!companysSelect ? 'iActive' : '']">>></span>
+              <span
+                v-if="companysSelect"
+                :class="[!!PropertysSelect ? 'active' : '']"
+              >{{PropertysSelect ? PropertysSelect : '选择项目'}}</span>
+            </div>
+            <div class="selectCompanys" v-if="!companysSelect">
+              <div>公司名称</div>
+              <ul>
+                <li
+                  v-for="item in companysList"
+                  :key="item.Companyid"
+                  @click="getCompanyDeatil(item)"
+                >{{item.Companyname}}</li>
+                <li v-if="companysList.length === 0">暂无公司</li>
+              </ul>
+            </div>
+            <div class="selectCompanys" v-if="!!companysSelect">
+              <div>项目名称</div>
+              <ul>
+                <li
+                  v-for="item in PropertysList"
+                  :key="item.Propertyid"
+                  @click="getPropertyDeatil(item)"
+                >{{item.Propertyname}}</li>
+                <li v-if="PropertysList.length === 0">暂无项目</li>
+              </ul>
+            </div>
+          </section>
+        </popup>
       </div>
-      <div @click="openStatus">
-        <span>状态</span>
+      <div class="projectStatus" @click="openStatus">
+        <span class="filterTitle">状态</span>
         <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus"></x-icon>
         <x-icon type="ios-arrow-up" size="25" v-show="hasStatus"></x-icon>
         <!-- 选择状态 -->
@@ -51,15 +94,15 @@
               <label>合同总额:</label>
               <span class="text">￥{{item.Contractamt | formatNumber}}</span>
             </div>
-            <div class="trace">
-              <label>面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;积:</label>
+            <div>
+              <label>面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;积:</label>
               <span class="text">{{item.Totalrentalarea}}M²</span>
             </div>
           </div>
           <div>
-            <label>租赁周期：</label>
+            <label class="cycleText">租赁周期：</label>
             <span
-              class="text"
+              class="cycleText"
             >{{item.Defaultstartdate | dataFrm('YYYY-MM-DD')}}&nbsp;至&nbsp;{{item.Defaultexpirydate | dataFrm('YYYY-MM-DD')}}</span>
           </div>
         </div>
@@ -69,8 +112,8 @@
   </div>
 </template>
 <script>
-import { XHeader, Search } from "vux";
-import { GetContractMgmt } from "@/axios/api";
+import { XHeader, Search, Popup } from "vux";
+import { GetContractMgmt, GetCompanyies, GetPropertys } from "@/axios/api";
 // 引入下拉组件
 import MescrollVue from "mescroll.js/mescroll.vue";
 import imgSrc from "../../assets/images/gototop.png";
@@ -78,6 +121,13 @@ export default {
   name: "contractList",
   data() {
     return {
+      projectInit: {},
+      companysList: [],
+      companysSelect: "",
+      PropertysList: [],
+      PropertysSelect: "",
+      showMask: false,
+      hasprojectStatus: false,
       hasGotop: true,
       mescroll: null, // mescroll实例对象
       mescrollDown: {}, //下拉刷新的配置. (如果下拉刷新和上拉加载处理的逻辑是一样的,则mescrollDown可不用写了)
@@ -110,6 +160,7 @@ export default {
       hasStatus: false,
       hasToast: false,
       statusDetail: {
+        all: "所有状态",
         Active: "未提交",
         Submitted: "审批中",
         Signed: "已签约",
@@ -129,6 +180,7 @@ export default {
   },
   components: {
     XHeader,
+    Popup,
     Search,
     MescrollVue
   },
@@ -144,10 +196,78 @@ export default {
     next();
   },
   methods: {
+    search() {
+      this.hasSearch = !this.hasSearch;
+    },
+    openStatus() {
+      this.hasStatus = !this.hasStatus;
+    },
+    openProjectStatus() {
+      //项目切换
+      this.hasprojectStatus = !this.hasprojectStatus;
+      this.getCompany();
+      this.projectInit = JSON.parse(localStorage.getItem("projectSelected"));
+      // console.log(this.projectInit);
+      // if (this.projectInit) {
+      //   //todo 需要后端补充，公司名称，显示使用公司ID
+      //   this.companysSelect = this.projectInit.Companyid;
+      //   this.PropertysSelect = this.projectInit.Propertyname;
+      //   this.Filter = {
+      //     Filter: `Companyid.=.${this.projectInit.Companyid}&Propertyid.=.${
+      //       this.projectInit.Propertyid
+      //     }`
+      //   };
+      // }
+    },
+    getCompany() {
+      const data = {
+        Companyid: 0
+      };
+      GetCompanyies(data).then(res => {
+        this.companysList = res.Content;
+      });
+    },
+    getCompanyDeatil(data) {
+      //获得公司
+      this.companysSelect = data.Companyname;
+      this.PropertysSelect = "";
+      const jsonData = {
+        Propertyid: 0
+      };
+      GetPropertys(jsonData).then(res => {
+        //获取项目
+        this.PropertysList = this._.filter(
+          res.Content,
+          item => item.Companyid === data.Companyid
+        );
+      });
+    },
+    getPropertyDeatil(data) {
+      // console.log(data);
+      this.PropertysSelect = data.Propertyname;
+      localStorage.setItem("projectSelected", JSON.stringify(data));
+      //选择项目，自定义搜索字段
+
+      this.Filter = {
+        Filter: `Companyid.=.${data.Companyid}&Propertyid.=.${data.Propertyid}`
+      };
+      this.mescroll.resetUpScroll();
+      this.hasprojectStatus = !this.hasprojectStatus;
+    },
+    reselectCompany() {
+      this.companysSelect = "";
+      this.PropertysSelect = "";
+    },
     getStatus(key) {
       //点击状态，选择状态，自定义搜索字段
-      this.mescroll.resetUpScroll();
-      this.Filter = { Filter: `Contractstatushow.=.${key}` };
+
+      if (key === "all") {
+        this.Filter = {};
+      } else {
+        this.Filter = {
+          Filter: `Contractstatushow.=.${key}`
+        };
+      }
       this.mescroll.resetUpScroll();
     },
     // mescroll组件初始化的回调,可获取到mescroll对象 (如果this.mescroll并没有使用到,可不用写mescrollInit)
@@ -164,6 +284,7 @@ export default {
         }
       };
       Object.assign(data.Urlpara, this.Filter);
+      console.log(data)
       GetContractMgmt(data)
         .then(res => {
           // 请求的列表数据
@@ -195,13 +316,10 @@ export default {
         }
       };
       console.log(requestData);
-      this.$router.push({name: 'contractDetail', params: {id: requestData.Contractmgmt.Rentalid,data:requestData}})
-    },
-    search() {
-      this.hasSearch = !this.hasSearch;
-    },
-    openStatus() {
-      this.hasStatus = !this.hasStatus;
+      this.$router.push({
+        name: "contractDetail",
+        params: { id: requestData.Contractmgmt.Rentalid, data: requestData }
+      });
     },
     getbusinessStatus(data) {
       switch (data) {
@@ -261,16 +379,70 @@ export default {
   .projectFilter {
     border-right: 1px solid #ccc;
   }
-  div {
+  .projectStatus,
+  .projectFilter {
     width: 50%;
     @include flexCenter;
-    span {
+    .filterTitle {
       //状态，项目文字
       @include sc(28px, rgba(30, 30, 30, 1));
       font-family: $familyR;
       margin-right: 12px;
     }
   }
+  .nav {
+    background-color: #fff;
+    box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
+    .close {
+      //弹出层关闭
+      display: flex;
+      justify-content: flex-end;
+      margin-right: 50px;
+      margin-top: 20px;
+      .iconfont {
+        color: rgba(136, 136, 136, 1);
+      }
+    }
+    .projectSelect {
+      .selectTitle {
+        @include flexCenter;
+        @include sc(32px, rgba(30, 30, 30, 1));
+        padding-bottom: 50px;
+      }
+      .selectNav {
+        padding: 0 40px;
+        span {
+          @include sc(28px, rgba(136, 136, 136, 1));
+          padding: 16px;
+        }
+        .active {
+          background-color: rgba(105, 167, 254, 0.08);
+          border: 2px solid rgba(105, 167, 254, 0.3);
+          @include sc(28px, rgba(105, 167, 254, 1));
+        }
+        .iActive {
+          @include sc(28px, rgba(105, 167, 254, 1));
+        }
+      }
+      .selectCompanys {
+        margin-top: 50px;
+        div:first-child {
+          background-color: rgba(243, 248, 253, 1);
+          padding: 26px 40px;
+          @include sc(32px, rgba(30, 30, 30, 1));
+        }
+        ul {
+          li {
+            background-color: rgba(249, 249, 249, 1);
+            margin: 4px 0;
+            padding: 26px 40px;
+            @include sc(30px, rgba(30, 30, 30, 1));
+          }
+        }
+      }
+    }
+  }
+
   //状态选择
   .status {
     @include borderStyle(#f4f6f8);
@@ -429,6 +601,9 @@ export default {
         }
         .text {
           @include sc(28px, rgba(30, 30, 30, 1));
+        }
+        .cycleText {
+          @include sc(24px, rgba(174, 174, 174, 1));
         }
         .lookRecord {
           @include flexCenter;
