@@ -13,5 +13,6 @@ export default {
   filter: _.filter,
   chain: _.chain,
   uniqBy: _.uniqBy,
+  find: _.find,
   forEach: _.forEach
 }
