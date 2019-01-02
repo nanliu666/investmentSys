@@ -10,9 +10,14 @@
           active-color="rgba(30, 30, 30, 1)"
           default-color="rgba(136, 136, 136, 1)"
           ref="tab"
-          v-model="index"
+          v-model="tabIndex"
         >
-          <tab-item class="vux-center" v-for="(item, index) in infoList" :key="index">{{item}}</tab-item>
+          <tab-item
+            class="vux-center"
+            v-for="(item, index) in infoList"
+            :key="index"
+            @click.native="goAnchor(item)"
+          >{{item}}</tab-item>
         </tab>
         <!-- <tab
           :line-width="1"
@@ -142,23 +147,23 @@
           <li v-for="(item, index) in Contractcommission" :key="index">
             <div class="contractSomeList">
               <span>{{item.Rentstandardtypestring}}</span>
-              <span>{{item.Rentstandardtypestring}}</span>
+              <span>{{item.Rentstandardtypestring | dataFrm('YYYY-MM-DD')}}</span>
               <span>{{item.Differencemethodstring | dataFrm('YYYY-MM-DD')}}</span>
-              <span>{{item.Differencefrequencystring | dataFrm('YYYY-MM-DD')}}</span>
+              <span>{{item.Differencefrequencystring }}</span>
             </div>
           </li>
         </div>
         <div class="contractCostMain" v-if="!Contractoptions.length !== 0">
           <div class="contractCostMainTitle">免租期</div>
           <div class="contractClassify">
-            <span>抽成类型</span>
-            <span>支付周期</span>
-            <span>补差周期</span>
-            <span>补差方式</span>
+            <span>费项名称</span>
+            <span>铺位编号</span>
+            <span>减免方式</span>
+            <span>免租值</span>
           </div>
-          <li>
+          <li v-for="(item, index) in Contractoptions" :key="index">
             <div class="contractSomeList">
-              <span>纯抽成</span>
+              <span>{{item.Itemname}}</span>
               <span>1月付</span>
               <span>半年</span>
               <span>信用卡</span>
@@ -168,23 +173,34 @@
         <div class="contractCostMain" v-if="!ContractDeposit.length !== 0">
           <div class="contractCostMainTitle">保证金</div>
           <div class="contractClassify">
-            <span>抽成类型</span>
-            <span>支付周期</span>
-            <span>补差周期</span>
-            <span>补差方式</span>
+            <span>费项名称</span>
+            <span>付款日期</span>
+            <span>保证金</span>
           </div>
-          <li>
+          <li v-for="(item, index) in ContractDeposit" :key="index">
             <div class="contractSomeList">
-              <span>纯抽成</span>
-              <span>1月付</span>
-              <span>半年</span>
-              <span>信用卡</span>
+              <span>{{item.Itemname}}</span>
+              <span>{{item.Documentdate | dataFrm('YYYY-MM-DD')}}</span>
+              <span>{{item.Documentamt | formatNumber}}</span>
             </div>
           </li>
         </div>
       </section>
       <section class="contractOther">
         <div class="contractTitle" id="other">其他</div>
+        <section class="otherMain">
+          <div class="contractCostMainTitle">权利条款</div>
+          <div class="contractClassify">
+            <span>条款名称</span>
+            <span>条款内容</span>
+          </div>
+          <li v-for="(item, index) in Contractoptions" :key="index">
+            <div class="contractSomeList">
+              <span>{{item.Description}}</span>
+              <span>{{item.Remark }}</span>
+            </div>
+          </li>
+        </section>
         <section class="otherMain">
           <div class="contractCostMainTitle">附件</div>
           <div class="otherfujianLi">
@@ -208,8 +224,8 @@ export default {
   name: "contractList",
   data() {
     return {
-      index: 0,
-      infoList: ["合同主体", "费用信息", "费用信息"],
+      tabIndex: 0,
+      infoList: ["合同主体", "费用信息", "其他"],
       scrolled: "",
       contractData: {},
       Contactmain: [],
@@ -231,28 +247,44 @@ export default {
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
   },
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
   created() {
     this.onLoad();
   },
   methods: {
-    goAnchor(selector) {
+    goAnchor(data) {
+      let selector = "";
+      switch (data) {
+        case "合同主体":
+          selector = "#main";
+          break;
+        case "费用信息":
+          selector = "#const";
+          break;
+        case "其他":
+          selector = "#other";
+          break;
+      }
       this.$el
         .querySelector(selector)
         .scrollIntoView({ block: "start", behavior: "smooth" });
     },
-    // handleScroll() {
-    //   //页面滚动高度
-    //   console.log(document.getElementById("const").offsetTop);
-    //   this.scrolled =
-    //     document.documentElement.scrollTop || document.body.scrollTop;
-    //   if (this.scrolled === 90) {
-    //     this.index = 0;
-    //   } else if (this.scrolled == document.getElementById("const").offsetTop) {
-    //     this.index = 1;
-    //   } else if (this.scrolled == document.getElementById("other").offsetTop) {
-    //     this.index = 2;
-    //   }
-    // },
+    handleScroll: _.debounce(function() {
+      //页面滚动高度
+      this.scrolled =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      if (this.scrolled == 0) {
+        this.tabIndex = 0;
+      } else if (this.scrolled > document.getElementById("const").offsetTop) {
+        this.tabIndex = 1;
+      } else if (this.scrolled > document.getElementById("other").offsetTop) {
+        this.tabIndex = 2;
+      }
+    }, 100),
     changeDetail() {
       //改变费用显示状态
       this.hasStatus = !this.hasStatus;

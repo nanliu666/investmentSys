@@ -1,9 +1,21 @@
 <template>
   <div>
-    <x-header :left-options="{backText: ''}" class="header">
+    <x-header :left-options="{backText: ''}" class="header" v-if="!hasSearch">
       合同管理
-      <i class="iconfont icon-fangdajing" slot="right" @click="search"></i>
+      <i class="iconfont icon-fangdajing" slot="right" @click="openSearch"></i>
     </x-header>
+    <section class="searchPart" v-if="hasSearch">
+      <x-input
+        type="text"
+        placeholder="请输入合同关键字"
+        v-model="enterText"
+        @on-enter="onEnter"
+        class="searchInput fs-search"
+      >
+        <i class="iconfont icon-fangdajing" slot="right" @click="onEnter"></i>
+      </x-input>
+      <div class="cancel" @click="searchCancel">取消</div>
+    </section>
     <section class="filter">
       <div class="projectFilter">
         <span class="filterTitle" @click="openProjectStatus">项目</span>
@@ -112,7 +124,7 @@
   </div>
 </template>
 <script>
-import { XHeader, Search, Popup } from "vux";
+import { XHeader, Search, Popup, XInput } from "vux";
 import { GetContractMgmt, GetCompanyies, GetPropertys } from "@/axios/api";
 // 引入下拉组件
 import MescrollVue from "mescroll.js/mescroll.vue";
@@ -121,6 +133,7 @@ export default {
   name: "contractList",
   data() {
     return {
+      enterText: "",
       projectInit: {},
       companysList: [],
       companysSelect: "",
@@ -128,7 +141,9 @@ export default {
       PropertysSelect: "",
       showMask: false,
       hasprojectStatus: false,
-      hasGotop: true,
+      hasSearch: false,
+      hasStatus: false,
+      FilterCond: {},
       mescroll: null, // mescroll实例对象
       mescrollDown: {}, //下拉刷新的配置. (如果下拉刷新和上拉加载处理的逻辑是一样的,则mescrollDown可不用写了)
       mescrollUp: {
@@ -156,8 +171,6 @@ export default {
       },
       dataList: [], //所有的合同列表数据
 
-      hasSearch: false,
-      hasStatus: false,
       hasToast: false,
       statusDetail: {
         all: "所有状态",
@@ -174,12 +187,12 @@ export default {
         Approved: "已审核",
         Tempsave: "暂存"
       },
-      statusList: [], //状态列表
-      FilterCond: {}
+      statusList: [] //状态列表
     };
   },
   components: {
     XHeader,
+    XInput,
     Popup,
     Search,
     MescrollVue
@@ -196,7 +209,20 @@ export default {
     next();
   },
   methods: {
-    search() {
+    onEnter(value) {
+      console.log("输入的值", this.enterText);
+      this.FilterCond = {
+        //todo 项目不能模糊搜索
+        Filter: `Keyword.like.${this.enterText}`
+      };
+      this.mescroll.resetUpScroll();
+
+      console.log("传输值", this.FilterCond);
+    },
+    searchCancel() {
+      this.hasSearch = !this.hasSearch;
+    },
+    openSearch() {
       this.hasSearch = !this.hasSearch;
     },
     openStatus() {
@@ -304,7 +330,6 @@ export default {
         }
       };
       Object.assign(data.Urlpara, this.FilterCond);
-      console.log("传递的数据", this.FilterCond.Filter);
       GetContractMgmt(data)
         .then(res => {
           // 请求的列表数据
@@ -335,7 +360,6 @@ export default {
           Propertyid: data.Propertyid
         }
       };
-      console.log(requestData);
       this.$router.push({
         name: "contractDetail",
         params: { id: requestData.Contractmgmt.Rentalid, data: requestData }
@@ -390,6 +414,25 @@ export default {
 
 .header {
   box-shadow: 0 0px 0px 0 #fff !important; //重叠头部
+}
+
+.searchPart {
+  padding: 0 40px;
+  @include fj(space-between);
+  background-color: #fff;
+  .fs-search {
+    height: 36px;
+    border-radius: 18px;
+    margin: 5px 0;
+  }
+  .searchInput {
+    border: 1px solid #ccc;
+    width: 88%;
+  }
+  .cancel {
+    @include sc(30px, rgb(105, 167, 254));
+    @include flexCenter;
+  }
 }
 .filter {
   background-color: #fff;
@@ -531,27 +574,15 @@ export default {
       }
       //审批中
       .Submitted {
-        background: linear-gradient(
-          to left,
-          rgba(123, 110, 240, 1),
-          rgba(202, 154, 210, 1)
-        );
+        background: rgb(105, 167, 254);
       }
       //执行中
       .Execing {
-        background: linear-gradient(
-          to left,
-          rgba(203, 220, 234, 1),
-          rgba(173, 188, 198, 1)
-        );
+        background: rgba(98, 198, 255, 1);
       }
       //变更中
       .Voing {
-        background: linear-gradient(
-          to left,
-          rgba(203, 220, 234, 1),
-          rgba(173, 188, 198, 1)
-        );
+        background: rgb(149, 154, 255);
       }
       //已到期
       .Expired {
@@ -595,11 +626,7 @@ export default {
       }
       //已审核
       .Approved {
-        background: linear-gradient(
-          to left,
-          rgba(203, 220, 234, 1),
-          rgba(173, 188, 198, 1)
-        );
+        background: rgb(59, 222, 186);
       }
       //暂存
       .Tempsave {
