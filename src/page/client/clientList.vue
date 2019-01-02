@@ -22,8 +22,8 @@
           :key="index"
           @click="getDeatil(item)"
         >
-          <span>{{item | strSubstring}}</span>
-          <span>{{item}}</span>
+          <span>{{item.Name | strSubstring}}</span>
+          <span>{{item.Name}}</span>
         </li>
       </div>
     </section>
@@ -114,11 +114,10 @@ export default {
       const data = {
         Urlpara: {
           Pageindex: 1,
-          Pageindex: 10
+          Pagesize: 300
         }
       };
       GetCustomer(data).then(res => {
-        // console.log(JSON.parse(res.Content))
         //对中文名字按照字母排序
         let nameArr = [];
         let nameArr1 = [];
@@ -135,24 +134,28 @@ export default {
         let A = this._.groupBy(nameArr, function(item) {
           return pinyinUtil.getFirstLetter(item).slice(0, 1);
         });
-        const alphabetTest = /^[a-zA-Z]+$/; //测试字符是否只含有英文符号
         Object.keys(A).map((item, index) => {
-          // if(alphabetTest.test(item)) {
           this.actualAlphabetList.push(item);
-          // }
         });
         this.nameList = Object.values(A);
       });
     },
-    getResult(val) {
+    getResult: _.debounce(function(val) {
       if (!!val) {
-        this.searchList = this._.filter(this.allNameList, item => {
-          return item.includes(val);
+        const data = {
+          Urlpara: {
+            Pageindex: 1,
+            Pagesize: 40,
+            Filter: `Keyword.like.${val}`
+          }
+        };
+        GetCustomer(data).then(res => {
+          this.searchList = JSON.parse(res.Content);
         });
       } else if (val === "") {
         this.searchList = [];
       }
-    },
+    }, 800),
     getFocus() {
       this.hasSearch = !this.hasSearch;
     },
