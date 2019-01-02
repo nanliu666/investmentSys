@@ -44,5 +44,6 @@ export default {
     //覆盖搜索居中问题
     @include flexCenter;
   }
+
 }
 </style>
