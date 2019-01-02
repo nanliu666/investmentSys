@@ -175,7 +175,7 @@ export default {
         Tempsave: "暂存"
       },
       statusList: [], //状态列表
-      Filter: {}
+      FilterCond: {}
     };
   },
   components: {
@@ -212,7 +212,7 @@ export default {
       //   //todo 需要后端补充，公司名称，显示使用公司ID
       //   this.companysSelect = this.projectInit.Companyid;
       //   this.PropertysSelect = this.projectInit.Propertyname;
-      //   this.Filter = {
+      //   this.FilterCond = {
       //     Filter: `Companyid.=.${this.projectInit.Companyid}&Propertyid.=.${
       //       this.projectInit.Propertyid
       //     }`
@@ -247,10 +247,21 @@ export default {
       this.PropertysSelect = data.Propertyname;
       localStorage.setItem("projectSelected", JSON.stringify(data));
       //选择项目，自定义搜索字段
-
-      this.Filter = {
-        Filter: `Companyid.=.${data.Companyid}&Propertyid.=.${data.Propertyid}`
-      };
+      // 拼接项目和状态两个的ID ---TODO可以优化写法！
+      this.FilterCond = !!this.FilterCond.Filter
+        ? {
+            //存在状态
+            Filter:
+              `Companyid.=.${data.Companyid}&Propertyid.=.${data.Propertyid}` +
+              "&" +
+              this.FilterCond.Filter
+          }
+        : {
+            //不存在状态
+            Filter: `Companyid.=.${data.Companyid}&Propertyid.=.${
+              data.Propertyid
+            }`
+          };
       this.mescroll.resetUpScroll();
       this.hasprojectStatus = !this.hasprojectStatus;
     },
@@ -260,13 +271,22 @@ export default {
     },
     getStatus(key) {
       //点击状态，选择状态，自定义搜索字段
-
       if (key === "all") {
-        this.Filter = {};
+        this.FilterCond = !!this.FilterCond.Filter
+          ? {
+              // 存在公司项目
+              Filter: this.FilterCond.Filter
+            }
+          : {};
       } else {
-        this.Filter = {
-          Filter: `Contractstatushow.=.${key}`
-        };
+        this.FilterCond = !!this.FilterCond.Filter
+          ? {
+              Filter:
+                this.FilterCond.Filter + "&" + `Contractstatushow.=.${key}`
+            }
+          : {
+              Filter: `Contractstatushow.=.${key}`
+            };
       }
       this.mescroll.resetUpScroll();
     },
@@ -283,13 +303,13 @@ export default {
           Pagesize: page.size
         }
       };
-      Object.assign(data.Urlpara, this.Filter);
-      console.log(data)
+      Object.assign(data.Urlpara, this.FilterCond);
+      console.log("传递的数据", this.FilterCond.Filter);
       GetContractMgmt(data)
         .then(res => {
           // 请求的列表数据
           let arr = JSON.parse(res.Content);
-          console.log(arr);
+          // console.log(arr);
           if (arr.length === 0) {
             this.hasToast = !this.hasToast;
           }
