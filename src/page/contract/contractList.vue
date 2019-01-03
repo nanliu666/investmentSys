@@ -128,7 +128,8 @@ import { XHeader, Search, Popup, XInput } from "vux";
 import { GetContractMgmt, GetCompanyies, GetPropertys } from "@/axios/api";
 // 引入下拉组件
 import MescrollVue from "mescroll.js/mescroll.vue";
-import imgSrc from "../../assets/images/gototop.png";
+import imgSrc from "../../assets/images/分组.png";
+import topimgSrc from "../../assets/images/gototop.png";
 export default {
   name: "contractList",
   data() {
@@ -158,7 +159,7 @@ export default {
         noMoreSize: 1, //如果列表已无数据,可设置列表总数大于5才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看
         toTop: {
           //回到顶部按钮
-          src: imgSrc, //图片路径,默认null,支持网络图
+          src: topimgSrc, //图片路径,默认null,支持网络图
           warpClass: "mescroll-totop",
           offset: 1000 //列表滚动1000px才显示回到顶部按钮
         },
@@ -274,20 +275,10 @@ export default {
       localStorage.setItem("projectSelected", JSON.stringify(data));
       //选择项目，自定义搜索字段
       // 拼接项目和状态两个的ID ---TODO可以优化写法！
-      this.FilterCond = !!this.FilterCond.Filter
-        ? {
-            //存在状态
-            Filter:
-              `Companyid.=.${data.Companyid}&Propertyid.=.${data.Propertyid}` +
-              "&" +
-              this.FilterCond.Filter
-          }
-        : {
-            //不存在状态
-            Filter: `Companyid.=.${data.Companyid}&Propertyid.=.${
-              data.Propertyid
-            }`
-          };
+      this.FilterCond = {
+        //不存在状态
+        Filter: `Companyid.=.${data.Companyid}&Propertyid.=.${data.Propertyid}`
+      };
       this.mescroll.resetUpScroll();
       this.hasprojectStatus = !this.hasprojectStatus;
     },
@@ -298,21 +289,11 @@ export default {
     getStatus(key) {
       //点击状态，选择状态，自定义搜索字段
       if (key === "all") {
-        this.FilterCond = !!this.FilterCond.Filter
-          ? {
-              // 存在公司项目
-              Filter: this.FilterCond.Filter
-            }
-          : {};
+        this.FilterCond = {};
       } else {
-        this.FilterCond = !!this.FilterCond.Filter
-          ? {
-              Filter:
-                this.FilterCond.Filter + "&" + `Contractstatushow.=.${key}`
-            }
-          : {
-              Filter: `Contractstatushow.=.${key}`
-            };
+        this.FilterCond = {
+          Filter: `Contractstatushow.=.${key}`
+        };
       }
       this.mescroll.resetUpScroll();
     },
@@ -332,6 +313,7 @@ export default {
       Object.assign(data.Urlpara, this.FilterCond);
       GetContractMgmt(data)
         .then(res => {
+          console.log(res);
           // 请求的列表数据
           let arr = JSON.parse(res.Content);
           // console.log(arr);
@@ -342,9 +324,11 @@ export default {
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表
           this.dataList = this._.uniqBy(this.dataList.concat(arr), "Rentalid");
+          console.log("拉回来的数组数据=>", arr.length);
+
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
-            mescroll.endSuccess(arr.length);
+            mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
           });
         })
         .catch(e => {

@@ -176,7 +176,7 @@
       </section>
       <section class="contractOther">
         <div class="contractTitle" id="other">其他</div>
-        <section class="otherMain">
+        <section class="otherMain" v-if="Contractoptions.length !== 0">
           <div class="otherMainTitle">权利条款</div>
           <div class="otherMainClassify">
             <span>条款名称</span>
@@ -189,7 +189,7 @@
             </div>
           </li>
         </section>
-        <section class="otherMain">
+        <section class="otherMain" v-if="Contractenclosure.length !== 0">
           <div class="otherMainTitle">附件</div>
           <div class="otherfujianLi" v-for="(item) in Contractenclosure" :key="item.Guid">
             <div>
@@ -330,7 +330,11 @@ export default {
         id: data.Guid
       };
       //TODO 补充预览
-      window.open(`http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=${data.Guid}`)
+      window.open(
+        `http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=${
+          data.Guid
+        }`
+      );
     },
     goAnchor(data) {
       let selector = "";
@@ -499,11 +503,11 @@ export default {
         padding: 30px 64px;
         @include fj(space-between);
         span:first-child {
-          width: 20%;
+          width: 40%;
           @include ellipsis;
         }
         span:last-child {
-          width: 80%;
+          width: 60%;
           @include ellipsis;
         }
       }
