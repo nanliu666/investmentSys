@@ -7,9 +7,27 @@
 let dataFrm = (date, format) => {
   return moment(date).format(format)
 }
-//截取第一个字符串
-let strSubstring = str => {
-  return str.substring(0, 1)
+
+//截取指定字符串
+let strSubstring = (str, strIndex) => {
+  return str.substring(0, strIndex)
+}
+
+//文件名称处理,获取文件名称
+let splitFileName = (text) => {
+  var pattern = /\.{1}[a-z]{1,}$/;
+  if (pattern.exec(text) !== null) {
+    return (text.slice(0, pattern.exec(text).index));
+  } else {
+    return text;
+  }
+}
+//文件名称处理,获取文件后缀
+let postfixFileName = (text) => {
+  let fileName = text.lastIndexOf("."); //取到文件名开始到最后一个点的长度
+  let fileNameLength = text.length; //取到文件名长度
+  let fileFormat = text.substring(fileName + 1, fileNameLength); //截
+  return fileFormat
 }
 
 //格式化数字 逢千加逗号
@@ -52,4 +70,6 @@ export {
   dataFrm,
   strSubstring,
   formatNumber,
+  postfixFileName,
+  splitFileName
 }
