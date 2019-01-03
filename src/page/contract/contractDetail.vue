@@ -19,18 +19,6 @@
             @click.native="goAnchor(item)"
           >{{item}}</tab-item>
         </tab>
-        <!-- <tab
-          :line-width="1"
-          custom-bar-width="60px"
-          bar-active-color="rgba(105, 167, 254, 1)"
-          active-color="rgba(30, 30, 30, 1)"
-          default-color="rgba(136, 136, 136, 1)"
-          ref="tab"
-        >
-          <tab-item selected @on-item-click="goAnchor('#main')">合同主体</tab-item>
-          <tab-item @on-item-click="goAnchor('#const')">费用信息</tab-item>
-          <tab-item @on-item-click="goAnchor('#other')">其他</tab-item>
-        </tab>-->
       </sticky>
     </div>
     <div class="vux-sticky-fill" style="height:44px;"></div>
@@ -51,7 +39,7 @@
         </li>
         <li class="contractLi">
           <span>租赁单元</span>
-          <span>{{item.Unitdesc}}</span>
+          <span class="Rentalid">{{item.Unitdesc}}</span>
         </li>
         <li class="contractLi">
           <span>合同开始日期</span>
@@ -67,7 +55,7 @@
         </li>
         <li class="contractLi">
           <span>合同金额</span>
-          <span>{{item.Contractamt | formatNumber}}</span>
+          <span>￥{{item.Contractamt | formatNumber}}</span>
         </li>
         <li class="contractLi">
           <span>净金额（天/平方米/元)</span>
@@ -93,25 +81,25 @@
             <span>费用标准</span>
             <span>计费方式</span>
           </div>
-          <li v-for="(item, index) in Contractcharges" :key="index">
+          <li v-for="(item) in Contractcharges" :key="item.Rentalid">
             <div class="contractClassifyList" @click="changeDetail">
-              <span>{{item.Itemname || ''}}</span>
+              <span>{{item.Itemname || '' || 111}}</span>
               <span>{{item.Billingfrequencystring|| ''}}</span>
               <span>{{item.Rentstandardtypestring|| ''}}</span>
               <span>{{item.Calculatemethodstring|| ''}}</span>
             </div>
             <div class="iconRow" @click="changeDetail">
-              <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus"></x-icon>
-              <x-icon type="ios-arrow-up" size="25" v-show="hasStatus"></x-icon>
+              <x-icon type="ios-arrow-down" size="25" v-show="hasStatus"></x-icon>
+              <x-icon type="ios-arrow-up" size="25" v-show="!hasStatus"></x-icon>
             </div>
             <div class="contractClassifyDetail" v-if="!hasStatus">
               <li>
                 <span>付款类型:</span>
-                <span></span>
+                <span>{{item.PriceModeString || ''}}</span>
               </li>
               <li>
                 <span>付款日:</span>
-                <span>每月{{item.Payday|| ''}}号</span>
+                <span>{{item.Payday|| ''}}</span>
               </li>
               <li>
                 <span>首期金额:</span>
@@ -136,7 +124,7 @@
             </div>
           </li>
         </div>
-        <div class="contractCostMain" v-if="!Contractcommission.length !== 0">
+        <div class="contractCostMain" v-if="Contractcommission.length !== 0">
           <div class="contractCostMainTitle">抽成</div>
           <div class="contractClassify">
             <span>抽成类型</span>
@@ -146,14 +134,14 @@
           </div>
           <li v-for="(item, index) in Contractcommission" :key="index">
             <div class="contractSomeList">
-              <span>{{item.Rentstandardtypestring}}</span>
-              <span>{{item.Rentstandardtypestring | dataFrm('YYYY-MM-DD')}}</span>
-              <span>{{item.Differencemethodstring | dataFrm('YYYY-MM-DD')}}</span>
-              <span>{{item.Differencefrequencystring }}</span>
+              <span>{{item.Rentstandardtypestring || '' }}</span>
+              <span>{{item.Rentstandardtypestring || '' }}</span>
+              <span>{{item.Differencemethodstring || '' }}</span>
+              <span>{{item.Differencefrequencystring || '' }}</span>
             </div>
           </li>
         </div>
-        <div class="contractCostMain" v-if="!Contractoptions.length !== 0">
+        <div class="contractCostMain" v-if="Contractrentfree.length !== 0">
           <div class="contractCostMainTitle">免租期</div>
           <div class="contractClassify">
             <span>费项名称</span>
@@ -161,16 +149,16 @@
             <span>减免方式</span>
             <span>免租值</span>
           </div>
-          <li v-for="(item, index) in Contractoptions" :key="index">
+          <li v-for="(item, index) in Contractrentfree" :key="index">
             <div class="contractSomeList">
-              <span>{{item.Itemname}}</span>
-              <span>1月付</span>
+              <span>{{item.Billitem}}</span>
+              <span>{{item.Unitno}}</span>
               <span>半年</span>
-              <span>信用卡</span>
+              <span>{{item.Amount | formatNumber}}</span>
             </div>
           </li>
         </div>
-        <div class="contractCostMain" v-if="!ContractDeposit.length !== 0">
+        <div class="contractCostMain" v-if="ContractDeposit.length !== 0">
           <div class="contractCostMainTitle">保证金</div>
           <div class="contractClassify">
             <span>费项名称</span>
@@ -189,27 +177,104 @@
       <section class="contractOther">
         <div class="contractTitle" id="other">其他</div>
         <section class="otherMain">
-          <div class="contractCostMainTitle">权利条款</div>
-          <div class="contractClassify">
+          <div class="otherMainTitle">权利条款</div>
+          <div class="otherMainClassify">
             <span>条款名称</span>
             <span>条款内容</span>
           </div>
           <li v-for="(item, index) in Contractoptions" :key="index">
             <div class="contractSomeList">
-              <span>{{item.Description}}</span>
+              <span>{{item.Description }}</span>
               <span>{{item.Remark }}</span>
             </div>
           </li>
         </section>
         <section class="otherMain">
-          <div class="contractCostMainTitle">附件</div>
-          <div class="otherfujianLi">
-            <span>月亮湾意向书</span>
-            <button>查看</button>
-          </div>
-          <div class="otherfujianLi">
-            <span>月亮湾意向书</span>
-            <button>查看</button>
+          <div class="otherMainTitle">附件</div>
+          <div class="otherfujianLi" v-for="(item) in Contractenclosure" :key="item.Guid">
+            <div>
+              <span>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-show="postfixFileName(item.Documentname)  ===( 'doc' || 'docx')"
+                >
+                  <use xlink:href="#icon-doc"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  === 'pdf'"
+                >
+                  <use xlink:href="#icon-PDFtubiao"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  === ('xls' || 'xlsx')"
+                >
+                  <use xlink:href="#icon-excel"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  === ('jpg' || 'jpeg')"
+                >
+                  <use xlink:href="#icon-jpg"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  === 'png'"
+                >
+                  <use xlink:href="#icon-PNG"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  === 'gif'"
+                >
+                  <use xlink:href="#icon-GIF"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  === ('ppt' || 'pptx')"
+                >
+                  <use xlink:href="icon-ppt"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  === 'dwg'"
+                >
+                  <use xlink:href="#icon-DWG"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  === 'txt'"
+                >
+                  <use xlink:href="#icon-filetext"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  === 'rar'"
+                >
+                  <use xlink:href="#icon-RARtubiao"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  === 'zip'"
+                >
+                  <use xlink:href="#icon-RARtubiao"></use>
+                </svg>
+              </span>
+              <span>{{item.Documentname | splitFileName}}</span>
+            </div>
+            <button @click="getContractenclosure(item)">查看</button>
           </div>
         </section>
       </section>
@@ -219,7 +284,7 @@
 </template>
 <script>
 import { XHeader, Tab, TabItem, Sticky } from "vux";
-import { GetContractMgmtDetail } from "@/axios/api";
+import { GetContractMgmtDetail, DocumentLibrary } from "@/axios/api";
 export default {
   name: "contractList",
   data() {
@@ -233,10 +298,10 @@ export default {
       ContractGuarantee: [],
       Contractcharges: [],
       Contractcommission: [],
-      Contractenclosure: "",
+      Contractenclosure: [],
       Contractoptions: [],
       Contractrentfree: [],
-      hasStatus: false,
+      hasStatus: true,
       disabled:
         typeof navigator !== "undefined" &&
         /iphone/i.test(navigator.userAgent) &&
@@ -254,6 +319,19 @@ export default {
     this.onLoad();
   },
   methods: {
+    postfixFileName(text) {
+      let fileName = text.lastIndexOf("."); //取到文件名开始到最后一个点的长度
+      let fileNameLength = text.length; //取到文件名长度
+      let fileFormat = text.substring(fileName + 1, fileNameLength); //截取
+      return fileFormat;
+    },
+    getContractenclosure(data) {
+      const jsonData = {
+        id: data.Guid
+      };
+      //TODO 补充预览
+      window.open(`http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=${data.Guid}`)
+    },
     goAnchor(data) {
       let selector = "";
       switch (data) {
@@ -277,12 +355,12 @@ export default {
         window.pageYOffset ||
         document.documentElement.scrollTop ||
         document.body.scrollTop;
-      if (this.scrolled == 0) {
-        this.tabIndex = 0;
-      } else if (this.scrolled > document.getElementById("const").offsetTop) {
+      if (this.scrolled > document.getElementById("const").offsetTop) {
         this.tabIndex = 1;
       } else if (this.scrolled > document.getElementById("other").offsetTop) {
         this.tabIndex = 2;
+      } else {
+        this.tabIndex = 0;
       }
     }, 100),
     changeDetail() {
@@ -298,9 +376,15 @@ export default {
         this.ContractGuarantee = JSON.parse(res.ContractGuarantee);
         this.Contractcharges = JSON.parse(res.Contractcharges); //管理费用
         this.Contractcommission = JSON.parse(res.Contractcommission); //抽成
-        this.Contractenclosure = res.Contractenclosure; //附件
+        this.Contractenclosure = JSON.parse(res.Contractenclosure); //附件
         this.Contractoptions = JSON.parse(res.Contractoptions); //权利条款
-        this.Contractrentfree = JSON.parse(res.Contractoptions); //免租期
+        this.Contractrentfree = JSON.parse(res.Contractrentfree); //免租期
+        // console.log(
+        //   this.$options.filters["postfixFileName"](
+        //     this.Contractenclosure[0].Documentname
+        //   )
+        // );
+        // console.log("附件=>",this.postfixFileName(this.Contractenclosure.Documentname) );
       });
     }
   }
@@ -356,7 +440,7 @@ export default {
         }
       }
       .contractClassifyList {
-        padding: 30px 0 30px 24px;
+        padding: 30px 24px;
         @include fj(space-between);
         span {
           @include flexCenter;
@@ -365,7 +449,7 @@ export default {
       .iconRow {
         //箭头定位
         position: absolute;
-        right: -44px;
+        right: -24px;
         top: 30px;
       }
     }
@@ -396,18 +480,45 @@ export default {
 .contractOther {
   .otherMain {
     background-color: #fff;
-    .contractCostMainTitle {
+    .otherMainTitle {
       @include sc(32px, rgba(30, 30, 30, 1));
       padding: 26px 40px;
       border-bottom: 2px solid rgba(244, 246, 248, 1);
     }
+    .otherMainClassify {
+      background-color: rgba(243, 247, 253, 1);
+      @include fj(space-between);
+      padding: 18px 24px;
+      margin: 0 40px;
+      span {
+        @include sc(28px, rgba(136, 136, 136, 1));
+      }
+    }
+    li {
+      .contractSomeList {
+        padding: 30px 64px;
+        @include fj(space-between);
+        span:first-child {
+          width: 20%;
+          @include ellipsis;
+        }
+        span:last-child {
+          width: 80%;
+          @include ellipsis;
+        }
+      }
+    }
     .otherfujianLi {
       @include fj(space-between);
       border-bottom: 2px solid rgba(244, 246, 248, 1);
-
       padding: 26px 40px;
-      span {
-        @include sc(30px, rgba(30, 30, 30, 1));
+      div {
+        @include fd(row);
+        span {
+          @include sc(30px, rgba(30, 30, 30, 1));
+          @include flexHCenter;
+          margin-right: 6px;
+        }
       }
       button {
         height: 50px;
