@@ -29,6 +29,13 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
+//绝对路径
+Vue.prototype.toAbsURL = function (url) {
+  var a = document.createElement('a');
+  a.href = url;
+  return a.href;
+};
+
 //页面位置保存
 Vue.use(VueRouter)
 const router = new VueRouter({
