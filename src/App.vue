@@ -14,7 +14,22 @@
 
 <script>
 export default {
-  name: "App"
+  name: "App",
+  mounted() {
+    var script = document.createElement("script");
+    script.setAttribute("type", "text/javascript");
+    if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+      script.setAttribute("src", "./scripts/ios_cordova.js");
+    } else {
+      script.setAttribute("src", "./scripts/android_cordova.js");
+    }
+    var heads = document.getElementsByTagName("head");
+    if (heads.length) {
+      heads[0].appendChild(script);
+    } else {
+      document.documentElement.appendChild(script);
+    }
+  }
 };
 </script>
 <style lang="scss">
@@ -44,6 +59,12 @@ export default {
     //覆盖搜索居中问题
     @include flexCenter;
   }
-
+  .icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+  }
 }
 </style>
