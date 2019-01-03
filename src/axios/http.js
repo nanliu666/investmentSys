@@ -1,18 +1,14 @@
 // 对请求进行配置
 import axios from "axios"
-import QS from "qs"
-
 // 环境切换
 if (process.env.NODE_ENV == 'development') {
-  axios.defaults.baseURL = 'http://10.122.10.244:82/ydzs/WebService/MobileMerchants/';
+  axios.defaults.baseURL = 'http://10.122.10.244:82/ydzs/';
 } else if (process.env.NODE_ENV == 'production') {
   // axios.defaults.baseURL = 'https://www.production.com';
 }
-
 axios.defaults.timeout = 10000;
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 axios.defaults.headers.common['Authorization'] = 'Bearer 29ff4d69bd3243de951e79169ce193e3'; // token写死了
-
 //请求响应器
 axios.interceptors.response.use(
   response => {
@@ -29,7 +25,6 @@ axios.interceptors.response.use(
     // 错误处理
   }
 )
-
 /**
  * get方法，对应get请求
  * @param {String} url [请求的url地址]
@@ -41,10 +36,10 @@ export function get(url, params) {
         params: params
       })
       .then(res => {
-        resolve(res.data);
+        resolve(res);
       })
       .catch(err => {
-        reject(err.data)
+        reject(err)
       })
   });
 }
