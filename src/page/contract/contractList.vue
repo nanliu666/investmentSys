@@ -63,20 +63,22 @@
           </section>
         </popup>
       </div>
-      <div class="projectStatus" @click="openStatus">
-        <span class="filterTitle">状态</span>
-        <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus"></x-icon>
-        <x-icon type="ios-arrow-up" size="25" v-show="hasStatus"></x-icon>
+      <div class="projectStatus">
+        <span class="filterTitle" @click="openStatus">状态</span>
+        <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon>
+        <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon>
         <!-- 选择状态 -->
-        <transition
-          name="custom-classes-transition"
-          enter-active-class="animated bounceInDown"
-          leave-active-class="animated bounceOutRight"
-        >
-          <section v-if="hasStatus" class="status">
-            <a v-for="(value, key) in statusDetail" :key="key" @click="getStatus(key)">{{value}}</a>
-          </section>
-        </transition>
+        <section v-if="hasStatus" class="status">
+          <div class="statusTop">
+            <div v-for="(value, key) in statusDetail" :key="key">
+              <span
+                :class="activeClass === value ? 'statusActive' : ''"
+                @click="getStatusDetail(key, value)"
+              >{{value}}</span>
+            </div>
+          </div>
+          <button class="ensureButton" @click="getStatus">确定</button>
+        </section>
       </div>
     </section>
     <!--mescroll滚动区域的基本结构-->
@@ -134,6 +136,7 @@ export default {
   name: "contractList",
   data() {
     return {
+      activeClass: "所有状态",
       enterText: "",
       projectInit: {},
       companysList: [],
@@ -186,6 +189,7 @@ export default {
         Approved: "已审核",
         Tempsave: "暂存"
       },
+      statusDetailSelect: ""
     };
   },
   components: {
@@ -283,16 +287,22 @@ export default {
       this.companysSelect = "";
       this.PropertysSelect = "";
     },
-    getStatus(key) {
+    getStatusDetail(key, value) {
+      this.statusDetailSelect = key;
+      this.activeClass = value;
+      console.log(this.activeClass)
+    },
+    getStatus() {
       //点击状态，选择状态，自定义搜索字段
-      if (key === "all") {
+      if (this.statusDetailSelect === "all") {
         this.FilterCond = {};
       } else {
         this.FilterCond = {
-          Filter: `Contractstatushow.=.${key}`
+          Filter: `Contractstatushow.=.${this.statusDetailSelect}`
         };
       }
       this.mescroll.resetUpScroll();
+      this.hasStatus = !this.hasStatus;
     },
     // mescroll组件初始化的回调,可获取到mescroll对象 (如果this.mescroll并没有使用到,可不用写mescrollInit)
     mescrollInit(mescroll) {
@@ -315,7 +325,6 @@ export default {
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表
           this.dataList = this._.uniqBy(this.dataList.concat(arr), "Rentalid");
-          console.log("拉回来的数组数据=>", arr.length);
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
             mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
@@ -454,7 +463,7 @@ export default {
         }
         .active {
           background-color: rgba(105, 167, 254, 0.08);
-          border: 2px solid rgba(105, 167, 254, 0.3);
+          border: 1px solid rgba(105, 167, 254, 0.3);
           @include sc(28px, rgba(105, 167, 254, 1));
         }
         .iActive {
@@ -482,22 +491,42 @@ export default {
 
   //状态选择
   .status {
-    @include borderStyle(#f4f6f8);
     position: absolute;
     z-index: 100;
     right: 4px;
-    top: 154px;
-    width: 50%;
+    top: 156px;
+    width: 100%;
     background-color: #fff;
     @include fd(column);
-    a {
-      @include sc(28px, rgba(30, 30, 30, 1));
-      width: 100%;
-      @include flexCenter;
-      padding: 10px;
-      &:hover {
-        background-color: rgba(105, 167, 254, 1);
+
+    .statusTop {
+      display: flex;
+      flex-flow: row wrap;
+      div {
+        width: 50%;
+        @include flexCenter;
+        span {
+          display: inline-block;
+          @include flexCenter;
+          @include sc(28px, rgba(30, 30, 30, 1));
+          border: 1px solid rgba(235, 237, 239, 1);
+          @include wh(240px, 72ox);
+          padding: 16px 60px;
+          margin-top: 25px;
+        }
       }
+      .statusActive {
+        color: rgba(105, 167, 254, 1);
+        background-color: rgba(105, 167, 254, 0.05);
+        border: 1px solid rgba(105, 167, 254, 0.5);
+      }
+    }
+    .ensureButton {
+      @include wh(100%, 88px);
+      margin-top: 20px;
+      @include flexCenter;
+      background-color: rgba(105, 167, 254, 1);
+      @include sc(34px, rgba(255, 255, 255, 1));
     }
   }
 }
