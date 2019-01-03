@@ -50,7 +50,10 @@ export default {
   .upwarp-nodata {
     @include sc(28px, rgba(136, 136, 136, 1));
   }
-
+  .empty-tip {
+    margin-top: 20px;
+    @include sc(30px, rgba(136, 136, 136, 1));
+  }
   .weui-input {
     //覆盖input样式
     color: #757575;
