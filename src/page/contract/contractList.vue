@@ -120,7 +120,7 @@
         </div>
       </li>
     </mescroll-vue>
-    <p id="NoData" v-show="hasToast"></p>
+    <p id="NoData"></p>
   </div>
 </template>
 <script>
@@ -171,8 +171,6 @@ export default {
         }
       },
       dataList: [], //所有的合同列表数据
-
-      hasToast: false,
       statusDetail: {
         all: "所有状态",
         Active: "未提交",
@@ -188,7 +186,6 @@ export default {
         Approved: "已审核",
         Tempsave: "暂存"
       },
-      statusList: [] //状态列表
     };
   },
   components: {
@@ -313,19 +310,12 @@ export default {
       Object.assign(data.Urlpara, this.FilterCond);
       GetContractMgmt(data)
         .then(res => {
-          console.log(res);
-          // 请求的列表数据
           let arr = JSON.parse(res.Content);
-          // console.log(arr);
-          if (arr.length === 0) {
-            this.hasToast = !this.hasToast;
-          }
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表
           this.dataList = this._.uniqBy(this.dataList.concat(arr), "Rentalid");
           console.log("拉回来的数组数据=>", arr.length);
-
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
             mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
