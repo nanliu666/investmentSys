@@ -22,7 +22,7 @@
           :key="index"
           @click="getDeatil(item)"
         >
-          <span>{{item.Name | strSubstring}}</span>
+          <span>{{item.Name | strSubstring(1)}}</span>
           <span>{{item.Name}}</span>
         </li>
       </div>
@@ -36,7 +36,7 @@
           :key="index"
           @click="getDeatil(item)"
         >
-          <span>{{item | strSubstring}}</span>
+          <span>{{item | strSubstring(1)}}</span>
           <span>{{item}}</span>
         </li>
       </section>
