@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="contractList">
     <x-header :left-options="{backText: ''}" class="header" v-if="!hasSearch">
       合同管理
       <i class="iconfont icon-fangdajing" slot="right" @click="openSearch"></i>
@@ -290,7 +290,6 @@ export default {
     getStatusDetail(key, value) {
       this.statusDetailSelect = key;
       this.activeClass = value;
-      console.log(this.activeClass)
     },
     getStatus() {
       //点击状态，选择状态，自定义搜索字段
@@ -394,289 +393,290 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
+.contractList {
+  height: 100%;
+  .header {
+    box-shadow: 0 0px 0px 0 #fff !important; //重叠头部
+  }
 
-.header {
-  box-shadow: 0 0px 0px 0 #fff !important; //重叠头部
-}
-
-.searchPart {
-  padding: 0 40px;
-  @include fj(space-between);
-  background-color: #fff;
-  .fs-search {
-    height: 36px;
-    border-radius: 18px;
-    margin: 5px 0;
-  }
-  .searchInput {
-    border: 1px solid #ccc;
-    width: 88%;
-  }
-  .cancel {
-    @include sc(30px, rgb(105, 167, 254));
-    @include flexCenter;
-  }
-}
-.filter {
-  background-color: #fff;
-  @include fd(row);
-  box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
-  padding: 10px 0;
-  .projectFilter {
-    border-right: 1px solid #ccc;
-  }
-  .projectStatus,
-  .projectFilter {
-    width: 50%;
-    @include flexCenter;
-    .filterTitle {
-      //状态，项目文字
-      @include sc(28px, rgba(30, 30, 30, 1));
-      font-family: $familyR;
-      margin-right: 12px;
-    }
-  }
-  .nav {
+  .searchPart {
+    padding: 0 40px;
+    @include fj(space-between);
     background-color: #fff;
-    box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
-    .close {
-      //弹出层关闭
-      display: flex;
-      justify-content: flex-end;
-      margin-right: 50px;
-      margin-top: 20px;
-      .iconfont {
-        color: rgba(136, 136, 136, 1);
+    .fs-search {
+      height: 36px;
+      border-radius: 18px;
+      margin: 5px 0;
+    }
+    .searchInput {
+      border: 1px solid #ccc;
+      width: 88%;
+    }
+    .cancel {
+      @include sc(30px, rgb(105, 167, 254));
+      @include flexCenter;
+    }
+  }
+  .filter {
+    background-color: #fff;
+    @include fd(row);
+    box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
+    padding: 10px 0;
+    .projectFilter {
+      border-right: 1px solid #ccc;
+    }
+    .projectStatus,
+    .projectFilter {
+      width: 50%;
+      @include flexCenter;
+      .filterTitle {
+        //状态，项目文字
+        @include sc(28px, rgba(30, 30, 30, 1));
+        font-family: $familyR;
+        margin-right: 12px;
       }
     }
-    .projectSelect {
-      .selectTitle {
-        @include flexCenter;
-        @include sc(32px, rgba(30, 30, 30, 1));
-        padding-bottom: 50px;
-      }
-      .selectNav {
-        padding: 0 40px;
-        span {
-          @include sc(28px, rgba(136, 136, 136, 1));
-          padding: 16px;
-        }
-        .active {
-          background-color: rgba(105, 167, 254, 0.08);
-          border: 1px solid rgba(105, 167, 254, 0.3);
-          @include sc(28px, rgba(105, 167, 254, 1));
-        }
-        .iActive {
-          @include sc(28px, rgba(105, 167, 254, 1));
+    .nav {
+      background-color: #fff;
+      box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
+      .close {
+        //弹出层关闭
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 50px;
+        margin-top: 20px;
+        .iconfont {
+          color: rgba(136, 136, 136, 1);
         }
       }
-      .selectCompanys {
-        margin-top: 50px;
-        div:first-child {
-          background-color: rgba(243, 248, 253, 1);
-          padding: 26px 40px;
+      .projectSelect {
+        .selectTitle {
+          @include flexCenter;
           @include sc(32px, rgba(30, 30, 30, 1));
+          padding-bottom: 50px;
         }
-        ul {
-          li {
-            background-color: rgba(249, 249, 249, 1);
-            margin: 4px 0;
+        .selectNav {
+          padding: 0 40px;
+          span {
+            @include sc(28px, rgba(136, 136, 136, 1));
+            padding: 16px;
+          }
+          .active {
+            background-color: rgba(105, 167, 254, 0.08);
+            border: 1px solid rgba(105, 167, 254, 0.3);
+            @include sc(28px, rgba(105, 167, 254, 1));
+          }
+          .iActive {
+            @include sc(28px, rgba(105, 167, 254, 1));
+          }
+        }
+        .selectCompanys {
+          margin-top: 50px;
+          div:first-child {
+            background-color: rgba(243, 248, 253, 1);
             padding: 26px 40px;
-            @include sc(30px, rgba(30, 30, 30, 1));
+            @include sc(32px, rgba(30, 30, 30, 1));
+          }
+          ul {
+            li {
+              background-color: rgba(249, 249, 249, 1);
+              margin: 4px 0;
+              padding: 26px 40px;
+              @include sc(30px, rgba(30, 30, 30, 1));
+            }
+          }
+        }
+      }
+    }
+
+    //状态选择
+    .status {
+      position: absolute;
+      z-index: 100;
+      right: 4px;
+      top: 156px;
+      width: 100%;
+      background-color: #fff;
+      @include fd(column);
+
+      .statusTop {
+        display: flex;
+        flex-flow: row wrap;
+        div {
+          width: 50%;
+          @include flexCenter;
+          span {
+            display: inline-block;
+            @include flexCenter;
+            @include sc(28px, rgba(30, 30, 30, 1));
+            border: 1px solid rgba(235, 237, 239, 1);
+            @include wh(240px, 72ox);
+            padding: 16px 60px;
+            margin-top: 25px;
+          }
+        }
+        .statusActive {
+          color: rgba(105, 167, 254, 1);
+          background-color: rgba(105, 167, 254, 0.05);
+          border: 1px solid rgba(105, 167, 254, 0.5);
+        }
+      }
+      .ensureButton {
+        @include wh(100%, 88px);
+        margin-top: 20px;
+        @include flexCenter;
+        background-color: rgba(105, 167, 254, 1);
+        @include sc(34px, rgba(255, 255, 255, 1));
+      }
+    }
+  }
+  .mescroll {
+    // padding: 10px 40px 0;
+    @include cl;
+    width: 88%;
+    position: fixed;
+    top: 160px;
+    bottom: 0;
+    height: auto;
+    li {
+      margin-bottom: 20px;
+      @include borderRadius(8px);
+      box-shadow: 0 0 4px 10px 0 rgba(126, 158, 230, 0.15);
+      background-color: $fc;
+      .top {
+        //详情头部
+        @include fj(space-between);
+        padding: 30px;
+        border-bottom: 2px dashed rgba(72, 121, 230, 1); /*no*/
+        span:first-child {
+          @include sc(32px, rgba(30, 30, 30, 1));
+          font-family: $familyMedium;
+        }
+        span:last-child {
+          padding: 6px 10px;
+          @include borderRadius(4px);
+
+          @include sc(20px, rgba(255, 255, 255, 1));
+          font-family: $familyR;
+        }
+        //未提交
+        .Active {
+          background: linear-gradient(
+            to left,
+            rgba(96, 229, 139, 1),
+            rgba(10, 188, 108, 1)
+          );
+        }
+        //已签约
+        .Signed {
+          background: linear-gradient(
+            to left,
+            rgba(40, 140, 241, 1),
+            rgba(120, 202, 255, 1)
+          );
+        }
+        //审批中
+        .Submitted {
+          background: rgb(105, 167, 254);
+        }
+        //执行中
+        .Execing {
+          background: rgba(98, 198, 255, 1);
+        }
+        //变更中
+        .Voing {
+          background: rgb(149, 154, 255);
+        }
+        //已到期
+        .Expired {
+          background: linear-gradient(
+            to left,
+            rgba(203, 220, 234, 1),
+            rgba(173, 188, 198, 1)
+          );
+        }
+        //已关闭
+        .Closed {
+          background: linear-gradient(
+            to left,
+            rgba(203, 220, 234, 1),
+            rgba(173, 188, 198, 1)
+          );
+        }
+        //已终止
+        .Terminated {
+          background: linear-gradient(
+            to left,
+            rgba(203, 220, 234, 1),
+            rgba(173, 188, 198, 1)
+          );
+        }
+        //续租中
+        .Releting {
+          background: linear-gradient(
+            to left,
+            rgba(203, 220, 234, 1),
+            rgba(173, 188, 198, 1)
+          );
+        }
+        //已驳回
+        .Rejected {
+          background: linear-gradient(
+            to left,
+            rgba(203, 220, 234, 1),
+            rgba(173, 188, 198, 1)
+          );
+        }
+        //已审核
+        .Approved {
+          background: rgb(59, 222, 186);
+        }
+        //暂存
+        .Tempsave {
+          background: linear-gradient(
+            to left,
+            rgba(203, 220, 234, 1),
+            rgba(173, 188, 198, 1)
+          );
+        }
+      }
+      .bottom {
+        // 底部
+        padding: 28px 30px;
+        div {
+          margin-bottom: 20px;
+          label {
+            @include sc(28px, rgba(136, 136, 136, 1));
+            font-family: $familyR;
+          }
+          .text {
+            @include sc(28px, rgba(30, 30, 30, 1));
+          }
+          .cycleText {
+            @include sc(24px, rgba(174, 174, 174, 1));
+          }
+          .lookRecord {
+            @include flexCenter;
+            height: 50px;
+            background-color: $fc;
+            @include borderRadius(25px);
+            @include sc(28px, rgba(72, 121, 230, 1));
+            font-family: $familyR;
+            border: 1px solid rgba(72, 121, 230, 1); /*no*/
+            padding: 0px 26px;
           }
         }
       }
     }
   }
-
-  //状态选择
-  .status {
-    position: absolute;
-    z-index: 100;
-    right: 4px;
-    top: 156px;
+  .mescroll-totop {
+    background-color: red;
+  }
+  #NoData {
+    @include flexCenter;
+    height: 80%;
     width: 100%;
-    background-color: #fff;
-    @include fd(column);
-
-    .statusTop {
-      display: flex;
-      flex-flow: row wrap;
-      div {
-        width: 50%;
-        @include flexCenter;
-        span {
-          display: inline-block;
-          @include flexCenter;
-          @include sc(28px, rgba(30, 30, 30, 1));
-          border: 1px solid rgba(235, 237, 239, 1);
-          @include wh(240px, 72ox);
-          padding: 16px 60px;
-          margin-top: 25px;
-        }
-      }
-      .statusActive {
-        color: rgba(105, 167, 254, 1);
-        background-color: rgba(105, 167, 254, 0.05);
-        border: 1px solid rgba(105, 167, 254, 0.5);
-      }
-    }
-    .ensureButton {
-      @include wh(100%, 88px);
-      margin-top: 20px;
-      @include flexCenter;
-      background-color: rgba(105, 167, 254, 1);
-      @include sc(34px, rgba(255, 255, 255, 1));
-    }
   }
-}
-.mescroll {
-  // padding: 10px 40px 0;
-  @include cl;
-  width: 88%;
-  position: fixed;
-  top: 160px;
-  bottom: 0;
-  height: auto;
-  li {
-    margin-bottom: 20px;
-    @include borderRadius(8px);
-    box-shadow: 0 0 4px 10px 0 rgba(126, 158, 230, 0.15);
-    background-color: $fc;
-    .top {
-      //详情头部
-      @include fj(space-between);
-      padding: 30px;
-      border-bottom: 2px dashed rgba(72, 121, 230, 1); /*no*/
-      span:first-child {
-        @include sc(32px, rgba(30, 30, 30, 1));
-        font-family: $familyMedium;
-      }
-      span:last-child {
-        padding: 6px 10px;
-        @include borderRadius(4px);
-
-        @include sc(20px, rgba(255, 255, 255, 1));
-        font-family: $familyR;
-      }
-      //未提交
-      .Active {
-        background: linear-gradient(
-          to left,
-          rgba(96, 229, 139, 1),
-          rgba(10, 188, 108, 1)
-        );
-      }
-      //已签约
-      .Signed {
-        background: linear-gradient(
-          to left,
-          rgba(40, 140, 241, 1),
-          rgba(120, 202, 255, 1)
-        );
-      }
-      //审批中
-      .Submitted {
-        background: rgb(105, 167, 254);
-      }
-      //执行中
-      .Execing {
-        background: rgba(98, 198, 255, 1);
-      }
-      //变更中
-      .Voing {
-        background: rgb(149, 154, 255);
-      }
-      //已到期
-      .Expired {
-        background: linear-gradient(
-          to left,
-          rgba(203, 220, 234, 1),
-          rgba(173, 188, 198, 1)
-        );
-      }
-      //已关闭
-      .Closed {
-        background: linear-gradient(
-          to left,
-          rgba(203, 220, 234, 1),
-          rgba(173, 188, 198, 1)
-        );
-      }
-      //已终止
-      .Terminated {
-        background: linear-gradient(
-          to left,
-          rgba(203, 220, 234, 1),
-          rgba(173, 188, 198, 1)
-        );
-      }
-      //续租中
-      .Releting {
-        background: linear-gradient(
-          to left,
-          rgba(203, 220, 234, 1),
-          rgba(173, 188, 198, 1)
-        );
-      }
-      //已驳回
-      .Rejected {
-        background: linear-gradient(
-          to left,
-          rgba(203, 220, 234, 1),
-          rgba(173, 188, 198, 1)
-        );
-      }
-      //已审核
-      .Approved {
-        background: rgb(59, 222, 186);
-      }
-      //暂存
-      .Tempsave {
-        background: linear-gradient(
-          to left,
-          rgba(203, 220, 234, 1),
-          rgba(173, 188, 198, 1)
-        );
-      }
-    }
-    .bottom {
-      // 底部
-      padding: 28px 30px;
-      div {
-        margin-bottom: 20px;
-        label {
-          @include sc(28px, rgba(136, 136, 136, 1));
-          font-family: $familyR;
-        }
-        .text {
-          @include sc(28px, rgba(30, 30, 30, 1));
-        }
-        .cycleText {
-          @include sc(24px, rgba(174, 174, 174, 1));
-        }
-        .lookRecord {
-          @include flexCenter;
-          height: 50px;
-          background-color: $fc;
-          @include borderRadius(25px);
-          @include sc(28px, rgba(72, 121, 230, 1));
-          font-family: $familyR;
-          border: 1px solid rgba(72, 121, 230, 1); /*no*/
-          padding: 0px 26px;
-        }
-      }
-    }
-  }
-}
-.mescroll-totop {
-  background-color: red;
-}
-#NoData {
-  position: absolute;
-  @include flexCenter;
-  height: 80%;
-  width: 100%;
 }
 </style>
 
