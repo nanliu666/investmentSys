@@ -1,14 +1,17 @@
 <template>
   <div id="app">
     <keep-alive>
-      <router-view v-if="$route.meta.keepAlive">
-        <!-- 这里是会被缓存的视图组件，比如客户详情页面 -->
-      </router-view>
+      <transition name="fade" mode="out-in">
+        <router-view v-if="$route.meta.keepAlive">
+          <!-- 这里是会被缓存的视图组件，比如客户详情页面 -->
+        </router-view>
+      </transition>
     </keep-alive>
-
-    <router-view v-if="!$route.meta.keepAlive">
-      <!-- 这里是不被缓存的视图组件，比如客户列表/编辑页面 -->
-    </router-view>
+    <transition name="fade" mode="out-in">
+      <router-view v-if="!$route.meta.keepAlive">
+        <!-- 这里是不被缓存的视图组件，比如客户列表/编辑页面 -->
+      </router-view>
+    </transition>
   </div>
 </template>
 
@@ -35,6 +38,13 @@ export default {
 <style lang="scss">
 @import "@/assets/sass/common.scss";
 @import "@/assets/sass/mixin.scss";
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 #app {
   height: 100%;
   .header {
