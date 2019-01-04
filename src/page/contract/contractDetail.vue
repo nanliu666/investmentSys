@@ -80,18 +80,18 @@
             <span>费用标准</span>
             <span>计费方式</span>
           </div>
-          <li v-for="(item) in Contractcharges" :key="item.Rentalid">
-            <div class="contractClassifyList" @click="changeDetail">
+          <li v-for="(item, index) in Contractcharges" :key="index">
+            <div class="contractClassifyList" @click="changeDetail(index)">
               <span>{{item.Itemname || '' || 111}}</span>
               <span>{{item.Billingfrequencystring|| ''}}</span>
               <span>{{item.Rentstandardtypestring|| ''}}</span>
               <span>{{item.Calculatemethodstring|| ''}}</span>
             </div>
-            <div class="iconRow" @click="changeDetail">
-              <x-icon type="ios-arrow-down" size="25" v-show="hasStatus"></x-icon>
-              <x-icon type="ios-arrow-up" size="25" v-show="!hasStatus"></x-icon>
+            <div class="iconRow" @click="changeDetail(index)">
+              <x-icon type="ios-arrow-down" size="25" v-show="index !== isStatus"></x-icon>
+              <x-icon type="ios-arrow-up" size="25" v-show="index === isStatus"></x-icon>
             </div>
-            <div class="contractClassifyDetail" v-if="!hasStatus">
+            <div class="contractClassifyDetail" v-if="index === isStatus">
               <li>
                 <span>付款类型:</span>
                 <span>{{item.PriceModeString || ''}}</span>
@@ -292,7 +292,7 @@ export default {
       Contractenclosure: [],
       Contractoptions: [],
       Contractrentfree: [],
-      hasStatus: true,
+      isStatus: -1,
       disabled:
         typeof navigator !== "undefined" &&
         /iphone/i.test(navigator.userAgent) &&
@@ -359,9 +359,9 @@ export default {
         this.tabIndex = 0;
       }
     },
-    changeDetail() {
+    changeDetail(index) {
       //改变费用显示状态
-      this.hasStatus = !this.hasStatus;
+      this.isStatus = this.isStatus === index ? -1 : index;
     },
     onLoad() {
       const data = this.$route.params.data;
@@ -370,10 +370,15 @@ export default {
         this.Contactmain = JSON.parse(res.Contactmain); //合同主体
         this.ContractDeposit = JSON.parse(res.ContractDeposit); //保证金
         this.Contractcharges = JSON.parse(res.Contractcharges); //管理费用
-        this.Contractcommission = JSON.parse(res.Contractcommission); //抽成
-        this.Contractenclosure = JSON.parse(res.Contractenclosure); //附件
-        this.Contractoptions = JSON.parse(res.Contractoptions); //权利条款
         this.Contractrentfree = JSON.parse(res.Contractrentfree); //免租期
+        this.Contractcommission = JSON.parse(res.Contractcommission); //抽成
+        this.Contractoptions = JSON.parse(res.Contractoptions); //权利条款
+        if (!!res.Contractenclosure) {
+          //附件返回有毒
+          this.Contractenclosure = JSON.parse(res.Contractenclosure);
+        } else {
+          this.Contractenclosure = [];
+        }
       });
     }
   }
@@ -534,6 +539,8 @@ export default {
 .Rentalid {
   width: 60%;
   text-overflow: ellipsis;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
 
