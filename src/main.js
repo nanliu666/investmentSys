@@ -8,6 +8,10 @@ Vue.prototype._ = _
 //暂时解决 vue-loader 打包太大
 import ToastPlugin from 'vux/src/plugins/toast/index.js'
 import PopupPicker from 'vux/src/components/popup-picker/index.vue'
+import {
+  LoadingPlugin
+} from 'vux'
+Vue.use(LoadingPlugin)
 Vue.use(ToastPlugin)
 Vue.use(PopupPicker)
 // 解决点击延迟300ms
