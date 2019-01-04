@@ -68,17 +68,23 @@
         <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon>
         <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon>
         <!-- 选择状态 -->
-        <section v-if="hasStatus" class="status">
-          <div class="statusTop">
-            <div v-for="(value, key) in statusDetail" :key="key">
-              <span
-                :class="activeClass === value ? 'statusActive' : ''"
-                @click="getStatusDetail(key, value)"
-              >{{value}}</span>
+        <transition
+          name="custom-classes-transition"
+          enter-active-class="animated fadeInDownBig"
+          leave-active-class="animated fadeOutUpBig"
+        >
+          <section v-if="hasStatus" class="status">
+            <div class="statusTop">
+              <div v-for="(value, key) in statusDetail" :key="key">
+                <span
+                  :class="activeClass === value ? 'statusActive' : ''"
+                  @click="getStatusDetail(key, value)"
+                >{{value}}</span>
+              </div>
             </div>
-          </div>
-          <button class="ensureButton" @click="getStatus">确定</button>
-        </section>
+            <button class="ensureButton" @click="getStatus">确定</button>
+          </section>
+        </transition>
       </div>
     </section>
     <!--mescroll滚动区域的基本结构-->
@@ -138,7 +144,6 @@ export default {
     return {
       activeClass: "所有状态",
       enterText: "",
-      projectInit: {},
       companysList: [],
       companysSelect: "",
       PropertysList: [],
@@ -192,6 +197,9 @@ export default {
       statusDetailSelect: ""
     };
   },
+  created() {
+    this.getCompany();
+  },
   components: {
     XHeader,
     XInput,
@@ -214,7 +222,6 @@ export default {
     onEnter(value) {
       console.log("输入的值", this.enterText);
       this.FilterCond = {
-        //todo 项目不能模糊搜索
         Filter: `Keyword.like.${this.enterText}`
       };
       this.mescroll.resetUpScroll();
@@ -233,19 +240,6 @@ export default {
     openProjectStatus() {
       //项目切换
       this.hasprojectStatus = !this.hasprojectStatus;
-      this.getCompany();
-      this.projectInit = JSON.parse(localStorage.getItem("projectSelected"));
-      // console.log(this.projectInit);
-      // if (this.projectInit) {
-      //   //todo 需要后端补充，公司名称，显示使用公司ID
-      //   this.companysSelect = this.projectInit.Companyid;
-      //   this.PropertysSelect = this.projectInit.Propertyname;
-      //   this.FilterCond = {
-      //     Filter: `Companyid.=.${this.projectInit.Companyid}&Propertyid.=.${
-      //       this.projectInit.Propertyid
-      //     }`
-      //   };
-      // }
     },
     getCompany() {
       const data = {
@@ -271,13 +265,9 @@ export default {
       });
     },
     getPropertyDeatil(data) {
-      // console.log(data);
       this.PropertysSelect = data.Propertyname;
-      localStorage.setItem("projectSelected", JSON.stringify(data));
       //选择项目，自定义搜索字段
-      // 拼接项目和状态两个的ID ---TODO可以优化写法！
       this.FilterCond = {
-        //不存在状态
         Filter: `Companyid.=.${data.Companyid}&Propertyid.=.${data.Propertyid}`
       };
       this.mescroll.resetUpScroll();
