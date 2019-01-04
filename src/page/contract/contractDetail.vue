@@ -103,7 +103,7 @@
               </li>
               <li>
                 <span>首期金额:</span>
-                <span>¥600.00</span>
+                <span>{{item.Paymentamt}}</span>
               </li>
               <li>
                 <span>首期开始日期:</span>
@@ -132,13 +132,11 @@
             <span>补差周期</span>
             <span>补差方式</span>
           </div>
-          <li v-for="(item, index) in Contractcommission" :key="index">
-            <div class="contractSomeList">
-              <span>{{item.Rentstandardtypestring || '' }}</span>
-              <span>{{item.Rentstandardtypestring || '' }}</span>
-              <span>{{item.Differencemethodstring || '' }}</span>
-              <span>{{item.Differencefrequencystring || '' }}</span>
-            </div>
+          <li class="contractSomeList" v-for="(item, index) in Contractcommission" :key="index">
+            <div>{{item.Rentstandardtypestring || '' }}</div>
+            <div>{{item.Billingfrequencystring || '' }}</div>
+            <div>{{item.Differencemethodstring || '' }}</div>
+            <div>{{item.Differencefrequencystring || '' }}</div>
           </li>
         </div>
         <div class="contractCostMain" v-if="Contractrentfree.length !== 0">
@@ -146,16 +144,12 @@
           <div class="contractClassify">
             <span>费项名称</span>
             <span>铺位编号</span>
-            <span>减免方式</span>
             <span>免租值</span>
           </div>
-          <li v-for="(item, index) in Contractrentfree" :key="index">
-            <div class="contractSomeList">
-              <span>{{item.Billitem}}</span>
-              <span>{{item.Unitno}}</span>
-              <span>半年</span>
-              <span>{{item.Amount | formatNumber}}</span>
-            </div>
+          <li class="contractSomeList" v-for="(item, index) in Contractrentfree" :key="index">
+            <div>{{item.Billitem || '' }}</div>
+            <div>{{item.Unitno || '' }}</div>
+            <div>{{item.Amount | formatNumber }}</div>
           </li>
         </div>
         <div class="contractCostMain" v-if="ContractDeposit.length !== 0">
@@ -165,12 +159,10 @@
             <span>付款日期</span>
             <span>保证金</span>
           </div>
-          <li v-for="(item, index) in ContractDeposit" :key="index">
-            <div class="contractSomeList">
-              <span>{{item.Itemname}}</span>
-              <span>{{item.Documentdate | dataFrm('YYYY-MM-DD')}}</span>
-              <span>{{item.Documentamt | formatNumber}}</span>
-            </div>
+          <li class="contractSomeList" v-for="(item, index) in ContractDeposit" :key="index">
+            <div>{{item.Itemname || '' }}</div>
+            <div>{{item.Documentdate | dataFrm('YYYY-MM-DD') }}</div>
+            <div>{{item.Documentamt | formatNumber }}</div>
           </li>
         </div>
       </section>
@@ -388,7 +380,7 @@ export default {
         //     this.Contractenclosure[0].Documentname
         //   )
         // );
-        // console.log("附件=>",this.postfixFileName(this.Contractenclosure.Documentname) );
+        console.log("抽成=>", this.Contractcommission);
       });
     }
   }
@@ -428,21 +420,23 @@ export default {
     }
     .contractClassify {
       background-color: rgba(243, 247, 253, 1);
-      @include fj(space-between);
-      padding: 18px 24px;
+      @include fj(space-around);
+      padding: 18px 0px;
       span {
         @include sc(28px, rgba(136, 136, 136, 1));
       }
     }
+    .contractSomeList {
+      //抽成
+      padding: 30px 0px;
+      @include fj(space-around);
+      div {
+        @include flexCenter;
+        width: 25%;
+      }
+    }
     li {
       position: relative;
-      .contractSomeList {
-        padding: 30px 24px;
-        @include fj(space-between);
-        span {
-          @include flexCenter;
-        }
-      }
       .contractClassifyList {
         padding: 30px 24px;
         @include fj(space-between);
