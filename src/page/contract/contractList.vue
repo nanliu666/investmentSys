@@ -16,77 +16,7 @@
       </x-input>
       <div class="cancel" @click="searchCancel">取消</div>
     </section>
-    <section class="filter">
-      <div class="projectFilter">
-        <span class="filterTitle" @click="openProjectStatus">项目</span>
-        <x-icon type="ios-arrow-down" size="25" v-show="!hasprojectStatus"></x-icon>
-        <x-icon type="ios-arrow-up" size="25" v-show="hasprojectStatus"></x-icon>
-        <popup v-model="hasprojectStatus" position="bottom" class="nav" :show-mask="showMask">
-          <div class="close" @click="openProjectStatus">
-            <i class="iconfont icon-guanbi"></i>
-          </div>
-          <section class="projectSelect">
-            <div class="selectTitle">请选择</div>
-            <div class="selectNav">
-              <span
-                :class="[!!companysSelect ? 'active' : '']"
-                @click="reselectCompany"
-              >{{companysSelect ? companysSelect : '选择公司'}}</span>
-              <span :class="[!!companysSelect ? 'iActive' : '']">>></span>
-              <span
-                v-if="companysSelect"
-                :class="[!!PropertysSelect ? 'active' : '']"
-              >{{PropertysSelect ? PropertysSelect : '选择项目'}}</span>
-            </div>
-            <div class="selectCompanys" v-if="!companysSelect">
-              <div>公司名称</div>
-              <ul>
-                <li
-                  v-for="item in companysList"
-                  :key="item.Companyid"
-                  @click="getCompanyDeatil(item)"
-                >{{item.Companyname}}</li>
-                <li v-if="companysList.length === 0">暂无公司</li>
-              </ul>
-            </div>
-            <div class="selectCompanys" v-if="!!companysSelect">
-              <div>项目名称</div>
-              <ul>
-                <li
-                  v-for="item in PropertysList"
-                  :key="item.Propertyid"
-                  @click="getPropertyDeatil(item)"
-                >{{item.Propertyname}}</li>
-                <li v-if="PropertysList.length === 0">暂无项目</li>
-              </ul>
-            </div>
-          </section>
-        </popup>
-      </div>
-      <div class="projectStatus">
-        <span class="filterTitle" @click="openStatus">状态</span>
-        <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon>
-        <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon>
-        <!-- 选择状态 -->
-        <transition
-          name="custom-classes-transition"
-          enter-active-class="animated fadeInDownBig"
-          leave-active-class="animated fadeOutUpBig"
-        >
-          <section v-if="hasStatus" class="status">
-            <div class="statusTop">
-              <div v-for="(value, key) in statusDetail" :key="key">
-                <span
-                  :class="activeClass === value ? 'statusActive' : ''"
-                  @click="getStatusDetail(key, value)"
-                >{{value}}</span>
-              </div>
-            </div>
-            <button class="ensureButton" @click="getStatus">确定</button>
-          </section>
-        </transition>
-      </div>
-    </section>
+    <projeceSelect :statusDetail="statusDetail" @FilterUpdate="FilterUpdate"/>
     <!--mescroll滚动区域的基本结构-->
     <mescroll-vue
       class="mescroll"
@@ -142,16 +72,8 @@ export default {
   name: "contractList",
   data() {
     return {
-      activeClass: "所有状态",
       enterText: "",
-      companysList: [],
-      companysSelect: "",
-      PropertysList: [],
-      PropertysSelect: "",
-      showMask: false,
-      hasprojectStatus: false,
       hasSearch: false,
-      hasStatus: false,
       FilterCond: {},
       mescroll: null, // mescroll实例对象
       mescrollDown: {}, //下拉刷新的配置. (如果下拉刷新和上拉加载处理的逻辑是一样的,则mescrollDown可不用写了)
@@ -193,19 +115,18 @@ export default {
         Execing: "执行中",
         Approved: "已审核",
         Tempsave: "暂存"
-      },
-      statusDetailSelect: ""
+      }
     };
-  },
-  created() {
-    this.getCompany();
   },
   components: {
     XHeader,
     XInput,
     Popup,
     Search,
-    MescrollVue
+    MescrollVue,
+    projeceSelect: function(resolve) {
+      require(["../../components/projectSelect.vue"], resolve);
+    }
   },
   beforeRouteEnter(to, from, next) {
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
@@ -219,79 +140,22 @@ export default {
     next();
   },
   methods: {
+    FilterUpdate(data) {
+      console.log("子组件传递过来的修改的值", data);
+      this.FilterCond = data;
+      this.mescroll.resetUpScroll();
+    },
     onEnter(value) {
-      console.log("输入的值", this.enterText);
       this.FilterCond = {
         Filter: `Keyword.like.${this.enterText}`
       };
       this.mescroll.resetUpScroll();
-
-      console.log("传输值", this.FilterCond);
     },
     searchCancel() {
       this.hasSearch = !this.hasSearch;
     },
     openSearch() {
       this.hasSearch = !this.hasSearch;
-    },
-    openStatus() {
-      this.hasStatus = !this.hasStatus;
-    },
-    openProjectStatus() {
-      //项目切换
-      this.hasprojectStatus = !this.hasprojectStatus;
-    },
-    getCompany() {
-      const data = {
-        Companyid: 0
-      };
-      GetCompanyies(data).then(res => {
-        this.companysList = res.Content;
-      });
-    },
-    getCompanyDeatil(data) {
-      //获得公司
-      this.companysSelect = data.Companyname;
-      this.PropertysSelect = "";
-      const jsonData = {
-        Propertyid: 0
-      };
-      GetPropertys(jsonData).then(res => {
-        //获取项目
-        this.PropertysList = this._.filter(
-          res.Content,
-          item => item.Companyid === data.Companyid
-        );
-      });
-    },
-    getPropertyDeatil(data) {
-      this.PropertysSelect = data.Propertyname;
-      //选择项目，自定义搜索字段
-      this.FilterCond = {
-        Filter: `Companyid.=.${data.Companyid}&Propertyid.=.${data.Propertyid}`
-      };
-      this.mescroll.resetUpScroll();
-      this.hasprojectStatus = !this.hasprojectStatus;
-    },
-    reselectCompany() {
-      this.companysSelect = "";
-      this.PropertysSelect = "";
-    },
-    getStatusDetail(key, value) {
-      this.statusDetailSelect = key;
-      this.activeClass = value;
-    },
-    getStatus() {
-      //点击状态，选择状态，自定义搜索字段
-      if (this.statusDetailSelect === "all") {
-        this.FilterCond = {};
-      } else {
-        this.FilterCond = {
-          Filter: `Contractstatushow.=.${this.statusDetailSelect}`
-        };
-      }
-      this.mescroll.resetUpScroll();
-      this.hasStatus = !this.hasStatus;
     },
     // mescroll组件初始化的回调,可获取到mescroll对象 (如果this.mescroll并没有使用到,可不用写mescrollInit)
     mescrollInit(mescroll) {
@@ -407,119 +271,7 @@ export default {
       @include flexCenter;
     }
   }
-  .filter {
-    background-color: #fff;
-    @include fd(row);
-    box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
-    padding: 10px 0;
-    .projectFilter {
-      border-right: 1px solid #ccc;
-    }
-    .projectStatus,
-    .projectFilter {
-      width: 50%;
-      @include flexCenter;
-      .filterTitle {
-        //状态，项目文字
-        @include sc(28px, rgba(30, 30, 30, 1));
-        font-family: $familyR;
-        margin-right: 12px;
-      }
-    }
-    .nav {
-      background-color: #fff;
-      box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
-      .close {
-        //弹出层关闭
-        display: flex;
-        justify-content: flex-end;
-        margin-right: 50px;
-        margin-top: 20px;
-        .iconfont {
-          color: rgba(136, 136, 136, 1);
-        }
-      }
-      .projectSelect {
-        .selectTitle {
-          @include flexCenter;
-          @include sc(32px, rgba(30, 30, 30, 1));
-          padding-bottom: 50px;
-        }
-        .selectNav {
-          padding: 0 40px;
-          span {
-            @include sc(28px, rgba(136, 136, 136, 1));
-            padding: 16px;
-          }
-          .active {
-            background-color: rgba(105, 167, 254, 0.08);
-            border: 1px solid rgba(105, 167, 254, 0.3);
-            @include sc(28px, rgba(105, 167, 254, 1));
-          }
-          .iActive {
-            @include sc(28px, rgba(105, 167, 254, 1));
-          }
-        }
-        .selectCompanys {
-          margin-top: 50px;
-          div:first-child {
-            background-color: rgba(243, 248, 253, 1);
-            padding: 26px 40px;
-            @include sc(32px, rgba(30, 30, 30, 1));
-          }
-          ul {
-            li {
-              background-color: rgba(249, 249, 249, 1);
-              margin: 4px 0;
-              padding: 26px 40px;
-              @include sc(30px, rgba(30, 30, 30, 1));
-            }
-          }
-        }
-      }
-    }
 
-    //状态选择
-    .status {
-      position: absolute;
-      z-index: 100;
-      right: 4px;
-      top: 156px;
-      width: 100%;
-      background-color: #fff;
-      @include fd(column);
-
-      .statusTop {
-        display: flex;
-        flex-flow: row wrap;
-        div {
-          width: 50%;
-          @include flexCenter;
-          span {
-            display: inline-block;
-            @include flexCenter;
-            @include sc(28px, rgba(30, 30, 30, 1));
-            border: 1px solid rgba(235, 237, 239, 1);
-            @include wh(240px, 72ox);
-            padding: 16px 60px;
-            margin-top: 25px;
-          }
-        }
-        .statusActive {
-          color: rgba(105, 167, 254, 1);
-          background-color: rgba(105, 167, 254, 0.05);
-          border: 1px solid rgba(105, 167, 254, 0.5);
-        }
-      }
-      .ensureButton {
-        @include wh(100%, 88px);
-        margin-top: 20px;
-        @include flexCenter;
-        background-color: rgba(105, 167, 254, 1);
-        @include sc(34px, rgba(255, 255, 255, 1));
-      }
-    }
-  }
   .mescroll {
     // padding: 10px 40px 0;
     @include cl;
