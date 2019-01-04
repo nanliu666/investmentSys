@@ -85,11 +85,11 @@
               <span>{{item.Itemname || '' || 111}}</span>
               <span>{{item.Billingfrequencystring|| ''}}</span>
               <span>{{item.Rentstandardtypestring|| ''}}</span>
-              <span>{{item.Calculatemethodstring|| ''}}</span>
-            </div>
-            <div class="iconRow" @click="changeDetail(index)">
-              <x-icon type="ios-arrow-down" size="25" v-show="index !== isStatus"></x-icon>
-              <x-icon type="ios-arrow-up" size="25" v-show="index === isStatus"></x-icon>
+              <span>
+                {{item.Calculatemethodstring|| ''}}
+                <x-icon type="ios-arrow-down" size="25" v-show="index !== isStatus"></x-icon>
+                <x-icon type="ios-arrow-up" size="25" v-show="index === isStatus"></x-icon>
+              </span>
             </div>
             <div class="contractClassifyDetail" v-if="index === isStatus">
               <li>
@@ -230,16 +230,16 @@
                 <svg
                   class="icon"
                   aria-hidden="true"
-                  v-if="postfixFileName(item.Documentname)  === ('ppt' || 'pptx')"
+                  v-if="postfixFileName(item.Documentname)  === 'dwg'"
                 >
-                  <use xlink:href="icon-ppt"></use>
+                  <use xlink:href="#icon-DWG"></use>
                 </svg>
                 <svg
                   class="icon"
                   aria-hidden="true"
-                  v-if="postfixFileName(item.Documentname)  === 'dwg'"
+                  v-if="postfixFileName(item.Documentname)  === ('ppt' || 'pptx')"
                 >
-                  <use xlink:href="#icon-DWG"></use>
+                  <use xlink:href="icon-ppt"></use>
                 </svg>
                 <svg
                   class="icon"
@@ -317,15 +317,42 @@ export default {
       return fileFormat;
     },
     getContractenclosure(data) {
+      switch (this.postfixFileName(data.Documentname)) {
+        case "jpg" || "jpeg" || "png" || "gif" || "dwg":
+          console.log("我是图片");
+          break;
+        case "doc" || "docx":
+          console.log("我是word");
+          break;
+        case "xls" || "xlsx":
+          console.log("我是elcel");
+          break;
+        case "pdf":
+          console.log("我是pdf");
+          break;
+        case "ppt" || "pptx":
+          console.log("ppt");
+          break;
+        case "txt":
+          console.log("我是txt");
+          break;
+        case "rar":
+          console.log("我是rar");
+          break;
+        case "zip":
+          console.log("我是zip");
+          break;
+      }
       const jsonData = {
         id: data.Guid
       };
+      console.log(data.Guid);
       //TODO 补充预览
-      window.open(
-        `http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=${
-          data.Guid
-        }`
-      );
+      // window.open(
+      //   `http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=${
+      //     data.Guid
+      //   }`
+      // );
     },
     goAnchor(data) {
       let selector = "";
@@ -440,17 +467,20 @@ export default {
     li {
       position: relative;
       .contractClassifyList {
-        padding: 30px 24px;
-        @include fj(space-between);
+        padding: 30px 0px;
+        margin-right: -20px;
+        @include fj(space-around);
         span {
+          width: 25%;
           @include flexCenter;
+
+          &:last-child {
+            width: 38%;
+          }
+          &:nth-child(1) {
+            width: 32%;
+          }
         }
-      }
-      .iconRow {
-        //箭头定位
-        position: absolute;
-        right: -24px;
-        top: 30px;
       }
     }
 
