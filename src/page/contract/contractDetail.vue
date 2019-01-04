@@ -9,14 +9,13 @@
           bar-active-color="rgba(105, 167, 254, 1)"
           active-color="rgba(30, 30, 30, 1)"
           default-color="rgba(136, 136, 136, 1)"
-          ref="tab"
-          v-model="tabIndex"
         >
           <tab-item
             class="vux-center"
+            :selected="tabSelect === item"
             v-for="(item, index) in infoList"
             :key="index"
-            @click.native="goAnchor(item)"
+            @on-item-click="goAnchor(item)"
           >{{item}}</tab-item>
         </tab>
       </sticky>
@@ -147,9 +146,9 @@
             <span>免租值</span>
           </div>
           <li class="contractSomeList" v-for="(item, index) in Contractrentfree" :key="index">
-            <div>{{item.Billitem || '' }}</div>
-            <div>{{item.Unitno || '' }}</div>
-            <div>{{item.Amount | formatNumber }}</div>
+            <div class="width30">{{item.Billitem || '' }}</div>
+            <div class="width30">{{item.Unitno || '' }}</div>
+            <div class="width30">{{item.Amount | formatNumber }}</div>
           </li>
         </div>
         <div class="contractCostMain" v-if="ContractDeposit.length !== 0">
@@ -160,9 +159,9 @@
             <span>保证金</span>
           </div>
           <li class="contractSomeList" v-for="(item, index) in ContractDeposit" :key="index">
-            <div>{{item.Itemname || '' }}</div>
-            <div>{{item.Documentdate | dataFrm('YYYY-MM-DD') }}</div>
-            <div>{{item.Documentamt | formatNumber }}</div>
+            <div class="width30">{{item.Itemname || '' }}</div>
+            <div class="width30">{{item.Documentdate | dataFrm('YYYY-MM-DD') }}</div>
+            <div class="width30">{{item.Documentamt | formatNumber }}</div>
           </li>
         </div>
       </section>
@@ -281,8 +280,8 @@ export default {
   name: "contractList",
   data() {
     return {
-      tabIndex: 0,
       infoList: ["合同主体", "费用信息", "其他"],
+      tabSelect: "合同主体",
       scrolled: "",
       contractData: {},
       Contactmain: [],
@@ -330,6 +329,7 @@ export default {
     },
     goAnchor(data) {
       let selector = "";
+      this.tabSelect = data;
       switch (data) {
         case "合同主体":
           selector = "#main";
@@ -345,7 +345,7 @@ export default {
         .querySelector(selector)
         .scrollIntoView({ block: "start", behavior: "smooth" });
     },
-    handleScroll: _.debounce(function() {
+    handleScroll() {
       //页面滚动高度
       this.scrolled =
         window.pageYOffset ||
@@ -358,7 +358,7 @@ export default {
       } else {
         this.tabIndex = 0;
       }
-    }, 100),
+    },
     changeDetail() {
       //改变费用显示状态
       this.hasStatus = !this.hasStatus;
@@ -369,18 +369,11 @@ export default {
         this.contractData = res;
         this.Contactmain = JSON.parse(res.Contactmain); //合同主体
         this.ContractDeposit = JSON.parse(res.ContractDeposit); //保证金
-        this.ContractGuarantee = JSON.parse(res.ContractGuarantee);
         this.Contractcharges = JSON.parse(res.Contractcharges); //管理费用
         this.Contractcommission = JSON.parse(res.Contractcommission); //抽成
         this.Contractenclosure = JSON.parse(res.Contractenclosure); //附件
         this.Contractoptions = JSON.parse(res.Contractoptions); //权利条款
         this.Contractrentfree = JSON.parse(res.Contractrentfree); //免租期
-        // console.log(
-        //   this.$options.filters["postfixFileName"](
-        //     this.Contractenclosure[0].Documentname
-        //   )
-        // );
-        console.log("抽成=>", this.Contractcommission);
       });
     }
   }
@@ -434,6 +427,10 @@ export default {
         @include flexCenter;
         width: 25%;
       }
+      .width30 {
+        width: 30%;
+        @include flexCenter;
+      }
     }
     li {
       position: relative;
@@ -485,9 +482,8 @@ export default {
     }
     .otherMainClassify {
       background-color: rgba(243, 247, 253, 1);
-      @include fj(space-between);
-      padding: 18px 24px;
-      margin: 0 40px;
+      @include fj(space-around);
+      padding: 18px 0px;
       span {
         @include sc(28px, rgba(136, 136, 136, 1));
       }
