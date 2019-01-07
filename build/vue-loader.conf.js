@@ -24,7 +24,7 @@ module.exports = {
       browsers: ['iOS >= 7', 'Android >= 4.1']
     }),
     require('postcss-plugin-px2rem')({
-      rootValue: 30, // 这里对应的是750的设计图尺寸 为什么是30？
+      rootValue: 34, // 这里对应的是750的设计图尺寸 为什么是34？
       selectorBlackList: ['fs'], //这里的类名不被转化 fs-xxx的样式不被转化
       minPixelValue: 2, //小于2px的样式不被转化 ---针对border
       mediaQuery: true,
