@@ -39,5 +39,14 @@ export const DeleteCustomer = p => post(`${baseHead}CustomerMgmt.asmx/DeleteCust
 export const GetContractMgmt = p => post(`${baseHead}ContractMgmt.asmx/GetContractMgmt`, p); //获取合同列表信息
 export const GetContractMgmtDetail = p => post(`${baseHead}ContractMgmt.asmx/GetContractMgmtDetail`, p); //获取合同详情
 
+
+// 预定信息接口
+export const GetReserveMgmt = p => post(`${baseHead}ReserveMgmt.asmx/GetReserveMgmt`, p); //获取预定列表信息
+export const GetReserveMgmtDetail = p => post(`${baseHead}ReserveMgmt.asmx/GetReserveMgmtDetail`, p); //获取预定详情信息
+export const EditReserveMgmt = p => post(`${baseHead}ReserveMgmt.asmx/EditReserveMgmt`, p); //新增，修改预定信息
+export const DeleteReserveMgmt = p => post(`${baseHead}ReserveMgmt.asmx/DeleteReserveMgmt`, p); //删除预定信息
+export const VoidReserveMgmt = p => post(`${baseHead}ReserveMgmt.asmx/VoidReserveMgmt`, p); //预定作废
+export const GetUserInfo = p => post(`${baseHead}ReserveMgmt.asmx/GetUserInfo`, p); //获取加签用户信息
+
 // 预览下载  //这个接口不一样！！
 export const DocumentLibrary = p => get(`DocumentLibrary/Download.ashx`, p)
