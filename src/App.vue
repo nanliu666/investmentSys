@@ -52,6 +52,7 @@ export default {
     box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
     h1 {
       @include sc(34px, rgba(3, 3, 3, 1));
+      font-family: $fm;
     }
   }
   //下拉刷新，上拉加载文字补充 ---fix px2rem
