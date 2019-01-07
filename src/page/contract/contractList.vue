@@ -297,81 +297,52 @@ export default {
         span:last-child {
           padding: 6px 10px;
           @include borderRadius(4px);
-
           @include sc(20px, rgba(255, 255, 255, 1));
           font-family: $familyR;
         }
         //未提交
         .Active {
-          background: linear-gradient(
-            to left,
-            rgba(96, 229, 139, 1),
-            rgba(10, 188, 108, 1)
-          );
+          background: rgba(152, 226, 72, 1);
         }
         //已签约
         .Signed {
-          background: linear-gradient(
-            to left,
-            rgba(40, 140, 241, 1),
-            rgba(120, 202, 255, 1)
-          );
+          background: rgba(59, 222, 186, 1);
         }
         //审批中
         .Submitted {
-          background: rgb(105, 167, 254);
+          background: rgba(105, 167, 254, 1);
         }
         //执行中
         .Execing {
-          background: rgba(98, 198, 255, 1);
+          background: rgba(105, 167, 254, 1);
         }
         //变更中
         .Voing {
-          background: rgb(149, 154, 255);
+          background: rgba(149, 154, 255, 1);
         }
         //已到期
         .Expired {
-          background: linear-gradient(
-            to left,
-            rgba(203, 220, 234, 1),
-            rgba(173, 188, 198, 1)
-          );
+          background: rgba(255, 166, 112, 1);
         }
         //已关闭
         .Closed {
-          background: linear-gradient(
-            to left,
-            rgba(203, 220, 234, 1),
-            rgba(173, 188, 198, 1)
-          );
+          background: rgba(188, 204, 212, 1);
         }
         //已终止
         .Terminated {
-          background: linear-gradient(
-            to left,
-            rgba(203, 220, 234, 1),
-            rgba(173, 188, 198, 1)
-          );
+          background: rgba(248, 123, 123, 1);
         }
         //续租中
         .Releting {
-          background: linear-gradient(
-            to left,
-            rgba(203, 220, 234, 1),
-            rgba(173, 188, 198, 1)
-          );
+          background: rgba(135, 226, 248, 1);
         }
         //已驳回
         .Rejected {
-          background: linear-gradient(
-            to left,
-            rgba(203, 220, 234, 1),
-            rgba(173, 188, 198, 1)
-          );
+          background: rgba(253, 180, 84, 1);
         }
         //已审核
         .Approved {
-          background: rgb(59, 222, 186);
+          background: rgba(120, 202, 255, 1);
         }
         //暂存
         .Tempsave {
