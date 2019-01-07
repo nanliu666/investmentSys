@@ -1,23 +1,19 @@
 <template>
   <div id="app">
-    <keep-alive>
-      <transition name="fade" mode="out-in">
-        <router-view v-if="$route.meta.keepAlive">
-          <!-- 这里是会被缓存的视图组件，比如客户详情页面 -->
-        </router-view>
-      </transition>
-    </keep-alive>
     <transition name="fade" mode="out-in">
-      <router-view v-if="!$route.meta.keepAlive">
-        <!-- 这里是不被缓存的视图组件，比如客户列表/编辑页面 -->
-      </router-view>
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive"></router-view>
+      </keep-alive>
+    </transition>
+    <transition name="fade" mode="out-in">
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
     </transition>
   </div>
 </template>
 
 <script>
 export default {
-  name: "App",
+  name: "App"
   // mounted() {
   //   var script = document.createElement("script");
   //   script.setAttribute("type", "text/javascript");

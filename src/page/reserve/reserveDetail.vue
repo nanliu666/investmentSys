@@ -73,7 +73,7 @@
 import { XHeader } from "vux";
 
 export default {
-  name: "reserve",
+  name: "reserveDetail",
   data() {
     return {};
   },

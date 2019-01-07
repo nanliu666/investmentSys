@@ -62,7 +62,12 @@ export default {
       hasToast: false
     };
   },
-  //todo 路由离开之前，详情页面会再次触发一次请求数据?怎么解决不清楚
+  beforeRouteEnter(to, from, next) {
+    if (from.name === "clientAdd") {
+      to.meta.isBack = true;
+    }
+    next();
+  },
   created() {
     this.isFirstEnter = true;
   },
@@ -70,18 +75,12 @@ export default {
     if (!this.$route.meta.isBack || this.isFirstEnter) {
       // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
       // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
-      this.data = ""; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
+      this.clientDeatil = ""; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
       this.onLoad(); // ajax获取数据方法
     }
     // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
     this.$route.meta.isBack = false;
     this.isFirstEnter = false;
-  },
-  beforeRouteEnter(to, from, next) {
-    if (from.name === "clientAdd") {
-      to.meta.isBack = true;
-    }
-    next();
   },
   methods: {
     onLoad() {

@@ -2,8 +2,8 @@ import App from '../App'
 const login = resolve => require(['@/page/login'], resolve);
 const home = resolve => require(['@/page/index'], resolve);
 //单元模块
-const unitOption = resolve => require(['@/page/unitInfo/unitInfoOption'], resolve);
-const unitAll = resolve => require(['@/page/unitInfo/unitInfoALL'], resolve);
+const unitInfoOption = resolve => require(['@/page/unitInfo/unitInfoOption'], resolve);
+const unitInfoALL = resolve => require(['@/page/unitInfo/unitInfoALL'], resolve);
 
 //预定模块
 const reserveList = resolve => require(['@/page/reserve/reserveList'], resolve);
@@ -20,7 +20,7 @@ const clientList = resolve => require(['@/page/client/clientList'], resolve);
 const clientAdd = resolve => require(['@/page/client/clientAdd'], resolve);
 const clientDetail = resolve => require(['@/page/client/clientDetail'], resolve);
 
-// 客户模块
+// 合同模块
 const contractDetail = resolve => require(['@/page/contract/contractDetail'], resolve);
 const contractList = resolve => require(['@/page/contract/contractList'], resolve);
 
@@ -46,14 +46,14 @@ export default [{
 
     //单元模块
     {
-      path: '/unit', //单元信息选择
-      name: 'unitOption',
-      component: unitOption,
+      path: '/unitInfoOption', //单元信息选择
+      name: 'unitInfoOption',
+      component: unitInfoOption,
     },
     {
-      path: '/unitAll', //单元信息所有
-      name: 'unitAll',
-      component: unitAll,
+      path: '/unitInfoALL', //单元信息所有
+      name: 'unitInfoALL',
+      component: unitInfoALL,
     },
 
 
@@ -115,7 +115,7 @@ export default [{
       component: reserveList,
     },
     {
-      path: '/reserveDetail', //预定详情
+      path: '/reserveDetail:id', //预定详情
       name: 'reserveDetail',
       component: reserveDetail,
     },
