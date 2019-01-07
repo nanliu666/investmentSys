@@ -42,12 +42,12 @@
       </section>
     </section>
     <section class="rightNav">
-      <a
+      <div
         class="alphabet"
         v-for="(item, index) in alphabetList"
         :key="index"
         @click="goAnchor('#anchor-'+item)"
-      >{{item}}</a>
+      >{{item}}</div>
     </section>
   </div>
 </template>
@@ -262,7 +262,7 @@ export default {
 .rightNav {
   position: fixed;
   right: 38px;
-  top: 160px;
+  top: 300px;
   .alphabet {
     margin: 4px 0;
     @include flexCenter;

@@ -18,21 +18,21 @@
 <script>
 export default {
   name: "App",
-  mounted() {
-    var script = document.createElement("script");
-    script.setAttribute("type", "text/javascript");
-    if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
-      script.setAttribute("src", "./scripts/ios_cordova.js");
-    } else {
-      script.setAttribute("src", "./scripts/android_cordova.js");
-    }
-    var heads = document.getElementsByTagName("head");
-    if (heads.length) {
-      heads[0].appendChild(script);
-    } else {
-      document.documentElement.appendChild(script);
-    }
-  }
+  // mounted() {
+  //   var script = document.createElement("script");
+  //   script.setAttribute("type", "text/javascript");
+  //   if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+  //     script.setAttribute("src", "./scripts/ios_cordova.js");
+  //   } else {
+  //     script.setAttribute("src", "./scripts/android_cordova.js");
+  //   }
+  //   var heads = document.getElementsByTagName("head");
+  //   if (heads.length) {
+  //     heads[0].appendChild(script);
+  //   } else {
+  //     document.documentElement.appendChild(script);
+  //   }
+  // }
 };
 </script>
 <style lang="scss">

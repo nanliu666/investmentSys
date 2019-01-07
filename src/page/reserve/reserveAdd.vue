@@ -6,7 +6,13 @@
         <div class="danyuan">当前预定单元</div>
         <div class="qi">星月湾·东街二期 &nbsp; 403</div>
       </div>
-      <group title="客户信息" label-width="4.5em" label-margin-right="2em" label-align="right">
+      <group
+        class="group"
+        title="客户信息"
+        label-width="4.5em"
+        label-margin-right="2em"
+        label-align="right"
+      >
         <cell class="cellLeft" title="客户姓名" :link="{path:'/clientList'}"></cell>
         <x-input
           title="电话号码"
@@ -262,12 +268,16 @@ export default {
       }
       .qi {
         @include sc(32px, rgba(30, 30, 30, 1));
-        font-family: fm;
+        font-family: $fm;
       }
+    }
+    .group {
+      @include sc(30px, rgba(136, 136, 136, 1));
+      font-family: $fr;
     }
     .cellLeft {
       @include sc(30px, rgba(136, 136, 136, 1));
-
+      font-family: $fr;
     }
     .button {
       @include fj(space-around);
@@ -275,7 +285,7 @@ export default {
         @include wh(320px, 88px);
         @include sc(36px, $fc);
         @include borderRadius(44px);
-        font-family:  $fm;
+        font-family: $fm;
         margin-top: 40px;
         box-shadow: 0 4px 20px 0 rgba(96, 137, 210, 0.17);
       }
