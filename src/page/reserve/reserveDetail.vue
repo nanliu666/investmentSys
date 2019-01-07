@@ -101,7 +101,7 @@ export default {
       .danyuan {
         @include sc(28px, rgba(255, 255, 255, 1));
         margin-bottom: 10px;
-        font-family: $familyR;
+        font-family: $fr;
       }
       .qi {
         @include sc(32px, rgba(255, 255, 255, 1));
@@ -111,7 +111,7 @@ export default {
     .main {
       .cientInfo {
         @include sc(28px, #1e1e1e);
-        font-family: $familyR;
+        font-family: $fr;
         padding: 16px 40px;
       }
       .formInfo {

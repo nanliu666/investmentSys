@@ -393,7 +393,7 @@ export default {
     @include wh(640px, 88px);
     @include sc(36px, $fc);
     @include borderRadius(44px);
-    font-family: $familyMedium;
+    font-family: $fm;
     margin-top: 40px;
     box-shadow: 0 4px 20px 0 rgba(96, 137, 210, 0.17);
   }

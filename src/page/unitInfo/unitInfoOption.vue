@@ -157,7 +157,7 @@ export default {
       margin: 12px 0;
       background-color: $fc;
       span {
-        font-family: $familyMedium;
+        font-family: $fm;
         @include sc(30px, #888888);
       }
       @include borderStyle(#ececec);

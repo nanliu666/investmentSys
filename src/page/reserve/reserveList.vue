@@ -279,7 +279,7 @@ export default {
           @include flexCenter;
           @include borderRadius(4px);
           @include sc(20px, rgba(255, 255, 255, 1));
-          font-family: $familyR;
+          font-family: $fr;
         }
         //未提交
         .Active {
@@ -313,7 +313,7 @@ export default {
           margin-bottom: 20px;
           label {
             @include sc(28px, rgba(136, 136, 136, 1));
-            font-family: $familyR;
+            font-family: $fr;
           }
           .text {
             @include sc(28px, rgba(30, 30, 30, 1));
@@ -327,7 +327,7 @@ export default {
             background-color: $fc;
             @include borderRadius(25px);
             @include sc(28px, rgba(72, 121, 230, 1));
-            font-family: $familyR;
+            font-family: $fr;
             border: 1px solid rgba(72, 121, 230, 1); /*no*/
             padding: 0px 26px;
           }

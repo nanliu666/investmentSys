@@ -113,17 +113,17 @@ export default {
       .danyuan {
         @include sc(28px, rgba(255, 255, 255, 1));
         margin-bottom: 10px;
-        font-family: $familyR;
+        font-family: $fr;
       }
       .qi {
         @include sc(32px, rgba(255, 255, 255, 1));
-        font-family: $familyMedium;
+        font-family: $fm;
       }
     }
     .main {
       .cientInfo {
         @include sc(28px, #1e1e1e);
-        font-family: $familyR;
+        font-family: $fr;
         padding: 16px 40px;
       }
       .formInfo {
@@ -185,7 +185,7 @@ export default {
         @include wh(168px, 60px);
         @include sc(28px, $fc);
         @include borderRadius(30px);
-        font-family: $familyMedium;
+        font-family: $fm;
         margin: 0 8px;
         box-shadow: 0 0px 20px 0 rgba(96, 137, 210, 0.17);
       }

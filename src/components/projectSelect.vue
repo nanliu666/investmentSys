@@ -189,7 +189,7 @@ export default {
     .filterTitle {
       //状态，项目文字
       @include sc(28px, rgba(30, 30, 30, 1));
-      font-family: $familyR;
+      font-family: $fr;
       margin-right: 12px;
     }
   }

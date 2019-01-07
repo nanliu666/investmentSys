@@ -204,7 +204,7 @@ export default {
       width: 10%;
       float: left;
       @include sc(44px, #888);
-      font-family: $familyMedium;
+      font-family: $fm;
     }
     .unitRoom {
       float: left;
@@ -217,7 +217,7 @@ export default {
         margin: 0 0 20px 20px;
         background-color: #78caff;
         @include sc(30px, $fc);
-        font-family: $familyMedium;
+        font-family: $fm;
       }
       .rented {
         background-color: #ffab56;
@@ -242,7 +242,7 @@ export default {
   background-color: $fc;
   box-shadow: 0 -2px 7px 0 rgba(126, 158, 230, 0.15);
   .rente-pater {
-    font-family: $familyR;
+    font-family: $fr;
     @include flexHCenter;
     .rente-text {
       @include sc(30px, rgba(136, 136, 136, 1));

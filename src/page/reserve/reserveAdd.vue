@@ -258,7 +258,7 @@ export default {
       .danyuan {
         @include sc(24px, rgba(136, 136, 136, 1));
         margin-bottom: 10px;
-        font-family: $familyR;
+        font-family: $fr;
       }
       .qi {
         @include sc(32px, rgba(30, 30, 30, 1));
@@ -275,7 +275,7 @@ export default {
         @include wh(320px, 88px);
         @include sc(36px, $fc);
         @include borderRadius(44px);
-        font-family: fm;
+        font-family:  $fm;
         margin-top: 40px;
         box-shadow: 0 4px 20px 0 rgba(96, 137, 210, 0.17);
       }
