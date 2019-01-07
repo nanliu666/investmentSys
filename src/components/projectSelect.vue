@@ -91,6 +91,7 @@ export default {
       companysSelect: "",
       PropertysList: [],
       companysList: [],
+      statusName: "",
       PropertysSelect: ""
     };
   },
@@ -132,7 +133,6 @@ export default {
         Filter: `Companyid.=.${data.Companyid}&Propertyid.=.${data.Propertyid}`
       };
       this.$emit("FilterUpdate", this.FilterCond);
-      // this.mescroll.resetUpScroll();
       this.hasprojectStatus = !this.hasprojectStatus;
     },
     reselectCompany() {
@@ -148,8 +148,16 @@ export default {
       if (this.statusDetailSelect === "all") {
         this.FilterCond = {};
       } else {
+        switch (this.comName) {
+          case "reserveList":
+            this.statusName = "Recordstatus";
+            break;
+          case "contractList":
+            this.statusName = "Contractstatushow";
+            break;
+        }
         this.FilterCond = {
-          Filter: `Contractstatushow.=.${this.statusDetailSelect}`
+          Filter: `${this.statusName}.=.${this.statusDetailSelect}`
         };
       }
       this.$emit("FilterUpdate", this.FilterCond);
@@ -157,7 +165,8 @@ export default {
     }
   },
   props: {
-    statusDetail: Object
+    statusDetail: Object,
+    comName: String
   }
 };
 </script>
