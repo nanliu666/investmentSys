@@ -27,13 +27,11 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     if (response.data.d && response.data.d !== undefined) {
-      const data = JSON.parse(response.data.d.Data)
+      Vue.$vux.loading.hide()
       if (response.data.d.Success === true) {
-        Vue.$vux.loading.hide()
-        return Promise.resolve(data);
+        return Promise.resolve(JSON.parse(response.data.d.Data));
       } else {
-        Vue.$vux.loading.hide()
-        Vue.$vux.toast.text(res.data.msg, 'top')
+        Vue.$vux.toast.text(res.data.Message, 'top')
         return Promise.reject(response); //增加对错误的处理改正
       }
     }

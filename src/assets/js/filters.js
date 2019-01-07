@@ -66,10 +66,23 @@ let formatNumber = (number, decimals = 2, dec_point = '.', thousands_sep = ',', 
   }
   return s.join(dec);
 }
+
+//字符串首字母大写
+let firstUpperCase = (str) => {
+  var newarr, newarr1 = [];
+  newarr = str.toLowerCase().split(" ");
+  for (var i = 0; i < newarr.length; i++) {
+    newarr1.push(newarr[i][0].toUpperCase() + newarr[i].substring(1));
+  }
+  return newarr1.join(' ');
+};
+
+
 export {
   dataFrm,
   strSubstring,
   formatNumber,
   postfixFileName,
+  firstUpperCase,
   splitFileName
 }

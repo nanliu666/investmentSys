@@ -14,5 +14,6 @@ export default {
   chain: _.chain,
   uniqBy: _.uniqBy,
   find: _.find,
+  map: _.map,
   forEach: _.forEach
 }

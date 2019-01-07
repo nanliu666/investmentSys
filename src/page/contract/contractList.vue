@@ -264,9 +264,9 @@ export default {
     @include fj(space-between);
     background-color: #fff;
     .fs-search {
-      height: 36px;
+      height: 32px;
       border-radius: 18px;
-      margin: 5px 0;
+      margin: 7px 0;
     }
     .searchInput {
       border: 1px solid #ccc;

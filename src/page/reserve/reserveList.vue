@@ -29,12 +29,8 @@
       <!--内容...-->
       <li v-for="(item) in dataList" :key="item.Bookid" @click="gotoDetail(item)">
         <div class="top">
-          <span>月亮湾第二期 1506</span>
-          <!-- <span>{{item.Companyname}} {{item.Projectname}}</span> -->
-          <span
-            :class="getbusinessStatus(item.Recordstatus)"
-            v-text="statusDetail[item.Recordstatus]"
-          ></span>
+          <span>{{item.Companyname}} {{item.Projectname}}</span>
+          <span :class="getbusinessStatus(item.Recordstatus)" v-text="getStatus(item.Recordstatus)"></span>
         </div>
         <div class="bottom">
           <div class="client">
@@ -103,7 +99,7 @@ export default {
         all: "所有状态",
         Active: "未提交",
         Submitted: "审批中",
-        SIGNED: "已签约",
+        Signed: "已签约",
         Rejected: "已驳回",
         Approved: "已审批",
         Voided: "已作废"
@@ -198,15 +194,16 @@ export default {
       // });
     },
     getbusinessStatus(data) {
-      switch (data) {
+      let strDatd = this.$options.filters.firstUpperCase(data);
+      switch (strDatd) {
         case "Active":
           return "Active";
           break;
         case "Approved":
           return "Approved";
           break;
-        case "SIGNED":
-          return "SIGNED";
+        case "Signed":
+          return "Signed";
           break;
         case "Rejected":
           return "Rejected";
@@ -216,6 +213,29 @@ export default {
           break;
         case "Voided":
           return "Voided";
+          break;
+      }
+    },
+    getStatus(data) {
+      let strDatd = this.$options.filters.firstUpperCase(data);
+      switch (strDatd) {
+        case "Active":
+          return "未提交";
+          break;
+        case "Approved":
+          return "审批中";
+          break;
+        case "Signed":
+          return "已签约";
+          break;
+        case "Rejected":
+          return "已驳回";
+          break;
+        case "Submitted":
+          return "已审批";
+          break;
+        case "Voided":
+          return "已作废";
           break;
       }
     }
@@ -239,9 +259,9 @@ export default {
     @include fj(space-between);
     background-color: #fff;
     .fs-search {
-      height: 36px;
+      height: 32px;
       border-radius: 18px;
-      margin: 5px 0;
+      margin: 7px 0;
     }
     .searchInput {
       border: 1px solid #ccc;
@@ -286,7 +306,7 @@ export default {
           background: rgba(152, 226, 72, 1);
         }
         //已签约
-        .SIGNED {
+        .Signed {
           background: rgba(59, 222, 186, 1);
         }
         //审批中
