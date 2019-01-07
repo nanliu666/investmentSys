@@ -6,7 +6,9 @@ const unitOption = resolve => require(['@/page/unitInfo/unitInfoOption'], resolv
 const unitAll = resolve => require(['@/page/unitInfo/unitInfoALL'], resolve);
 
 //预定模块
-const reserve = resolve => require(['@/page/reserve/reserve'], resolve);
+const reserveList = resolve => require(['@/page/reserve/reserveList'], resolve);
+const reserveDetail = resolve => require(['@/page/reserve/reserveDetail'], resolve);
+const reserveAdd = resolve => require(['@/page/reserve/reserveAdd'], resolve);
 
 // 商机模块
 const businessAdd = resolve => require(['@/page/business/businessAdd'], resolve);
@@ -108,9 +110,19 @@ export default [{
 
     //预定模块
     {
-      path: '/reserve', //预定
-      name: 'reserve',
-      component: reserve,
+      path: '/reserveList', //预定列表
+      name: 'reserveList',
+      component: reserveList,
+    },
+    {
+      path: '/reserveDetail', //预定详情
+      name: 'reserveDetail',
+      component: reserveDetail,
+    },
+    {
+      path: '/reserveAdd', //预定新增
+      name: 'reserveAdd',
+      component: reserveAdd,
     },
 
   ]
