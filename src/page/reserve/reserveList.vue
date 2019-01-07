@@ -1,13 +1,14 @@
 <template>
   <div class="contractList">
     <x-header :left-options="{backText: ''}" class="header" v-if="!hasSearch">
-      合同管理
+      预定管理
       <i class="iconfont icon-fangdajing" slot="right" @click="openSearch"></i>
+      <i class="iconfont icon-jia" slot="right" @click="addReserve"></i>
     </x-header>
     <section class="searchPart" v-if="hasSearch">
       <x-input
         type="text"
-        placeholder="请输入合同关键字"
+        placeholder="请输入预定关键字"
         v-model="enterText"
         @on-enter="onEnter"
         class="searchInput fs-search"
@@ -16,11 +17,7 @@
       </x-input>
       <div class="cancel" @click="searchCancel">取消</div>
     </section>
-    <projeceSelect
-      :statusDetail="statusDetail"
-      @FilterUpdate="FilterUpdate"
-      comName="contractList"
-    />
+    <projeceSelect :statusDetail="statusDetail" @FilterUpdate="FilterUpdate" comName="reserveList"/>
     <!--mescroll滚动区域的基本结构-->
     <mescroll-vue
       class="mescroll"
@@ -30,31 +27,28 @@
       @init="mescrollInit"
     >
       <!--内容...-->
-      <li v-for="(item) in dataList" :key="item.Rentalid" @click="gotoDetail(item)">
+      <li v-for="(item) in dataList" :key="item.Bookid" @click="gotoDetail(item)">
         <div class="top">
-          <span>{{item.Companyname}} {{item.Projectname}}</span>
+          <span>月亮湾第二期 1506</span>
+          <!-- <span>{{item.Companyname}} {{item.Projectname}}</span> -->
           <span
-            :class="getbusinessStatus(item.Contractstatushow)"
-            v-text="statusDetail[item.Contractstatushow]"
+            :class="getbusinessStatus(item.Recordstatus)"
+            v-text="statusDetail[item.Recordstatus]"
           ></span>
         </div>
         <div class="bottom">
           <div class="client">
             <div>
-              <label>签约客户：</label>
-              <span class="text">{{item.Debtorname}}</span>
+              <label>预定客户：</label>
+              <span class="text">{{item.Accountname}}</span>
             </div>
             <div class="phone">
-              <label>合同总额:</label>
-              <span class="text">￥{{item.Contractamt | formatNumber}}</span>
-            </div>
-            <div>
-              <label>面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;积:</label>
-              <span class="text">{{item.Totalrentalarea}}M²</span>
+              <label>定金:</label>
+              <span class="text">￥{{item.Bookamt | formatNumber}}</span>
             </div>
           </div>
           <div>
-            <label class="cycleText">租赁周期：</label>
+            <label class="cycleText">预定周期：</label>
             <span
               class="cycleText"
             >{{item.Defaultstartdate | dataFrm('YYYY-MM-DD')}}&nbsp;至&nbsp;{{item.Defaultexpirydate | dataFrm('YYYY-MM-DD')}}</span>
@@ -67,13 +61,13 @@
 </template>
 <script>
 import { XHeader, Search, Popup, XInput } from "vux";
-import { GetContractMgmt, GetCompanyies, GetPropertys } from "@/axios/api";
+import { GetReserveMgmt, GetCompanyies, GetPropertys } from "@/axios/api";
 // 引入下拉组件
 import MescrollVue from "mescroll.js/mescroll.vue";
 import imgSrc from "../../assets/images/分组.png";
 import topimgSrc from "../../assets/images/gototop.png";
 export default {
-  name: "contractList",
+  name: "reserveList",
   data() {
     return {
       enterText: "",
@@ -107,18 +101,12 @@ export default {
       dataList: [], //所有的合同列表数据
       statusDetail: {
         all: "所有状态",
-        // Active: "未提交",
+        Active: "未提交",
         Submitted: "审批中",
-        Signed: "已签约",
-        Voing: "变更中",
-        Expired: "已到期 ",
-        Closed: "已关闭 ",
-        Terminated: "已终止",
-        Releting: "续租中",
+        SIGNED: "已签约",
         Rejected: "已驳回",
-        Execing: "执行中",
-        Approved: "已审核",
-        Tempsave: "暂存"
+        Approved: "已审批",
+        Voided: "已作废"
       }
     };
   },
@@ -144,6 +132,11 @@ export default {
     next();
   },
   methods: {
+    addReserve() {
+      this.$router.push({
+        name: "reserveAdd"
+      });
+    },
     FilterUpdate(data) {
       console.log("子组件传递过来的修改的值", data);
       this.FilterCond = data;
@@ -175,15 +168,14 @@ export default {
         }
       };
       Object.assign(data.Urlpara, this.FilterCond);
-      GetContractMgmt(data)
+      GetReserveMgmt(data)
         .then(res => {
           let arr = JSON.parse(res.Content);
+          console.log(arr);
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.dataList = [];
-          // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
-          this.dataList = this._.filter(this.dataList.concat(arr), item => {
-            return item.Contractstatushow !== "Active";
-          });
+          // 把请求到的数据添加到列表
+          this.dataList = this.dataList.concat(arr);
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
             mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
@@ -196,54 +188,34 @@ export default {
     },
     gotoDetail(data) {
       const requestData = {
-        Contractmgmt: {
-          Rentalid: data.Rentalid,
-          Companyid: data.Companyid,
-          Propertyid: data.Propertyid
+        Reservemgmt: {
+          Bookid: data.Bookid
         }
       };
-      this.$router.push({
-        name: "contractDetail",
-        params: { id: requestData.Contractmgmt.Rentalid, data: requestData }
-      });
+      // this.$router.push({
+      //   name: "reserveDetail",
+      //   params: { id: requestData.Reservemgmt.Bookid, data: requestData, }
+      // });
     },
     getbusinessStatus(data) {
       switch (data) {
-        // case "Active":
-        //   return "Active";
-        //   break;
-        case "Submitted":
-          return "Submitted";
-          break;
-        case "Signed":
-          return "Signed";
-          break;
-        case "Voing":
-          return "Voing";
-          break;
-        case "Expired":
-          return "Expired";
-          break;
-        case "Closed":
-          return "Closed";
-          break;
-        case "Terminated":
-          return "Terminated";
-          break;
-        case "Releting":
-          return "Releting";
-          break;
-        case "Rejected":
-          return "Rejected";
-          break;
-        case "Execing":
-          return "Execing";
+        case "Active":
+          return "Active";
           break;
         case "Approved":
           return "Approved";
           break;
-        case "Tempsave":
-          return "Tempsave";
+        case "SIGNED":
+          return "SIGNED";
+          break;
+        case "Rejected":
+          return "Rejected";
+          break;
+        case "Submitted":
+          return "Submitted";
+          break;
+        case "Voided":
+          return "Voided";
           break;
       }
     }
@@ -257,6 +229,9 @@ export default {
   height: 100%;
   .header {
     box-shadow: 0 0px 0px 0 #fff !important; //重叠头部
+    .iconfont {
+      margin: 10px;
+    }
   }
 
   .searchPart {
@@ -279,7 +254,6 @@ export default {
   }
 
   .mescroll {
-    // padding: 10px 40px 0;
     @include cl;
     width: 88%;
     position: fixed;
@@ -298,7 +272,7 @@ export default {
         border-bottom: 4px dashed rgba(244, 246, 248, 1); /*no*/
         span:first-child {
           @include sc(32px, rgba(30, 30, 30, 1));
-          font-family:  $familyMedium;
+          font-family: fm;
         }
         span:last-child {
           @include wh(80px, 38px);
@@ -312,52 +286,24 @@ export default {
           background: rgba(152, 226, 72, 1);
         }
         //已签约
-        .Signed {
+        .SIGNED {
           background: rgba(59, 222, 186, 1);
         }
         //审批中
         .Submitted {
           background: rgba(105, 167, 254, 1);
         }
-        //执行中
-        .Execing {
-          background: rgba(105, 167, 254, 1);
-        }
-        //变更中
-        .Voing {
-          background: rgba(149, 154, 255, 1);
-        }
-        //已到期
-        .Expired {
-          background: rgba(255, 166, 112, 1);
-        }
-        //已关闭
-        .Closed {
+        //已作废
+        .Voided {
           background: rgba(188, 204, 212, 1);
-        }
-        //已终止
-        .Terminated {
-          background: rgba(248, 123, 123, 1);
-        }
-        //续租中
-        .Releting {
-          background: rgba(135, 226, 248, 1);
         }
         //已驳回
         .Rejected {
           background: rgba(253, 180, 84, 1);
         }
-        //已审核
+        //已审批
         .Approved {
           background: rgba(120, 202, 255, 1);
-        }
-        //暂存
-        .Tempsave {
-          background: linear-gradient(
-            to left,
-            rgba(203, 220, 234, 1),
-            rgba(173, 188, 198, 1)
-          );
         }
       }
       .bottom {
