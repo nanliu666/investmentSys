@@ -257,7 +257,7 @@ export default {
     @include cl;
     width: 88%;
     position: fixed;
-    top: 160px;
+    top: 180px;
     bottom: 0;
     height: auto;
     li {
