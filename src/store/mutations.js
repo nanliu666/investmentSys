@@ -15,6 +15,6 @@ export default {
     state.clientDetail = value
   },
   [RESERVEADD](state, value) {
-    state.reserveObj = value
+    state.reserveObj = Object.assign(state.reserveObj, value)
   },
 }

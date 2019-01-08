@@ -50,7 +50,7 @@
           title="面积(m²)"
           placeholder="请填入面积"
           placeholder-align="right"
-          v-model="reserveAddObj.area"
+          v-model="area"
           @on-change="areaChange"
           type="number"
           value-align="right"
@@ -58,23 +58,29 @@
         ></x-input>
         <datetime
           class="dateTime"
-          v-model="limitHourValue"
-          @on-change="change"
+          v-model="startTime"
+          @on-change="startChange"
           format="YYYY-MM-DD"
           title="预定日期"
         ></datetime>
         <datetime
           class="dateTime"
-          v-model="limitHourValue"
-          @on-change="change"
+          v-model="endTime"
+          @on-change="endChange"
           format="YYYY-MM-DD"
           title="预定结束日期"
         ></datetime>
-        <x-textarea title="备注" v-model="remark" placeholder="请输入备注" class="textArea"></x-textarea>
+        <x-textarea
+          title="备注"
+          @on-change="textAreaChange"
+          v-model="remark"
+          placeholder="请输入备注"
+          class="textArea"
+        ></x-textarea>
       </group>
       <div class="button">
-        <button class="save">保存</button>
-        <button class="submit">提交</button>
+        <button class="save" @click="save">保存</button>
+        <button class="submit" @click="submit">提交</button>
       </div>
     </section>
     <router-view/>
@@ -90,8 +96,6 @@ import {
   XInput,
   PopupPicker,
   XTextarea,
-  XButton,
-  Badge,
   Confirm,
   Datetime,
   Toast
@@ -105,23 +109,22 @@ export default {
     PopupPicker,
     XTextarea,
     Toast,
-    XButton,
     Confirm,
     Cell,
-    Badge,
     Datetime,
     XInput
   },
   data() {
     return {
-      reserveAddObj: {},
       area: "",
+      clientDataName: "",
+      clientDataPhone: "",
       depositMoney: "",
       remark: "",
-      phoneVaule: "",
       hasStatus: false,
       hasUint: false,
-      limitHourValue: ""
+      startTime: "",
+      endTime: ""
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -135,20 +138,39 @@ export default {
     ...mapState(["toPageName", "clientDetail", "reserveObj"])
   },
   methods: {
+    save() {
+      this.RESERVEADD({ clientDataName: this.clientDataName });
+      this.RESERVEADD({ clientDataPhone: this.clientDataPhone });
+      console.log(this.reserveObj);
+    },
+    submit() {
+      console.log(1);
+    },
+    textAreaChange: _.debounce(function(value) {
+      this.RESERVEADD({ remark: value });
+    }, 1000),
     depositMoneyChange: _.debounce(function(value) {
-      this.RESERVEADD(this.reserveAddObj);
+      this.RESERVEADD({ depositMoney: value });
     }, 1000),
     areaChange: _.debounce(function(value) {
-      this.RESERVEADD(this.reserveAddObj);
+      this.RESERVEADD({ area: value });
     }, 1000),
     ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
     onLoad() {
-      // this.reserveAddObj = this.reserveObj;
-      // this.reserveAddObj.clientData = this.clientDetail;
-      // console.log(this.reserveObj);
+      this.clientDataName = this.clientDetail.Name;
+      this.clientDataPhone = this.clientDetail.Phone;
+      this.depositMoney = this.reserveObj.depositMoney;
+      this.area = this.reserveObj.area;
+      this.startTime = this.reserveObj.startTime;
+      this.endTime = this.reserveObj.endTime;
+      this.remark = this.reserveObj.remark;
+      console.log(this.reserveObj);
     },
-    change(value) {
-      console.log("change", value);
+    startChange(value) {
+      this.RESERVEADD({ startTime: value });
+    },
+    endChange(value) {
+      this.RESERVEADD({ endTime: value });
     },
     openStatus() {},
     getClient() {

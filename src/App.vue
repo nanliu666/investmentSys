@@ -79,14 +79,17 @@ export default {
   textarea {
     @include sc(34px, rgb(153, 153, 153));
     font-family: $fr;
+    direction: rtl;
   }
   textarea:-ms-input-placeholder {
     @include sc(34px, rgb(153, 153, 153));
     font-family: $fr;
+    direction: rtl;
   }
   textarea::-webkit-input-placeholder {
     @include sc(34px, rgb(153, 153, 153));
     font-family: $fr;
+    direction: rtl;
   }
 }
 </style>
