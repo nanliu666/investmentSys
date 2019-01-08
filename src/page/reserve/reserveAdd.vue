@@ -226,18 +226,10 @@ export default {
         box-shadow: 0 4px 20px 0 rgba(96, 137, 210, 0.17);
       }
       .save {
-        background: linear-gradient(
-          to left,
-          rgba(120, 202, 255, 1),
-          rgba(55, 185, 255, 1)
-        );
+        background: rgba(120, 202, 255, 1);
       }
       .submit {
-        background: linear-gradient(
-          to left,
-          rgba(56, 153, 255, 1),
-          rgba(74, 116, 226, 1)
-        );
+        background: rgba(105, 167, 254, 1);
       }
     }
   }
