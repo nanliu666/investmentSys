@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import routes from './router'
 import App from './App'
+import store from './store/index'
 import * as filters from './assets/js/filters'
 import _ from './assets/js/lodash' //loadsh待改进
 Vue.prototype._ = _
@@ -70,6 +71,7 @@ const router = new VueRouter({
 new Vue({
   el: '#app',
   router,
+  store,
   components: {
     App
   },

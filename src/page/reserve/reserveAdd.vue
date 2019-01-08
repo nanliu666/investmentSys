@@ -1,54 +1,83 @@
 <template>
   <div class="reservePart">
     <x-header :left-options="{backText: ''}" class="header">预定新增</x-header>
-
     <section class="content">
       <div class="reseveTitle" v-if="hasUint">
         <div class="danyuan">当前预定单元</div>
         <div class="qi">星月湾·东街二期 &nbsp; 403</div>
+        <div class="shangji">
+          <div>
+            当前铺位已有
+            <span class="shangjiNum">&nbsp;2&nbsp;</span>条可直接载入商机
+          </div>
+          <div>
+            <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon>
+            <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon>
+          </div>
+        </div>
       </div>
-      <li class="reserveLi">
-        <div class="liTitle">预定单元</div>
-        <div class="liRight">
-          <span>请选择</span>
-          <!-- <span></span> -->
-          <i class="iconfont icon-youjiantou"></i>
-        </div>
-      </li>
-      <li class="title">客户信息</li>
-      <li class="reserveLi">
-        <div class="liTitle">客户姓名</div>
-        <div class="liRight">
-          <span>请选择</span>
-          <i class="iconfont icon-youjiantou"></i>
-        </div>
-      </li>
-      <li class="reserveLi">
-        <div class="liTitle">手机号码</div>
-        <div class="liRight">
-          <span>请填写</span>
-        </div>
-      </li>
-      <li class="title">客户信息</li>
-      <li class="reserveLi">
-        <div class="liTitle">定金 (￥)</div>
-        <input class="hasLiRight" type="text" placeholder="请输入定金金额">
-      </li>
-      <li class="reserveLi">
-        <div class="liTitle">面积 (m²)</div>
-        <input class="hasLiRight" type="text" placeholder="请输入面积">
-      </li>
-      <group>
+      <group
+        label-width="6em"
+        label-margin-right="2em"
+        label-align="left"
+        class="firstGroup"
+        v-if="!hasUint"
+      >
+        <cell title="预定单元" value="请选择" value-align="right" is-link></cell>
+      </group>
+      <group title="客户信息" label-width="6em" label-margin-right="2em" label-align="left">
+        <cell
+          title="客户姓名"
+          value-align="right"
+          v-model="clientDataName"
+          is-link
+          @click.native="getClient"
+        ></cell>
+        <cell title="电话号码" value-align="right" v-model="clientDataPhone"></cell>
+      </group>
+      <group title="客户信息" label-width="6em" label-margin-right="2em" label-align="left">
+        <x-input
+          title="定金(￥)"
+          placeholder="请填入定金金额"
+          v-model="depositMoney"
+          type="number"
+          @on-change="depositMoneyChange"
+          placeholder-align="right"
+          value-align="right"
+          text-align="right"
+        ></x-input>
+        <x-input
+          title="面积(m²)"
+          placeholder="请填入面积"
+          placeholder-align="right"
+          v-model="reserveAddObj.area"
+          @on-change="areaChange"
+          type="number"
+          value-align="right"
+          text-align="right"
+        ></x-input>
         <datetime
+          class="dateTime"
           v-model="limitHourValue"
-          :start-date="startDate"
-          :end-date="endDate"
           @on-change="change"
           format="YYYY-MM-DD"
-          title="开始时间"
+          title="预定日期"
         ></datetime>
+        <datetime
+          class="dateTime"
+          v-model="limitHourValue"
+          @on-change="change"
+          format="YYYY-MM-DD"
+          title="预定结束日期"
+        ></datetime>
+        <x-textarea title="备注" v-model="remark" placeholder="请输入备注" class="textArea"></x-textarea>
       </group>
+      <div class="button">
+        <button class="save">保存</button>
+        <button class="submit">提交</button>
+      </div>
     </section>
+    <router-view/>
   </div>
 </template>
 
@@ -67,7 +96,7 @@ import {
   Datetime,
   Toast
 } from "vux";
-
+import { mapMutations, mapState } from "vuex";
 export default {
   name: "reserveAdd",
   components: {
@@ -85,21 +114,47 @@ export default {
   },
   data() {
     return {
+      reserveAddObj: {},
+      area: "",
+      depositMoney: "",
+      remark: "",
+      phoneVaule: "",
+      hasStatus: false,
       hasUint: false,
-      limitHourValue: "",
-      startDate: "2015-11-11",
-      endDate: "2017-10-11"
+      limitHourValue: ""
     };
+  },
+  beforeRouteLeave(to, from, next) {
+    this.TO_PAGE_NAME(from.name); //离开的时候在vuex存起来本组件的路由名称
+    next();
   },
   created() {
     this.onLoad();
   },
+  computed: {
+    ...mapState(["toPageName", "clientDetail", "reserveObj"])
+  },
   methods: {
+    depositMoneyChange: _.debounce(function(value) {
+      this.RESERVEADD(this.reserveAddObj);
+    }, 1000),
+    areaChange: _.debounce(function(value) {
+      this.RESERVEADD(this.reserveAddObj);
+    }, 1000),
+    ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
     onLoad() {
-      console.log(1);
+      // this.reserveAddObj = this.reserveObj;
+      // this.reserveAddObj.clientData = this.clientDetail;
+      // console.log(this.reserveObj);
     },
     change(value) {
       console.log("change", value);
+    },
+    openStatus() {},
+    getClient() {
+      this.$router.push({
+        name: "clientList"
+      });
     }
   }
 };
@@ -110,59 +165,33 @@ export default {
 .reservePart {
   .content {
     .reseveTitle {
-      height: 160px;
-      padding: 32px 40px;
+      background-color: #fff;
       .danyuan {
-        @include sc(24px, rgba(136, 136, 136, 1));
+        @include sc(30px, rgba(136, 136, 136, 1));
+        padding: 32px 40px 0;
         margin-bottom: 10px;
         font-family: $fr;
       }
       .qi {
-        @include sc(32px, rgba(30, 30, 30, 1));
+        @include sc(34px, rgba(30, 30, 30, 1));
+        padding: 0 40px;
         font-family: $fm;
+        border-bottom: 2px solid rgb(244, 246, 248);
+      }
+      .shangji {
+        @include fj(space-between);
+        @include wh(100%, 96px);
+        @include flexHCenter;
+        padding: 0 40px;
+        font-family: $fr;
+        @include sc(32px, rgba(136, 136, 136, 1));
+        .shangjiNum {
+          @include sc(32px, rgba(105, 167, 254, 1));
+        }
       }
     }
-    .group {
-      margin-top: -30px;
-      background: #000;
-    }
-    .reserveLi {
-      background-color: #fff;
-      @include fj(space-between);
-      @include wh(100%, 96px);
-      padding: 0 40px;
-      margin-bottom: 4px;
-      font-family: $fr;
-      .liTitle {
-        @include flexCenter;
-        @include sc(30px, rgba(136, 136, 136, 1));
-      }
-      .liRight {
-        @include flexCenter;
-        @include sc(30px, rgba(209, 209, 209, 1));
-      }
-      .hasLiRight {
-        @include sc(30px, rgba(30, 30, 30, 1));
-      }
-      input {
-        text-align: right;
-      }
-      input::-webkit-input-placeholder {
-        /* WebKit browsers */
-        direction: rtl;
-        @include sc(30px, rgba(209, 209, 209, 1));
-      }
-      input:-ms-input-placeholder {
-        direction: rtl;
-        @include sc(30px, rgba(209, 209, 209, 1));
-      }
-    }
-    .title {
-      @include wh(100%, 96px);
-      @include flexHCenter;
-      font-family: $fr;
-      @include sc(28px, rgba(85, 85, 85, 1));
-      padding: 0 40px;
+    .firstGroup {
+      margin-top: -40px;
     }
     .button {
       @include fj(space-around);

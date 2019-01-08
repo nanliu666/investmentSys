@@ -54,10 +54,14 @@
 
 <script>
 import { XHeader, XButton, Search } from "vux";
+import { mapState, mapMutations } from "vuex";
 import { GetCustomer } from "@/axios/api";
 import { pinyinUtil } from "@/assets/js/pinyinUtil"; //拼音首字母转化
 export default {
   name: "clientList",
+  computed: {
+    ...mapState(["toPageName"]) //从需要调用联系人列表组件的进入的时候，拿到vuex内的来的路由名称
+  },
   data() {
     return {
       hasSearch: false,
@@ -106,6 +110,7 @@ export default {
     this.onLoad();
   },
   methods: {
+    ...mapMutations(["CLIENT_DETAIL"]),
     //锚点跳转
     goAnchor(selector) {
       this.$el.querySelector(selector).scrollIntoView();
@@ -172,10 +177,16 @@ export default {
       let selectData = this._.filter(this.clientAllData, item => {
         return item.Name === data;
       });
-      this.$router.push({
-        name: "clientDetail",
-        params: { id: selectData[0].Accountid }
-      });
+      if (this.toPageName === "reserveAdd") {
+        //如果是从预订新增进来，把联系人存起去vuex，并且回去预订新增
+        this.CLIENT_DETAIL(selectData[0]);
+        this.$router.push({ name: "reserveAdd" });
+      } else {
+        this.$router.push({
+          name: "clientDetail",
+          params: { id: selectData[0].Accountid }
+        });
+      }
     }
   }
 };
