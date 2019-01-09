@@ -1,190 +1,131 @@
 <template>
   <div>
-    <x-header :left-options="{backText: ''}" class="header">星月湾第二期</x-header>
+    <x-header :left-options="{backText: ''}" class="header" @click.native="openProjecySelct">
+      {{projectTittle}}
+      <x-icon type="ios-arrow-down" size="23" v-show="!hasprojectStatus"></x-icon>
+      <x-icon type="ios-arrow-up" size="23" v-show="hasprojectStatus"></x-icon>
+    </x-header>
+    <div style="height:44px;">
+      <sticky ref="sticky" :disabled="disabled" :check-sticky-support="false">
+        <tab
+          class="tab"
+          :line-width="1"
+          custom-bar-width="60px"
+          :bar-active-color="barActiveColor"
+          active-color="rgba(30, 30, 30, 1)"
+          default-color="rgba(136, 136, 136, 1)"
+        >
+          <tab-item selected @on-item-click="getToRent">
+            <div class="tabDiv">
+              <div class="toRent">1</div>可租
+            </div>
+          </tab-item>
+          <tab-item @on-item-click="getReserve">
+            <div class="tabDiv">
+              <div class="toRent reserve">1</div>已预定
+            </div>
+          </tab-item>
+          <tab-item @on-item-click="getRented">
+            <div class="tabDiv">
+              <div class="toRent rented">1</div>已租
+            </div>
+          </tab-item>
+          <tab-item @on-item-click="getNoRented">
+            <div class="tabDiv">
+              <div class="toRent noRented">1</div>不可租
+            </div>
+          </tab-item>
+        </tab>
+      </sticky>
+    </div>
     <section class="uintInfoAll">
-      <section class="uintOne clear">
-        <div class="uintFloor">14F</div>
-        <div class="unitRoom">
-          <div>1407</div>
-          <div>1407</div>
-          <div class="rented">1407</div>
-          <div class="reserve">1407</div>
-          <div class="noRented">1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
+      <section class="navBar">
+        <div class="top">
+          <div class="goPrePage">
+            <x-icon type="ios-arrow-up" class="icon"></x-icon>
+          </div>
+          <div class="floorList">
+            <li>5F</li>
+            <li>4F</li>
+            <li>3F</li>
+            <li>2F</li>
+            <li>1F</li>
+          </div>
+          <div class="goNextPage">
+            <x-icon type="ios-arrow-down" class="icon"></x-icon>
+          </div>
+        </div>
+        <div class="bottom">
+          <img src="../../assets/images/gotoAll.png" alt>
         </div>
       </section>
-      <section class="uintOne clear">
-        <div class="uintFloor">15F</div>
-        <div class="unitRoom">
-          <div>1407</div>
-          <div>1407</div>
-          <div class="rented">1407</div>
-          <div class="reserve">1407</div>
-          <div class="noRented">1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-        </div>
-      </section>
-      <section class="uintOne clear">
-        <div class="uintFloor">14F</div>
-        <div class="unitRoom">
-          <div>1407</div>
-          <div>1407</div>
-          <div class="rented">1407</div>
-          <div class="reserve">1407</div>
-          <div class="noRented">1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-        </div>
-      </section>
-      <section class="uintOne clear">
-        <div class="uintFloor">15F</div>
-        <div class="unitRoom">
-          <div>1407</div>
-          <div>1407</div>
-          <div class="rented">1407</div>
-          <div class="reserve">1407</div>
-          <div class="noRented">1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-        </div>
-      </section>
-      <section class="uintOne clear">
-        <div class="uintFloor">14F</div>
-        <div class="unitRoom">
-          <div>1407</div>
-          <div>1407</div>
-          <div class="rented">1407</div>
-          <div class="reserve">1407</div>
-          <div class="noRented">1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-        </div>
-      </section>
-      <section class="uintOne clear">
-        <div class="uintFloor">15F</div>
-        <div class="unitRoom">
-          <div>1407</div>
-          <div>1407</div>
-          <div class="rented">1407</div>
-          <div class="reserve">1407</div>
-          <div class="noRented">1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-        </div>
-      </section>
-      <section class="uintOne clear">
-        <div class="uintFloor">14F</div>
-        <div class="unitRoom">
-          <div>1407</div>
-          <div>1407</div>
-          <div class="rented">1407</div>
-          <div class="reserve">1407</div>
-          <div class="noRented">1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-        </div>
-      </section>
-      <section class="uintOne clear">
-        <div class="uintFloor">15F</div>
-        <div class="unitRoom">
-          <div>1407</div>
-          <div>1407</div>
-          <div class="rented">1407</div>
-          <div class="reserve">1407</div>
-          <div class="noRented">1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-        </div>
-      </section>
-      <section class="uintOne clear">
-        <div class="uintFloor">14F</div>
-        <div class="unitRoom">
-          <div>1407</div>
-          <div>1407</div>
-          <div class="rented">1407</div>
-          <div class="reserve">1407</div>
-          <div class="noRented">1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-        </div>
-      </section>
-      <section class="uintOne clear">
-        <div class="uintFloor">15F</div>
-        <div class="unitRoom">
-          <div>1407</div>
-          <div>1407</div>
-          <div class="rented">1407</div>
-          <div class="reserve">1407</div>
-          <div class="noRented">1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-          <div>1407</div>
-        </div>
-      </section>
+      <section class="main"></section>
     </section>
-    <footer class="footer">
-      <div class="rente-pater">
-        <span class="rente-text">当前可租单元：</span>
-        <span class="rente-number">483</span>
-        <span class="rente-pu">铺</span>
-      </div>
-      <div class="joinfloor">进入楼层平面图</div>
-    </footer>
   </div>
 </template>
 
 
 <script>
 import { GetUnitByBlock, GetBlocks, GetPropertys } from "@/axios/api";
-import { XHeader } from "vux";
+import { XHeader, Tab, TabItem, Sticky } from "vux";
 export default {
+  data() {
+    return {
+      allBlock: [],
+      projectTittle: "",
+      barActiveColor: "#78caff",
+      hasprojectStatus: false,
+      disabled:
+        typeof navigator !== "undefined" &&
+        /iphone/i.test(navigator.userAgent) &&
+        /ucbrowser/i.test(navigator.userAgent)
+    };
+  },
+  components: { XHeader, Tab, TabItem, Sticky },
   name: "unitALL",
   created() {
     this.onLoad();
   },
-  components: {
-    XHeader
-  },
   methods: {
+    getToRent() {
+      this.barActiveColor = "#78caff";
+    },
+    getReserve() {
+      this.barActiveColor = "#4879e6";
+    },
+    getRented() {
+      this.barActiveColor = "#ffab56";
+    },
+    getNoRented() {
+      this.barActiveColor = "rgba(206, 223, 234, 1)";
+    },
     onLoad() {
       let data = {
-        Blockid: 0
+        Blockid: 0,
+        Statucode: "",
+        Floorno: "",
+        Startdate: "",
+        Enddate: ""
       };
-      GetBlocks(data).then(res => {
-        console.log(res);
+      GetUnitByBlock(data).then(res => {
+        this.allBlock = res.Content;
+        this.hasProject();
       });
-      console.log(this.$route.params);
+    },
+    hasProject() {
+      if (this.allBlock.length === 0) {
+        //没有数据返回
+      } else if (this.allBlock.length === 1) {
+        //该用户只有一个项目
+        console.log(this.allBlock);
+        this.projectTittle = this.allBlock[0].Blockname;
+      } else {
+        //该用户有多个项目，需要选择项目
+        console.log(2);
+      }
+    },
+    openProjecySelct() {
+      this.hasprojectStatus = !this.hasprojectStatus;
     }
   }
 };
@@ -192,75 +133,62 @@ export default {
 
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
-.uintInfoAll {
-  margin-bottom: 100px;
-  padding-top: 10px;
-  .uintOne {
-    background-color: $fc;
-    padding: 40px;
-    padding-right: 0;
-    margin-bottom: 20px;
-    .uintFloor {
-      width: 10%;
-      float: left;
-      @include sc(44px, #888);
-      font-family: $fm;
+.tab {
+  .tabDiv {
+    @include flexCenter;
+    .toRent {
+      @include wh(24px, 24px);
+      margin-right: 10px;
+      color: transparent;
+      background: #78caff;
     }
-    .unitRoom {
-      float: left;
-      width: 90%;
-      @include flexwrap(wrap);
-      div {
-        @include flexCenter;
-        width: 20%;
-        padding: 10px 30px;
-        margin: 0 0 20px 20px;
-        background-color: #78caff;
-        @include sc(30px, $fc);
-        font-family: $fm;
-      }
-      .rented {
-        background-color: #ffab56;
-      }
-      .reserve {
-        background-color: #4879e6;
-      }
-      .noRented {
-        background-color: #cedfea;
-      }
+    .rented {
+      //已租
+      background-color: #ffab56;
+    }
+    .reserve {
+      //已预定
+      background-color: #4879e6;
+    }
+    .noRented {
+      //不可租
+      background-color: #cedfea;
     }
   }
 }
-.footer {
-  @include fj(space-between);
-  @include flexHCenter;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  padding: 18px 37px;
-  height: 96px;
-  background-color: $fc;
-  box-shadow: 0 -2px 7px 0 rgba(126, 158, 230, 0.15);
-  .rente-pater {
-    font-family: $fr;
-    @include flexHCenter;
-    .rente-text {
-      @include sc(30px, rgba(136, 136, 136, 1));
+.uintInfoAll {
+  position: relative;
+  .navBar {
+    position: fixed;
+    // @include flexCenter;
+    top: 260px;
+    @include wh(108px, 60%);
+    .top {
+      background-color: #fff;
+      .goPrePage,
+      .goNextPage {
+        @include flexCenter;
+        height: 108px;
+      }
+      .icon {
+        @include sc(52px, rgba(219, 219, 219, 1));
+      }
+      .floorList {
+        li {
+          @include flexCenter;
+          height: 108px;
+        }
+      }
     }
-    .rente-number {
-      @include sc(30px, #4879e6);
+    .bottom {
+      background-color: #fff;
+      margin-top: 24px;
+      @include wh(108px, 108px);
+      @include flexCenter;
+      img {
+        @include wh(58px, 58px);
+      }
     }
-    .rente-pu {
-      @include sc(30px, rgb(66, 66, 66));
-    }
-  }
-  .joinfloor {
-    @include borderStyle(rgba(72, 121, 230, 0.5));
-    @include flexHCenter;
-    height: 60px;
-    border-radius: 30px;
-    @include sc(30px, rgba(72, 121, 230, 1));
-    padding: 5px 20px;
   }
 }
 </style>
