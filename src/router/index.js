@@ -1,6 +1,6 @@
 import App from '../App'
 const login = resolve => require(['@/page/login'], resolve);
-const home = resolve => require(['@/page/index'], resolve);
+const home = resolve => require(['@/page/home'], resolve);
 //单元模块
 const unitInfoOption = resolve => require(['@/page/unitInfo/unitInfoOption'], resolve);
 const unitInfoALL = resolve => require(['@/page/unitInfo/unitInfoALL'], resolve);

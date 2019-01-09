@@ -133,7 +133,7 @@ module.exports = vuxLoader.merge(webpackCofig, {
       return source
     }
   }, {
-    // name: 'less-theme',
-    // path: 'src/styles/theme.less' // 相对项目根目录路径
+    name: 'less-theme',
+    path: 'src/assets/sass/theme.less' // 相对项目根目录路径
   }]
 })
