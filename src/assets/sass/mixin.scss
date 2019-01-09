@@ -90,7 +90,6 @@ $fr: 'PingFangSC-Semibold, sans-serif' ; //苹方字体Regular
 @mixin fj($type: space-between) {
   display: flex;
   justify-content: $type;
-
 }
 
 // flex版本 上下左右居中
@@ -113,7 +112,7 @@ $fr: 'PingFangSC-Semibold, sans-serif' ; //苹方字体Regular
 }
 
 // 横排列，竖排
-@mixin fd($type) {
+@mixin fd($type: row) {
   display: flex;
   flex-direction: $type;
 }
