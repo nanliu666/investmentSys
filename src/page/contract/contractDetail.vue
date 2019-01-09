@@ -94,11 +94,11 @@
             <div class="contractClassifyDetail" v-if="index === isStatus">
               <li>
                 <span>付款类型:</span>
-                <span>{{item.PriceModeString || ''}}</span>
+                <span>{{item.PriceModeString}}</span>
               </li>
               <li>
                 <span>付款日:</span>
-                <span>{{item.Payday|| ''}}</span>
+                <span>{{item.Payday}}</span>
               </li>
               <li>
                 <span>首期金额:</span>
@@ -106,19 +106,19 @@
               </li>
               <li>
                 <span>首期开始日期:</span>
-                <span>{{item.Paymentstartdate | dataFrm('YYYY-MM-DD')|| ''}}</span>
+                <span>{{item.Paymentstartdate | dataFrm('YYYY-MM-DD')}}</span>
               </li>
               <li>
                 <span>首期结束日期:</span>
-                <span>{{item.Paymentenddate | dataFrm('YYYY-MM-DD')|| ''}}</span>
+                <span>{{item.Paymentenddate | dataFrm('YYYY-MM-DD')}}</span>
               </li>
               <li>
                 <span>计费周期:</span>
-                <span>{{item.Frequencymodestring|| ''}}</span>
+                <span>{{item.Frequencymodestring}}</span>
               </li>
               <li>
                 <span>是否自然月账单:</span>
-                <span>{{item.Isfirstdaybillingstring|| ''}}</span>
+                <span>{{item.Isfirstdaybillingstring}}</span>
               </li>
             </div>
           </li>
@@ -379,11 +379,11 @@ export default {
         document.documentElement.scrollTop ||
         document.body.scrollTop;
       if (this.scrolled > document.getElementById("const").offsetTop) {
-        this.tabIndex = 1;
+        this.tabSelect = "费用信息";
       } else if (this.scrolled > document.getElementById("other").offsetTop) {
-        this.tabIndex = 2;
+        this.tabSelect = "其他";
       } else {
-        this.tabIndex = 0;
+        this.tabSelect = "合同主体";
       }
     },
     changeDetail(index) {
