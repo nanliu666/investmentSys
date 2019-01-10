@@ -8,6 +8,7 @@ export default {
   throttle: _.throttle,
   size: _.size,
   pick: _.pick,
+  pickBy: _.pickBy,
   isEmpty: _.isEmpty,
   groupBy: _.groupBy,
   filter: _.filter,
@@ -15,5 +16,7 @@ export default {
   uniqBy: _.uniqBy,
   find: _.find,
   map: _.map,
+  slice: _.slice,
+  orderBy: _.orderBy,
   forEach: _.forEach
 }

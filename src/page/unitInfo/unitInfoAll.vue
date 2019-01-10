@@ -9,30 +9,36 @@
       <sticky ref="sticky" :disabled="disabled" :check-sticky-support="false">
         <tab
           class="tab"
+          :scroll-threshold="5"
           :line-width="1"
           custom-bar-width="60px"
           :bar-active-color="barActiveColor"
           active-color="rgba(30, 30, 30, 1)"
           default-color="rgba(136, 136, 136, 1)"
         >
-          <tab-item selected @on-item-click="getToRent">
+          <tab-item selected @on-item-click="getStatus(0)">
             <div class="tabDiv">
               <div class="toRent">1</div>可租
             </div>
           </tab-item>
-          <tab-item @on-item-click="getReserve">
+          <tab-item @on-item-click="getStatus(1)">
             <div class="tabDiv">
-              <div class="toRent reserve">1</div>已预定
+              <div class="reserve">1</div>已预定
             </div>
           </tab-item>
-          <tab-item @on-item-click="getRented">
+          <tab-item @on-item-click="getStatus(2)">
             <div class="tabDiv">
-              <div class="toRent rented">1</div>已租
+              <div class="rented">1</div>已租
             </div>
           </tab-item>
-          <tab-item @on-item-click="getNoRented">
+          <tab-item @on-item-click="getStatus(3)">
             <div class="tabDiv">
-              <div class="toRent noRented">1</div>不可租
+              <div class="noRented">1</div>不可租
+            </div>
+          </tab-item>
+          <tab-item @on-item-click="getStatus(4)">
+            <div class="tabDiv">
+              <div class="all">1</div>全部
             </div>
           </tab-item>
         </tab>
@@ -41,17 +47,19 @@
     <section class="uintInfoAll">
       <section class="navBar">
         <div class="top">
-          <div class="goPrePage">
+          <div class="goPrePage" @click="goPrePage">
             <x-icon type="ios-arrow-up" class="icon"></x-icon>
           </div>
-          <div class="floorList">
-            <li>5F</li>
-            <li>4F</li>
-            <li>3F</li>
-            <li>2F</li>
-            <li>1F</li>
+          <div class="floorList" ref="floorList">
+            <a
+              ref="floorListLi"
+              @click="floorLi(key,item)"
+              v-for="(item, key) in floorListDisplay"
+              :class="activeClass == key ? 'active' : ''"
+              :key="key"
+            >{{item[0].Floor}} F</a>
           </div>
-          <div class="goNextPage">
+          <div class="goNextPage" @click="goNextPage">
             <x-icon type="ios-arrow-down" class="icon"></x-icon>
           </div>
         </div>
@@ -59,7 +67,20 @@
           <img src="../../assets/images/gotoAll.png" alt>
         </div>
       </section>
-      <section class="main"></section>
+      <section class="main">
+        <li
+          class="mainLi"
+          v-for="(item, index) in floorList"
+          :key="index"
+          :id="'anchor-'+ item[0].Floor"
+        >
+          <div
+            v-for="(Item, index) in item[0].Unitlist"
+            :class="getbusinessStatus(Item.Recordstatusstringcode)"
+            :key="index"
+          >{{Item.Unitno | strSubstring(4)}}</div>
+        </li>
+      </section>
     </section>
   </div>
 </template>
@@ -71,7 +92,12 @@ import { XHeader, Tab, TabItem, Sticky } from "vux";
 export default {
   data() {
     return {
+      activeClass: 0,
+      requestData: {},
       allBlock: [],
+      floorList: [],
+      floorListCount: 1,
+      floorListDisplay: [],
       projectTittle: "",
       barActiveColor: "#78caff",
       hasprojectStatus: false,
@@ -87,29 +113,109 @@ export default {
     this.onLoad();
   },
   methods: {
-    getToRent() {
-      this.barActiveColor = "#78caff";
+    floorLi(key, item) {
+      this.activeClass = key;
+      const selector = `#anchor-${item[0].Floor}`;
+      this.goAnchor(selector);
     },
-    getReserve() {
-      this.barActiveColor = "#4879e6";
+    goAnchor(selector) {
+      this.$el
+        .querySelector(selector)
+        .scrollIntoView({ block: "start", behavior: "smooth" });
     },
-    getRented() {
-      this.barActiveColor = "#ffab56";
+    goPrePage() {
+      this.floorListCount -= 1;
+      if (this.floorListCount * 5 > 0) {
+        this.activeClass = 0;
+        this.floorListDisplay = this.floorList.slice(
+          (this.floorListCount - 1) * 5,
+          this.floorListCount * 5
+        );
+      } else {
+        this.floorListCount += 1;
+        this.$vux.toast.show({
+          text: "已无更多楼层",
+          type: "cancel",
+          time: "1000"
+        });
+      }
     },
-    getNoRented() {
-      this.barActiveColor = "rgba(206, 223, 234, 1)";
+    goNextPage() {
+      this.floorListCount += 1;
+      this.activeClass = 0;
+      if (this.floorListCount * 5 <= this.floorList.length + 5) {
+        this.floorListDisplay = this.floorList.slice(
+          (this.floorListCount - 1) * 5,
+          this.floorListCount * 5
+        );
+      } else {
+        this.floorListCount -= 1;
+        this.$vux.toast.show({
+          text: "已无更多楼层",
+          type: "cancel",
+          time: "1000"
+        });
+      }
+    },
+    getbusinessStatus(data) {
+      let strDatd = this.$options.filters.firstUpperCase(data);
+      switch (strDatd) {
+        //预定
+        case "Rt_rentalstatus_booked":
+          return "reserve";
+          break;
+        //可租
+        case "Unitavailable":
+          return "toRent";
+          break;
+        //不可租
+        case "Unitactive":
+          return "noRented";
+          break;
+        // 已租
+        case "Unitinactive":
+          return "rented";
+          break;
+      }
+    },
+    getStatus(index) {
+      switch (index) {
+        case 0:
+          this.barActiveColor = "#78caff";
+          this.requestData.Statucode = "UnitAvailable";
+          this.requestData.Blockid = 1;
+          this.getUnitBlock();
+          break;
+        case 1:
+          this.barActiveColor = "#4879e6";
+          break;
+        case 2:
+          this.barActiveColor = "#ffab56";
+          break;
+        case 3:
+          this.barActiveColor = "rgba(206, 223, 234, 1)";
+          break;
+        case 4:
+          this.barActiveColor = "rgb(102, 153, 255)";
+          break;
+      }
     },
     onLoad() {
-      let data = {
+      this.requestData = {
         Blockid: 0,
         Statucode: "",
         Floorno: "",
         Startdate: "",
         Enddate: ""
       };
-      GetUnitByBlock(data).then(res => {
+      GetUnitByBlock(this.requestData).then(res => {
         this.allBlock = res.Content;
         this.hasProject();
+      });
+    },
+    getUnitBlock() {
+      GetUnitByBlock(this.requestData).then(res => {
+        this.allBlock = res.Content;
       });
     },
     hasProject() {
@@ -117,11 +223,16 @@ export default {
         //没有数据返回
       } else if (this.allBlock.length === 1) {
         //该用户只有一个项目
-        console.log(this.allBlock);
         this.projectTittle = this.allBlock[0].Blockname;
+        this.floorList = this._.chain(this.allBlock[0].Floorlist)
+          .groupBy("Floor")
+          .orderBy(function(item) {
+            return item[0].Floor;
+          })
+          .value();
+        this.floorListDisplay = this.floorList.slice(0, 5);
       } else {
         //该用户有多个项目，需要选择项目
-        console.log(2);
       }
     },
     openProjecySelct() {
@@ -134,37 +245,43 @@ export default {
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
 .tab {
+  @include fj;
   .tabDiv {
     @include flexCenter;
-    .toRent {
+    div {
       @include wh(24px, 24px);
       margin-right: 10px;
       color: transparent;
-      background: #78caff;
-    }
-    .rented {
-      //已租
-      background-color: #ffab56;
-    }
-    .reserve {
-      //已预定
-      background-color: #4879e6;
-    }
-    .noRented {
-      //不可租
-      background-color: #cedfea;
     }
   }
+}
+.all {
+  background-color: rgb(102, 153, 255);
+}
+.toRent {
+  background: #78caff;
+}
+.rented {
+  //已租
+  background-color: #ffab56;
+}
+.reserve {
+  //已预定
+  background-color: #4879e6;
+}
+.noRented {
+  //不可租
+  background-color: #cedfea;
 }
 .uintInfoAll {
   position: relative;
   .navBar {
     position: fixed;
-    // @include flexCenter;
     top: 260px;
     @include wh(108px, 60%);
     .top {
       background-color: #fff;
+      position: relative;
       .goPrePage,
       .goNextPage {
         @include flexCenter;
@@ -172,11 +289,25 @@ export default {
       }
       .icon {
         @include sc(52px, rgba(219, 219, 219, 1));
+        &:hover {
+          color: rgba(30, 30, 30, 1);
+        }
       }
       .floorList {
-        li {
+        overflow: hidden;
+        height: 540px;
+        a {
           @include flexCenter;
           height: 108px;
+          @include sc(36px, rgba(136, 136, 136, 1));
+          font-family: $fr;
+          border-bottom: 1px solid rgba(235, 237, 239, 1);
+          &:first-child {
+            border-top: 1px solid rgba(235, 237, 239, 1);
+          }
+        }
+        .active {
+          color: rgba(30, 30, 30, 1);
         }
       }
     }
@@ -187,6 +318,28 @@ export default {
       @include flexCenter;
       img {
         @include wh(58px, 58px);
+      }
+    }
+  }
+  .main {
+    padding: 60px 40px 0px 168px;
+    .mainLi {
+      margin-bottom: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      div {
+        width: 20%;
+        height: 60px;
+        line-height: 60px;
+        @include flexCenter;
+        @include ellipsis;
+        margin-right: 6.6%;
+        margin-bottom: 20px;
+        @include sc(30px, rgba(255, 255, 255, 1));
+        font-family: $fm;
+        &:nth-child(4n + 4) {
+          margin-right: 0;
+        }
       }
     }
   }

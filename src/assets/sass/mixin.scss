@@ -15,7 +15,6 @@ $noRent: rgba(206, 223, 234, 1); //不可租
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
-
 @mixin bis150($url) {
   background-image: url($url);
   background-repeat: no-repeat;
@@ -127,6 +126,7 @@ $noRent: rgba(206, 223, 234, 1); //不可租
   flex-wrap: $type;
 }
 
+//省略号
 @mixin ellipsis {
   white-space: nowrap;
   overflow: hidden;
