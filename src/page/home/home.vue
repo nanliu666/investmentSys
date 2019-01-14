@@ -31,25 +31,25 @@
         <ul class="nav">
           <router-link tag="li" to="/unitInfoAll">
             <span>
-              <img src="../assets/images/分组 11.png" alt>
+              <img src="../../assets/images/分组 11.png" alt>
             </span>
             <span>单元信息</span>
           </router-link>
           <router-link tag="li" to="/reserveList">
             <span>
-              <img src="../assets/images/分组 4.png" alt>
+              <img src="../../assets/images/分组 4.png" alt>
             </span>
             <span>预定管理</span>
           </router-link>
           <router-link tag="li" to="/businessList">
             <span>
-              <img src="../assets/images/分组 5.png" alt>
+              <img src="../../assets/images/分组 5.png" alt>
             </span>
             <span>商机管理</span>
           </router-link>
           <router-link tag="li" to="/foo">
             <span>
-              <img src="../assets/images/分组 6.png" alt>
+              <img src="../../assets/images/分组 6.png" alt>
             </span>
             <span>事务管理</span>
           </router-link>
