@@ -1,24 +1,19 @@
 // 对请求进行配置
 import axios from "axios"
 import Vue from 'vue'
-// 环境切换
-if (process.env.NODE_ENV == 'development') {
-  axios.defaults.baseURL = 'http://10.122.10.244:82/ydzs/';
-} else if (process.env.NODE_ENV == 'production') {
-  // axios.defaults.baseURL = 'https://www.production.com';
-}
 axios.defaults.timeout = 10000;
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 // axios.defaults.headers.common['Authorization'] = 'Bearer 29ff4d69bd3243de951e79169ce193e3'; // 不使用token了
-
 axios.interceptors.request.use(
   config => {
     Vue.$vux.loading.show({
       text: 'Loading' //以plugin形式调用
     })
-    config.params = {
-      'loginname': 'yujing'
-    };
+    if (config.url.includes('/ydzs/WebService/MobileMerchants/')) { //黄鑫接口需要加一个参数
+      config.params = {
+        'loginname': 'yujing'
+      };
+    }
     return config
   },
   err => {
@@ -30,15 +25,23 @@ axios.interceptors.request.use(
 //请求响应器
 axios.interceptors.response.use(
   response => {
-    if (response.data.d && response.data.d !== undefined) {
-      Vue.$vux.loading.hide()
-      if (response.data.d.Success === true) {
-        return Promise.resolve(JSON.parse(response.data.d.Data));
-      } else {
-        Vue.$vux.toast.text(res.data.Message, 'top')
-        return Promise.reject(response); //增加对错误的处理改正
+    if (!!response.data.d) { //黄鑫的接口
+      if (response.data.d && response.data.d !== undefined) {
+        Vue.$vux.loading.hide()
+        if (response.data.d.Success === true) {
+          return Promise.resolve(JSON.parse(response.data.d.Data));
+        } else {
+          Vue.$vux.toast.text(res.data.Message, 'top')
+          return Promise.reject(response); //增加对错误的处理改正
+        }
+      }
+    } else { //丘堃的接口
+      if (response.status === 200) {
+        Vue.$vux.loading.hide()
+        return Promise.resolve(response.data);
       }
     }
+
     err => {
       Vue.$vux.loading.hide()
       Vue.$vux.toast.text('请求失败，请稍后再试', 'top')

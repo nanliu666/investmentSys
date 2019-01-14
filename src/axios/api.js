@@ -3,7 +3,8 @@ import {
   post
 } from './http'
 // 单元信息接口
-const baseHead = `WebService/MobileMerchants/`
+const baseHead = `http://10.122.10.244:82/ydzs/WebService/MobileMerchants/`
+const platformHead = ` http://gz.ifca.com.cn:9999/RMSApp6.0/api/`
 export const GetUnitinfoAll = p => post(`${baseHead}Unitinfo.asmx/GetUnitinfoAll`, p); //获取当前用户所有单元信息
 export const GetCompanyies = p => post(`${baseHead}Unitinfo.asmx/GetCompanyies`, p); //获取当前用户所有公司信息
 export const GetPropertys = p => post(`${baseHead}Unitinfo.asmx/GetPropertys`, p); //获取当前用户项目信息
@@ -50,3 +51,6 @@ export const GetUserInfo = p => post(`${baseHead}ReserveMgmt.asmx/GetUserInfo`, 
 
 // 预览下载  //这个接口不一样！！
 export const DocumentLibrary = p => get(`DocumentLibrary/Download.ashx`, p)
+
+// 平台信息接口
+export const getAgencyAndNewest = p => get(`${platformHead}Message/getAgencyAndNewest`, p)
