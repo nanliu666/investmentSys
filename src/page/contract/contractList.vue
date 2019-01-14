@@ -178,6 +178,7 @@ export default {
       GetContractMgmt(data)
         .then(res => {
           let arr = JSON.parse(res.Content);
+          console.log(arr);
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
@@ -297,7 +298,7 @@ export default {
         border-bottom: 4px dashed rgba(244, 246, 248, 1); /*no*/
         span:first-child {
           @include sc(32px, rgba(30, 30, 30, 1));
-          font-family:  $fm;
+          font-family: $fm;
         }
         span:last-child {
           @include wh(80px, 38px);

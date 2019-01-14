@@ -1,7 +1,12 @@
 <template>
   <div>
-    <x-header :left-options="{backText: ''}" class="header" @click.native="openProjecySelct">
-      {{projectTittle}}
+    <x-header
+      :left-options="{backText: ''}"
+      class="header"
+      @click.native="openProjecySelct"
+      id="header"
+    >
+      {{headerTittle}}
       <x-icon type="ios-arrow-down" size="23" v-show="!hasprojectStatus"></x-icon>
       <x-icon type="ios-arrow-up" size="23" v-show="hasprojectStatus"></x-icon>
     </x-header>
@@ -44,6 +49,105 @@
         </tab>
       </sticky>
     </div>
+    <popup v-model="hasprojectStatus" position="bottom" class="nav">
+      <div class="close" @click="openProjecySelct">
+        <i class="iconfont icon-guanbi"></i>
+      </div>
+      <section class="projectSelect">
+        <div class="selectTitle">请选择</div>
+        <div class="selectNav">
+          <span
+            :class="[!!companysSelect ? 'active' : '']"
+            @click="reselectCompany"
+          >{{companysSelect ? companysSelect : '选择公司'}}</span>
+          <span :class="[!!companysSelect ? 'iActive' : '']">>></span>
+          <span
+            @click="reselectProject"
+            v-if="companysSelect"
+            :class="[!!PropertysSelect ? 'active' : '']"
+          >{{PropertysSelect ? PropertysSelect : '选择项目'}}</span>
+          <span :class="[!!PropertysSelect ? 'iActive' : '']" v-if="!!PropertysSelect">>></span>
+          <span
+            v-if="companysSelect && PropertysSelect"
+            :class="[!!blockSelect ? 'active' : '']"
+          >{{blockSelect ? blockSelect : '选择楼栋'}}</span>
+        </div>
+        <div class="selectCompanys" v-if="!companysSelect">
+          <div>公司名称</div>
+          <ul>
+            <li
+              v-for="item in companysList"
+              :key="item.Companyid"
+              @click="getCompanyDeatil(item)"
+            >{{item.Companyname}}</li>
+            <li v-if="companysList.length === 0">暂无公司</li>
+          </ul>
+        </div>
+        <div class="selectCompanys" v-if="!!companysSelect && !PropertysSelect">
+          <div>项目名称</div>
+          <ul>
+            <li
+              v-for="item in PropertysList"
+              :key="item.Propertyid"
+              @click="getPropertyDeatil(item)"
+            >{{item.Propertyname}}</li>
+            <li v-if="PropertysList.length === 0">暂无项目</li>
+          </ul>
+        </div>
+        <div class="selectCompanys" v-if="!!PropertysSelect">
+          <div>楼栋名称</div>
+          <ul>
+            <li
+              v-for="item in blocksList"
+              :key="item.Blockid"
+              @click="getPropertyBlock(item)"
+            >{{item.Blockname}}</li>
+            <li v-if="blocksList.length === 0">暂无楼栋</li>
+          </ul>
+        </div>
+      </section>
+    </popup>
+    <popup
+      v-model="hasUnitDetail"
+      position="bottom"
+      class="UnitDetail"
+      v-for="(key, value) in unitDetail"
+      :key="value"
+    >
+      <div class="top">
+        <div class="topLeft">
+          <span class="unitNo">{{unitDetail.Unitno}}</span>
+          <span
+            class="unitStatus"
+            v-text="getUintStatus(unitDetail.Recordstatusstringcode)"
+            :class="getbusinessStatus(unitDetail.Recordstatusstringcode)"
+          ></span>
+        </div>
+        <div class="topRight" @click="openUnitDetail">×</div>
+      </div>
+      <div class="main">
+        <li>
+          <span>占地面积:</span>
+          <span>{{unitDetail.Builduparea | formatNumber}}M²</span>
+        </li>
+        <li>
+          <span>每平方米报价:</span>
+          <span>{{unitDetail.Minprice | formatNumber}}万元</span>
+        </li>
+        <li>
+          <span>总租金:</span>
+          <span>{{unitDetail.Toprice | formatNumber}}万元</span>
+        </li>
+        <li>
+          <span>当前商机数:</span>
+          <span>6条</span>
+        </li>
+      </div>
+      <div class="bottom">
+        <button @click="addReserve(unitDetail)">新增预定</button>
+        <button @click="addNewBusiness(unitDetail)">新增商机</button>
+      </div>
+    </popup>
     <section class="uintInfoAll">
       <section class="navBar">
         <div class="top">
@@ -78,45 +182,186 @@
             v-for="(Item, index) in item[0].Unitlist"
             :class="getbusinessStatus(Item.Recordstatusstringcode)"
             :key="index"
+            @click="getUnitDetail(Item)"
           >{{Item.Unitno | strSubstring(4)}}</div>
         </li>
       </section>
+    </section>
+    <section class="noData" v-if="noData">
+      <img src="../../assets/images/分组.png" alt>
+      <div class="noDataTittle">暂无数据</div>
+    </section>
+    <section class="gotoTop" v-if="gotoTop" @click="goTop">
+      <img src="../../assets/images/gototop.png" alt>
     </section>
   </div>
 </template>
 
 
 <script>
-import { GetUnitByBlock, GetBlocks, GetPropertys } from "@/axios/api";
-import { XHeader, Tab, TabItem, Sticky } from "vux";
+import {
+  GetCompanyies,
+  GetUnitByBlock,
+  GetBlocks,
+  GetPropertys
+} from "@/axios/api";
+import imgSrc from "../../assets/images/分组.png";
+import { XHeader, Tab, TabItem, Sticky, Popup } from "vux";
 export default {
   data() {
     return {
+      unitDetail: {},
+      headerTittle: "",
+      gotoTop: false,
+      noData: false,
+      companysSelect: "",
+      PropertysSelect: "",
+      blockSelect: "",
+      PropertysList: [],
+      companysList: [],
+      blocksList: [],
       activeClass: 0,
       requestData: {},
       allBlock: [],
       floorList: [],
       floorListCount: 1,
       floorListDisplay: [],
-      projectTittle: "",
       barActiveColor: "#78caff",
       hasprojectStatus: false,
+      hasUnitDetail: false,
       disabled:
         typeof navigator !== "undefined" &&
         /iphone/i.test(navigator.userAgent) &&
         /ucbrowser/i.test(navigator.userAgent)
     };
   },
-  components: { XHeader, Tab, TabItem, Sticky },
+  components: { XHeader, Tab, TabItem, Sticky, Popup },
   name: "unitALL",
   created() {
     this.onLoad();
   },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
   methods: {
+    goTop() {
+      this.goAnchor("#header");
+      this.gotoTop = !this.gotoTop;
+    },
+    handleScroll() {
+      //页面滚动高度
+      let scrolled =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      if (scrolled > 500) {
+        this.gotoTop = !this.gotoTop;
+      }
+    },
+    getCompany() {
+      const data = {
+        Companyid: 0
+      };
+      GetCompanyies(data).then(res => {
+        this.companysList = res.Content;
+      });
+    },
+    getCompanyDeatil(data) {
+      //获得公司
+      this.companysSelect = data.Companyname;
+      this.PropertysSelect = "";
+      const jsonData = {
+        Propertyid: 0
+      };
+      GetPropertys(jsonData).then(res => {
+        //获取项目
+        this.PropertysList = this._.filter(
+          res.Content,
+          item => item.Companyid === data.Companyid
+        );
+      });
+    },
+    getPropertyDeatil(data) {
+      this.PropertysSelect = data.Propertyname;
+      this.getBlock(data);
+    },
+    getBlock(data) {
+      let JsonData = {
+        Blockid: 0
+      };
+      GetBlocks(JsonData).then(res => {
+        //获取符合条件的楼栋
+        this.blocksList = this._.filter(
+          res.Content,
+          item => item.Propertyid === data.Propertyid
+        );
+      });
+    },
+    getPropertyBlock(data) {
+      this.blockSelect = data.Blockname;
+      this.requestData.Blockid = data.Blockid;
+      this.getUnitBlock();
+      this.hasprojectStatus = !this.hasprojectStatus;
+    },
+    reselectCompany() {
+      this.companysSelect = "";
+      this.PropertysSelect = "";
+      this.blockSelect = "";
+    },
+    reselectProject() {
+      this.PropertysSelect = "";
+      this.blockSelect = "";
+    },
     floorLi(key, item) {
       this.activeClass = key;
       const selector = `#anchor-${item[0].Floor}`;
       this.goAnchor(selector);
+    },
+    //单元详细信息
+    getUnitDetail(data) {
+      console.log(data);
+      this.hasUnitDetail = !this.hasUnitDetail;
+      this.unitDetail = data;
+    },
+    openUnitDetail() {
+      this.hasUnitDetail = !this.hasUnitDetail;
+    },
+    getUintStatus(data) {
+      switch (data) {
+        case "UnitAVAILABLE":
+          return "可租";
+          break;
+        case "UnitINACTIVE":
+          return "已租";
+          break;
+        case "UnitACTIVE":
+          return "不可租";
+          break;
+        case "RT_RentalStatus_Booked ":
+          return "已预定";
+          break;
+      }
+    },
+    addReserve(data) {
+      console.log(data);
+      this.$router.push({
+        name: "reserveAdd",
+        params: {
+          data: data
+        }
+      });
+    },
+    addNewBusiness(data) {
+      console.log(data);
+      this.$router.push({
+        name: "businessAdd",
+        params: {
+          data: data
+        }
+      });
     },
     goAnchor(selector) {
       this.$el
@@ -180,23 +425,30 @@ export default {
     },
     getStatus(index) {
       switch (index) {
-        case 0:
+        case 0: //可租
           this.barActiveColor = "#78caff";
           this.requestData.Statucode = "UnitAvailable";
-          this.requestData.Blockid = 1;
           this.getUnitBlock();
           break;
-        case 1:
+        case 1: //预定
           this.barActiveColor = "#4879e6";
+          this.requestData.Statucode = "RT_RentalStatus_Booked ";
+          this.getUnitBlock();
           break;
-        case 2:
+        case 2: //已租
           this.barActiveColor = "#ffab56";
+          this.requestData.Statucode = "UnitINACTIVE";
+          this.getUnitBlock();
           break;
-        case 3:
+        case 3: //不可租
           this.barActiveColor = "rgba(206, 223, 234, 1)";
+          this.requestData.Statucode = "UnitActive";
+          this.getUnitBlock();
           break;
-        case 4:
+        case 4: //全部
           this.barActiveColor = "rgb(102, 153, 255)";
+          this.requestData.Statucode = "";
+          this.getUnitBlock();
           break;
       }
     },
@@ -210,12 +462,15 @@ export default {
       };
       GetUnitByBlock(this.requestData).then(res => {
         this.allBlock = res.Content;
+        console.log(this.allBlock);
         this.hasProject();
       });
+      this.getCompany();
     },
     getUnitBlock() {
       GetUnitByBlock(this.requestData).then(res => {
         this.allBlock = res.Content;
+        this.hasProject();
       });
     },
     hasProject() {
@@ -223,14 +478,32 @@ export default {
         //没有数据返回
       } else if (this.allBlock.length === 1) {
         //该用户只有一个项目
-        this.projectTittle = this.allBlock[0].Blockname;
+        this.blockSelect = this.allBlock[0].Blockname;
+        this.headerTittle = `${this.allBlock[0].Projectname}·${
+          this.blockSelect
+        }`;
         this.floorList = this._.chain(this.allBlock[0].Floorlist)
           .groupBy("Floor")
           .orderBy(function(item) {
             return item[0].Floor;
           })
           .value();
-        this.floorListDisplay = this.floorList.slice(0, 5);
+        let unitNull = 0; //判断有没有数据
+        this.floorList.map(item => {
+          if (item[0].Unitlist.length === 0) {
+            unitNull += 1;
+          }
+        });
+        if (unitNull === this.floorList.length) {
+          //没有数据展示
+          this.noData = true;
+        } else {
+          this.noData = false;
+        }
+        let floorListTemp = this.floorList.filter(item => {
+          return item[0].Unitlist.length !== 0;
+        });
+        this.floorListDisplay = floorListTemp.slice(0, 5);
       } else {
         //该用户有多个项目，需要选择项目
       }
@@ -274,7 +547,7 @@ export default {
   background-color: #cedfea;
 }
 .uintInfoAll {
-  position: relative;
+  // position: relative;
   .navBar {
     position: fixed;
     top: 260px;
@@ -341,6 +614,134 @@ export default {
           margin-right: 0;
         }
       }
+    }
+  }
+}
+.nav {
+  background-color: #fff;
+  box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
+  .close {
+    //弹出层关闭
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 50px;
+    margin-top: 20px;
+    .iconfont {
+      color: rgba(136, 136, 136, 1);
+    }
+  }
+  .projectSelect {
+    .selectTitle {
+      @include flexCenter;
+      @include sc(32px, rgba(30, 30, 30, 1));
+      padding-bottom: 50px;
+    }
+    .selectNav {
+      padding: 0 40px;
+      span {
+        @include sc(28px, rgba(136, 136, 136, 1));
+        padding: 16px;
+      }
+      .active {
+        background-color: rgba(105, 167, 254, 0.08);
+        border: 1px solid rgba(105, 167, 254, 0.3);
+        @include sc(28px, rgba(105, 167, 254, 1));
+      }
+      .iActive {
+        @include sc(28px, rgba(105, 167, 254, 1));
+      }
+    }
+    .selectCompanys {
+      margin-top: 50px;
+      div:first-child {
+        background-color: rgba(243, 248, 253, 1);
+        padding: 26px 40px;
+        @include sc(32px, rgba(30, 30, 30, 1));
+      }
+      ul {
+        li {
+          background-color: rgba(249, 249, 249, 1);
+          margin: 4px 0;
+          padding: 26px 40px;
+          @include sc(30px, rgba(30, 30, 30, 1));
+        }
+      }
+    }
+  }
+}
+.noData {
+  @include center;
+  .noDataTittle {
+    @include flexCenter;
+    @include sc(30px, rgba(136, 136, 136, 1));
+    font-family: $fr;
+  }
+}
+.gotoTop {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  img {
+    width: 60px;
+    height: 60px;
+  }
+}
+.UnitDetail {
+  background-color: #fff;
+  padding: 26px 40px;
+  .top {
+    @include fj;
+    margin-bottom: 20px;
+    .topLeft {
+      @include flexHCenter;
+      .unitNo {
+        @include sc(44px, rgba(30, 30, 30, 1));
+        margin-right: 18px;
+      }
+      .unitStatus {
+        // background-color: rgba(105, 167, 254, 1);
+        @include sc(24px, rgba(255, 255, 255, 1));
+        padding: 4px 20px;
+      }
+    }
+    .topRight {
+      font-size: 40px;
+    }
+  }
+  .main {
+    background-color: rgb(243, 247, 253);
+    padding: 36px 0 24px 36px;
+    li {
+      &:nth-child(1) {
+        margin-bottom: 8px;
+      }
+      &:nth-child(2) {
+        margin-bottom: 8px;
+      }
+      &:nth-child(3) {
+        margin-bottom: 24px;
+      }
+      span {
+        font-family: $fr;
+        &:first-child {
+          @include sc(30px, rgba(136, 136, 136, 1));
+        }
+        &:last-child {
+          @include sc(30px, rgba(30, 30, 30, 1));
+        }
+      }
+    }
+  }
+  .bottom {
+    margin-top: 26px;
+    @include fj(flex-end);
+    button {
+      margin-left: 16px;
+      border: 1px solid rgba(105, 167, 254, 1);
+      @include wh(168px, 60px);
+      border-radius: 30px;
+      background-color: #fff;
+      @include sc(28px, rgba(105, 167, 254, 1));
     }
   }
 }
