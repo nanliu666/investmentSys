@@ -9,7 +9,7 @@
         <div class="signCount">
           <div class="signTittle">本月签约合同</div>
           <div class="signNum">
-            <span class="signMoeny">6,8976.00</span>
+            <span class="signMoeny">{{signMoeny | formatNumber}}</span>
             <span class="getContranct">
               <span class="getContranctTittle">查看合同</span>
               <i class="iconfont icon-youjiantou"></i>
@@ -18,7 +18,7 @@
           <div class="Expire">
             <div class="ExpireLeft">
               <span>近三个月合同到期数</span>
-              <span class="ExpireNum">4</span>
+              <span class="ExpireNum">{{ExpireNum }}</span>
             </div>
             <div class="ExpireRight">
               <span>立即处理</span>
@@ -96,6 +96,10 @@ import {
   ViewBox,
   Badge
 } from "vux";
+import {
+  GetAgentDefaultPageNEW,
+  GetAgentDefaultPageChartNEW
+} from "@/axios/api";
 export default {
   components: {
     VChart,
@@ -108,47 +112,62 @@ export default {
     Badge,
     TabbarItem
   },
+  created() {
+    this.onLoad();
+  },
+  methods: {
+    onLoad() {
+      const PageNEWData = {
+        Datetime: moment()
+          .locale("zh-cn")
+          .format("YYYY-MM-DD HH:mm:ss")
+      };
+      GetAgentDefaultPageNEW(PageNEWData).then(res => {
+        this.signMoeny = res.Currmonthamt;
+        this.ExpireNum = res.Overduesoon;
+      });
+      GetAgentDefaultPageChartNEW(PageNEWData).then(res => {
+        console.log(res);
+        this.$set(this.data[0], "percent", res[0].Chartcompleteper);
+        this.$set(this.data[1], "percent", res[0].Chartnotcompleteper);
+        this.$set(this.data[2], "percent", res[1].Chartcompleteper);
+        this.$set(this.data[3], "percent", res[1].Chartnotcompleteper);
+        this.$set(this.data[4], "percent", res[2].Chartcompleteper);
+        this.$set(this.data[5], "percent", res[2].Chartnotcompleteper);
+      });
+    }
+  },
   data() {
     return {
       formatter: function(val) {
         return (val * 100).toFixed(0) + "%";
       },
+      signMoeny: "",
+      ExpireNum: "",
       data: [
         {
           country: "完成率",
-          classes: "交易金额",
-          value: 900,
-          percent: 0.9
+          classes: "交易金额"
         },
         {
           country: "未完成率",
-          classes: "交易金额",
-          value: 100,
-          percent: 0.1
+          classes: "交易金额"
         },
         {
           country: "完成率",
-          classes: "交易面积",
-          value: 203,
-          percent: 0.24224343675417662
+          classes: "交易面积"
         },
         {
           country: "未完成率",
-          classes: "交易面积",
-          value: 635,
-          percent: 0.7577565632458234
+          classes: "交易面积"
         },
         {
           country: "完成率",
-          classes: "签约数",
-          value: 276,
-          percent: 0.2543778801843318
+          classes: "签约数"
         },
         {
           country: "未完成率",
-          classes: "签约数",
-          value: 809,
-          percent: 0.7456221198156682
+          classes: "签约数"
         }
       ]
     };
@@ -203,7 +222,7 @@ export default {
       .getContranct {
         font-size: 28px;
         .icon-youjiantou {
-          margin-left: 10px;
+          margin-left: 8px;
           font-size: 28px;
         }
       }
@@ -223,7 +242,7 @@ export default {
       }
       .ExpireRight {
         .icon-youjiantou {
-          margin-left: 10px;
+          margin-left: 8px;
           font-size: 28px;
         }
       }

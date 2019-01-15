@@ -3,6 +3,11 @@ const login = resolve => require(['@/page/login'], resolve);
 //首页模块
 const home = resolve => require(['@/page/home/home'], resolve);
 const homeNew = resolve => require(['@/page/home/homeNew'], resolve);
+
+//事务模块
+const affairList = resolve => require(['@/page/affair/affairList'], resolve);
+const affairDetail = resolve => require(['@/page/affair/affairDetail'], resolve);
+const affairHistory = resolve => require(['@/page/affair/affairHistory'], resolve);
 //单元模块
 const unitInfoOption = resolve => require(['@/page/unitInfo/unitInfoOption'], resolve);
 const unitInfoALL = resolve => require(['@/page/unitInfo/unitInfoALL'], resolve);
@@ -35,14 +40,30 @@ export default [{
       path: '',
       redirect: '/home'
     },
-    //首页
+    //首页模块
     {
-      path: '/home',
+      path: '/home', //首页
       component: home,
+      name: 'home'
     },
     {
-      path: '/homeNew',
+      path: '/homeNew', //信息列表
       component: homeNew,
+      name: 'homeNew'
+    },
+    //事务管理模块
+    {
+      path: '/affairList', //事务列表
+      component: affairList,
+      name: 'affairList'
+    }, {
+      path: '/affairDetail/:id', //事务详情审批
+      component: affairDetail,
+      name: 'affairDetail'
+    }, {
+      path: '/affairHistory', //审批历史
+      component: affairHistory,
+      name: 'affairHistory'
     },
     //登陆
     {

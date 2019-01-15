@@ -49,8 +49,18 @@ export const DeleteReserveMgmt = p => post(`${baseHead}ReserveMgmt.asmx/DeleteRe
 export const VoidReserveMgmt = p => post(`${baseHead}ReserveMgmt.asmx/VoidReserveMgmt`, p); //预定作废
 export const GetUserInfo = p => post(`${baseHead}ReserveMgmt.asmx/GetUserInfo`, p); //获取加签用户信息
 
+// 首页信息接口
+export const GetAgentDefaultPageNEW = p => post(`${baseHead}DefaultPage.asmx/GetAgentDefaultPageNEW`, p); //获取业务员首页统计数据
+export const GetAgentDefaultPageChartNEW = p => post(`${baseHead}DefaultPage.asmx/GetAgentDefaultPageChartNEW`, p); //获取业务员首页图表统计数据
+
+// 工作流接口接口
+export const GetToDoDetail = p => post(`${baseHead}Workflow.asmx/GetToDoDetail`, p); //获取工作流详情信息
+export const GetToDoHistory = p => post(`${baseHead}Workflow.asmx/GetToDoHistory`, p); //获取工作流历史信息
+export const GetToDoFile = p => post(`${baseHead}Workflow.asmx/GetToDoFile`, p); //获取工作流附件
+export const GetToDoFlows = p => post(`${baseHead}Workflow.asmx/GetToDoFlows`, p); //获取工作流流程状态
+
 // 预览下载  //这个接口不一样！！
 export const DocumentLibrary = p => get(`DocumentLibrary/Download.ashx`, p)
 
-// 平台信息接口
-export const getAgencyAndNewest = p => get(`${platformHead}Message/getAgencyAndNewest`, p)
+// 待办列表
+export const getTodoList = p => get(`${platformHead}Message/getTodoList`, p)

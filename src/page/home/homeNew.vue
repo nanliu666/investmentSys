@@ -7,7 +7,6 @@
 
 <script>
 import { XHeader } from "vux";
-import { getAgencyAndNewest } from "@/axios/api";
 export default {
   name: "homeNew",
   components: { XHeader },
@@ -19,9 +18,6 @@ export default {
       const data = {
         LoginName: "qw"
       };
-      getAgencyAndNewest(data).then(res => {
-        console.log(res);
-      });
     }
   }
 };
