@@ -54,7 +54,11 @@ export default [{
     {
       path: '/affairList', //事务列表
       component: affairList,
-      name: 'affairList'
+      name: 'affairList',
+      meta: {
+        keepAlive: true,
+        isBack: false
+      }
     },
     {
       path: '/affairDetail/:id', //事务详情审批
@@ -77,6 +81,10 @@ export default [{
       path: '/unitInfoALL', //单元信息所有
       name: 'unitInfoALL',
       component: unitInfoALL,
+      meta: { //单元信息所有的模块的keepalive有问题
+        // keepAlive: true,
+        // isBack: false
+      }
     },
 
 
@@ -95,6 +103,10 @@ export default [{
       path: '/businessList', //商机管理
       name: 'businessList',
       component: businessList,
+      meta: {
+        keepAlive: true,
+        isBack: false
+      }
     },
 
     //客户模块
@@ -136,6 +148,10 @@ export default [{
       path: '/reserveList', //预定列表
       name: 'reserveList',
       component: reserveList,
+      meta: {
+        keepAlive: true,
+        isBack: false
+      }
     },
     {
       path: '/reserveDetail:id', //预定详情

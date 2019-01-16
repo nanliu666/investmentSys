@@ -2,6 +2,7 @@ import {
   TO_PAGE_NAME,
   FROM_PAGE_NAME,
   RESERVEADD,
+  RESAVESCORLLTOP,
   CLIENT_DETAIL
 } from './mutation-types.js'
 export default {
@@ -16,5 +17,8 @@ export default {
   },
   [RESERVEADD](state, value) {
     state.reserveObj = Object.assign(state.reserveObj, value)
+  },
+  [RESAVESCORLLTOP](state, value) {
+    state.scrollTop = value
   },
 }

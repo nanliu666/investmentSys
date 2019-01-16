@@ -12,7 +12,9 @@ const state = {
   formPageName: '', //页面来的路由名字
   clientDetail: '', //获取的联系人详情
   reserveObj: '', //获取预订新增的暂存对象
+  scrollTop: '' //记录高度
 }
+
 
 
 export default new Vuex.Store({

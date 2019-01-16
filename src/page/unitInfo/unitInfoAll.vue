@@ -166,7 +166,7 @@
           <img src="../../assets/images/gotoAll.png" alt>
         </div>
       </section>
-      <section class="main">
+      <section class="main" ref="scroll">
         <li
           class="mainLi"
           v-for="(item, index) in floorList"
@@ -202,6 +202,7 @@ import {
 } from "@/axios/api";
 import imgSrc from "../../assets/images/分组.png";
 import { XHeader, Tab, TabItem, Sticky, Popup } from "vux";
+import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -232,8 +233,39 @@ export default {
   },
   components: { XHeader, Tab, TabItem, Sticky, Popup },
   name: "unitALL",
+  beforeRouteEnter(to, from, next) {
+    if (from.name === "reserveAdd" || from.name === "businessAdd") {
+      to.meta.isBack = true;
+    }
+    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
+    next();
+  },
   created() {
     this.onLoad();
+    this.isFirstEnter = true;
+  },
+  computed: {
+    ...mapState([
+      "scrollTop" //vuex中的存放的滚动条的位置
+    ])
+  },
+  activated() {
+    if (!this.$route.meta.isBack || this.isFirstEnter) {
+      // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
+      // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
+      this.allBlock = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
+      this.onLoad(); // ajax获取数据方法
+    }
+    // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
+    this.$route.meta.isBack = false;
+    this.isFirstEnter = false;
+    //滚动条位置的监听放到activated是因为此页面被keep-alive缓存了
+    this.$refs.scroll.scrollTop = this.scrollTop; //this.$refs.scroll拿到滚动的dom，即scrollContainer，this.home_list_top是存入到vuex里的值
+    this.$refs.scroll.addEventListener("scroll", this.handleScroll); //添加绑定事件
+  },
+  deactivated() {
+    //keep-alive 的页面跳转时，移除scroll事件
+    this.$refs.scroll.removeEventListener("scroll", this.handleScroll); //清除绑定的scroll事件
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
@@ -242,6 +274,7 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
+    ...mapMutations(["RESAVESCORLLTOP"]),
     goTop() {
       this.goAnchor("#header");
       this.gotoTop = !this.gotoTop;
@@ -255,6 +288,7 @@ export default {
       if (scrolled > 500) {
         this.gotoTop = !this.gotoTop;
       }
+      this.RESAVESCORLLTOP(this.$refs.scroll.scrollTop); //vuex暂存
     },
     getCompany() {
       const data = {
@@ -591,6 +625,9 @@ export default {
   }
   .main {
     padding: 60px 40px 0px 168px;
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    overflow-x: hidden;
     .mainLi {
       margin-bottom: 30px;
       display: flex;

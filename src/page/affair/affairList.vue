@@ -99,15 +99,34 @@ export default {
     MescrollVue
   },
   beforeRouteEnter(to, from, next) {
+    if (from.name === "affairDetail") {
+      to.meta.isBack = true;
+    }
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
     next(vm => {
+      // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteEnter方法
       vm.$refs.mescroll.beforeRouteEnter(); // 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置
     });
   },
   beforeRouteLeave(to, from, next) {
+    // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteLeave方法
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
-    this.$refs.mescroll.beforeRouteLeave(); // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
+    this.$refs.mescroll && this.$refs.mescroll.beforeRouteLeave(); // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
     next();
+  },
+  created() {
+    this.isFirstEnter = true;
+  },
+  activated() {
+    if (!this.$route.meta.isBack || this.isFirstEnter) {
+      // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
+      // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
+      this.affairList = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
+      this.mescroll.resetUpScroll(); // ajax获取数据方法
+    }
+    // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
+    this.$route.meta.isBack = false;
+    this.isFirstEnter = false;
   },
   methods: {
     getDeatil(data) {
