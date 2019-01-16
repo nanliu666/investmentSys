@@ -173,14 +173,6 @@ export default {
           Pagesize: page.size
         }
       };
-      if (this.$route.params.dateTime === "currentMonth") {
-        let nowTime = moment()
-          .locale("zh-cn")
-          .format("YYYY-MM");
-        Object.assign(data.Urlpara, {
-          Showmonthdata: nowTime
-        });
-      }
       switch (this.$route.params.dateTime) {
         case "currentMonth": //当月额
           let nowTime = moment()

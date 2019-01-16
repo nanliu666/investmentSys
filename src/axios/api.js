@@ -59,6 +59,10 @@ export const GetToDoHistory = p => post(`${baseHead}Workflow.asmx/GetToDoHistory
 export const GetToDoFile = p => post(`${baseHead}Workflow.asmx/GetToDoFile`, p); //获取工作流附件
 export const GetToDoFlows = p => post(`${baseHead}Workflow.asmx/GetToDoFlows`, p); //获取工作流流程状态
 
+// 消息通知接口接口
+export const GetUserMessage = p => post(`${baseHead}Message.asmx/GetUserMessage`, p); //获取当前用户消息通知
+export const GetUserMessageTotal = p => post(`${baseHead}Message.asmx/GetUserMessageTotal`, p); //获取当前用户消息通知总数
+
 // 预览下载  //这个接口不一样！！
 export const DocumentLibrary = p => get(`DocumentLibrary/Download.ashx`, p)
 

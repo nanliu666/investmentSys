@@ -4,7 +4,7 @@
       <section class="homeTop">
         <div class="message" @click="gotoNew">
           <i class="iconfont icon-youjian"></i>
-          <badge class="badge" text="8"></badge>
+          <badge class="badge" v-text="messageNum"></badge>
         </div>
         <div class="signCount">
           <div class="signTittle">本月签约合同</div>
@@ -88,7 +88,8 @@
 import { VChart, VLegend, VBar, VTooltip, VScale, ViewBox, Badge } from "vux";
 import {
   GetAgentDefaultPageNEW,
-  GetAgentDefaultPageChartNEW
+  GetAgentDefaultPageChartNEW,
+  GetUserMessageTotal
 } from "@/axios/api";
 export default {
   components: {
@@ -143,6 +144,10 @@ export default {
         this.$set(this.data[4], "percent", res[2].Chartcompleteper);
         this.$set(this.data[5], "percent", res[2].Chartnotcompleteper);
       });
+      let data = "";
+      GetUserMessageTotal(data).then(res => {
+        this.messageNum = res.Totalmessage;
+      });
     }
   },
   data() {
@@ -152,6 +157,7 @@ export default {
       },
       signMoeny: "",
       ExpireNum: "",
+      messageNum: "",
       data: [
         {
           country: "完成率",
@@ -229,7 +235,8 @@ export default {
     }
     .badge {
       position: absolute;
-      right: 40px;
+      padding: 0px 8px !important;
+      right: 44px;
       top: 28px;
     }
   }
