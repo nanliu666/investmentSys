@@ -82,8 +82,8 @@ export default [{
       name: 'unitInfoALL',
       component: unitInfoALL,
       meta: { //单元信息所有的模块的keepalive有问题
-        // keepAlive: true,
-        // isBack: false
+        keepAlive: true,
+        isBack: false
       }
     },
 

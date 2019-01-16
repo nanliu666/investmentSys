@@ -1,48 +1,46 @@
 <template>
   <div>
-    <x-header :left-options="{backText: ''}" class="header" id="header">
-      <div @click="openProjecySelct">{{headerTittle}}</div>
-      <x-icon type="ios-arrow-down" size="23" v-show="!hasprojectStatus"></x-icon>
-      <x-icon type="ios-arrow-up" size="23" v-show="hasprojectStatus"></x-icon>
-    </x-header>
-    <div style="height:44px;">
-      <sticky ref="sticky" :disabled="disabled" :check-sticky-support="false">
-        <tab
-          class="tab"
-          :scroll-threshold="5"
-          :line-width="1"
-          custom-bar-width="60px"
-          :bar-active-color="barActiveColor"
-          active-color="rgba(30, 30, 30, 1)"
-          default-color="rgba(136, 136, 136, 1)"
-        >
-          <tab-item selected @on-item-click="getStatus(0)">
-            <div class="tabDiv">
-              <div class="toRent">1</div>可租
-            </div>
-          </tab-item>
-          <tab-item @on-item-click="getStatus(1)">
-            <div class="tabDiv">
-              <div class="reserve">1</div>已预定
-            </div>
-          </tab-item>
-          <tab-item @on-item-click="getStatus(2)">
-            <div class="tabDiv">
-              <div class="rented">1</div>已租
-            </div>
-          </tab-item>
-          <tab-item @on-item-click="getStatus(3)">
-            <div class="tabDiv">
-              <div class="noRented">1</div>不可租
-            </div>
-          </tab-item>
-          <tab-item @on-item-click="getStatus(4)">
-            <div class="tabDiv">
-              <div class="all">1</div>全部
-            </div>
-          </tab-item>
-        </tab>
-      </sticky>
+    <div class="allHeader">
+      <x-header :left-options="{backText: ''}" class="header">
+        <div @click="openProjecySelct">{{headerTittle}}</div>
+        <x-icon type="ios-arrow-down" size="23" v-show="!hasprojectStatus"></x-icon>
+        <x-icon type="ios-arrow-up" size="23" v-show="hasprojectStatus"></x-icon>
+      </x-header>
+      <tab
+        class="tab"
+        :scroll-threshold="5"
+        :line-width="1"
+        custom-bar-width="60px"
+        :bar-active-color="barActiveColor"
+        active-color="rgba(30, 30, 30, 1)"
+        default-color="rgba(136, 136, 136, 1)"
+      >
+        <tab-item selected @on-item-click="getStatus(0)">
+          <div class="tabDiv">
+            <div class="toRent">1</div>可租
+          </div>
+        </tab-item>
+        <tab-item @on-item-click="getStatus(1)">
+          <div class="tabDiv">
+            <div class="reserve">1</div>已预定
+          </div>
+        </tab-item>
+        <tab-item @on-item-click="getStatus(2)">
+          <div class="tabDiv">
+            <div class="rented">1</div>已租
+          </div>
+        </tab-item>
+        <tab-item @on-item-click="getStatus(3)">
+          <div class="tabDiv">
+            <div class="noRented">1</div>不可租
+          </div>
+        </tab-item>
+        <tab-item @on-item-click="getStatus(4)">
+          <div class="tabDiv">
+            <div class="all">1</div>全部
+          </div>
+        </tab-item>
+      </tab>
     </div>
     <popup v-model="hasprojectStatus" position="bottom" class="nav">
       <div class="close" @click="openProjecySelct">
@@ -167,6 +165,7 @@
         </div>
       </section>
       <section class="main" ref="scroll">
+        <div id="anchorScroll"></div>
         <li
           class="mainLi"
           v-for="(item, index) in floorList"
@@ -241,7 +240,6 @@ export default {
     next();
   },
   created() {
-    this.onLoad();
     this.isFirstEnter = true;
   },
   computed: {
@@ -276,7 +274,7 @@ export default {
   methods: {
     ...mapMutations(["RESAVESCORLLTOP"]),
     goTop() {
-      this.goAnchor("#header");
+      this.goAnchor("#anchorScroll");
       this.gotoTop = !this.gotoTop;
     },
     handleScroll() {
@@ -351,7 +349,6 @@ export default {
     },
     //单元详细信息
     getUnitDetail(data) {
-      console.log(data);
       this.hasUnitDetail = !this.hasUnitDetail;
       this.unitDetail = data;
     },
@@ -375,7 +372,6 @@ export default {
       }
     },
     addReserve(data) {
-      console.log(data);
       this.$router.push({
         name: "reserveAdd",
         params: {
@@ -384,7 +380,6 @@ export default {
       });
     },
     addNewBusiness(data) {
-      console.log(data);
       this.$router.push({
         name: "businessAdd",
         params: {
@@ -393,6 +388,7 @@ export default {
       });
     },
     goAnchor(selector) {
+      console.log(selector);
       this.$el
         .querySelector(selector)
         .scrollIntoView({ block: "start", behavior: "smooth" });
@@ -453,33 +449,25 @@ export default {
       }
     },
     getStatus(index) {
-      switch (index) {
-        case 0: //可租
-          this.barActiveColor = "#78caff";
-          this.requestData.Statucode = "UnitAvailable";
-          this.getUnitBlock();
-          break;
-        case 1: //预定
-          this.barActiveColor = "#4879e6";
-          this.requestData.Statucode = "RT_RentalStatus_Booked ";
-          this.getUnitBlock();
-          break;
-        case 2: //已租
-          this.barActiveColor = "#ffab56";
-          this.requestData.Statucode = "UnitINACTIVE";
-          this.getUnitBlock();
-          break;
-        case 3: //不可租
-          this.barActiveColor = "rgba(206, 223, 234, 1)";
-          this.requestData.Statucode = "UnitActive";
-          this.getUnitBlock();
-          break;
-        case 4: //全部
-          this.barActiveColor = "rgb(102, 153, 255)";
-          this.requestData.Statucode = "";
-          this.getUnitBlock();
-          break;
+      if (index === 0) {
+        this.barActiveColor = "#78caff";
+        this.requestData.Statucode = "UnitAvailable";
+      } else if (index === 1) {
+        this.barActiveColor = "#4879e6";
+        this.requestData.Statucode = "RT_RentalStatus_Booked";
+      } else if (index === 2) {
+        this.barActiveColor = "#ffab56";
+        this.requestData.Statucode = "UnitINACTIVE";
+      } else if (index === 3) {
+        this.barActiveColor = "rgba(206, 223, 234, 1)";
+        this.requestData.Statucode = "UnitActive";
+      } else {
+        this.barActiveColor = "rgb(102, 153, 255)";
+        this.requestData.Statucode = "";
       }
+      this.getUnitBlock();
+      this.$el.querySelector("#anchorScroll").scrollIntoView();
+
     },
     onLoad() {
       this.requestData = {
@@ -491,7 +479,6 @@ export default {
       };
       GetUnitByBlock(this.requestData).then(res => {
         this.allBlock = res.Content;
-        console.log(this.allBlock);
         this.hasProject();
       });
       this.getCompany();
@@ -546,7 +533,21 @@ export default {
 
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
+.allHeader {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1;
+}
+#anchorScroll {
+  position: fixed;
+  top: -250px;
+}
+.header {
+  box-shadow: 0 0px 0px 0 #fff !important; //重叠头部
+}
 .tab {
+  margin-top: -2px;
   @include fj;
   .tabDiv {
     @include flexCenter;
@@ -576,7 +577,6 @@ export default {
   background-color: #cedfea;
 }
 .uintInfoAll {
-  // position: relative;
   .navBar {
     position: fixed;
     top: 260px;
@@ -624,8 +624,12 @@ export default {
     }
   }
   .main {
-    padding: 60px 40px 0px 168px;
-    -webkit-overflow-scrolling: touch;
+    position: fixed;
+    top: 250px;
+    margin-left: 6%;
+    @include cl;
+    width: 80%;
+    height: auto;
     overflow-y: auto;
     overflow-x: hidden;
     .mainLi {

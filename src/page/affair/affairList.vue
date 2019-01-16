@@ -199,12 +199,9 @@ export default {
 .tittle {
   background-color: #fff;
   @include fj(space-around);
-  box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
   @include sc(28px, rgba(30, 30, 30, 1));
   padding: 10px 0px 0px;
   margin-top: -10px;
-  margin-bottom: 20px;
-  height: 60px;
   .feige {
     color: #ccc;
   }
@@ -240,7 +237,7 @@ export default {
 .newList {
   @include cl;
   position: fixed;
-  top: 180px;
+  top: 162px;
   bottom: 0;
   height: auto;
   .newLi {
