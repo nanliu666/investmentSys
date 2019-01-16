@@ -74,9 +74,11 @@
         <ul class="flowMain">
           <li v-for="(item, index) in flowListActual" :key="index">
             <div class="flowLeft">
-              <span class="iconbox agreeing">
-                <i class="iconfont icon-location"></i>
-              </span>
+              <div class="flowFlag">
+                <img v-if="hasCheckShow(item)" src="../../assets/images/椭圆形@2x.png" alt>
+                <img v-if="hasRejectShow(item)" src="../../assets/images/椭圆形@2x (1).png" alt>
+                <img v-if="hasAgreeShow(item)" src="../../assets/images/椭圆形@2x (2).png" alt>
+              </div>
               <span class="iconTittle">{{item.SectionRows[0].Value}}</span>
               <div class="shuxianBox">
                 <div class="shuxian"></div>
@@ -194,9 +196,11 @@
       <ul class="flowMain">
         <li v-for="(item, index) in flowListActual" :key="index">
           <div class="flowLeft">
-            <span class="iconbox agreeing">
-              <i class="iconfont icon-location"></i>
-            </span>
+            <div class="flowFlag">
+              <img v-if="hasCheckShow(item)" src="../../assets/images/椭圆形@2x.png" alt>
+              <img v-if="hasRejectShow(item)" src="../../assets/images/椭圆形@2x (1).png" alt>
+              <img v-if="hasAgreeShow(item)" src="../../assets/images/椭圆形@2x (2).png" alt>
+            </div>
             <span class="iconTittle">{{item.SectionRows[0].Value}}</span>
             <div class="shuxianBox">
               <div class="shuxian"></div>
@@ -253,6 +257,33 @@ export default {
     this.onLoad();
   },
   methods: {
+    hasRejectShow(data) {
+      //驳回
+      if (data.SectionRows[0].Value.includes("驳回")) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    hasCheckShow(data) {
+      //待审
+      if (data.SectionRows[0].Value.includes("待审")) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    hasAgreeShow(data) {
+      //批准或者提交
+      if (
+        data.SectionRows[0].Value.includes("批准") ||
+        data.SectionRows[0].Value.includes("提交")
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     getHistoryDetail() {
       this.haspopup = !this.haspopup;
       this.flowListActual = this.flowList;
@@ -284,6 +315,7 @@ export default {
       });
       GetToDoHistory(jsonData).then(res => {
         this.flowList = res.SectionTables;
+        console.log("流=>", res.SectionTables);
         if (this.flowList.length > 3) {
           this.flowListActual = this.flowList.slice(0, 3);
         } else {
@@ -291,7 +323,6 @@ export default {
         }
       });
       GetToDoFile(jsonData).then(res => {
-        console.log("附件", res);
         this.fujianList = res;
       });
     },
@@ -328,7 +359,7 @@ export default {
           console.log("我是zip");
           break;
       }
-      console.log((this.postfixFileName(data.FileName) ) === ('xls' || 'xlsx'))
+      console.log(this.postfixFileName(data.FileName) === ("xls" || "xlsx"));
       //TODO 补充预览
       // window.open(
       //   `http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=${
@@ -482,29 +513,17 @@ export default {
       }
     }
     .flowLeft {
+      .flowFlag {
+        @include flexCenter;
+        img {
+          @include wh(46px, 46px);
+        }
+      }
       width: 20%;
       @include fd(column);
       margin-right: 24px;
-      .iconbox {
-        @include wh(50px, 50px);
-        border-radius: 25px;
-        @include flexCenter;
-        margin-bottom: 8px;
-        .iconfont {
-          font-size: 20px;
-          @include flexCenter;
-        }
-      }
-      .agree {
-        background-color: rgba(90, 204, 155, 1);
-        .iconfont {
-          color: #fff;
-        }
-      }
-      .agreeing {
-        background-color: rgba(105, 167, 254, 1);
-      }
       .iconTittle {
+        margin-top: 6px;
         @include sc(24px, rgba(136, 136, 136, 1));
         @include flexCenter;
       }

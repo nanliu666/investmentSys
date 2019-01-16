@@ -1,12 +1,7 @@
 <template>
   <div>
-    <x-header
-      :left-options="{backText: ''}"
-      class="header"
-      @click.native="openProjecySelct"
-      id="header"
-    >
-      {{headerTittle}}
+    <x-header :left-options="{backText: ''}" class="header" id="header">
+      <div @click="openProjecySelct">{{headerTittle}}</div>
       <x-icon type="ios-arrow-down" size="23" v-show="!hasprojectStatus"></x-icon>
       <x-icon type="ios-arrow-up" size="23" v-show="hasprojectStatus"></x-icon>
     </x-header>
@@ -487,6 +482,9 @@ export default {
           .orderBy(function(item) {
             return item[0].Floor;
           })
+          .filter(item => {
+            return item[0].Unitlist.length !== 0;
+          })
           .value();
         let unitNull = 0; //判断有没有数据
         this.floorList.map(item => {
@@ -500,10 +498,7 @@ export default {
         } else {
           this.noData = false;
         }
-        let floorListTemp = this.floorList.filter(item => {
-          return item[0].Unitlist.length !== 0;
-        });
-        this.floorListDisplay = floorListTemp.slice(0, 5);
+        this.floorListDisplay = this.floorList.slice(0, 5);
       } else {
         //该用户有多个项目，需要选择项目
       }

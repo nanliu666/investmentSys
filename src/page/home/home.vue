@@ -66,36 +66,26 @@
           </div>
         </div>
       </section>
-      <tabbar class="navBar">
-        <tabbar-item selected>
-          <i class="iconfont icon-xiazai45" slot="icon"></i>
-          <span slot="label" class="tabbarTitle">首页</span>
-        </tabbar-item>
-        <tabbar-item>
-          <i class="iconfont icon-yingyong" slot="icon"></i>
-          <span slot="label">应用</span>
-        </tabbar-item>
-        <tabbar-item>
-          <i class="iconfont icon-wode" slot="icon"></i>
-          <span slot="label">我的</span>
-        </tabbar-item>
-      </tabbar>
+      <section class="navBar">
+        <li>
+          <img src="../../assets/images/home2.png" alt>
+          <span class="tabbarTitle active">首页</span>
+        </li>
+        <li>
+          <img src="../../assets/images/应用2.png" alt>
+          <span class="tabbarTitle">应用</span>
+        </li>
+        <li>
+          <img src="../../assets/images/我的1.png" alt>
+          <span class="tabbarTitle">我的</span>
+        </li>
+      </section>
     </view-box>
   </div>
 </template>
 
 <script>
-import {
-  VChart,
-  VLegend,
-  VBar,
-  VTooltip,
-  VScale,
-  Tabbar,
-  TabbarItem,
-  ViewBox,
-  Badge
-} from "vux";
+import { VChart, VLegend, VBar, VTooltip, VScale, ViewBox, Badge } from "vux";
 import {
   GetAgentDefaultPageNEW,
   GetAgentDefaultPageChartNEW
@@ -107,10 +97,8 @@ export default {
     VLegend,
     VBar,
     VScale,
-    Tabbar,
     ViewBox,
-    Badge,
-    TabbarItem
+    Badge
   },
   created() {
     this.onLoad();
@@ -200,8 +188,28 @@ export default {
 .navBar {
   box-shadow: 0 -4px 14px 0px rgba(126, 158, 230, 0.15);
   font-family: $fr;
+  display: flex;
+  position: absolute;
+  z-index: 500;
+  bottom: 0;
+  width: 100%;
+  background-color: $fc;
+  @include wh(100%, 98px);
+  li {
+    flex: 1;
+    @include fd(column);
+    @include flexCenter;
+    img {
+      @include wh(42px, 42px);
+      margin-bottom: 6px;
+    }
+  }
   .tabbarTitle {
     font-size: 24px;
+    color: rgba(136, 136, 136, 1);
+  }
+  .active {
+    color: rgba(105, 167, 254, 1) !important ;
   }
 }
 .homeTop {

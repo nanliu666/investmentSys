@@ -181,17 +181,12 @@ export default {
         });
     },
     gotoDetail(data) {
-      const requestData = {
-        Contractmgmt: {
-          Rentalid: data.Rentalid,
-          Companyid: data.Companyid,
-          Propertyid: data.Propertyid
-        }
-      };
-      this.$router.push({
-        name: "contractDetail",
-        params: { id: requestData.Contractmgmt.Rentalid, data: requestData }
-      });
+      console.log(data);
+
+      // this.$router.push({
+      //   name: "contractDetail",
+      //   params: { id: requestData.Contractmgmt.Rentalid, data: requestData }
+      // });
     },
     getbusinessStatus(data) {
       let strDatd = this.$options.filters.firstUpperCase(data);
@@ -289,11 +284,11 @@ export default {
         }
         //已流失
         .Lost {
-          background: rgba(105, 167, 254, 1);
+          background: rgba(188, 204, 212, 1);
         }
         //已预订
         .Booked {
-          background: rgba(255, 166, 112, 1);
+          background: rgba(120, 202, 255, 1);
         }
         //已删除
         .INACTIVE {
@@ -306,9 +301,8 @@ export default {
       }
       .bottom {
         // 底部
-        padding: 28px 30px;
+        padding: 28px 34px;
         div {
-          margin-bottom: 20px;
           label {
             @include sc(28px, rgba(136, 136, 136, 1));
             font-family: $fr;
