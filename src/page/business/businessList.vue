@@ -182,11 +182,6 @@ export default {
     },
     gotoDetail(data) {
       console.log(data);
-
-      // this.$router.push({
-      //   name: "contractDetail",
-      //   params: { id: requestData.Contractmgmt.Rentalid, data: requestData }
-      // });
     },
     getbusinessStatus(data) {
       let strDatd = this.$options.filters.firstUpperCase(data);
