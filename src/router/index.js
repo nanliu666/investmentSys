@@ -7,7 +7,6 @@ const homeNew = resolve => require(['@/page/home/homeNew'], resolve);
 //事务模块
 const affairList = resolve => require(['@/page/affair/affairList'], resolve);
 const affairDetail = resolve => require(['@/page/affair/affairDetail'], resolve);
-const affairHistory = resolve => require(['@/page/affair/affairHistory'], resolve);
 //单元模块
 const unitInfoOption = resolve => require(['@/page/unitInfo/unitInfoOption'], resolve);
 const unitInfoALL = resolve => require(['@/page/unitInfo/unitInfoALL'], resolve);
@@ -56,14 +55,11 @@ export default [{
       path: '/affairList', //事务列表
       component: affairList,
       name: 'affairList'
-    }, {
+    },
+    {
       path: '/affairDetail/:id', //事务详情审批
       component: affairDetail,
       name: 'affairDetail'
-    }, {
-      path: '/affairHistory', //审批历史
-      component: affairHistory,
-      name: 'affairHistory'
     },
     //登陆
     {

@@ -2,7 +2,7 @@
   <div style="height:100%;">
     <view-box ref="viewBox">
       <section class="homeTop">
-        <div class="message">
+        <div class="message" @click="gotoNew">
           <i class="iconfont icon-youjian"></i>
           <badge class="badge" text="8"></badge>
         </div>
@@ -10,7 +10,7 @@
           <div class="signTittle">本月签约合同</div>
           <div class="signNum">
             <span class="signMoeny">{{signMoeny | formatNumber}}</span>
-            <span class="getContranct">
+            <span class="getContranct" @click="gotoContranctMonth">
               <span class="getContranctTittle">查看合同</span>
               <i class="iconfont icon-youjiantou"></i>
             </span>
@@ -20,7 +20,7 @@
               <span>近三个月合同到期数</span>
               <span class="ExpireNum">{{ExpireNum }}</span>
             </div>
-            <div class="ExpireRight">
+            <div class="ExpireRight" @click="gotoContranctExpire">
               <span>立即处理</span>
               <i class="iconfont icon-youjiantou"></i>
             </div>
@@ -47,7 +47,7 @@
             </span>
             <span>商机管理</span>
           </router-link>
-          <router-link tag="li" to="/foo">
+          <router-link tag="li" to="/affairList">
             <span>
               <img src="../../assets/images/分组 6.png" alt>
             </span>
@@ -116,6 +116,27 @@ export default {
     this.onLoad();
   },
   methods: {
+    gotoNew() {
+      this.$router.push({
+        name: "homeNew"
+      });
+    },
+    gotoContranctMonth() {
+      this.$router.push({
+        name: "contractList",
+        params: {
+          dateTime: "currentMonth"
+        }
+      });
+    },
+    gotoContranctExpire() {
+      this.$router.push({
+        name: "contractList",
+        params: {
+          dateTime: "threeMonth"
+        }
+      });
+    },
     onLoad() {
       const PageNEWData = {
         Datetime: moment()
@@ -127,7 +148,6 @@ export default {
         this.ExpireNum = res.Overduesoon;
       });
       GetAgentDefaultPageChartNEW(PageNEWData).then(res => {
-        console.log(res);
         this.$set(this.data[0], "percent", res[0].Chartcompleteper);
         this.$set(this.data[1], "percent", res[0].Chartnotcompleteper);
         this.$set(this.data[2], "percent", res[1].Chartcompleteper);

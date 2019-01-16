@@ -1,96 +1,102 @@
 <template>
-  <div class="businessListPart">
-    <x-header :left-options="{backText: ''}" class="header">商机管理</x-header>
-    <section class="filter">
-      <div class="projectFilter">
-        <span>项目</span>
-      </div>
-      <div @click="openStatus">
-        <span>状态</span>
-        <x-icon type="ios-arrow-down" size="25" v-if="!hasStatus"></x-icon>
-        <x-icon type="ios-arrow-up" size="25" v-if="hasStatus"></x-icon>
-        <!-- 选择状态 -->
-        <transition
-          name="custom-classes-transition"
-          enter-active-class="animated bounceInDown"
-          leave-active-class="animated bounceOutRight"
-        >
-          <section v-if="hasStatus" class="status">
-            <a
-              v-text="statusDetail[Item]"
-              v-for="(Item, index) in statusList"
-              :key="index"
-              @click.native="openStatus"
-              :href="'#anchor-'+index"
-            ></a>
-          </section>
-        </transition>
-      </div>
+  <div class="contractList">
+    <x-header :left-options="{backText: ''}" class="header" v-if="!hasSearch">
+      商机管理
+      <i class="iconfont icon-fangdajing" slot="right" @click="openSearch"></i>
+    </x-header>
+    <section class="searchPart" v-if="hasSearch">
+      <x-input
+        type="text"
+        placeholder="请输入商机关键字"
+        v-model="enterText"
+        @on-enter="onEnter"
+        class="searchInput fs-search"
+      >
+        <i class="iconfont icon-fangdajing" slot="right" @click="onEnter"></i>
+      </x-input>
+      <div class="cancel" @click="searchCancel">取消</div>
     </section>
-    <section class="content">
-      <section class="newBuiness" v-for="(Item, index) in statusList" :key="index">
-        <div class="Btitle" v-text="statusDetail[Item]" :id="'anchor-'+index"></div>
-        <li v-for="(item, index) in dataSource[Item]" :key="index" @click="gotoDetail(item)">
-          <div class="top">
-            <span>月亮湾二期 1506</span>
-            <span
-              :class="getbusinessStatus(item.Recordstatus)"
-              v-text="statusDetail[item.Recordstatus]"
-            ></span>
-          </div>
-          <div class="bottom">
-            <div class="client">
-              <div>
-                <label>意向客户：</label>
-                <span class="text">{{item.Accountname}}</span>
-              </div>
-              <div class="phone">
-                <label>联系电话:</label>
-                <span class="text">{{item.Phone}}</span>
-              </div>
-            </div>
-            <div class="trace">
-              <span>
-                <label>跟踪次数:</label>
-                <span class="text">{{item.Countfollowup}}</span>
-              </span>
-              <button class="lookRecord">查看记录</button>
-            </div>
+    <projeceSelect
+      :statusDetail="statusDetail"
+      @FilterUpdate="FilterUpdate"
+      comName="contractList"
+    />
+    <!--mescroll滚动区域的基本结构-->
+    <mescroll-vue
+      class="mescroll"
+      ref="mescroll"
+      :down="mescrollDown"
+      :up="mescrollUp"
+      @init="mescrollInit"
+    >
+      <!--内容...-->
+      <li v-for="(item) in dataList" :key="item.Rentalid" @click="gotoDetail(item)">
+        <div class="top">
+          <span>{{item.Accountname}} {{item.Companyname}}</span>
+          <span
+            :class="getbusinessStatus(item.Recordstatus)"
+            v-text="statusDetail[item.Recordstatus]"
+          ></span>
+        </div>
+        <div class="bottom">
+          <div class="client">
             <div>
-              <label>最后接触日期：</label>
-              <span class="text">{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span>
+              <label>意向单元：</label>
+              <span class="text">{{item.Unitdesc}}</span>
             </div>
           </div>
-        </li>
-      </section>
-    </section>
-    <section class="addNew" @click="addNew">
-      <span>＋</span>
-    </section>
-    <section class="more">没有更多了</section>
+          <div>
+            <label class="cycleText">最后一次接触时间：</label>
+            <span class="cycleText">{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span>
+          </div>
+        </div>
+      </li>
+    </mescroll-vue>
+    <p id="NoData"></p>
   </div>
 </template>
-
-
 <script>
-import { XHeader } from "vux";
-
-import {
-  GetBizOpportunity,
-  GetBizOpportunityDetail,
-  GetBizopprtunityDropdown
-} from "@/axios/api";
-
+import { XHeader, Search, Popup, XInput } from "vux";
+import { GetBizOpportunity, GetCompanyies, GetPropertys } from "@/axios/api";
+// 引入下拉组件
+import MescrollVue from "mescroll.js/mescroll.vue";
+import imgSrc from "../../assets/images/分组.png";
+import topimgSrc from "../../assets/images/gototop.png";
 export default {
-  name: "businessList",
+  name: "contractList",
   data() {
     return {
-      hasState: true,
-      hasSearch: true,
-      hasStatus: false,
-      statusList: [], // 状态
-      dataSource: [], // 数据源
+      enterText: "",
+      hasSearch: false,
+      FilterCond: {},
+      mescroll: null, // mescroll实例对象
+      mescrollDown: {}, //下拉刷新的配置. (如果下拉刷新和上拉加载处理的逻辑是一样的,则mescrollDown可不用写了)
+      mescrollUp: {
+        // 上拉加载的配置.
+        callback: this.upCallback, // 上拉回调,此处可简写; 相当于 callback: function (page, mescroll) { getListData(page); }
+        //以下是一些常用的配置,当然不写也可以的.
+        page: {
+          num: 0, //当前页 默认0,回调之前会加1; 即callback(page)会从1开始
+          size: 10 //每页数据条数,默认10
+        },
+        htmlNodata: '<p class="upwarp-nodata">我也是有底线的~</p>',
+        noMoreSize: 1, //如果列表已无数据,可设置列表总数大于5才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看
+        toTop: {
+          //回到顶部按钮
+          src: topimgSrc, //图片路径,默认null,支持网络图
+          warpClass: "mescroll-totop",
+          offset: 1000 //列表滚动1000px才显示回到顶部按钮
+        },
+        empty: {
+          //列表第一页无任何数据时,显示的空提示布局; 需配置warpId才显示
+          warpId: "NoData", //父布局的id (1.3.5版本支持传入dom元素)
+          icon: imgSrc, //图标,默认null,支持网络图
+          tip: "暂无相关数据~" //提示
+        }
+      },
+      dataList: [], //所有的合同列表数据
       statusDetail: {
+        all: "所有状态",
         Active: "新商机",
         Lost: "已流失",
         Signed: "已签约",
@@ -101,172 +107,201 @@ export default {
       }
     };
   },
-  created() {
-    this.onLoad();
-  },
   components: {
-    XHeader
+    XHeader,
+    XInput,
+    Popup,
+    Search,
+    MescrollVue,
+    projeceSelect: function(resolve) {
+      require(["../../components/projectSelect.vue"], resolve);
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
+    next(vm => {
+      vm.$refs.mescroll.beforeRouteEnter(); // 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置
+    });
+  },
+  beforeRouteLeave(to, from, next) {
+    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
+    this.$refs.mescroll.beforeRouteLeave(); // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
+    next();
   },
   methods: {
-    openStatus() {
-      this.hasStatus = !this.hasStatus;
+    FilterUpdate(data) {
+      console.log("子组件传递过来的修改的值", data);
+      this.FilterCond = data;
+      this.mescroll.resetUpScroll();
     },
-    gotoDetail(item) {
-      // 路由跳转
-      this.$router.push({
-        name: "businessDetail",
-        params: { id: item.Prospectid }
-      });
-    },
-    //新增商机
-    addNew() {
-      this.$router.push({ name: "businessAdd" });
-    },
-    getbusinessStatus(data) {
-      switch (data) {
-        case "Active":
-          this.businessStatus = "Active";
-          return this.businessStatus;
-          break;
-        case "Booked":
-          this.businessStatus = "Booked";
-          return this.businessStatus;
-          break;
-        case "Signed":
-          this.businessStatus = "Signed";
-          return this.businessStatus;
-          break;
-      }
-    },
-    onLoad() {
-      var data = {
-        Bizopportunity: {},
-        Prospectid: 0
+    onEnter(value) {
+      this.FilterCond = {
+        Filter: `Keyword.like.${this.enterText}`
       };
-      var Urlpara = {
+      this.mescroll.resetUpScroll();
+    },
+    searchCancel() {
+      this.hasSearch = !this.hasSearch;
+    },
+    openSearch() {
+      this.hasSearch = !this.hasSearch;
+    },
+    // mescroll组件初始化的回调,可获取到mescroll对象 (如果this.mescroll并没有使用到,可不用写mescrollInit)
+    mescrollInit(mescroll) {
+      this.mescroll = mescroll;
+    },
+    // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
+    upCallback(page, mescroll) {
+      // 上拉下拉不区分状态、项目请求
+      const data = {
         Urlpara: {
-          Pageindex: 1,
-          Pagesize: 10
+          Pageindex: page.num,
+          Pagesize: page.size
         }
       };
-      GetBizOpportunity(Urlpara).then(res => {
-        let data = this._.groupBy(JSON.parse(res.Content), "Recordstatus");
-        this.statusList = Object.keys(data);
-        this.dataSource = data;
-        // console.log(JSON.parse(res.Content));
+      Object.assign(data.Urlpara, this.FilterCond);
+      GetBizOpportunity(data)
+        .then(res => {
+          let arr = JSON.parse(res.Content);
+          console.log(arr);
+          // 如果是第一页需手动制空列表
+          if (page.num === 1) this.dataList = [];
+          // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
+          this.dataList = this._.filter(this.dataList.concat(arr), item => {
+            return item.Contractstatushow !== "Active";
+          });
+          // 数据渲染成功后,隐藏下拉刷新的状态
+          this.$nextTick(() => {
+            mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
+          });
+        })
+        .catch(e => {
+          // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;
+          mescroll.endErr();
+        });
+    },
+    gotoDetail(data) {
+      const requestData = {
+        Contractmgmt: {
+          Rentalid: data.Rentalid,
+          Companyid: data.Companyid,
+          Propertyid: data.Propertyid
+        }
+      };
+      this.$router.push({
+        name: "contractDetail",
+        params: { id: requestData.Contractmgmt.Rentalid, data: requestData }
       });
+    },
+    getbusinessStatus(data) {
+      let strDatd = this.$options.filters.firstUpperCase(data);
+      let str = this;
+      switch (strDatd) {
+        case "Active":
+          return "Active";
+          break;
+        case "Lost":
+          return "Lost";
+          break;
+        case "Signed":
+          return "Signed";
+          break;
+        case "Quotation":
+          return "Quotation";
+          break;
+        case "Booked":
+          return "Booked";
+          break;
+        case "INACTIVE":
+          return "INACTIVE";
+          break;
+        case "Used":
+          return "Used";
+          break;
+      }
     }
   }
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 @import "src/assets/sass/mixin";
-.businessListPart {
+.contractList {
+  height: 100%;
   .header {
     box-shadow: 0 0px 0px 0 #fff !important; //重叠头部
   }
 
-  .filter {
+  .searchPart {
+    padding: 0 40px;
+    @include fj(space-between);
     background-color: #fff;
-    @include fd(row);
-    box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
-    padding: 10px 0;
-    .projectFilter {
-      border-right: 1px solid #ccc;
+    .fs-search {
+      height: 32px;
+      border-radius: 18px;
+      margin: 7px 0;
     }
-    div {
-      width: 50%;
+    .searchInput {
+      border: 1px solid #ccc;
+      width: 88%;
+    }
+    .cancel {
+      @include sc(30px, rgb(105, 167, 254));
       @include flexCenter;
-      span {
-        //状态，项目文字
-        @include sc(28px, rgba(30, 30, 30, 1));
-        font-family: $fr;
-        margin-right: 12px;
-      }
-    }
-    //状态选择
-    .status {
-      position: absolute;
-      right: 0;
-      top: 146px;
-      width: 50%;
-      background-color: #fff;
-      @include fd(column);
-      a {
-        width: 100%;
-        @include flexCenter;
-        padding: 10px;
-      }
-    }
-    .row-img {
-      max-width: 26px;
-      max-height: 11px;
-    }
-    .decollator {
-      //分隔符
-      @include wh(4px, 32px);
-      color: rgba(219, 219, 219, 1);
     }
   }
-  .content {
-    padding: 10px 40px 0;
-    .Btitle {
-      margin-bottom: 12px;
-      @include sc(28px, rgba(30, 30, 30, 1));
-      font-family: $fr;
-    }
+
+  .mescroll {
+    @include cl;
+    width: 88%;
+    position: fixed;
+    top: 180px;
+    bottom: 0;
+    height: auto;
     li {
       margin-bottom: 20px;
-      @include borderRadius(8px);
+      @include borderRadius(20px);
       box-shadow: 0 0 4px 10px 0 rgba(126, 158, 230, 0.15);
       background-color: $fc;
       .top {
         //详情头部
         @include fj(space-between);
-        padding: 30px;
-        border-bottom: 1px dashed rgba(72, 121, 230, 1); /*no*/
+        padding: 30px 30px 26px;
+        border-bottom: 4px dashed rgba(244, 246, 248, 1); /*no*/
         span:first-child {
           @include sc(32px, rgba(30, 30, 30, 1));
           font-family: $fm;
         }
         span:last-child {
-          padding: 6px 10px;
+          @include wh(80px, 38px);
+          @include flexCenter;
           @include borderRadius(4px);
-
           @include sc(20px, rgba(255, 255, 255, 1));
           font-family: $fr;
         }
         //新商机
         .Active {
-          background: linear-gradient(
-            to left,
-            rgba(96, 229, 139, 1),
-            rgba(10, 188, 108, 1)
-          );
+          background: rgba(152, 226, 72, 1);
         }
-        //签约
+        //已签约
         .Signed {
-          background: linear-gradient(
-            to left,
-            rgba(40, 140, 241, 1),
-            rgba(120, 202, 255, 1)
-          );
+          background: rgba(59, 222, 186, 1);
         }
-        //预定
+        //已流失
+        .Lost {
+          background: rgba(105, 167, 254, 1);
+        }
+        //已预订
         .Booked {
-          background: linear-gradient(
-            to left,
-            rgba(123, 110, 240, 1),
-            rgba(202, 154, 210, 1)
-          );
+          background: rgba(255, 166, 112, 1);
         }
-        .lost {
-          background: linear-gradient(
-            to left,
-            rgba(203, 220, 234, 1),
-            rgba(173, 188, 198, 1)
-          );
+        //已删除
+        .INACTIVE {
+          background: rgba(188, 204, 212, 1);
+        }
+        //已使用
+        .Used {
+          background: rgba(248, 123, 123, 1);
         }
       }
       .bottom {
@@ -281,6 +316,9 @@ export default {
           .text {
             @include sc(28px, rgba(30, 30, 30, 1));
           }
+          .cycleText {
+            @include sc(24px, rgba(174, 174, 174, 1));
+          }
           .lookRecord {
             @include flexCenter;
             height: 50px;
@@ -292,40 +330,17 @@ export default {
             padding: 0px 26px;
           }
         }
-        // div:last-child {
-        //   margin-top: 40px;
-        // }
-        .trace {
-          display: flex;
-          span {
-            margin-right: 26px;
-          }
-        }
       }
     }
   }
-  .addNew {
-    @include wh(120px, 120px);
-    border-radius: 50%;
-    background-color: #fff;
-    position: fixed;
-    bottom: 28px;
-    right: 40px;
-    box-shadow: 0 2px 14px 0 rgba(126, 158, 230, 0.15);
-    @include flexCenter;
-    span {
-      color: rgba(72, 121, 230, 1);
-      font-size: 58px;
-    }
+  .mescroll-totop {
+    background-color: red;
   }
-  .more {
+  #NoData {
     @include flexCenter;
-    margin-bottom: 26px;
-    @include sc(24px, rgba(136, 136, 136, 1));
-    font-family: $fr;
+    height: 80%;
+    width: 100%;
   }
 }
 </style>
-
-
 

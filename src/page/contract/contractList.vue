@@ -145,7 +145,6 @@ export default {
   },
   methods: {
     FilterUpdate(data) {
-      console.log("子组件传递过来的修改的值", data);
       this.FilterCond = data;
       this.mescroll.resetUpScroll();
     },
@@ -168,13 +167,38 @@ export default {
     // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
     upCallback(page, mescroll) {
       // 上拉下拉不区分状态、项目请求
-      const data = {
+      let data = {
         Urlpara: {
           Pageindex: page.num,
           Pagesize: page.size
         }
       };
+      if (this.$route.params.dateTime === "currentMonth") {
+        let nowTime = moment()
+          .locale("zh-cn")
+          .format("YYYY-MM");
+        Object.assign(data.Urlpara, {
+          Showmonthdata: nowTime
+        });
+      }
+      switch (this.$route.params.dateTime) {
+        case "currentMonth": //当月额
+          let nowTime = moment()
+            .locale("zh-cn")
+            .format("YYYY-MM");
+          Object.assign(data.Urlpara, {
+            Showmonthdata: nowTime
+          });
+          break;
+        case "threeMonth": //近3个月到期
+          let MONTH_NUMBER = 3; //常量3
+          Object.assign(data.Urlpara, {
+            Showexpiresoon: MONTH_NUMBER
+          });
+          break;
+      }
       Object.assign(data.Urlpara, this.FilterCond);
+      console.log(data);
       GetContractMgmt(data)
         .then(res => {
           let arr = JSON.parse(res.Content);
@@ -210,9 +234,9 @@ export default {
     },
     getbusinessStatus(data) {
       switch (data) {
-        // case "Active":
-        //   return "Active";
-        //   break;
+        case "Active":
+          return "Active";
+          break;
         case "Submitted":
           return "Submitted";
           break;

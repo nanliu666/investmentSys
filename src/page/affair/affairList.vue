@@ -137,6 +137,8 @@ export default {
     upCallback(page, mescroll) {
       // 上拉下拉不区分状态、项目请求
       this.affairCond.LoginName = "qw";
+      this.affairCond.PageIndex = page.num;
+      this.affairCond.PageSize = page.size;
       getTodoList(this.affairCond)
         .then(res => {
           let arr = res.Content;
@@ -145,9 +147,10 @@ export default {
           if (page.num === 1) this.affairList = [];
           // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
           this.affairList = this.affairList.concat(arr);
+          console.log(this.affairList);
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
-            mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
+            mescroll.endByPage(arr.length, res.Total); //修复结束条件
           });
         })
         .catch(e => {
