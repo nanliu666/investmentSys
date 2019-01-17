@@ -66,7 +66,7 @@
           </div>
         </div>
       </section>
-      <section class="navBar">
+      <!-- <section class="navBar">
         <li>
           <img src="../../assets/images/home2.png" alt>
           <span class="tabbarTitle active">首页</span>
@@ -79,7 +79,7 @@
           <img src="../../assets/images/我的1.png" alt>
           <span class="tabbarTitle">我的</span>
         </li>
-      </section>
+      </section> -->
     </view-box>
   </div>
 </template>
@@ -191,33 +191,33 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
-.navBar {
-  box-shadow: 0 -4px 14px 0px rgba(126, 158, 230, 0.15);
-  font-family: $fr;
-  display: flex;
-  position: absolute;
-  z-index: 500;
-  bottom: 0;
-  width: 100%;
-  background-color: $fc;
-  @include wh(100%, 98px);
-  li {
-    flex: 1;
-    @include fd(column);
-    @include flexCenter;
-    img {
-      @include wh(42px, 42px);
-      margin-bottom: 6px;
-    }
-  }
-  .tabbarTitle {
-    font-size: 24px;
-    color: rgba(136, 136, 136, 1);
-  }
-  .active {
-    color: rgba(105, 167, 254, 1) !important ;
-  }
-}
+// .navBar {
+//   box-shadow: 0 -4px 14px 0px rgba(126, 158, 230, 0.15);
+//   font-family: $fr;
+//   display: flex;
+//   position: absolute;
+//   z-index: 500;
+//   bottom: 0;
+//   width: 100%;
+//   background-color: $fc;
+//   @include wh(100%, 98px);
+//   li {
+//     flex: 1;
+//     @include fd(column);
+//     @include flexCenter;
+//     img {
+//       @include wh(42px, 42px);
+//       margin-bottom: 6px;
+//     }
+//   }
+//   .tabbarTitle {
+//     font-size: 24px;
+//     color: rgba(136, 136, 136, 1);
+//   }
+//   .active {
+//     color: rgba(105, 167, 254, 1) !important ;
+//   }
+// }
 .homeTop {
   background: linear-gradient(
     to right,
