@@ -467,7 +467,7 @@ export default {
       }
       this.getUnitBlock();
       this.$el.querySelector("#anchorScroll").scrollIntoView();
-
+      this.floorList = [];
     },
     onLoad() {
       this.requestData = {

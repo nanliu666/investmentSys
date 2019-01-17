@@ -116,6 +116,7 @@ export default {
   },
   created() {
     this.isFirstEnter = true;
+    document.addEventListener("deviceready", onDeviceReady, false);
   },
   activated() {
     if (!this.$route.meta.isBack || this.isFirstEnter) {
@@ -129,6 +130,22 @@ export default {
     this.isFirstEnter = false;
   },
   methods: {
+    onDeviceReady() {
+      cordova.exec(
+        successCallBack,
+        errorCallBack,
+        "ifcaPlugIns",
+        "getAppInfoFunc",
+        []
+      );
+    },
+    successCallBack(data) {
+      // 用户名
+       this.affairCond.LoginName = data["username"];
+    },
+    errorCallBack(data) {
+      console.log(data);
+    },
     getDeatil(data) {
       this.$router.push({
         name: "affairDetail",
@@ -155,7 +172,7 @@ export default {
     // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
     upCallback(page, mescroll) {
       // 上拉下拉不区分状态、项目请求
-      this.affairCond.LoginName = "qw";
+
       this.affairCond.PageIndex = page.num;
       this.affairCond.PageSize = page.size;
       getTodoList(this.affairCond)
