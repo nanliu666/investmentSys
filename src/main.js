@@ -45,7 +45,7 @@ Vue.prototype.toAbsURL = function (url) {
 Vue.use(VueRouter)
 const router = new VueRouter({
   routes,
-  mode: 'history',
+  // mode: 'history',
   strict: process.env.NODE_ENV !== 'production',
   scrollBehavior(to, from, savedPosition) {
     if (to.hash) {
