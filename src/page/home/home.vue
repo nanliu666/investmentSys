@@ -90,15 +90,29 @@ export default {
   created() {
     this.onLoad();
   },
-  mounted() {
-    document.addEventListener("deviceready", this.onDeviceReady, false);
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      document.addEventListener("deviceready", vm.onHomeDeviceReady, false);
+    });
+  },
+  beforeRouteLeave(to, from, next) {
+    document.addEventListener("deviceready", this.onLeaveDeviceReady, false);
+    next();
   },
   methods: {
-    onDeviceReady() {
+    onHomeDeviceReady() {
       //设置导航栏颜色的接口
       cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
         103,
         185,
+        255
+      ]);
+    },
+    onLeaveDeviceReady() {
+      //设置导航栏颜色的接口
+      cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
+        255,
+        255,
         255
       ]);
     },

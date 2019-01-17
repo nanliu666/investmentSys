@@ -142,6 +142,7 @@ export default {
     successCallBack(data) {
       // 用户名
       this.affairCond.LoginName = data["username"];
+      this.mescroll.resetUpScroll();
     },
     errorCallBack(data) {
       console.log(data);
