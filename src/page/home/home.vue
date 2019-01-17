@@ -66,20 +66,6 @@
           </div>
         </div>
       </section>
-      <!-- <section class="navBar">
-        <li>
-          <img src="../../assets/images/home2.png" alt>
-          <span class="tabbarTitle active">首页</span>
-        </li>
-        <li>
-          <img src="../../assets/images/应用2.png" alt>
-          <span class="tabbarTitle">应用</span>
-        </li>
-        <li>
-          <img src="../../assets/images/我的1.png" alt>
-          <span class="tabbarTitle">我的</span>
-        </li>
-      </section> -->
     </view-box>
   </div>
 </template>
@@ -104,7 +90,18 @@ export default {
   created() {
     this.onLoad();
   },
+  mounted() {
+    document.addEventListener("deviceready", this.onDeviceReady, false);
+  },
   methods: {
+    onDeviceReady() {
+      //设置导航栏颜色的接口
+      cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
+        103,
+        185,
+        255
+      ]);
+    },
     gotoNew() {
       this.$router.push({
         name: "homeNew"
@@ -191,33 +188,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
-// .navBar {
-//   box-shadow: 0 -4px 14px 0px rgba(126, 158, 230, 0.15);
-//   font-family: $fr;
-//   display: flex;
-//   position: absolute;
-//   z-index: 500;
-//   bottom: 0;
-//   width: 100%;
-//   background-color: $fc;
-//   @include wh(100%, 98px);
-//   li {
-//     flex: 1;
-//     @include fd(column);
-//     @include flexCenter;
-//     img {
-//       @include wh(42px, 42px);
-//       margin-bottom: 6px;
-//     }
-//   }
-//   .tabbarTitle {
-//     font-size: 24px;
-//     color: rgba(136, 136, 136, 1);
-//   }
-//   .active {
-//     color: rgba(105, 167, 254, 1) !important ;
-//   }
-// }
+
 .homeTop {
   background: linear-gradient(
     to right,

@@ -33,6 +33,20 @@ export default {
     } else {
       document.documentElement.appendChild(script);
     }
+
+    document.addEventListener("deviceready", this.onDeviceReady, false);
+  },
+  methods: {
+    onDeviceReady() {
+      if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+        console.log("IOS");
+      } else {
+        // 禁用安卓返回键
+        cordova.exec(null, null, "ifcaPlugIns", "enabledsystembackFunc", [
+          false
+        ]);
+      }
+    }
   }
 };
 </script>

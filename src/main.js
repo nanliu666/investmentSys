@@ -41,6 +41,23 @@ Vue.prototype.toAbsURL = function (url) {
   return a.href;
 };
 
+//设置导航栏的名字
+router.beforeEach(function (to, from, next) {
+  if (to.name === 'home') {
+    document.addEventListener("deviceready", cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
+      96,
+      147,
+      255
+    ]), false);
+  } else {
+    document.addEventListener("deviceready", cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
+      255,
+      255,
+      255
+    ]), false);
+  }
+  next()
+})
 //页面位置保存
 Vue.use(VueRouter)
 const router = new VueRouter({
@@ -67,6 +84,8 @@ const router = new VueRouter({
     }
   }
 })
+
+
 
 new Vue({
   el: '#app',

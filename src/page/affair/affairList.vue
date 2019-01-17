@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="affairList">
     <x-header class="header" :left-options="{backText: ''}" v-if="!hasSearch">
       事务管理
       <i class="iconfont icon-fangdajing" slot="right" @click="openSearch"></i>
@@ -116,7 +116,7 @@ export default {
   },
   created() {
     this.isFirstEnter = true;
-    document.addEventListener("deviceready", onDeviceReady, false);
+    document.addEventListener("deviceready", this.onDeviceReady, false);
   },
   activated() {
     if (!this.$route.meta.isBack || this.isFirstEnter) {
@@ -132,8 +132,8 @@ export default {
   methods: {
     onDeviceReady() {
       cordova.exec(
-        successCallBack,
-        errorCallBack,
+        this.successCallBack,
+        this.errorCallBack,
         "ifcaPlugIns",
         "getAppInfoFunc",
         []
@@ -141,7 +141,7 @@ export default {
     },
     successCallBack(data) {
       // 用户名
-       this.affairCond.LoginName = data["username"];
+      this.affairCond.LoginName = data["username"];
     },
     errorCallBack(data) {
       console.log(data);
@@ -178,12 +178,10 @@ export default {
       getTodoList(this.affairCond)
         .then(res => {
           let arr = res.Content;
-          console.log(arr);
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.affairList = [];
           // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
           this.affairList = this.affairList.concat(arr);
-          console.log(this.affairList);
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
             mescroll.endByPage(arr.length, res.Total); //修复结束条件
@@ -210,6 +208,9 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
+.affairList {
+  height: 100%;
+}
 .header {
   box-shadow: 0 0px 0px 0 #fff !important; //重叠头部
 }
@@ -287,6 +288,7 @@ export default {
   background-color: red;
 }
 #NoData {
+  // @include center;
   @include flexCenter;
   height: 80%;
   width: 100%;
