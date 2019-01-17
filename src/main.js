@@ -15,6 +15,9 @@ import {
 Vue.use(LoadingPlugin)
 Vue.use(ToastPlugin)
 Vue.use(PopupPicker)
+
+import Vehistogram from 'v-charts/lib/histogram.common'
+Vue.component(Vehistogram.name, Vehistogram)
 // 解决点击延迟300ms
 if ('addEventListener' in document) {
   document.addEventListener('DOMContentLoaded', function (event) {

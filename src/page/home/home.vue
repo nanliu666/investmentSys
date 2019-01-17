@@ -56,13 +56,13 @@
         </ul>
         <div class="performance">
           <div class="performanceTitle">我的业绩完成率</div>
+
           <div class="performanceSheet">
-            <v-chart ref="demo" :data="data">
-              <v-scale x field="classes"/>
-              <v-scale y field="percent" :min="0" :max="1" :formatter="formatter"/>
-              <v-bar series-field="country" adjust="stack"/>
-              <v-tooltip show-value-in-legend/>
-            </v-chart>
+            <ve-histogram
+              :data="chartData"
+              :settings="chartSettings"
+              :colors="[ 'rgb(105, 167, 254)','rgb(228, 233, 245)']"
+            ></ve-histogram>
           </div>
         </div>
       </section>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { VChart, VLegend, VBar, VTooltip, VScale, ViewBox, Badge } from "vux";
+import { ViewBox, Badge } from "vux";
 import {
   GetAgentDefaultPageNEW,
   GetAgentDefaultPageChartNEW,
@@ -79,11 +79,6 @@ import {
 } from "@/axios/api";
 export default {
   components: {
-    VChart,
-    VTooltip,
-    VLegend,
-    VBar,
-    VScale,
     ViewBox,
     Badge
   },
@@ -162,7 +157,22 @@ export default {
     }
   },
   data() {
+    this.chartSettings = {
+      stack: { 用户: ["访问用户", "下单用户"] }
+    };
     return {
+      chartData: {
+        columns: ["日期", "访问用户", "下单用户", "下单率"],
+        rows: [
+          { 日期: "1/1", 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
+          { 日期: "1/2", 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
+          { 日期: "1/3", 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
+          { 日期: "1/4", 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
+          { 日期: "1/5", 访问用户: 3792, 下单用户: 3492, 下单率: 0.323 },
+          { 日期: "1/6", 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 }
+        ]
+      },
+
       formatter: function(val) {
         return (val * 100).toFixed(0) + "%";
       },
@@ -235,6 +245,8 @@ export default {
       @include fj;
       align-items: flex-end;
       .signMoeny {
+        // width: 80%;
+        // @include ellipsis;
         @include sc(84px, $fc);
         font-family: Hiragino Kaku Gothic ProN W3;
         font-weight: normal;

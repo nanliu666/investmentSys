@@ -18,7 +18,7 @@ axios.interceptors.request.use(
   },
   err => {
     Vue.$vux.loading.hide()
-    Vue.$vux.toast.text('请求错误', 'top') //以plugin形式调用
+    Vue.$vux.toast.text('请求错误') //以plugin形式调用
     return Promise.reject(err)
   }
 )
@@ -41,13 +41,12 @@ axios.interceptors.response.use(
         return Promise.resolve(response.data);
       }
     }
-
-    err => {
-      Vue.$vux.loading.hide()
-      Vue.$vux.toast.text('请求失败，请稍后再试', 'top')
-      return Promise.reject(err)
-    }
   },
+  err => {
+    Vue.$vux.loading.hide()
+    Vue.$vux.toast.text('请求失败，请稍后再试', 'top')
+    return Promise.reject(err)
+  }
 )
 /**
  * get方法，对应get请求
