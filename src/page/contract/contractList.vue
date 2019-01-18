@@ -52,12 +52,12 @@
               <label>面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;积:</label>
               <span class="text">{{item.Totalrentalarea}}M²</span>
             </div>
-          </div>
-          <div>
-            <label class="cycleText">租赁周期：</label>
-            <span
-              class="cycleText"
-            >{{item.Defaultstartdate | dataFrm('YYYY-MM-DD')}}&nbsp;至&nbsp;{{item.Defaultexpirydate | dataFrm('YYYY-MM-DD')}}</span>
+            <div>
+              <label class="phone">租赁周期：</label>
+              <span
+                class="text"
+              >{{item.Defaultstartdate | dataFrm('YYYY-MM-DD')}}&nbsp;至&nbsp;{{item.Defaultexpirydate | dataFrm('YYYY-MM-DD')}}</span>
+            </div>
           </div>
         </div>
       </li>
