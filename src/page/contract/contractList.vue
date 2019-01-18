@@ -107,7 +107,7 @@ export default {
       dataList: [], //所有的合同列表数据
       statusDetail: {
         all: "所有状态",
-        // Active: "未提交",
+        Active: "未提交",
         Submitted: "审批中",
         Signed: "已签约",
         Voing: "变更中",
@@ -198,9 +198,7 @@ export default {
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
-          this.dataList = this._.filter(this.dataList.concat(arr), item => {
-            return item.Contractstatushow !== "Active";
-          });
+          this.dataList = this.dataList.concat(arr);
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
             mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
@@ -286,20 +284,20 @@ export default {
       margin: 7px 0;
     }
     .searchInput {
-      border: 1px solid #ccc;
+      border: 1px solid rgba(235, 237, 239, 1);
       width: 88%;
     }
     .cancel {
-      @include sc(30px, rgb(105, 167, 254));
+      @include sc(32px, rgba(136, 136, 136, 1));
       @include flexCenter;
     }
   }
 
   .mescroll {
     @include cl;
-    width: 88%;
+    width: 670px;
     position: fixed;
-    top: 180px;
+    top: 210px;
     bottom: 0;
     height: auto;
     li {
@@ -310,7 +308,7 @@ export default {
       .top {
         //详情头部
         @include fj(space-between);
-        padding: 30px;
+        padding: 30px 30px 26px;
         border-bottom: 4px dashed rgba(244, 246, 248, 1); /*no*/
         span:first-child {
           @include sc(32px, rgba(30, 30, 30, 1));
@@ -325,7 +323,9 @@ export default {
         }
         //未提交
         .Active {
-          background: rgba(152, 226, 72, 1);
+          background-color: #fff;
+          border: 1px solid rgba(235, 237, 239, 1);
+          color: rgba(0, 0, 0, 1) !important;
         }
         //已签约
         .Signed {
@@ -378,9 +378,9 @@ export default {
       }
       .bottom {
         // 底部
-        padding: 28px 30px;
+        padding: 28px 30px 14px;
         div {
-          margin-bottom: 20px;
+          margin-bottom: 14px;
           label {
             @include sc(28px, rgba(136, 136, 136, 1));
             font-family: $fr;

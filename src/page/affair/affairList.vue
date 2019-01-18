@@ -22,7 +22,7 @@
       <div class="finished" :class="[hasActive ? 'active' : '']" @click="getFinished">已办</div>
     </section>
     <mescroll-vue
-      class="newList"
+      class="mescroll"
       ref="mescroll"
       :down="mescrollDown"
       :up="mescrollUp"
@@ -173,7 +173,7 @@ export default {
     // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
     upCallback(page, mescroll) {
       // 上拉下拉不区分状态、项目请求
-      // this.affairCond.LoginName = "qw";
+      this.affairCond.LoginName = "qw";
 
       this.affairCond.PageIndex = page.num;
       this.affairCond.PageSize = page.size;
@@ -245,19 +245,19 @@ export default {
     margin: 7px 0;
   }
   .searchInput {
-    border: 1px solid #ccc;
+    border: 1px solid rgba(235, 237, 239, 1);
     width: 88%;
   }
   .cancel {
-    @include sc(30px, rgb(105, 167, 254));
+    @include sc(32px, rgba(136, 136, 136, 1));
     @include flexCenter;
   }
 }
 
-.newList {
+.mescroll {
   @include cl;
   position: fixed;
-  top: 162px;
+  top: 180px;
   bottom: 0;
   height: auto;
   .newLi {

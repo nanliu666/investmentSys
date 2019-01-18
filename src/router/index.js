@@ -30,6 +30,8 @@ const clientDetail = resolve => require(['@/page/client/clientDetail'], resolve)
 const contractDetail = resolve => require(['@/page/contract/contractDetail'], resolve);
 const contractList = resolve => require(['@/page/contract/contractList'], resolve);
 
+const notFound = resolve => require(['@/page/404/notFound'], resolve);
+
 export default [{
   path: '/',
   component: App, //顶层路由，对应index.html
@@ -163,6 +165,17 @@ export default [{
       name: 'reserveAdd',
       component: reserveAdd,
     },
+
+    {
+      name: '404',
+      path: '/404',
+      component: notFound,
+    },
+    {
+      path: '*', // 此处需特别注意至于最底部
+      redirect: '/404'
+    }
+
 
   ]
 }]

@@ -277,20 +277,20 @@ export default {
       margin: 7px 0;
     }
     .searchInput {
-      border: 1px solid #ccc;
+      border: 1px solid rgba(235, 237, 239, 1);
       width: 88%;
     }
     .cancel {
-      @include sc(30px, rgb(105, 167, 254));
+      @include sc(32px, rgba(136, 136, 136, 1));
       @include flexCenter;
     }
   }
 
   .mescroll {
     @include cl;
-    width: 88%;
+    width: 670px;
     position: fixed;
-    top: 180px;
+    top: 200px;
     bottom: 0;
     height: auto;
     li {
@@ -316,7 +316,9 @@ export default {
         }
         //未提交
         .Active {
-          background: rgba(152, 226, 72, 1);
+          background-color: #fff;
+          border: 1px solid rgba(235, 237, 239, 1);
+          color: rgba(0, 0, 0, 1) !important;
         }
         //已签约
         .Signed {

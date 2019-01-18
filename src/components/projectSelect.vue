@@ -178,9 +178,17 @@ export default {
   background-color: #fff;
   @include fd(row);
   box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
-  padding: 10px 0;
+  @include wh(100%, 90px);
   .projectFilter {
-    border-right: 1px solid #ccc;
+    position: relative;
+    &::after {
+      position: absolute;
+      content: "";
+      width: 1px;
+      height: 32px;
+      background-color: rgba(219, 219, 219, 1);
+      right: 0;
+    }
   }
   .projectStatus,
   .projectFilter {
@@ -251,12 +259,13 @@ export default {
     position: absolute;
     z-index: 100;
     right: 4px;
-    top: 156px;
+    top: 186px;
     width: 100%;
     background-color: #fff;
     @include fd(column);
 
     .statusTop {
+      border-top: 1px solid rgba(235, 237, 239, 1);
       display: flex;
       flex-flow: row wrap;
       div {

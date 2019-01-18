@@ -2,7 +2,8 @@
   <div>
     <div class="allHeader">
       <x-header :left-options="{backText: ''}" class="header">
-        <div @click="openProjecySelct">{{headerTittle}}</div>
+        <div class="headerTittle" @click="openProjecySelct">{{headerTittle}}</div>
+
         <x-icon type="ios-arrow-down" size="23" v-show="!hasprojectStatus"></x-icon>
         <x-icon type="ios-arrow-up" size="23" v-show="hasprojectStatus"></x-icon>
       </x-header>
@@ -15,7 +16,12 @@
         active-color="rgba(30, 30, 30, 1)"
         default-color="rgba(136, 136, 136, 1)"
       >
-        <tab-item selected @on-item-click="getStatus(0)">
+        <tab-item selected @on-item-click="getStatus(4)">
+          <div class="tabDiv">
+            <div class="all">1</div>全部
+          </div>
+        </tab-item>
+        <tab-item @on-item-click="getStatus(0)">
           <div class="tabDiv">
             <div class="toRent">1</div>可租
           </div>
@@ -33,11 +39,6 @@
         <tab-item @on-item-click="getStatus(3)">
           <div class="tabDiv">
             <div class="noRented">1</div>不可租
-          </div>
-        </tab-item>
-        <tab-item @on-item-click="getStatus(4)">
-          <div class="tabDiv">
-            <div class="all">1</div>全部
           </div>
         </tab-item>
       </tab>
@@ -501,12 +502,13 @@ export default {
         this.floorList = this._.chain(this.allBlock[0].Floorlist)
           .groupBy("Floor")
           .orderBy(function(item) {
-            return item[0].Floor;
-          })
+            return item[0].Floor
+          }, ['desc'])
           .filter(item => {
             return item[0].Unitlist.length !== 0;
           })
           .value();
+        console.log("=>", this.floorList);
         let unitNull = 0; //判断有没有数据
         this.floorList.map(item => {
           if (item[0].Unitlist.length === 0) {
@@ -545,6 +547,11 @@ export default {
 }
 .header {
   box-shadow: 0 0px 0px 0 #fff !important; //重叠头部
+  .headerTittle {
+    font-weight: 500;
+    font-family: $fr;
+    @include sc(34px, rgba(3, 3, 3, 1));
+  }
 }
 .tab {
   margin-top: -2px;
@@ -619,7 +626,7 @@ export default {
       @include wh(108px, 108px);
       @include flexCenter;
       img {
-        @include wh(58px, 58px);
+        @include wh(58px, 40px);
       }
     }
   }
@@ -725,23 +732,25 @@ export default {
 .UnitDetail {
   background-color: #fff;
   padding: 26px 40px;
+  font-family: $fr;
   .top {
+    @include wh(100%, 60px);
     @include fj;
     margin-bottom: 20px;
+    @include flexHCenter;
     .topLeft {
-      @include flexHCenter;
       .unitNo {
         @include sc(44px, rgba(30, 30, 30, 1));
         margin-right: 18px;
       }
+      @include flexHCenter;
       .unitStatus {
-        // background-color: rgba(105, 167, 254, 1);
         @include sc(24px, rgba(255, 255, 255, 1));
         padding: 4px 20px;
       }
     }
     .topRight {
-      font-size: 40px;
+      font-size: 60px;
     }
   }
   .main {

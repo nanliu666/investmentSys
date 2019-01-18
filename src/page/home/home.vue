@@ -250,6 +250,7 @@ export default {
       font-size: 28px;
     }
     .signNum {
+      font-family: $fr;
       padding: 0 40px 94px;
       @include fj;
       align-items: flex-end;

@@ -1,13 +1,13 @@
 // 对请求进行配置
 import axios from "axios"
 import Vue from 'vue'
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 7000;
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 // axios.defaults.headers.common['Authorization'] = 'Bearer 29ff4d69bd3243de951e79169ce193e3'; // 不使用token了
 axios.interceptors.request.use(
   config => {
     Vue.$vux.loading.show({
-      text: 'Loading' //以plugin形式调用
+      text: '加载中' //以plugin形式调用
     })
     if (config.url.includes('/ydzs/WebService/MobileMerchants/')) { //黄鑫接口需要加一个参数
       config.params = {
@@ -44,6 +44,7 @@ axios.interceptors.response.use(
   },
   err => {
     Vue.$vux.loading.hide()
+    console.log(err)
     Vue.$vux.toast.text('请求失败，请稍后再试', 'top')
     return Promise.reject(err)
   }
