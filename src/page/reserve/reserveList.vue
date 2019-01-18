@@ -48,12 +48,12 @@
               <label>定金:</label>
               <span class="text">￥{{item.Bookamt | formatNumber}}</span>
             </div>
-          </div>
-          <div>
-            <label class="cycleText">预定周期：</label>
-            <span
-              class="cycleText"
-            >{{item.Defaultstartdate | dataFrm('YYYY-MM-DD')}}&nbsp;至&nbsp;{{item.Defaultexpirydate | dataFrm('YYYY-MM-DD')}}</span>
+            <div>
+              <label class="phone">预定周期：</label>
+              <span
+                class="text"
+              >{{item.Defaultstartdate | dataFrm('YYYY-MM-DD')}}&nbsp;至&nbsp;{{item.Defaultexpirydate | dataFrm('YYYY-MM-DD')}}</span>
+            </div>
           </div>
         </div>
       </li>
@@ -131,6 +131,11 @@ export default {
       // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteEnter方法
       vm.$refs.mescroll.beforeRouteEnter(); // 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置
     });
+  },
+  beforeRouteLeave(to, from, next) {
+    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
+    this.$refs.mescroll.beforeRouteLeave(); // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
+    next();
   },
   created() {
     this.isFirstEnter = true;
@@ -294,7 +299,7 @@ export default {
 
   .mescroll {
     @include cl;
-    width: 670px;
+    padding: 0 40px;
     position: fixed;
     top: 200px;
     bottom: 0;
@@ -349,9 +354,9 @@ export default {
       }
       .bottom {
         // 底部
-        padding: 28px 30px;
+        padding: 28px 30px 10px;
         div {
-          margin-bottom: 20px;
+          margin-bottom: 10px;
           label {
             @include sc(28px, rgba(136, 136, 136, 1));
             font-family: $fr;

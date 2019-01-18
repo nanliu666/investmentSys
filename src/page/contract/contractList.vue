@@ -300,7 +300,7 @@ export default {
 
   .mescroll {
     @include cl;
-    width: 670px;
+    padding:0 40px;
     position: fixed;
     top: 210px;
     bottom: 0;

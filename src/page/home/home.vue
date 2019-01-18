@@ -4,13 +4,12 @@
       <section class="homeTop">
         <div class="message" @click="gotoNew">
           <img src="../../assets/images/分组 12.png">
-          <!-- <i class="iconfont icon-youjian"></i> -->
           <span class="badge">{{messageNum}}</span>
         </div>
         <div class="signCount">
           <div class="signTittle">本月签约合同</div>
           <div class="signNum">
-            <span class="signMoeny">{{signMoeny | formatNumber}}</span>
+            <span class="signMoeny">{{signMoeny | formatNumber(0)}}</span>
             <span class="getContranct" @click="gotoContranctMonth">
               <span class="getContranctTittle">查看合同</span>
               <i class="iconfont icon-youjiantou"></i>
@@ -107,6 +106,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       document.addEventListener("deviceready", vm.onHomeDeviceReady, false);
+      console.log(document.getElementsByClassName('mescroll-totop'))
     });
   },
   beforeRouteLeave(to, from, next) {
@@ -152,6 +152,7 @@ export default {
       });
     },
     onLoad() {
+      console.log(this.gotoTop);
       const PageNEWData = {
         Datetime: moment()
           .locale("zh-cn")
@@ -256,8 +257,9 @@ export default {
       @include fj;
       align-items: flex-end;
       .signMoeny {
-        // width: 80%;
-        // @include ellipsis;
+        display: flex;
+        flex-wrap: wrap;
+        width: 78%;
         @include sc(84px, $fc);
         font-family: Hiragino Kaku Gothic ProN W3;
         font-weight: normal;

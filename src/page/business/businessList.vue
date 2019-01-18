@@ -50,10 +50,10 @@
               <label>意向单元：</label>
               <span class="text">{{item.Unitdesc}}</span>
             </div>
-          </div>
-          <div>
-            <label class="cycleText">最后一次接触时间：</label>
-            <span class="cycleText">{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span>
+            <div>
+              <label>最后一次接触时间：</label>
+              <span class="text">{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span>
+            </div>
           </div>
         </div>
       </li>
@@ -132,6 +132,11 @@ export default {
       // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteEnter方法
       vm.$refs.mescroll.beforeRouteEnter(); // 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置
     });
+  },
+  beforeRouteLeave(to, from, next) {
+    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
+    this.$refs.mescroll.beforeRouteLeave(); // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
+    next();
   },
   created() {
     this.isFirstEnter = true;
@@ -263,7 +268,7 @@ export default {
 
   .mescroll {
     @include cl;
-    width: 670px;
+    padding: 0 40px;
     position: fixed;
     top: 180px;
     margin-top: 30px;

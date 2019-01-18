@@ -200,7 +200,6 @@ import {
   GetBlocks,
   GetPropertys
 } from "@/axios/api";
-import imgSrc from "../../assets/images/分组.png";
 import { XHeader, Tab, TabItem, Sticky, Popup } from "vux";
 import { mapState, mapMutations } from "vuex";
 export default {
@@ -270,6 +269,7 @@ export default {
     window.addEventListener("scroll", this.handleScroll);
   },
   destroyed() {
+
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
@@ -328,6 +328,7 @@ export default {
         );
       });
     },
+
     getPropertyBlock(data) {
       this.blockSelect = data.Blockname;
       this.requestData.Blockid = data.Blockid;
