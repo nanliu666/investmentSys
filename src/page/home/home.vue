@@ -4,7 +4,7 @@
       <section class="homeTop">
         <div class="message" @click="gotoNew">
           <i class="iconfont icon-youjian"></i>
-          <badge class="badge" v-text="messageNum"></badge>
+          <span class="badge">{{messageNum}}</span>
         </div>
         <div class="signCount">
           <div class="signTittle">本月签约合同</div>
@@ -74,7 +74,6 @@
 <script>
 import {
   ViewBox,
-  Badge,
   VChart,
   VLine,
   VArea,
@@ -99,8 +98,7 @@ export default {
     VLegend,
     VBar,
     XButton,
-    VScale,
-    Badge
+    VScale
   },
   created() {
     this.onLoad();
@@ -236,9 +234,14 @@ export default {
     }
     .badge {
       position: absolute;
-      padding: 0px 8px !important;
-      right: 44px;
-      top: 28px;
+      background-color: rgba(255, 66, 66, 1);
+      @include sc(24px, rgba(255, 255, 255, 1));
+      @include flexCenter;
+      @include wh(34px, 34px);
+      border-radius: 17px;
+      padding: 0px 8px;
+      right: 46px;
+      top: 34px;
     }
   }
   .signCount {
@@ -274,7 +277,9 @@ export default {
       font-size: 28px;
       .ExpireLeft {
         .ExpireNum {
-          color: rgb(215, 217, 91);
+          @include sc(28px, rgba(248, 231, 28, 1));
+          font-family: $fs;
+          font-weight: 500;
           margin-left: 10px;
         }
       }
