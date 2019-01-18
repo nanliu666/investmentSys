@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="affairDetail">
     <x-header :left-options="{backText: ''}" class="header">审批详情</x-header>
     <div style="height:44px;">
       <sticky ref="sticky" :disabled="disabled" :check-sticky-support="false">
@@ -21,13 +21,8 @@
       </sticky>
     </div>
     <div class="vux-sticky-fill" style="height:44px;"></div>
-    <section>
-      <section
-        class="contractMain"
-        id="main"
-        v-for="(item, index) in contractMainList"
-        :key="index"
-      >
+    <section id="main">
+      <section class="contractMain" v-for="(item, index) in contractMainList" :key="index">
         <div class="contractTitle" ref="main">单据详情</div>
         <li class="contractLi">
           <span>预定单元</span>
@@ -219,7 +214,7 @@
   </div>
 </template>
 <script>
-import { XHeader, Tab, TabItem, Sticky, Popup } from "vux";
+import { XHeader, Tab, TabItem, Sticky, Popup, ViewBox } from "vux";
 import {
   GetToDoDetail,
   GetToDoHistory,
@@ -246,7 +241,7 @@ export default {
         /ucbrowser/i.test(navigator.userAgent)
     };
   },
-  components: { XHeader, Tab, TabItem, Sticky, Popup },
+  components: { XHeader, Tab, TabItem, Sticky, Popup, ViewBox },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
   },
@@ -312,18 +307,20 @@ export default {
         this.$set(this.contractMain, "yudingEnd", data[6].Value); //预定介绍日期
         this.$set(this.contractMain, "remask", data[8].Value); //备注
         this.contractMainList.push(this.contractMain);
+        this.$refs.sticky.bindSticky();
       });
       GetToDoHistory(jsonData).then(res => {
         this.flowList = res.SectionTables;
-        console.log("流=>", res.SectionTables);
         if (this.flowList.length > 3) {
           this.flowListActual = this.flowList.slice(0, 3);
         } else {
           this.flowListActual = this.flowList;
         }
+        this.$refs.sticky.bindSticky();
       });
       GetToDoFile(jsonData).then(res => {
         this.fujianList = res;
+        this.$refs.sticky.bindSticky();
       });
     },
     postfixFileName(text) {
@@ -369,7 +366,6 @@ export default {
     },
     goAnchor(data) {
       let selector = "";
-      // this.tabSelect = data;
       switch (data) {
         case "单据详情":
           selector = "#main";
@@ -408,242 +404,240 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
-.contractTitle {
-  @include fj;
-  @include sc(28px, rgba(136, 136, 136, 1));
-  padding: 20px 40px;
-}
-.contractLi {
-  background-color: #fff;
-  @include fj(space-between);
-  padding: 26px 40px;
-  border-bottom: 2px solid rgb(244, 246, 248);
-  &:last-child {
-    border: 0;
+.affairDetail {
+  height: 100%;
+  .contractTitle {
+    @include fj;
+    @include sc(28px, rgba(136, 136, 136, 1));
+    padding: 20px 40px;
   }
-  span {
-    &:first-child {
-      @include sc(30px, rgba(136, 136, 136, 1));
-    }
-    &:last-child {
-      @include sc(30px, rgba(30, 30, 30, 1));
-    }
-  }
-}
-.contractCost {
-  .contractCostMain {
-    padding: 10px 40px;
+  .contractLi {
     background-color: #fff;
-    .contractCostMainTitle {
-      @include sc(32px, rgba(30, 30, 30, 1));
-      padding: 26px 0;
+    @include fj(space-between);
+    padding: 26px 40px;
+    border-bottom: 2px solid rgb(244, 246, 248);
+    &:last-child {
+      border: 0;
     }
-    .contractClassify {
-      background-color: rgba(243, 247, 253, 1);
-      @include fj(space-around);
-      padding: 18px 0px;
-      span {
-        @include sc(28px, rgba(136, 136, 136, 1));
+    span {
+      &:first-child {
+        @include sc(30px, rgba(136, 136, 136, 1));
+      }
+      &:last-child {
+        @include sc(30px, rgba(30, 30, 30, 1));
       }
     }
-    .contractSomeList {
-      //抽成
-      padding: 30px 0px;
-      @include fj(space-around);
-      div {
-        @include flexCenter;
-        width: 25%;
+  }
+  .contractCost {
+    .contractCostMain {
+      padding: 10px 40px;
+      background-color: #fff;
+      .contractCostMainTitle {
+        @include sc(32px, rgba(30, 30, 30, 1));
+        padding: 26px 0;
       }
-      .width30 {
-        width: 30%;
-        @include flexCenter;
-      }
-    }
-    li {
-      position: relative;
-      .contractClassifyList {
-        padding: 30px 0px;
-        margin-right: -20px;
+      .contractClassify {
+        background-color: rgba(243, 247, 253, 1);
         @include fj(space-around);
+        padding: 18px 0px;
         span {
-          width: 25%;
-          @include flexCenter;
-
-          &:last-child {
-            width: 38%;
-          }
-          &:nth-child(1) {
-            width: 32%;
-          }
+          @include sc(28px, rgba(136, 136, 136, 1));
         }
       }
-    }
-
-    .contractClassifyDetail {
-      border-bottom: 2px solid rgba(244, 246, 248, 1);
-      border-top: 2px solid rgba(244, 246, 248, 1);
-      &:last-child {
-        border-bottom: 0px solid rgba(244, 246, 248, 1);
+      .contractSomeList {
+        //抽成
+        padding: 30px 0px;
+        @include fj(space-around);
+        div {
+          @include flexCenter;
+          width: 25%;
+        }
+        .width30 {
+          width: 30%;
+          @include flexCenter;
+        }
       }
       li {
-        //每个li
-        font-size: 28px;
-        padding: 10px 0;
-        span {
-          &:first-child {
-            @include sc(28px, rgba(136, 136, 136, 1));
+        position: relative;
+        .contractClassifyList {
+          padding: 30px 0px;
+          margin-right: -20px;
+          @include fj(space-around);
+          span {
+            width: 25%;
+            @include flexCenter;
+
+            &:last-child {
+              width: 38%;
+            }
+            &:nth-child(1) {
+              width: 32%;
+            }
           }
-          &:last-child {
-            @include sc(28px, rgba(30, 30, 30, 1));
+        }
+      }
+
+      .contractClassifyDetail {
+        border-bottom: 2px solid rgba(244, 246, 248, 1);
+        border-top: 2px solid rgba(244, 246, 248, 1);
+        &:last-child {
+          border-bottom: 0px solid rgba(244, 246, 248, 1);
+        }
+        li {
+          //每个li
+          font-size: 28px;
+          padding: 10px 0;
+          span {
+            &:first-child {
+              @include sc(28px, rgba(136, 136, 136, 1));
+            }
+            &:last-child {
+              @include sc(28px, rgba(30, 30, 30, 1));
+            }
           }
         }
       }
     }
   }
-}
-.flowMain {
-  background-color: #fff;
-  padding: 30px 40px 0;
-  font-family: $fr;
-  li {
-    @include fd;
-    &:last-child {
-      .shuxian {
-        width: 0 !important;
-      }
-    }
-    .flowLeft {
-      .flowFlag {
-        @include flexCenter;
-        img {
-          @include wh(46px, 46px);
-        }
-      }
-      width: 20%;
-      @include fd(column);
-      margin-right: 24px;
-      .iconTittle {
-        margin-top: 6px;
-        @include sc(24px, rgba(136, 136, 136, 1));
-        @include flexCenter;
-      }
-      .shuxianBox {
-        width: 100%;
-        @include flexWCenter;
-        margin-bottom: 10px;
+  .flowMain {
+    background-color: #fff;
+    padding: 30px 40px 0;
+    font-family: $fr;
+    li {
+      @include fd;
+      &:last-child {
         .shuxian {
-          padding: 6px 0;
-          @include wh(2px, 106px);
-          background: rgb(244, 246, 248);
+          width: 0 !important;
         }
       }
-    }
-    .flowRight {
-      .top {
-        @include sc(24px, rgba(136, 136, 136, 1));
-        margin-bottom: 8px;
+      .flowLeft {
+        .flowFlag {
+          @include flexCenter;
+          img {
+            @include wh(46px, 46px);
+          }
+        }
+        width: 20%;
+        @include fd(column);
+        margin-right: 24px;
+        .iconTittle {
+          margin-top: 6px;
+          @include sc(24px, rgba(136, 136, 136, 1));
+          @include flexCenter;
+        }
+        .shuxianBox {
+          width: 100%;
+          @include flexWCenter;
+          margin-bottom: 10px;
+          .shuxian {
+            padding: 6px 0;
+            @include wh(2px, 106px);
+            background: rgb(244, 246, 248);
+          }
+        }
       }
-      .main {
-        background: rgba(243, 247, 253, 1);
-        @include wh(600px, 138px);
-        padding: 24px 0 0 24px;
-        .mainTop {
-          @include sc(30px, rgba(80, 80, 80, 1));
+      .flowRight {
+        .top {
+          @include sc(24px, rgba(136, 136, 136, 1));
           margin-bottom: 8px;
         }
-        .mainBottom {
-          @include sc(24px, rgba(136, 136, 136, 1));
+        .main {
+          background: rgba(243, 247, 253, 1);
+          @include wh(600px, 138px);
+          padding: 24px 0 0 24px;
+          .mainTop {
+            @include sc(30px, rgba(80, 80, 80, 1));
+            margin-bottom: 8px;
+          }
+          .mainBottom {
+            @include sc(24px, rgba(136, 136, 136, 1));
+          }
         }
       }
     }
   }
-}
-.ApprovalFlow {
-  .getAll {
-    @include sc(28px, rgba(80, 80, 80, 1));
-    padding: 20px;
-    @include flexCenter;
-    background-color: #fff;
-    border-top: 1px solid rgb(244, 246, 248);
+  .ApprovalFlow {
+    .getAll {
+      @include sc(28px, rgba(80, 80, 80, 1));
+      padding: 20px;
+      @include flexCenter;
+      background-color: #fff;
+      border-top: 1px solid rgb(244, 246, 248);
+    }
   }
-}
 
-.contractOther {
-  .otherMain {
-    background-color: #fff;
-    .otherMainTitle {
-      @include sc(32px, rgba(30, 30, 30, 1));
-      padding: 26px 40px;
-      border-bottom: 2px solid rgba(244, 246, 248, 1);
-    }
-    .otherMainClassify {
-      background-color: rgba(243, 247, 253, 1);
-      @include fj(space-around);
-      padding: 18px 0px;
-      span {
-        @include sc(28px, rgba(136, 136, 136, 1));
+  .contractOther {
+    .otherMain {
+      background-color: #fff;
+      .otherMainTitle {
+        @include sc(32px, rgba(30, 30, 30, 1));
+        padding: 26px 40px;
+        border-bottom: 2px solid rgba(244, 246, 248, 1);
       }
-    }
-    li {
-      .contractSomeList {
-        padding: 30px 64px;
-        @include fj(space-between);
-        span:first-child {
-          width: 40%;
-          @include ellipsis;
-        }
-        span:last-child {
-          width: 60%;
-          @include ellipsis;
-        }
-      }
-    }
-    .otherfujianLi {
-      @include fj(space-between);
-      border-bottom: 2px solid rgba(244, 246, 248, 1);
-      padding: 26px 40px;
-      div {
-        @include fd(row);
+      .otherMainClassify {
+        background-color: rgba(243, 247, 253, 1);
+        @include fj(space-around);
+        padding: 18px 0px;
         span {
-          @include sc(30px, rgba(30, 30, 30, 1));
-          @include flexHCenter;
-          margin-right: 6px;
+          @include sc(28px, rgba(136, 136, 136, 1));
         }
       }
-      button {
-        height: 50px;
-        width: 144px;
-        padding: 6px 30px;
-        border-radius: 25px;
-        border: 2px solid rgba(105, 167, 254, 1);
-        color: rgba(105, 167, 254, 1);
-        background-color: #fff;
+      li {
+        .contractSomeList {
+          padding: 30px 64px;
+          @include fj(space-between);
+          span:first-child {
+            width: 40%;
+            @include ellipsis;
+          }
+          span:last-child {
+            width: 60%;
+            @include ellipsis;
+          }
+        }
+      }
+      .otherfujianLi {
+        @include fj(space-between);
+        border-bottom: 2px solid rgba(244, 246, 248, 1);
+        padding: 26px 40px;
+        div {
+          @include fd(row);
+          span {
+            @include sc(30px, rgba(30, 30, 30, 1));
+            @include flexHCenter;
+            margin-right: 6px;
+          }
+        }
+        button {
+          height: 50px;
+          width: 144px;
+          padding: 6px 30px;
+          border-radius: 25px;
+          border: 2px solid rgba(105, 167, 254, 1);
+          color: rgba(105, 167, 254, 1);
+          background-color: #fff;
+        }
       }
     }
   }
-}
-.nomore {
-  @include sc(24px, rgba(174, 174, 174, 1));
-  @include flexCenter;
-  margin: 30px;
-}
-.Rentalid {
-  width: 60%;
-  text-overflow: ellipsis;
-  display: flex;
-  justify-content: flex-end;
-}
-.popupHistory {
-  background-color: #fff;
-  box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
-  .close {
-    //弹出层关闭
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 50px;
-    margin-top: 20px;
-    .iconfont {
-      color: rgba(136, 136, 136, 1);
+  .nomore {
+    @include sc(24px, rgba(174, 174, 174, 1));
+    @include flexCenter;
+    margin: 30px;
+  }
+
+  .popupHistory {
+    background-color: #fff;
+    box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
+    .close {
+      //弹出层关闭
+      display: flex;
+      justify-content: flex-end;
+      margin-right: 50px;
+      margin-top: 20px;
+      .iconfont {
+        color: rgba(136, 136, 136, 1);
+      }
     }
   }
 }
