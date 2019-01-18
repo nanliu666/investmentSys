@@ -58,11 +58,12 @@
           <div class="performanceTitle">我的业绩完成率</div>
 
           <div class="performanceSheet">
-            <ve-histogram
-              :data="chartData"
-              :settings="chartSettings"
-              :colors="[ 'rgb(105, 167, 254)','rgb(228, 233, 245)']"
-            ></ve-histogram>
+            <v-chart ref="demo" :data="data">
+              <v-scale x field="year"/>
+              <v-scale y field="percent" :min="0" :max="0.5" :formatter="formatter"/>
+              <v-bar series-field="country" adjust="stack" :colors="dataColor"/>
+              <v-tooltip show-value-in-legend/>
+            </v-chart>
           </div>
         </div>
       </section>
@@ -71,7 +72,18 @@
 </template>
 
 <script>
-import { ViewBox, Badge } from "vux";
+import {
+  ViewBox,
+  Badge,
+  VChart,
+  VLine,
+  VArea,
+  VTooltip,
+  VLegend,
+  VBar,
+  XButton,
+  VScale
+} from "vux";
 import {
   GetAgentDefaultPageNEW,
   GetAgentDefaultPageChartNEW,
@@ -80,6 +92,14 @@ import {
 export default {
   components: {
     ViewBox,
+    VChart,
+    VLine,
+    VArea,
+    VTooltip,
+    VLegend,
+    VBar,
+    XButton,
+    VScale,
     Badge
   },
   created() {
@@ -157,54 +177,40 @@ export default {
     }
   },
   data() {
-    this.chartSettings = {
-      stack: { 用户: ["访问用户", "下单用户"] }
-    };
     return {
-      chartData: {
-        columns: ["日期", "访问用户", "下单用户", "下单率"],
-        rows: [
-          { 日期: "1/1", 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
-          { 日期: "1/2", 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
-          { 日期: "1/3", 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
-          { 日期: "1/4", 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
-          { 日期: "1/5", 访问用户: 3792, 下单用户: 3492, 下单率: 0.323 },
-          { 日期: "1/6", 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 }
-        ]
-      },
-
+      dataColor: ["rgb(105, 167, 254)", "rgb(228, 233, 245)"],
       formatter: function(val) {
         return (val * 100).toFixed(0) + "%";
       },
-      signMoeny: "",
-      ExpireNum: "",
-      messageNum: "",
       data: [
         {
           country: "完成率",
-          classes: "交易金额"
+          year: "交易金额"
         },
         {
           country: "未完成率",
-          classes: "交易金额"
+          year: "交易金额"
         },
         {
           country: "完成率",
-          classes: "交易面积"
+          year: "交易面积"
         },
         {
           country: "未完成率",
-          classes: "交易面积"
+          year: "交易面积"
         },
         {
           country: "完成率",
-          classes: "签约数"
+          year: "签约数"
         },
         {
           country: "未完成率",
-          classes: "签约数"
+          year: "签约数"
         }
-      ]
+      ],
+      signMoeny: "",
+      ExpireNum: "",
+      messageNum: ""
     };
   }
 };
