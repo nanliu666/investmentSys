@@ -5,7 +5,7 @@
       <!-- <x-icon type="ios-arrow-down" size="25" v-show="!hasprojectStatus"></x-icon> -->
       <img src="../assets/images/下拉@3x.png" v-show="!hasprojectStatus" alt>
       <!-- <x-icon type="ios-arrow-up" size="25" v-show="hasprojectStatus"></x-icon> -->
-      <popup v-model="hasprojectStatus"  class="nav">
+      <popup v-model="hasprojectStatus" :show-mask="showMask" class="nav">
         <div class="close" @click="openProjectStatus">
           <i class="iconfont icon-guanbi"></i>
         </div>
@@ -88,6 +88,7 @@ export default {
   data() {
     return {
       activeClass: "所有状态",
+      showMask: false,
       hasStatus: false,
       hasprojectStatus: false,
       companysSelect: "",
@@ -100,12 +101,12 @@ export default {
   methods: {
     openStatus() {
       this.hasStatus = !this.hasStatus;
-      this.hasprojectStatus = false
+      this.hasprojectStatus = false;
     },
     openProjectStatus() {
       //项目切换
       this.hasprojectStatus = !this.hasprojectStatus;
-      this.hasStatus = false
+      this.hasStatus = false;
 
       if (this.hasprojectStatus == false) {
         this.whiteTab();

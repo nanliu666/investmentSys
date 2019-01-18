@@ -43,7 +43,7 @@
         </tab-item>
       </tab>
     </div>
-    <popup v-model="hasprojectStatus" position="bottom" class="nav">
+    <popup v-model="hasprojectStatus" position="bottom" class="nav" :show-mask="showMask">
       <div class="close" @click="openProjecySelct">
         <i class="iconfont icon-guanbi"></i>
       </div>
@@ -205,6 +205,7 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      showMask: false,
       unitDetail: {},
       headerTittle: "",
       gotoTop: false,
@@ -269,7 +270,6 @@ export default {
     window.addEventListener("scroll", this.handleScroll);
   },
   destroyed() {
-
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
@@ -417,7 +417,7 @@ export default {
     goNextPage() {
       this.floorListCount += 1;
       this.activeClass = 0;
-      if (this.floorListCount * 5 <= this.floorList.length + 5) {
+      if (this.floorListCount * 5 < this.floorList.length + 5) {
         this.floorListDisplay = this.floorList.slice(
           (this.floorListCount - 1) * 5,
           this.floorListCount * 5
@@ -676,6 +676,8 @@ export default {
   }
 }
 .nav {
+  height: 100% !important;
+  top: 100px;
   background-color: #fff;
   box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
   .close {
