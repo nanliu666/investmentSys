@@ -106,7 +106,6 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       document.addEventListener("deviceready", vm.onHomeDeviceReady, false);
-      console.log(document.getElementsByClassName('mescroll-totop'))
     });
   },
   beforeRouteLeave(to, from, next) {

@@ -353,11 +353,9 @@ export default {
     getUnitDetail(data) {
       this.hasUnitDetail = !this.hasUnitDetail;
       this.unitDetail = data;
-      this.whiteTab();
     },
     openUnitDetail() {
       this.hasUnitDetail = !this.hasUnitDetail;
-      this.popupTab();
     },
     getUintStatus(data) {
       switch (data) {
@@ -534,11 +532,6 @@ export default {
     },
     openProjecySelct() {
       this.hasprojectStatus = !this.hasprojectStatus;
-      if (this.hasprojectStatus == false) {
-        this.whiteTab();
-      } else {
-        this.popupTab();
-      }
     }
   }
 };

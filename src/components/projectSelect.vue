@@ -107,12 +107,6 @@ export default {
       //项目切换
       this.hasprojectStatus = !this.hasprojectStatus;
       this.hasStatus = false;
-
-      if (this.hasprojectStatus == false) {
-        this.whiteTab();
-      } else {
-        this.popupTab();
-      }
     },
     getCompany() {
       const data = {
