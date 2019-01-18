@@ -71,6 +71,9 @@ export default {
       font-family: $fm;
     }
   }
+  .searchImg {
+    @include wh(30px, 30px);
+  }
   //下拉刷新，上拉加载文字补充 ---fix px2rem
   .downwarp-tip,
   .upwarp-tip,

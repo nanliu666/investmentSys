@@ -2,7 +2,13 @@
   <div class="affairList">
     <x-header class="header" :left-options="{backText: ''}" v-if="!hasSearch">
       事务管理
-      <i class="iconfont icon-fangdajing" slot="right" @click="openSearch"></i>
+      <img
+        class="searchImg"
+        src="../../assets/images/搜索.png"
+        @click="openSearch"
+        slot="right"
+        alt
+      >
     </x-header>
     <section class="searchPart" v-if="hasSearch">
       <x-input
@@ -12,7 +18,7 @@
         @on-enter="onEnter"
         class="searchInput fs-search"
       >
-        <i class="iconfont icon-fangdajing" slot="right" @click="onEnter"></i>
+        <img class="searchImg" src="../../assets/images/搜索.png" @click="onEnter" slot="right" alt>
       </x-input>
       <div class="cancel" @click="searchCancel">取消</div>
     </section>

@@ -3,7 +3,8 @@
     <view-box ref="viewBox">
       <section class="homeTop">
         <div class="message" @click="gotoNew">
-          <i class="iconfont icon-youjian"></i>
+          <img src="../../assets/images/分组 12.png">
+          <!-- <i class="iconfont icon-youjian"></i> -->
           <span class="badge">{{messageNum}}</span>
         </div>
         <div class="signCount">
@@ -114,7 +115,7 @@ export default {
   },
   methods: {
     onHomeDeviceReady() {
-      //设置导航栏颜色的接口
+      //设置导航栏是蓝色
       cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
         103,
         185,
@@ -229,8 +230,8 @@ export default {
     position: relative;
     @include fd(row-reverse);
     padding: 36px 54px 0;
-    .icon-youjian {
-      font-size: 2rem;
+    img {
+      @include wh(42px, 32px);
     }
     .badge {
       position: absolute;
@@ -240,8 +241,8 @@ export default {
       @include wh(34px, 34px);
       border-radius: 17px;
       padding: 0px 8px;
-      right: 46px;
-      top: 34px;
+      right: 40px;
+      top: 20px;
     }
   }
   .signCount {

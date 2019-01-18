@@ -40,6 +40,28 @@ Vue.prototype.toAbsURL = function (url) {
   a.href = url;
   return a.href;
 };
+//设置导航栏是蓝色
+Vue.prototype.onHomeDeviceReady = function () {
+  cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
+    103,
+    185,
+    255
+  ]);
+}
+//设置导航栏是白色
+Vue.prototype.whiteTab = function () {
+  cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
+    255,
+    255,
+    255
+  ]);
+}
+//设置导航栏弹出层颜色
+Vue.prototype.popupTab = function () {
+  cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
+    123, 123, 125
+  ]);
+}
 
 
 

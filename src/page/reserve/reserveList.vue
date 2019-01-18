@@ -2,7 +2,13 @@
   <div class="contractList">
     <x-header :left-options="{backText: ''}" class="header" v-if="!hasSearch">
       预定管理
-      <i class="iconfont icon-fangdajing" slot="right" @click="openSearch"></i>
+      <img
+        class="searchImg"
+        src="../../assets/images/搜索.png"
+        @click="openSearch"
+        slot="right"
+        alt
+      >
       <i class="iconfont icon-jia" slot="right" @click="addReserve"></i>
     </x-header>
     <section class="searchPart" v-if="hasSearch">
@@ -13,7 +19,7 @@
         @on-enter="onEnter"
         class="searchInput fs-search"
       >
-        <i class="iconfont icon-fangdajing" slot="right" @click="onEnter"></i>
+        <img class="searchImg" src="../../assets/images/搜索.png" @click="onEnter" slot="right" alt>
       </x-input>
       <div class="cancel" @click="searchCancel">取消</div>
     </section>

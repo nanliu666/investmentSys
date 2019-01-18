@@ -2,9 +2,10 @@
   <section class="filter">
     <div class="projectFilter">
       <span class="filterTitle" @click="openProjectStatus">项目</span>
-      <x-icon type="ios-arrow-down" size="25" v-show="!hasprojectStatus"></x-icon>
-      <x-icon type="ios-arrow-up" size="25" v-show="hasprojectStatus"></x-icon>
-      <popup v-model="hasprojectStatus" position="bottom" class="nav">
+      <!-- <x-icon type="ios-arrow-down" size="25" v-show="!hasprojectStatus"></x-icon> -->
+      <img src="../assets/images/下拉@3x.png" v-show="!hasprojectStatus" alt>
+      <!-- <x-icon type="ios-arrow-up" size="25" v-show="hasprojectStatus"></x-icon> -->
+      <popup v-model="hasprojectStatus" position="top" class="nav">
         <div class="close" @click="openProjectStatus">
           <i class="iconfont icon-guanbi"></i>
         </div>
@@ -48,8 +49,9 @@
     </div>
     <div class="projectStatus">
       <span class="filterTitle" @click="openStatus">状态</span>
-      <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon>
-      <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon>
+      <img src="../assets/images/下拉@3x.png" v-show="!hasStatus" alt>
+      <!-- <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon> -->
+      <!-- <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon> -->
       <!-- 选择状态 -->
       <transition
         name="custom-classes-transition"
@@ -102,6 +104,11 @@ export default {
     openProjectStatus() {
       //项目切换
       this.hasprojectStatus = !this.hasprojectStatus;
+      if (this.hasprojectStatus == false) {
+        this.whiteTab();
+      } else {
+        this.popupTab();
+      }
     },
     getCompany() {
       const data = {
@@ -200,8 +207,13 @@ export default {
       font-family: $fr;
       margin-right: 12px;
     }
+    img {
+      @include wh(26px, 11px);
+    }
   }
   .nav {
+    height: 100% !important;
+    top: 100px;
     background-color: #fff;
     box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
     .close {

@@ -3,8 +3,8 @@
     <div class="allHeader">
       <x-header :left-options="{backText: ''}" class="header">
         <div class="headerTittle" @click="openProjecySelct">{{headerTittle}}</div>
-
-        <x-icon type="ios-arrow-down" size="23" v-show="!hasprojectStatus"></x-icon>
+        <img src="../../assets/images/下拉.png" v-show="!hasprojectStatus" alt>
+        <!-- <x-icon type="ios-arrow-down" size="23" v-show="!hasprojectStatus"></x-icon> -->
         <x-icon type="ios-arrow-up" size="23" v-show="hasprojectStatus"></x-icon>
       </x-header>
       <tab
@@ -162,7 +162,7 @@
           </div>
         </div>
         <div class="bottom">
-          <img src="../../assets/images/gotoAll.png" alt>
+          <img src="../../assets/images/分组 9.png" alt>
         </div>
       </section>
       <section class="main" ref="scroll">
@@ -352,9 +352,11 @@ export default {
     getUnitDetail(data) {
       this.hasUnitDetail = !this.hasUnitDetail;
       this.unitDetail = data;
+      this.whiteTab();
     },
     openUnitDetail() {
       this.hasUnitDetail = !this.hasUnitDetail;
+      this.popupTab();
     },
     getUintStatus(data) {
       switch (data) {
@@ -501,9 +503,12 @@ export default {
         }`;
         this.floorList = this._.chain(this.allBlock[0].Floorlist)
           .groupBy("Floor")
-          .orderBy(function(item) {
-            return item[0].Floor
-          }, ['desc'])
+          .orderBy(
+            function(item) {
+              return item[0].Floor;
+            },
+            ["desc"]
+          )
           .filter(item => {
             return item[0].Unitlist.length !== 0;
           })
@@ -528,6 +533,11 @@ export default {
     },
     openProjecySelct() {
       this.hasprojectStatus = !this.hasprojectStatus;
+      if (this.hasprojectStatus == false) {
+        this.whiteTab();
+      } else {
+        this.popupTab();
+      }
     }
   }
 };
@@ -551,6 +561,10 @@ export default {
     font-weight: 500;
     font-family: $fr;
     @include sc(34px, rgba(3, 3, 3, 1));
+  }
+  img {
+    @include wh(26px, 11px);
+    margin-left: 8px;
   }
 }
 .tab {
