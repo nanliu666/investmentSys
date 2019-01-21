@@ -3,7 +3,9 @@
     <div class="allHeader">
       <x-header :left-options="{backText: ''}" class="header">
         <div class="headerTittle" @click="openProjecySelct">{{headerTittle}}</div>
-        <img src="../../assets/images/下拉.png" v-show="!hasprojectStatus" alt>
+        <span class="imgBox">
+          <img src="../../assets/images/下拉@3x.png" class="fs-dropImg" v-show="!hasprojectStatus" alt>
+        </span>
         <!-- <x-icon type="ios-arrow-down" size="23" v-show="!hasprojectStatus"></x-icon> -->
         <x-icon type="ios-arrow-up" size="23" v-show="hasprojectStatus"></x-icon>
       </x-header>
@@ -545,6 +547,12 @@ export default {
   top: 0;
   z-index: 1;
   box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
+  .imgBox {
+    @include flexCenter;
+    .fs-dropImg {
+      @include wh(11px, 6px);
+    }
+  }
 }
 #anchorScroll {
   position: fixed;

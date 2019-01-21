@@ -2,9 +2,9 @@
   <section class="filter">
     <div class="projectFilter">
       <span class="filterTitle" @click="openProjectStatus">项目</span>
-      <!-- <x-icon type="ios-arrow-down" size="25" v-show="!hasprojectStatus"></x-icon> -->
-      <img src="../assets/images/下拉@3x.png" v-show="!hasprojectStatus" alt>
-      <!-- <x-icon type="ios-arrow-up" size="25" v-show="hasprojectStatus"></x-icon> -->
+      <span class="imgBox">
+        <img src="../assets/images/下拉@3x.png" class="fs-dropImg" v-show="!hasprojectStatus" alt>
+      </span>
       <popup v-model="hasprojectStatus" :show-mask="showMask" class="nav">
         <div class="close" @click="openProjectStatus">
           <i class="iconfont icon-guanbi"></i>
@@ -49,9 +49,9 @@
     </div>
     <div class="projectStatus">
       <span class="filterTitle" @click="openStatus">状态</span>
-      <img src="../assets/images/下拉@3x.png" v-show="!hasStatus" alt>
-      <!-- <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon> -->
-      <!-- <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon> -->
+      <span class="imgBox">
+        <img src="../assets/images/下拉@3x.png" class="fs-dropImg" v-show="!hasStatus" alt>
+      </span>
       <!-- 选择状态 -->
       <transition
         name="custom-classes-transition"
@@ -205,8 +205,11 @@ export default {
       font-family: $fr;
       margin-right: 12px;
     }
-    img {
-      @include wh(26px, 11px);
+    .imgBox {
+      @include flexCenter;
+      .fs-dropImg {
+        @include wh(11px, 6px);
+      }
     }
   }
   .nav {
