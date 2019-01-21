@@ -6,6 +6,9 @@ import store from './store/index'
 import * as filters from './assets/js/filters'
 import _ from './assets/js/lodash' //loadsh待改进
 Vue.prototype._ = _
+import VueClipboard from 'vue-clipboard2';
+Vue.use(VueClipboard)
+//注册到vue原型上
 //暂时解决 vue-loader 打包太大
 import ToastPlugin from 'vux/src/plugins/toast/index.js'
 import PopupPicker from 'vux/src/components/popup-picker/index.vue'
@@ -40,28 +43,7 @@ Vue.prototype.toAbsURL = function (url) {
   a.href = url;
   return a.href;
 };
-//设置导航栏是蓝色
-Vue.prototype.onHomeDeviceReady = function () {
-  cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
-    103,
-    185,
-    255
-  ]);
-}
-//设置导航栏是白色
-Vue.prototype.whiteTab = function () {
-  cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
-    255,
-    255,
-    255
-  ]);
-}
-//设置导航栏弹出层颜色
-Vue.prototype.popupTab = function () {
-  cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
-    123, 123, 125
-  ]);
-}
+
 
 
 

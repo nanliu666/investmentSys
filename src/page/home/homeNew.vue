@@ -12,7 +12,12 @@
       <!--内容...-->
       <div v-for="(Item, index) in timeList" :key="index">
         <div class="time">{{Item}}</div>
-        <li v-for="(item, index) in dataList[Item]" class="mescrollLi" :key="index">
+        <li
+          v-for="(item, index) in dataList[Item]"
+          class="mescrollLi"
+          :key="index"
+          @click="getDetail(item)"
+        >
           <div class="liLeft">
             <img src="../../assets/images/shenpi.png" alt>
           </div>
@@ -82,6 +87,9 @@ export default {
     next();
   },
   methods: {
+    getDetail(data) {
+      console.log(data);
+    },
     // mescroll组件初始化的回调,可获取到mescroll对象 (如果this.mescroll并没有使用到,可不用写mescrollInit)
     mescrollInit(mescroll) {
       this.mescroll = mescroll;

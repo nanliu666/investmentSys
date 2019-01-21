@@ -61,6 +61,7 @@ export default {
   opacity: 0;
 }
 #app {
+  font-family: $fr;
   height: 100%;
   .header {
     background-color: #fff;
@@ -71,8 +72,9 @@ export default {
       font-family: $fm;
     }
   }
-  .searchImg {
-    @include wh(30px, 30px);
+  .searchImg,
+  .addImg {
+    @include wh(38px, 38px);
   }
   //下拉刷新，上拉加载文字补充 ---fix px2rem
   .downwarp-tip,

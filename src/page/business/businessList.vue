@@ -9,6 +9,7 @@
         slot="right"
         alt
       >
+      <img class="addImg" src="../../assets/images/搜索.png" @click="addBusiness" slot="right" alt>
     </x-header>
     <section class="searchPart" v-if="hasSearch">
       <x-input
@@ -50,7 +51,7 @@
               <label>意向单元：</label>
               <span class="text">{{item.Unitdesc}}</span>
             </div>
-            <div>
+            <div class="cycleText">
               <label>最后一次接触时间：</label>
               <span class="text">{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span>
             </div>
@@ -124,11 +125,15 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === "businessDetail" || from.name === "businessAdd") {
-      to.meta.isBack = true;
-    }
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
     next(vm => {
+      console.log(vm.$route.params);
+      if (
+        (from.name === "businessDetail" && vm.$route.params.isLoad) ||
+        from.name === "businessAdd"
+      ) {
+        to.meta.isBack = true;
+      }
       // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteEnter方法
       vm.$refs.mescroll.beforeRouteEnter(); // 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置
     });
@@ -153,6 +158,11 @@ export default {
     this.isFirstEnter = false;
   },
   methods: {
+    addBusiness() {
+      this.$router.push({
+        name: "businessAdd"
+      });
+    },
     FilterUpdate(data) {
       console.log("子组件传递过来的修改的值", data);
       this.FilterCond = data;
@@ -187,13 +197,11 @@ export default {
       GetBizOpportunity(data)
         .then(res => {
           let arr = JSON.parse(res.Content);
-          console.log(arr);
+          console.log(arr)
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
-          this.dataList = this._.filter(this.dataList.concat(arr), item => {
-            return item.Contractstatushow !== "Active";
-          });
+          this.dataList = this.dataList.concat(arr);
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
             mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
@@ -205,7 +213,13 @@ export default {
         });
     },
     gotoDetail(data) {
-      console.log(data);
+      this.$router.push({
+        name: "businessDetail",
+        params: {
+          data: data,
+          id: data.Prospectid
+        }
+      });
     },
     getbusinessStatus(data) {
       let strDatd = this.$options.filters.firstUpperCase(data);
@@ -245,7 +259,9 @@ export default {
   .header {
     box-shadow: 0 0px 0px 0 #fff !important; //重叠头部
   }
-
+  .addImg {
+    margin-left: 34px;
+  }
   .searchPart {
     padding: 0 40px;
     @include fj(space-between);
@@ -282,8 +298,9 @@ export default {
       .top {
         //详情头部
         @include fj(space-between);
-        padding: 30px 30px 26px;
-        border-bottom: 4px dashed rgba(244, 246, 248, 1); /*no*/
+        padding: 20px 30px;
+        @include flexHCenter;
+        border-bottom: 4px dashed rgba(218, 228, 250, 0.8); /*no*/
         span:first-child {
           @include sc(32px, rgba(30, 30, 30, 1));
           font-family: $fm;
@@ -324,6 +341,7 @@ export default {
         // 底部
         padding: 28px 34px;
         div {
+          line-height: 36px;
           label {
             @include sc(28px, rgba(136, 136, 136, 1));
             font-family: $fr;
@@ -332,17 +350,7 @@ export default {
             @include sc(28px, rgba(30, 30, 30, 1));
           }
           .cycleText {
-            @include sc(24px, rgba(174, 174, 174, 1));
-          }
-          .lookRecord {
-            @include flexCenter;
-            height: 50px;
-            background-color: $fc;
-            @include borderRadius(25px);
-            @include sc(28px, rgba(72, 121, 230, 1));
-            font-family: $fr;
-            border: 1px solid rgba(72, 121, 230, 1); /*no*/
-            padding: 0px 26px;
+            margin-top: 25px;
           }
         }
       }

@@ -38,7 +38,8 @@
       <!--内容...-->
       <li v-for="(item) in dataList" :key="item.Rentalid" @click="gotoDetail(item)">
         <div class="top">
-          <span>{{item.Companyname}} {{item.Projectname}}</span>
+          <!-- <span>{{item.Companyname}} {{item.Projectname}}</span> -->
+          <span>月亮湾二期 1506</span>
           <span
             :class="getbusinessStatus(item.Contractstatushow)"
             v-text="statusDetail[item.Contractstatushow]"
@@ -58,8 +59,8 @@
               <label>面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;积:</label>
               <span class="text">{{item.Totalrentalarea}}M²</span>
             </div>
-            <div>
-              <label class="phone">租赁周期：</label>
+            <div class="cycleText">
+              <label>租赁周期：</label>
               <span
                 class="text"
               >{{item.Defaultstartdate | dataFrm('YYYY-MM-DD')}}&nbsp;至&nbsp;{{item.Defaultexpirydate | dataFrm('YYYY-MM-DD')}}</span>
@@ -300,7 +301,7 @@ export default {
 
   .mescroll {
     @include cl;
-    padding:0 40px;
+    padding: 0 40px;
     position: fixed;
     top: 210px;
     bottom: 0;
@@ -313,17 +314,20 @@ export default {
       .top {
         //详情头部
         @include fj(space-between);
-        padding: 30px 30px 26px;
-        border-bottom: 4px dashed rgba(244, 246, 248, 1); /*no*/
+        @include flexHCenter;
+        padding: 20px 30px;
+        border-bottom: 4px dashed rgba(218, 228, 250, 0.8);
         span:first-child {
           @include sc(32px, rgba(30, 30, 30, 1));
           font-family: $fm;
+          @include flexHCenter;
+          font-weight: bolder;
         }
         span:last-child {
-          @include wh(80px, 38px);
+          @include wh(100px, 50px);
           @include flexCenter;
           @include borderRadius(4px);
-          @include sc(20px, rgba(255, 255, 255, 1));
+          @include sc(24px, rgba(255, 255, 255, 1));
           font-family: $fr;
         }
         //未提交
@@ -386,15 +390,13 @@ export default {
         padding: 28px 30px 14px;
         div {
           margin-bottom: 14px;
+          line-height: 36px;
           label {
             @include sc(28px, rgba(136, 136, 136, 1));
             font-family: $fr;
           }
           .text {
             @include sc(28px, rgba(30, 30, 30, 1));
-          }
-          .cycleText {
-            @include sc(24px, rgba(174, 174, 174, 1));
           }
           .lookRecord {
             @include flexCenter;
@@ -406,6 +408,9 @@ export default {
             border: 1px solid rgba(72, 121, 230, 1); /*no*/
             padding: 0px 26px;
           }
+        }
+        .cycleText {
+          margin-top: 25px;
         }
       }
     }

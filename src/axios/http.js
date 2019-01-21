@@ -31,8 +31,8 @@ axios.interceptors.response.use(
         if (response.data.d.Success === true) {
           return Promise.resolve(JSON.parse(response.data.d.Data));
         } else {
-          Vue.$vux.toast.text(res.data.Message, 'top')
-          return Promise.reject(response); //增加对错误的处理改正
+          Vue.$vux.toast.text(response.data.d.Message, 'top')
+          return Promise.resolve(response.data.d); //增加对错误的处理改正
         }
       }
     } else { //丘堃的接口

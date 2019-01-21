@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="contractDetail">
     <x-header :left-options="{backText: ''}" class="header">合同详情</x-header>
     <div style="height:44px;">
       <sticky ref="sticky" :disabled="disabled" :check-sticky-support="false">
@@ -188,7 +188,14 @@
                 <svg
                   class="icon"
                   aria-hidden="true"
-                  v-show="postfixFileName(item.Documentname)  ===( 'doc' || 'docx')"
+                  v-show="postfixFileName(item.Documentname)  ==='doc'"
+                >
+                  <use xlink:href="#icon-doc"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-show="postfixFileName(item.Documentname)  ==='docx'"
                 >
                   <use xlink:href="#icon-doc"></use>
                 </svg>
@@ -202,14 +209,28 @@
                 <svg
                   class="icon"
                   aria-hidden="true"
-                  v-if="postfixFileName(item.Documentname)  === ('xls' || 'xlsx')"
+                  v-if="postfixFileName(item.Documentname)  === 'xls' "
                 >
                   <use xlink:href="#icon-excel"></use>
                 </svg>
                 <svg
                   class="icon"
                   aria-hidden="true"
-                  v-if="postfixFileName(item.Documentname)  === ('jpg' || 'jpeg')"
+                  v-if="postfixFileName(item.Documentname)  === 'xlsx'"
+                >
+                  <use xlink:href="#icon-excel"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  ===  'jpeg'"
+                >
+                  <use xlink:href="#icon-jpg"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  === ('jpg')"
                 >
                   <use xlink:href="#icon-jpg"></use>
                 </svg>
@@ -237,7 +258,14 @@
                 <svg
                   class="icon"
                   aria-hidden="true"
-                  v-if="postfixFileName(item.Documentname)  === ('ppt' || 'pptx')"
+                  v-if="postfixFileName(item.Documentname)  === ( 'pptx')"
+                >
+                  <use xlink:href="icon-ppt"></use>
+                </svg>
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  v-if="postfixFileName(item.Documentname)  === ('ppt' )"
                 >
                   <use xlink:href="icon-ppt"></use>
                 </svg>
@@ -414,6 +442,9 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
+.contractDetail {
+  font-family: $fr;
+}
 .contractTitle {
   @include sc(28px, rgba(136, 136, 136, 1));
   padding: 20px 40px;
@@ -422,7 +453,7 @@ export default {
   background-color: #fff;
   @include fj(space-between);
   padding: 26px 40px;
-  border-bottom: 2px solid rgb(244, 246, 248);
+  margin-bottom: 2px;
   &:last-child {
     border: 0;
   }
@@ -485,7 +516,7 @@ export default {
     }
 
     .contractClassifyDetail {
-      border-bottom: 2px solid rgba(244, 246, 248, 1);
+      margin-bottom: 2px;
       border-top: 2px solid rgba(244, 246, 248, 1);
       &:last-child {
         border-bottom: 0px solid rgba(244, 246, 248, 1);
@@ -509,13 +540,14 @@ export default {
 
 .contractOther {
   .otherMain {
-    background-color: #fff;
     .otherMainTitle {
+      background-color: #fff;
       @include sc(32px, rgba(30, 30, 30, 1));
       padding: 26px 40px;
       border-bottom: 2px solid rgba(244, 246, 248, 1);
     }
     .otherMainClassify {
+      background-color: #fff;
       background-color: rgba(243, 247, 253, 1);
       @include fj(space-around);
       padding: 18px 0px;
@@ -538,8 +570,9 @@ export default {
       }
     }
     .otherfujianLi {
+      background-color: #fff;
       @include fj(space-between);
-      border-bottom: 2px solid rgba(244, 246, 248, 1);
+      margin-bottom: 2px;
       padding: 26px 40px;
       div {
         @include fd(row);

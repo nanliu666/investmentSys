@@ -1,6 +1,9 @@
 <template>
   <div class="reservePart">
-    <x-header :left-options="{backText: ''}" class="header">新增商机</x-header>
+    <x-header :left-options="{backText: ''}" class="header">
+      <img src="../../assets/images/返回@3x.png" slot="left" class="backICon" alt>
+      新增商机
+    </x-header>
     <section class="content">
       <div class="reseveTitle">
         <div class="danyuan">当前预定单元</div>
@@ -8,13 +11,24 @@
       </div>
       <group class="group">
         <div class="cientInfo">客户信息</div>
-        <cell title="客户姓名" :value="111" is-link>
+        <cell is-link>
           <div slot="title" class="phone">
             <span style="vertical-align:middle;">客户姓名</span>
             <badge text="*" class="badge"></badge>
           </div>
+          <span
+            :class="[!!nameValue ? 'cellValueClass' : 'placeholderClass']"
+          >{{!!nameValue ? nameValue : '请选择联系人'}}</span>
         </cell>
-        <cell title="手机号码" :value="phoneValue"></cell>
+        <cell>
+          <div slot="title" class="phone">
+            <span style="vertical-align:middle;">手机号码</span>
+            <badge text="*" class="badge"></badge>
+          </div>
+          <span
+            :class="[!!phoneValue ? 'cellValueClass' : 'placeholderClass']"
+          >{{!!nameValue ? phoneValue : '请选择联系人'}}</span>
+        </cell>
         <div class="cientInfo">商机信息</div>
         <popup-picker
           title="商机来源"
@@ -22,15 +36,30 @@
           v-model="chanceValue"
           @on-change="chanceChange"
         ></popup-picker>
-        <cell title="总面积" value="500.25 m²"></cell>
-        <cell title="预计成交金额" value="¥453.5万"></cell>
+        <cell>
+          <div slot="title" class="phone">
+            <span style="vertical-align:middle;">总面积</span>
+          </div>
+          <span
+            :class="[!!phoneValue ? 'cellValueClass' : 'placeholderClass']"
+          >{{!!nameValue ? phoneValue : '暂无面积数'}}</span>
+        </cell>
+        <cell>
+          <div slot="title" class="phone">
+            <span style="vertical-align:middle;">预计成交金额</span>
+          </div>
+          <span
+            :class="[!!phoneValue ? 'cellValueClass' : 'placeholderClass']"
+          >{{!!nameValue ? phoneValue : '暂无面积数'}}</span>
+        </cell>
+        <!-- <cell title="预计成交金额" value="¥453.5万"></cell> -->
         <popup-picker
           title="紧急程度"
           :data="urgencyList"
           v-model="urgencyValue"
           @on-change="urgencyChange"
         ></popup-picker>
-        <x-textarea title="备注" placeholder="请填写备注" :show-counter="false" :rows="3" v-model="Remark"></x-textarea>
+        <x-textarea title="备注" placeholder="请填写备注" :show-counter="true" :rows="1" v-model="Remark" autosize></x-textarea>
       </group>
       <section class="button">
         <x-button class="submit" @click.native="submit">保存</x-button>
@@ -41,7 +70,16 @@
 
 
 <script>
-import { XHeader, Group, Cell, Picker, XButton, XTextarea, Badge } from "vux";
+import {
+  XHeader,
+  Group,
+  Cell,
+  Picker,
+  XButton,
+  XTextarea,
+  Badge,
+  PopupPicker
+} from "vux";
 
 // api
 import { EditBizOpportunity, GetBizopprtunityDropdown } from "@/axios/api";
@@ -51,12 +89,11 @@ export default {
   data() {
     return {
       Remark: "", //备注
-      nameValue: "张三",
+      nameValue: "11",
       OpSource: [], // 商机数据源
       chanceSource: [], //商机处理后的数据源
       chanceValue: [], //商机来源默认值
       Sourceid: "", //商机来源ID
-
       urgencySource: [], //数据源
       urgencyList: [], //紧急程度处理后的数据源
       urgencyValue: [], //紧急默认值
@@ -76,6 +113,7 @@ export default {
     XButton,
     Cell,
     Badge,
+    PopupPicker,
     XTextarea
   },
   methods: {
@@ -151,10 +189,23 @@ export default {
   }
 };
 </script>
-
+<style lang="scss">
+@import "src/assets/sass/mixin";
+.cellValueClass {
+  font-family: $fr;
+  @include sc(30px, rgba(30, 30, 30, 1));
+}
+.placeholderClass {
+  font-family: $fr;
+  @include sc(30px, rgba(209, 209, 209, 1));
+}
+</style>
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
 .reservePart {
+  .backICon {
+    @include wh(14px, 26px);
+  }
   .content {
     .reseveTitle {
       height: 160px;
@@ -177,14 +228,15 @@ export default {
       }
     }
     .cientInfo {
-      // @include sc(28px, #1e1e1e);
+      @include sc(28px, rgba(136, 136, 136, 1));
       // font-family: $fr;
       padding: 16px 40px;
       background-color: $bc;
     }
     .phone {
+      font-family: $fr;
+      @include sc(30px, rgba(136, 136, 136, 1));
       background-color: #fff;
-      color: #000;
     }
     .badge {
       background-color: #fff;

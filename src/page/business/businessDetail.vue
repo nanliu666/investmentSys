@@ -1,214 +1,305 @@
 <template>
   <div class="reservePart">
-    <x-header
-      :left-options="{backText: ''}"
-      :right-options="{showMore: true}"
-      class="header"
-      @on-click-more="showMenus = true"
-    >月亮湾 第二期1506</x-header>
-    <actionsheet :menus="menus" v-model="showMenus" show-cancel></actionsheet>
-    <section class="content">
-      <form action>
-        <section class="main">
-          <div class="cientInfo">客户信息</div>
-          <section class="formInfo">
-            <div>
-              <label for>
-                客户姓名
-                <span class="start">*</span>
-              </label>
-              <input type="text" placeholder="请选择客户" required>
-              <i class="iconfont icon-youjiantou"></i>
-            </div>
-            <div>
-              <label for>手机号码</label>
-              <input type="number" name id>
-            </div>
-          </section>
-        </section>
-        <section class="main">
-          <div class="cientInfo">商机信息</div>
-          <section class="formInfo">
-            <div>
-              <label for>商机来源</label>
-              <input type="text" placeholder="请选择客户" required>
-            </div>
-            <div>
-              <label for>总面积</label>
-              <input type="number" name id>
-            </div>
-            <div>
-              <label for>预计成交金额</label>
-              <input type="number" name id>
-            </div>
-            <div>
-              <label for>紧急程度</label>
-              <input type="number" name id>
-            </div>
-            <div>
-              <label for>备注</label>
-              <input type="number" name id>
-            </div>
-          </section>
-        </section>
-
-        <section class="button">
-          <button class="submit">预定</button>
-          <button class="reserve">签约</button>
-          <button class="losse">流失</button>
-          <button class="moveto">移交</button>
-        </section>
-      </form>
+    <section class="businessHeader">
+      <div @click="goback">
+        <img src="../../assets/images/返回@2x.png" alt>
+      </div>
+      <div class="headerTitle">商机详情</div>
+      <div @click="showMenus = true" class="more">···</div>
     </section>
+    <section v-for="(item, index) in businessDetail" :key="index">
+      <section class="client">
+        <div class="clientTittle">意向客户</div>
+        <div class="clientName">{{item.Agentname}}</div>
+        <div class="clientPhone">
+          <span class="iconfont icon-002dianhua"></span>
+          <span class="phone">{{item.Phone}}</span>
+          <span
+            class="copyPhone"
+            v-clipboard:copy="item.Phone"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onError"
+          >复制</span>
+        </div>
+      </section>
+      <section class="tail">
+        <div class="tailTop">
+          <div class="tailTopLi">
+            <span class="tailTopLiTop">跟踪状态</span>
+            <span class="tailTopLiBottom" v-text="statusDetail[item.Recordstatus]">机会渺茫</span>
+          </div>
+          <div class="tailTopLi">
+            <span class="tailTopLiTop">上次跟踪时间</span>
+            <span class="tailTopLiBottom">{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span>
+          </div>
+        </div>
+        <div class="tailBottom">查看跟踪记录 >></div>
+      </section>
+      <section class="businessInfo">
+        <div class="infoTittle">商机信息</div>
+        <ul class="infoMain">
+          <li>
+            <span class="mainTittle">意向单元</span>
+            <span class="mainContent">{{item.Unitdesc}}</span>
+          </li>
+          <li>
+            <span class="mainTittle">商机来源</span>
+            <span class="mainContent">{{item.Sourcename}}</span>
+          </li>
+          <li>
+            <span class="mainTittle">期望铺位面积(m²)</span>
+            <span class="mainContent">500</span>
+          </li>
+          <li>
+            <span class="mainTittle">备注</span>
+            <span class="mainContent">{{item.Remark}}</span>
+          </li>
+        </ul>
+        <div class="reserveButton">
+          <button>预定</button>
+        </div>
+      </section>
+    </section>
+    <actionsheet :menus="menus" v-model="showMenus" show-cancel @on-click-menu="businessAct"></actionsheet>
   </div>
 </template>
 
 
 <script>
-import { GetBizOpportunityDetail } from "@/axios/api";
-import { XHeader, Actionsheet } from "vux";
+import { GetBizOpportunityDetail, DeleteBizOpportunity } from "@/axios/api";
+import { Actionsheet } from "vux";
 export default {
   name: "businessDetail",
   data() {
     return {
       menus: {
-        menu1: "删除",
-        menu2: "编辑"
+        menu1: "编辑",
+        menu2: "删除",
+        menu3: "移交",
+        menu4: "流失"
       },
-      showMenus: false
-    };
-  },
-  created() {
-    let data = {
-      Bizopportunity: {
-        Prospectid: 562
+      showMenus: false,
+      businessDetail: [],
+      statusDetail: {
+        Active: "新商机",
+        Lost: "已流失",
+        Signed: "已签约",
+        Quotation: "已报价",
+        Booked: "已预订 ",
+        INACTIVE: "已删除 ",
+        Used: "已使用"
       }
     };
-    GetBizOpportunityDetail(data).then(res => {
-      console.log(JSON.parse(res.Bizopprtunity).Option);
+  },
+
+  created() {
+    let jsonData = {
+      Bizopportunity: {
+        Prospectid: Number(this.$route.params.id)
+      }
+    };
+    GetBizOpportunityDetail(jsonData).then(res => {
+      this.businessDetail = JSON.parse(res.Bizopprtunity).Datasource;
+      console.log(JSON.parse(res.Bizopprtunity));
     });
-    console.log(this.$route.params.id);
   },
   components: {
-    XHeader,
     Actionsheet
   },
-  methods: {}
+  methods: {
+    businessAct(key, item) {
+      console.log(item);
+      switch (item) {
+        case "编辑":
+          console.log("编辑");
+          break;
+        case "删除":
+          console.log("删除");
+          let data = {
+            Prospectid: this.$route.params.id
+          };
+          DeleteBizOpportunity(data).then(res => {
+            if (!!res.Success) {
+              this.$vux.toast.show({
+                text: "删除成功！",
+                type: "success"
+              });
+              this.$router.push({
+                name: "businessList",
+                params: {
+                  isLoad: true
+                }
+              });
+            } else {
+              this.$vux.toast.show({
+                text: "此商机非新商机，不能删除！",
+                type: "warn"
+              });
+            }
+          });
+          break;
+        case "流失":
+          console.log("流失");
+          break;
+        case "移交":
+          console.log("移交");
+          break;
+      }
+    },
+    goback() {
+      this.$router.back(-1);
+    },
+    onCopy(e) {
+      this.$vux.toast.show({
+        text: "复制成功！",
+        type: "success"
+      });
+    },
+    onError() {
+      this.$vux.toast.show({
+        text: "复制失败，请手动输入！",
+        type: "warn"
+      });
+    }
+  }
 };
 </script>
 
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
 .reservePart {
-  .content {
-    .reseveTitle {
-      height: 160px;
-      padding: 32px 40px;
-      background: linear-gradient(
-        to left,
-        rgba(56, 153, 255, 1),
-        rgba(74, 116, 226, 1)
-      );
-      box-shadow: 0 0 28px 0 rgba(96, 137, 210, 0.17);
-      .danyuan {
-        @include sc(28px, rgba(255, 255, 255, 1));
-        margin-bottom: 10px;
+  .businessHeader {
+    @include fj;
+    @include wh(100%, 80px);
+    @include flexHCenter;
+    padding: 18px 40px;
+    font-family: $fm;
+    background: linear-gradient(
+      90deg,
+      rgba(103, 185, 255, 1) 0%,
+      rgba(92, 128, 255, 1) 100%
+    );
+    color: rgba(255, 255, 255, 1) !important;
+    font-size: 34px !important;
+    img {
+      @include wh(18px, 30px);
+    }
+    .headerTitle {
+      @include sc(34px, rgba(255, 255, 255, 1));
+    }
+    .more {
+      @include flexCenter;
+      @include sc(60px, $fc);
+    }
+  }
+  .client {
+    margin-top: -1px;
+    padding: 20px 40px 50px;
+    background: linear-gradient(
+      90deg,
+      rgba(103, 185, 255, 1) 0%,
+      rgba(92, 128, 255, 1) 100%
+    );
+    color: $fc;
+    .clientTittle {
+      font-size: 28px;
+      font-family: $fr;
+      opacity: 0.8;
+    }
+    .clientName {
+      font-family: $fm;
+      font-size: 44px;
+      font-weight: 500;
+      padding-bottom: 36px;
+    }
+    .clientPhone {
+      font-size: 28px;
+      .copyPhone {
+        font-size: 24px;
+        background-color: rgba(38, 81, 196, 0.3);
         font-family: $fr;
-      }
-      .qi {
-        @include sc(32px, rgba(255, 255, 255, 1));
-        font-family: $fm;
+        border-radius: 21px;
+        @include wh(90px, 42px);
+        margin-left: 18px;
+        padding: 4px 20px;
       }
     }
-    .main {
-      .cientInfo {
-        @include sc(28px, #1e1e1e);
-        font-family: $fr;
-        padding: 16px 40px;
-      }
-      .formInfo {
-        padding: 0 40px;
-        background-color: #fff;
-        div {
-          position: relative;
-          padding: 20px 0;
-          border-bottom: 1px solid #ececec; /*no*/
-          label {
-            @include sc(30px, #888);
-          }
-          input {
+  }
+  .tail {
+    background-color: #fff;
+    .tailTop {
+      padding: 30px 0;
+      border-bottom: 6px solid #f4f6f8;
+      @include fj(space-around);
+      .tailTopLi {
+        @include fd(column);
+        position: relative;
+        .tailTopLiTop {
+          font-family: $fr;
+          @include sc(28px, rgba(136, 136, 136, 1));
+          @include flexCenter;
+        }
+        .tailTopLiBottom {
+          font-family: $fm;
+          @include sc(32px, rgba(30, 30, 30, 1));
+          @include flexCenter;
+        }
+        &:first-child {
+          &::before {
             position: absolute;
-            left: 240px;
-          }
-        }
-        div:last-child {
-          border-bottom: 0px solid #ececec; /*no*/
-        }
-        .start {
-          color: red;
-        }
-        .icon-youjiantou {
-          position: absolute;
-          right: 8px;
-          @include wh(8px, 16px);
-          color: rgba(219, 219, 219, 1);
-        }
-      }
-      .upload {
-        div {
-          @include fj(space-between);
-          input {
-            width: 60%;
-          }
-          button {
-            @include wh(114px, 50px);
-            @include borderRadius(25px);
-            @include borderStyle(rgba(72, 121, 230, 1));
-            @include sc(28px, rgba(72, 121, 230, 1));
-            padding: 6px 18px;
-            background-color: $fc;
+            right: -128px;
+            content: "";
+            width: 1px;
+            height: 80px;
+            background-color: rgba(174, 174, 174, 1);
+            color: rgba(174, 174, 174, 1);
           }
         }
       }
     }
-    .button {
-      background-color: #fff;
-      height: 98px;
-      position: fixed;
-      width: 100%;
-      bottom: 0;
-      display: flex;
-      align-items: center;
-      flex-direction: row-reverse;
-      padding: 0 30px;
+    .tailBottom {
+      @include wh(100%, 88px);
+      @include flexCenter;
+      font-family: $fr;
+      @include sc(28px, rgba(136, 136, 136, 1));
+    }
+  }
+  .businessInfo {
+    .infoTittle {
+      padding: 20px 26px;
+      @include sc(28px, rgba(136, 136, 136, 1));
+      font-family: $fr;
+    }
+    .infoMain {
+      li {
+        @include fj;
+        font-family: $fr;
+        background-color: #fff;
+        margin-bottom: 4px;
+        padding: 26px 40px;
+        &:last-child {
+          margin-bottom: 0px;
+        }
+        .mainTittle {
+          @include sc(30px, rgba(136, 136, 136, 1));
+        }
+        .mainContent {
+          width: 60%;
+          display: flex;
+          justify-content: flex-end;
+          @include sc(30px, rgba(30, 30, 30, 1));
+        }
+      }
+    }
+    .reserveButton {
+      padding: 58px 40px 0;
       button {
-        @include wh(168px, 60px);
-        @include sc(28px, $fc);
-        @include borderRadius(30px);
+        background-color: rgba(105, 167, 254, 1);
+        width: 100%;
+        height: 88px;
+        border-radius: 44px;
         font-family: $fm;
-        margin: 0 8px;
-        box-shadow: 0 0px 20px 0 rgba(96, 137, 210, 0.17);
-      }
-      .submit {
-        background: linear-gradient(
-          to left,
-          rgba(56, 153, 255, 1),
-          rgba(74, 116, 226, 1)
-        );
-      }
-      .losse {
-        background: linear-gradient(
-          to left,
-          rgba(203, 220, 234, 1),
-          rgba(173, 188, 198, 1)
-        );
-      }
-      .reserve {
-        background: linear-gradient(
-          to left,
-          rgba(120, 202, 255, 1),
-          rgba(55, 185, 255, 1)
-        );
+        @include sc(34px, rgba(255, 255, 255, 1));
       }
     }
   }
