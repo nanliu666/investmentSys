@@ -127,7 +127,6 @@ export default {
   beforeRouteEnter(to, from, next) {
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
     next(vm => {
-      console.log(vm.$route.params);
       if (
         (from.name === "businessDetail" && vm.$route.params.isLoad) ||
         from.name === "businessAdd"
@@ -164,7 +163,6 @@ export default {
       });
     },
     FilterUpdate(data) {
-      console.log("子组件传递过来的修改的值", data);
       this.FilterCond = data;
       this.mescroll.resetUpScroll();
     },
@@ -197,7 +195,6 @@ export default {
       GetBizOpportunity(data)
         .then(res => {
           let arr = JSON.parse(res.Content);
-          console.log(arr)
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态

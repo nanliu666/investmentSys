@@ -228,6 +228,8 @@ export default {
   @include sc(28px, rgba(30, 30, 30, 1));
   padding: 10px 0px 0px;
   margin-top: -10px;
+  box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
+
   .feige {
     color: #ccc;
   }

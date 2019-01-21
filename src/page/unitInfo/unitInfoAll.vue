@@ -544,6 +544,7 @@ export default {
   width: 100%;
   top: 0;
   z-index: 1;
+  box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
 }
 #anchorScroll {
   position: fixed;
