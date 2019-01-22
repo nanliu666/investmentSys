@@ -11,7 +11,7 @@ const state = {
   toPageName: '', //页面返回的路由名字
   formPageName: '', //页面来的路由名字
   clientDetail: '', //获取的联系人详情
-  uintDetail: [], //获取单元列表
+  uintDetailList: [], //获取单元列表
   reserveObj: '', //获取预订新增的暂存对象
   scrollTop: '' //记录高度
 }

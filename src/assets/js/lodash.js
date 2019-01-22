@@ -16,6 +16,7 @@ export default {
   filter: _.filter,
   chain: _.chain,
   find: _.find,
+  findIndex: _.findIndex,
   map: _.map,
   slice: _.slice,
   orderBy: _.orderBy,

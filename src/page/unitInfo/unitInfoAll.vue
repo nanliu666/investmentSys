@@ -113,16 +113,16 @@
       v-model="hasUnitDetail"
       position="bottom"
       class="UnitDetail"
-      v-for="(key, value) in unitDetail"
+      v-for="(key, value) in unitDetailSelect"
       :key="value"
     >
       <div class="top">
         <div class="topLeft">
-          <span class="unitNo">{{unitDetail.Unitno}}</span>
+          <span class="unitNo">{{unitDetailSelect.Unitno}}</span>
           <span
             class="unitStatus"
-            v-text="getUintStatus(unitDetail.Recordstatusstringcode)"
-            :class="getbusinessStatus(unitDetail.Recordstatusstringcode)"
+            v-text="getUintStatus(unitDetailSelect.Recordstatusstringcode)"
+            :class="getbusinessStatus(unitDetailSelect.Recordstatusstringcode)"
           ></span>
         </div>
         <div class="topRight" @click="openUnitDetail">×</div>
@@ -130,15 +130,15 @@
       <div class="main">
         <li>
           <span>占地面积:</span>
-          <span>{{unitDetail.Builduparea | formatNumber}}M²</span>
+          <span>{{unitDetailSelect.Builduparea | formatNumber}}M²</span>
         </li>
         <li>
           <span>每平方米报价:</span>
-          <span>{{unitDetail.Minprice | formatNumber}}万元</span>
+          <span>{{unitDetailSelect.Minprice | formatNumber}}万元</span>
         </li>
         <li>
           <span>总租金:</span>
-          <span>{{unitDetail.Toprice | formatNumber}}万元</span>
+          <span>{{unitDetailSelect.Toprice | formatNumber}}万元</span>
         </li>
         <li>
           <span>当前商机数:</span>
@@ -146,8 +146,8 @@
         </li>
       </div>
       <div class="bottom">
-        <button @click="addReserve(unitDetail)">新增预定</button>
-        <button @click="addNewBusiness(unitDetail)">新增商机</button>
+        <button @click="addReserve(unitDetailSelect)">新增预定</button>
+        <button @click="addNewBusiness(unitDetailSelect)">新增商机</button>
       </div>
     </popup>
     <section class="uintInfoAll">
@@ -188,11 +188,11 @@
             @click="getUnitDetail(Item)"
           >
             <a
-              :class="[hasUintUnitList.indexOf(Item) > -1 ?  'dispalyNo':  getbusinessStatus(Item.Recordstatusstringcode) ]"
+              :class="[uintVuexList.indexOf(Item) !== -1 ? 'dispalyNo': getbusinessStatus(Item.Recordstatusstringcode) ]"
             >{{Item.Unitno | strSubstring(4) }}</a>
             <div
               class="imgBox"
-              :class="[hasUintUnitList.indexOf(Item) > -1 ?  'dispalyYes A-visited':  'dispalyNo' ]"
+              :class="[uintVuexList.indexOf(Item) !== -1 ?  'dispalyYes A-visited':  'dispalyNo' ]"
             >
               <img class="fs-img" src="../../assets/images/勾.png" alt>
             </div>
@@ -211,7 +211,7 @@
       <div class="footerLeft">
         <span class="leftTittle">已选中单元</span>
         <div class="leftContent">
-          <span v-for="(item, index) in hasUintUnitList" :key="index">{{item.Unitno}}</span>
+          <span v-for="(item, index) in uintVuexList" :key="index">{{item.Unitno}}</span>
         </div>
       </div>
       <button class="footerRight" @click="getUintList">确定</button>
@@ -233,10 +233,10 @@ export default {
   data() {
     return {
       hasUintNumber: false,
-      hasUintUnitList: [],
+      uintVuexList: [],
       uintNumber: "",
       showMask: false,
-      unitDetail: {},
+      unitDetailSelect: {},
       headerTittle: "",
       gotoTop: false,
       noData: false,
@@ -275,7 +275,7 @@ export default {
     this.onLoad();
   },
   computed: {
-    ...mapState(["scrollTop", "toPageName", "uintDetail"])
+    ...mapState(["scrollTop", "toPageName", "uintDetailList"])
   },
   activated() {
     if (!this.$route.meta.isBack || this.isFirstEnter) {
@@ -382,24 +382,46 @@ export default {
     getUnitDetail(data) {
       if (this.toPageName === "reserveAdd") {
         this.getUintID(data);
-        // this.$router.replace({ name: "reserveAdd" });
       } else if (this.toPageName === "businessAdd") {
         this.getUintID(data);
-        // this.$router.replace({ name: "businessAdd" });
       } else {
         this.hasUnitDetail = !this.hasUnitDetail;
-        this.unitDetail = data;
+        this.unitDetailSelect = data;
       }
     },
     getUintID(data) {
-      if (this.hasUintUnitList.indexOf(data) > -1) {
-        let i = this.hasUintUnitList.indexOf(data);
-        this.hasUintUnitList.splice(i, 1);
+      let A = this._.findIndex(this.uintVuexList, item => {
+        return item.Unitid === data.Unitid;
+      });
+      if (A === -1) {
+        this.uintVuexList.push(data);
       } else {
-        this.hasUintUnitList.push(data);
+        let i = this.uintVuexList.indexOf(data);
+        this.uintVuexList.splice(i, 1);
       }
-      this.UINT_DETAIL(data); //存数据到vuex
-      console.log(this.hasUintUnitList);
+      this.UINT_DETAIL(this.uintVuexList);
+    },
+    onLoad() {
+      this.UINT_DETAIL()
+      this.requestData = {
+        Blockid: 0,
+        Statucode: "",
+        Floorno: "",
+        Startdate: "",
+        Enddate: ""
+      };
+      if (
+        this.toPageName === "reserveAdd" ||
+        this.toPageName === "businessAdd"
+      ) {
+        this.requestData.Statucode = "UnitAvailable";
+        this.hasUintNumber = !this.hasUintNumber;
+      }
+      GetUnitByBlock(this.requestData).then(res => {
+        this.allBlock = res.Content;
+        this.hasProject();
+      });
+      this.getCompany();
     },
     getUintList() {
       if (this.toPageName === "reserveAdd") {
@@ -523,28 +545,6 @@ export default {
       this.getUnitBlock();
       this.$el.querySelector("#anchorScroll").scrollIntoView();
       this.floorList = [];
-    },
-    onLoad() {
-      this.requestData = {
-        Blockid: 0,
-        Statucode: "",
-        Floorno: "",
-        Startdate: "",
-        Enddate: ""
-      };
-      if (
-        this.toPageName === "reserveAdd" ||
-        this.toPageName === "businessAdd"
-      ) {
-        this.requestData.Statucode = "UnitAvailable";
-        this.hasUintNumber = !this.hasUintNumber;
-      }
-      GetUnitByBlock(this.requestData).then(res => {
-        this.allBlock = res.Content;
-        console.log(res.Content)
-        this.hasProject();
-      });
-      this.getCompany();
     },
     getUnitBlock() {
       GetUnitByBlock(this.requestData).then(res => {

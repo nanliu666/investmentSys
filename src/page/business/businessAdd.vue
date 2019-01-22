@@ -8,6 +8,16 @@
       <div class="reseveTitle" v-if="hasUint">
         <div class="danyuan">当前预定单元</div>
         <div class="qi">星月湾·东街二期 &nbsp; 403</div>
+        <div class="shangji">
+          <div>
+            当前铺位已有
+            <span class="shangjiNum">&nbsp;2&nbsp;</span>条可直接载入商机
+          </div>
+          <div>
+            <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon>
+            <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon>
+          </div>
+        </div>
       </div>
       <div class="group">
         <div class="cientInfo">客户信息</div>
@@ -141,7 +151,6 @@ import {
   Radio,
   Popup
 } from "vux";
-
 // api
 import { EditBizOpportunity, GetBizopprtunityDropdown } from "@/axios/api";
 import { mapMutations, mapState } from "vuex";
@@ -164,11 +173,12 @@ export default {
           }
         }
       },
+      hasStatus: false,
       hasUint: "",
       Remark: "", //备注
       clientDataName: "", //姓名
       clientDataPhone: "", //电话
-      businessList: {}, //当前意向
+      businessList: [], //当前意向
       radioOptions: [], //商机来源列表
       radioOptionsList: [], //实际商机来源列表
       radioOptionsValue: "", //选中商机来源值
@@ -201,7 +211,7 @@ export default {
     next();
   },
   computed: {
-    ...mapState(["uintDetail", "clientDetail"])
+    ...mapState(["uintDetailList", "clientDetail"])
   },
   created() {
     this.isFirstEnter = true;
@@ -211,6 +221,9 @@ export default {
     this.onLoad();
   },
   methods: {
+    openStatus() {
+      this.hasStatus = !this.hasStatus;
+    },
     TextAreaChange: _.debounce(function() {
       this.businessNewObj.Bizopportunity.Remark = this.Remark; //存起来成交几率
     }, 1000),
@@ -252,12 +265,12 @@ export default {
       this.clientDataName = this.clientDetail.Name;
       this.businessNewObj.Bizopportunity.Accountid = this.clientDetail.Accountid; //存起来客户ID
       this.clientDataPhone = this.clientDetail.Phone;
-      if (this.uintDetail.length !== 0) {
-        this.businessNewObj.Bizopportunity.Units.Jsondata = this.uintDetail; //存起来选择的单元信息
-        this.businessList = this.uintDetail.map(item => {
+      if (!!this.uintDetailList ) {
+        this.businessNewObj.Bizopportunity.Units.Jsondata = this.uintDetailList; //存起来选择的单元信息
+        this.businessList = this.uintDetailList.map(item => {
           return item.Unitno;
         });
-        let A = this.uintDetail.map(item => {
+        let A = this.uintDetailList.map(item => {
           return Number(item.Builduparea);
         });
         this.unitArea = A.reduce(function(prev, curr, idx, arr) {
@@ -309,22 +322,29 @@ export default {
 .reservePart {
   .content {
     .reseveTitle {
-      height: 160px;
-      padding: 32px 40px;
-      background: linear-gradient(
-        to left,
-        rgba(56, 153, 255, 1),
-        rgba(74, 116, 226, 1)
-      );
-      box-shadow: 0 0 28px 0 rgba(96, 137, 210, 0.17);
+      background-color: #fff;
       .danyuan {
-        @include sc(28px, rgba(255, 255, 255, 1));
+        @include sc(30px, rgba(136, 136, 136, 1));
+        padding: 32px 40px 0;
         margin-bottom: 10px;
         font-family: $fr;
       }
       .qi {
-        @include sc(32px, rgba(255, 255, 255, 1));
+        @include sc(34px, rgba(30, 30, 30, 1));
+        padding: 0 40px;
         font-family: $fm;
+        border-bottom: 2px solid rgb(244, 246, 248);
+      }
+      .shangji {
+        @include fj(space-between);
+        @include wh(100%, 96px);
+        @include flexHCenter;
+        padding: 0 40px;
+        font-family: $fr;
+        @include sc(32px, rgba(136, 136, 136, 1));
+        .shangjiNum {
+          @include sc(32px, rgba(105, 167, 254, 1));
+        }
       }
     }
     .cientInfo {

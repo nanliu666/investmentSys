@@ -10,8 +10,6 @@
         alt
       >
       <img src="../../assets/images/addNew.png" @click="addBusiness" slot="right" class="fs-addNew" alt>
-
-      <!-- <img class="addImg" src="../../assets/images/搜索.png"  alt> -->
     </x-header>
     <section class="searchPart" v-if="hasSearch">
       <x-input

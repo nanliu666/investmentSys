@@ -18,7 +18,7 @@ export default {
     state.clientDetail = value
   },
   [UINT_DETAIL](state, value) {
-    state.uintDetail.push(value)
+    state.uintDetailList = value
   },
   [RESERVEADD](state, value) {
     state.reserveObj = Object.assign(state.reserveObj, value)
