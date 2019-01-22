@@ -5,7 +5,7 @@
       新增商机
     </x-header>
     <section class="content">
-      <div class="reseveTitle">
+      <div class="reseveTitle" v-if="hasUint">
         <div class="danyuan">当前预定单元</div>
         <div class="qi">星月湾·东街二期 &nbsp; 403</div>
       </div>
@@ -16,8 +16,8 @@
             <span>客户姓名</span>
             <span class="badge">*</span>
           </div>
-          <div class="liRight" :class="[!!nameValue ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!nameValue ? nameValue : '请选择联系人'}}</span>
+          <div class="liRight" :class="[!!clientDataName ? 'cellValueClass' : 'placeholderClass']">
+            <span>{{!!clientDataName ? clientDataName : '请选择联系人'}}</span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
@@ -26,25 +26,35 @@
             <span>手机号码</span>
             <span class="badge">*</span>
           </div>
-          <div class="liRight" :class="[!!nameValue ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!nameValue ? nameValue : '请选择联系人'}}</span>
+          <div class="liRight" :class="[!!clientDataPhone ? 'cellValueClass' : 'placeholderClass']">
+            <span>{{!!clientDataPhone ? clientDataPhone : '请选择联系人'}}</span>
           </div>
         </li>
         <div class="cientInfo">商机信息</div>
-        <li class="groupLi">
+        <li class="groupLi" @click="getUint">
           <div class="liLeft">
             <span>当前意向</span>
           </div>
-          <div class="liRight" :class="[!!nameValue ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!nameValue ? nameValue : '请选择联系人'}}</span>
+          <div
+            class="liRight"
+            :class="[businessList.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span v-if="businessList.length === 0">请选择意向单元</span>
+            <span v-if="businessList.length !== 0" class="liRightContent">
+              <span v-for="(item, index) in businessList" :key="index">{{item}}</span>
+            </span>
+            <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
         <li class="groupLi" @click="chancesource">
           <div class="liLeft">
             <span>商机来源</span>
           </div>
-          <div class="liRight" :class="[!!nameValue ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!nameValue ? nameValue : '请选择联系人'}}</span>
+          <div
+            class="liRight"
+            :class="[!!radioOptionsValue ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{!!radioOptionsValue ? radioOptionsValue : '商机来源'}}</span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
@@ -52,16 +62,22 @@
           <div class="liLeft">
             <span>期望铺位面积(m²)</span>
           </div>
-          <div class="liRight" :class="[!!nameValue ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!nameValue ? nameValue : '请选择联系人'}}</span>
+          <div class="liRight" :class="[!!unitArea ? 'cellValueClass' : 'placeholderClass']">
+            <input
+              readonly
+              type="number"
+              placeholder="请填写面积"
+              style="text-align: right"
+              v-model="unitArea"
+            >
           </div>
         </li>
-        <li class="groupLi">
+        <li class="groupLi" @click="getUrgencySource">
           <div class="liLeft">
             <span>成交几率(范围)</span>
           </div>
-          <div class="liRight" :class="[!!nameValue ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!nameValue ? nameValue : '请选择联系人'}}</span>
+          <div class="liRight" :class="[!!urgencyValue ? 'cellValueClass' : 'placeholderClass']">
+            <span>{{!!urgencyValue ? urgencyValue : '请选择成交几率'}}</span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
@@ -69,8 +85,14 @@
           <div class="liLeft">
             <span>备注</span>
           </div>
-          <div class="liRight" :class="[!!nameValue ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!nameValue ? nameValue : '请选择联系人'}}</span>
+          <div class="liRight" :class="[!!Remark ? 'cellValueClass' : 'placeholderClass']">
+            <input
+              type="text"
+              placeholder="请填写备注"
+              style="text-align: right"
+              v-model="Remark"
+              @input="TextAreaChange()"
+            >
           </div>
         </li>
         <popup v-model="chanceValue">
@@ -83,7 +105,20 @@
             @on-click-right="chanceValue = false"
           ></popup-header>
           <group gutter="0">
-            <radio :options="radioOptions" @on-change="getpopupHeader" v-model="radio001Value"></radio>
+            <radio :options="radioOptions" @on-change="getBusinessChange"></radio>
+          </group>
+        </popup>
+        <popup v-model="hasUrgencySource">
+          <popup-header
+            left-text="取消"
+            right-text="确认"
+            title="请选择成交几率"
+            :show-bottom-border="false"
+            @on-click-left="hasUrgencySource = false"
+            @on-click-right="hasUrgencySource = false"
+          ></popup-header>
+          <group gutter="0">
+            <radio :options="urgencyList" @on-change="getUrgencyChange"></radio>
           </group>
         </popup>
       </div>
@@ -109,24 +144,42 @@ import {
 
 // api
 import { EditBizOpportunity, GetBizopprtunityDropdown } from "@/axios/api";
-
+import { mapMutations, mapState } from "vuex";
 export default {
   name: "reserve",
   data() {
     return {
+      businessNewObj: {
+        Bizopportunity: {
+          Prospectid: 0, //商机ID，如果是新增就为0
+          Sourceid: "", //商机来源id
+          Priorityid: "", //紧急程度id
+          Remark: "", //备注
+          Propertyid: "", //项目id
+          Companyid: "", //公司id
+          Accountid: "", //客户id
+          Units: {
+            //选择的单元信息
+            Jsondata: {}
+          }
+        }
+      },
+      hasUint: "",
       Remark: "", //备注
-      nameValue: "11",
-      OpSource: [], // 商机数据源
-      radioOptions: [],
-      chanceValue: false, //商机来源默认值
-      Sourceid: "", //商机来源ID
+      clientDataName: "", //姓名
+      clientDataPhone: "", //电话
+      businessList: {}, //当前意向
+      radioOptions: [], //商机来源列表
+      radioOptionsList: [], //实际商机来源列表
+      radioOptionsValue: "", //选中商机来源值
+      radioOptionsSelect: [], //选中商机来源值--传递的值
+      unitArea: "", //铺位面积
+      chanceValue: false, //商机来源默认值 --popup判断
+      hasUrgencySource: false, //商机来源默认值--popup判断
       urgencySource: [], //数据源
       urgencyList: [], //紧急程度处理后的数据源
-      urgencyValue: [], //紧急默认值
-      Priorityid: "", //紧急情况id
-      phoneValue: "",
-      radio001Value: "电视电台",
-      unitInfoName: ""
+      urgencyObj: [], //紧急程度被传递的值
+      urgencyValue: "" //紧急默认值
     };
   },
 
@@ -143,40 +196,93 @@ export default {
     Popup,
     Radio
   },
+  beforeRouteLeave(to, from, next) {
+    this.TO_PAGE_NAME(from.name); //离开的时候在vuex存起来本组件的路由名称
+    next();
+  },
+  computed: {
+    ...mapState(["uintDetail", "clientDetail"])
+  },
+  created() {
+    this.isFirstEnter = true;
+    if (!!this.$route.params.data) {
+      this.hasUint = !this.hasUint;
+    }
+    this.onLoad();
+  },
   methods: {
+    TextAreaChange: _.debounce(function() {
+      this.businessNewObj.Bizopportunity.Remark = this.Remark; //存起来成交几率
+    }, 1000),
+    ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
     goback() {
       this.$router.back(-1);
     },
     getClient() {
-      this.$router.push({ name: "clientList" });
+      this.$router.replace({
+        name: "clientList"
+      });
     },
-    getpopupHeader(value, label) {
-      console.log(value);
+    getUint() {
+      this.$router.replace({
+        name: "unitInfoALL"
+      });
+    },
+    getUrgencyChange(value) {
+      this.urgencyValue = value;
+      this.urgencyObj = this._.filter(this.urgencySource, item => {
+        return item.Text === value;
+      });
+      this.businessNewObj.Bizopportunity.Priorityid = this.urgencyObj[0].Value; //存起来成交几率
+    },
+    getBusinessChange(value) {
+      this.radioOptionsValue = value;
+      this.radioOptionsSelect = this._.filter(this.radioOptionsList, item => {
+        return item.Text === value;
+      });
+      this.businessNewObj.Bizopportunity.Sourceid = this.radioOptionsSelect[0].Value; //存起来商机来源
     },
     chancesource() {
       this.chanceValue = !this.chanceValue;
     },
+    getUrgencySource() {
+      this.hasUrgencySource = !this.hasUrgencySource;
+    },
     onLoad() {
+      this.clientDataName = this.clientDetail.Name;
+      this.businessNewObj.Bizopportunity.Accountid = this.clientDetail.Accountid; //存起来客户ID
+      this.clientDataPhone = this.clientDetail.Phone;
+      if (this.uintDetail.length !== 0) {
+        this.businessNewObj.Bizopportunity.Units.Jsondata = this.uintDetail; //存起来选择的单元信息
+        this.businessList = this.uintDetail.map(item => {
+          return item.Unitno;
+        });
+        let A = this.uintDetail.map(item => {
+          return Number(item.Builduparea);
+        });
+        this.unitArea = A.reduce(function(prev, curr, idx, arr) {
+          return prev + curr;
+        });
+      }
       GetBizopprtunityDropdown("").then(res => {
         this.urgencySource = res.Option.Dropdownpriorityid; //紧急程度
-        this.OpSource = res.Option.Dropdownsourceid; //商机来源
+        this.radioOptionsList = res.Option.Dropdownsourceid;
+        this.radioOptionsList.map(item => {
+          this.radioOptions.push(item.Text);
+        });
+        this.urgencySource.map(item => {
+          this.urgencyList.push(item.Text);
+        });
       });
     },
-    // 商机改变
-    chanceChange(value) {
-      let A = this.OpSource.filter(function(item) {
-        return item.Text === value[0];
-      });
-      this.Sourceid = A[0].Value;
-    },
-    // 紧急程度改变
-    urgencyChange(value) {
-      let A = this.urgencySource.filter(function(item) {
-        return item.Text === value[0];
-      });
-      this.Priorityid = A[0].Value;
-    },
-    submit() {}
+
+    submit() {
+      console.log(this.businessNewObj);
+
+      // EditBizOpportunity().then(res => {
+      //   console.log(res);
+      // });
+    }
   }
 };
 </script>
@@ -194,6 +300,7 @@ export default {
   @include wh(7px, 13px);
 }
 .fs-goaheadICon {
+  margin-left: 4px;
   @include wh(6px, 10px);
 }
 </style>
@@ -252,7 +359,8 @@ export default {
         @include flexHCenter;
         border-bottom: 4px solid #f4f6f8;
         .liLeft {
-          @include fj;
+          width: 36%;
+          @include fj(flex-start);
           @include sc(30px, rgba(136, 136, 136, 1));
           .badge {
             margin-left: 4px;
@@ -262,6 +370,20 @@ export default {
           }
         }
         .liRight {
+          @include fj(flex-end);
+          @include flexHCenter;
+          width: 64%;
+          .liRightContent {
+            text-align: right;
+            width: 100%;
+            @include ellipsis;
+            span {
+              margin-left: 5px;
+            }
+          }
+          input {
+            width: 100%;
+          }
           // @include sc(30px, rgba(209, 209, 209, 1));
         }
       }

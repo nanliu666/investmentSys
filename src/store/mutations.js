@@ -3,8 +3,10 @@ import {
   FROM_PAGE_NAME,
   RESERVEADD,
   RESAVESCORLLTOP,
-  CLIENT_DETAIL
+  CLIENT_DETAIL,
+  UINT_DETAIL,
 } from './mutation-types.js'
+import _ from '../assets/js/lodash'
 export default {
   [TO_PAGE_NAME](state, value) {
     state.toPageName = value
@@ -14,6 +16,9 @@ export default {
   },
   [CLIENT_DETAIL](state, value) {
     state.clientDetail = value
+  },
+  [UINT_DETAIL](state, value) {
+    state.uintDetail.push(value)
   },
   [RESERVEADD](state, value) {
     state.reserveObj = Object.assign(state.reserveObj, value)

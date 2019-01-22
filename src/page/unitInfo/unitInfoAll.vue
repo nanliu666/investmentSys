@@ -1,15 +1,20 @@
 <template>
-  <div>
+  <div class="unit">
     <div class="allHeader">
       <x-header :left-options="{backText: ''}" class="header">
         <div class="headerTittle" @click="openProjecySelct">{{headerTittle}}</div>
         <span class="imgBox">
-          <img src="../../assets/images/下拉@3x.png" class="fs-dropImg" v-show="!hasprojectStatus" alt>
+          <img
+            src="../../assets/images/下拉@3x.png"
+            class="fs-dropImg"
+            v-show="!hasprojectStatus"
+            alt
+          >
         </span>
-        <!-- <x-icon type="ios-arrow-down" size="23" v-show="!hasprojectStatus"></x-icon> -->
         <x-icon type="ios-arrow-up" size="23" v-show="hasprojectStatus"></x-icon>
       </x-header>
       <tab
+        v-if="!hasUintNumber"
         class="tab"
         :scroll-threshold="5"
         :line-width="1"
@@ -44,6 +49,7 @@
           </div>
         </tab-item>
       </tab>
+      <div class="uintNumber" v-if="hasUintNumber">当前楼盘可租单元: {{uintNumber}}</div>
     </div>
     <popup v-model="hasprojectStatus" position="bottom" class="nav" :show-mask="showMask">
       <div class="close" @click="openProjecySelct">
@@ -176,11 +182,21 @@
           :id="'anchor-'+ item[0].Floor"
         >
           <div
+            class="mainLiA"
             v-for="(Item, index) in item[0].Unitlist"
-            :class="getbusinessStatus(Item.Recordstatusstringcode)"
             :key="index"
             @click="getUnitDetail(Item)"
-          >{{Item.Unitno | strSubstring(4)}}</div>
+          >
+            <a
+              :class="[hasUintUnitList.indexOf(Item) > -1 ?  'dispalyNo':  getbusinessStatus(Item.Recordstatusstringcode) ]"
+            >{{Item.Unitno | strSubstring(4) }}</a>
+            <div
+              class="imgBox"
+              :class="[hasUintUnitList.indexOf(Item) > -1 ?  'dispalyYes A-visited':  'dispalyNo' ]"
+            >
+              <img class="fs-img" src="../../assets/images/勾.png" alt>
+            </div>
+          </div>
         </li>
       </section>
     </section>
@@ -190,6 +206,15 @@
     </section>
     <section class="gotoTop" v-if="gotoTop" @click="goTop">
       <img src="../../assets/images/gototop.png" alt>
+    </section>
+    <section class="footer" v-if="hasUintNumber">
+      <div class="footerLeft">
+        <span class="leftTittle">已选中单元</span>
+        <div class="leftContent">
+          <span v-for="(item, index) in hasUintUnitList" :key="index">{{item.Unitno}}</span>
+        </div>
+      </div>
+      <button class="footerRight" @click="getUintList">确定</button>
     </section>
   </div>
 </template>
@@ -207,6 +232,9 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      hasUintNumber: false,
+      hasUintUnitList: [],
+      uintNumber: "",
       showMask: false,
       unitDetail: {},
       headerTittle: "",
@@ -236,7 +264,7 @@ export default {
   components: { XHeader, Tab, TabItem, Sticky, Popup },
   name: "unitALL",
   beforeRouteEnter(to, from, next) {
-    if (from.name === "reserveAdd" || from.name === "businessAdd") {
+    if (from.name === "reserveAdd") {
       to.meta.isBack = true;
     }
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
@@ -244,11 +272,10 @@ export default {
   },
   created() {
     this.isFirstEnter = true;
+    this.onLoad();
   },
   computed: {
-    ...mapState([
-      "scrollTop" //vuex中的存放的滚动条的位置
-    ])
+    ...mapState(["scrollTop", "toPageName", "uintDetail"])
   },
   activated() {
     if (!this.$route.meta.isBack || this.isFirstEnter) {
@@ -275,7 +302,6 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
-    ...mapMutations(["RESAVESCORLLTOP"]),
     goTop() {
       this.goAnchor("#anchorScroll");
       this.gotoTop = !this.gotoTop;
@@ -351,10 +377,36 @@ export default {
       const selector = `#anchor-${item[0].Floor}`;
       this.goAnchor(selector);
     },
+    ...mapMutations(["UINT_DETAIL", "RESAVESCORLLTOP"]),
     //单元详细信息
     getUnitDetail(data) {
-      this.hasUnitDetail = !this.hasUnitDetail;
-      this.unitDetail = data;
+      if (this.toPageName === "reserveAdd") {
+        this.getUintID(data);
+        // this.$router.replace({ name: "reserveAdd" });
+      } else if (this.toPageName === "businessAdd") {
+        this.getUintID(data);
+        // this.$router.replace({ name: "businessAdd" });
+      } else {
+        this.hasUnitDetail = !this.hasUnitDetail;
+        this.unitDetail = data;
+      }
+    },
+    getUintID(data) {
+      if (this.hasUintUnitList.indexOf(data) > -1) {
+        let i = this.hasUintUnitList.indexOf(data);
+        this.hasUintUnitList.splice(i, 1);
+      } else {
+        this.hasUintUnitList.push(data);
+      }
+      this.UINT_DETAIL(data); //存数据到vuex
+      console.log(this.hasUintUnitList);
+    },
+    getUintList() {
+      if (this.toPageName === "reserveAdd") {
+        this.$router.replace({ name: "reserveAdd" });
+      } else if (this.toPageName === "businessAdd") {
+        this.$router.replace({ name: "businessAdd" });
+      }
     },
     openUnitDetail() {
       this.hasUnitDetail = !this.hasUnitDetail;
@@ -392,7 +444,6 @@ export default {
       });
     },
     goAnchor(selector) {
-      console.log(selector);
       this.$el
         .querySelector(selector)
         .scrollIntoView({ block: "start", behavior: "smooth" });
@@ -481,8 +532,16 @@ export default {
         Startdate: "",
         Enddate: ""
       };
+      if (
+        this.toPageName === "reserveAdd" ||
+        this.toPageName === "businessAdd"
+      ) {
+        this.requestData.Statucode = "UnitAvailable";
+        this.hasUintNumber = !this.hasUintNumber;
+      }
       GetUnitByBlock(this.requestData).then(res => {
         this.allBlock = res.Content;
+        console.log(res.Content)
         this.hasProject();
       });
       this.getCompany();
@@ -514,7 +573,13 @@ export default {
             return item[0].Unitlist.length !== 0;
           })
           .value();
-        console.log("=>", this.floorList);
+        let B = [];
+        this.floorList.map(item => {
+          B.push(item[0].Unitlist.length);
+        });
+        this.uintNumber = B.reduce(function(prev, cur) {
+          return prev + cur;
+        }, 0);
         let unitNull = 0; //判断有没有数据
         this.floorList.map(item => {
           if (item[0].Unitlist.length === 0) {
@@ -541,6 +606,7 @@ export default {
 
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
+
 .allHeader {
   position: fixed;
   width: 100%;
@@ -553,6 +619,49 @@ export default {
       @include wh(11px, 6px);
     }
   }
+}
+.footer {
+  position: fixed;
+  bottom: 0px;
+  background-color: #fff;
+  @include wh(100%, 96px);
+  line-height: 96px;
+  @include flexHCenter;
+  @include fj;
+  padding: 40px;
+  box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
+  .footerLeft {
+    display: flex;
+    width: 80%;
+    .leftTittle {
+      width: 30%;
+      @include flexCenter;
+      @include sc(30px, rgba(30, 30, 30, 1));
+    }
+    .leftContent {
+      width: 70%;
+      @include ellipsis;
+      @include sc(30px, rgba(105, 167, 254, 1));
+      span {
+        margin-left: 10px;
+        width: 25%;
+      }
+    }
+  }
+  .footerRight {
+    @include wh(168px, 60px);
+    border-radius: 30px;
+    border: 1px solid rgba(105, 167, 254, 1);
+    background-color: #fff;
+    @include sc(28px, rgba(105, 167, 254, 1));
+  }
+}
+.uintNumber {
+  background-color: rgba(231, 237, 244, 1);
+  @include wh(100%, 88px);
+  @include sc(26px, rgba(30, 30, 30, 1));
+  @include flexHCenter;
+  padding: 0 34px;
 }
 #anchorScroll {
   position: fixed;
@@ -603,7 +712,7 @@ export default {
 .uintInfoAll {
   .navBar {
     position: fixed;
-    top: 260px;
+    top: 230px;
     @include wh(108px, 60%);
     .top {
       background-color: #fff;
@@ -649,7 +758,7 @@ export default {
   }
   .main {
     position: fixed;
-    top: 250px;
+    top: 230px;
     margin-left: 6%;
     @include cl;
     width: 80%;
@@ -660,12 +769,12 @@ export default {
       margin-bottom: 30px;
       display: flex;
       flex-wrap: wrap;
-      div {
+      .mainLiA {
         width: 20%;
         height: 60px;
         line-height: 60px;
         @include flexCenter;
-        @include ellipsis;
+
         margin-right: 6.6%;
         margin-bottom: 20px;
         @include sc(30px, rgba(255, 255, 255, 1));
@@ -673,6 +782,30 @@ export default {
         &:nth-child(4n + 4) {
           margin-right: 0;
         }
+        a {
+          width: 100%;
+          @include flexCenter;
+          @include ellipsis;
+        }
+        .imgBox {
+          width: 100%;
+          height: 100%;
+          @include flexCenter;
+
+          .fs-img {
+            width: 20px;
+            height: 10px;
+          }
+        }
+      }
+      .A-visited {
+        background-color: rgba(90, 204, 155, 1);
+      }
+      .dispalyNo {
+        display: none !important ;
+      }
+      .dispalyYes {
+        display: block;
       }
     }
   }

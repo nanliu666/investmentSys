@@ -180,7 +180,10 @@ export default {
       if (this.toPageName === "reserveAdd") {
         //如果是从预订新增进来，把联系人存起去vuex，并且回去预订新增
         this.CLIENT_DETAIL(selectData[0]);
-        this.$router.push({ name: "reserveAdd" });
+        this.$router.replace({ name: "reserveAdd" });
+      } else if (this.toPageName === "businessAdd") {
+        this.CLIENT_DETAIL(selectData[0]);
+        this.$router.replace({ name: "businessAdd" });
       } else {
         this.$router.push({
           name: "clientDetail",

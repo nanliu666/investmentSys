@@ -3,13 +3,15 @@
     <x-header :left-options="{backText: ''}" class="header" v-if="!hasSearch">
       商机管理
       <img
-        class="searchImg"
+        class="fs-addNew"
         src="../../assets/images/搜索.png"
         @click="openSearch"
         slot="right"
         alt
       >
-      <img class="addImg" src="../../assets/images/搜索.png" @click="addBusiness" slot="right" alt>
+      <img src="../../assets/images/addNew.png" @click="addBusiness" slot="right" class="fs-addNew" alt>
+
+      <!-- <img class="addImg" src="../../assets/images/搜索.png"  alt> -->
     </x-header>
     <section class="searchPart" v-if="hasSearch">
       <x-input
@@ -19,7 +21,7 @@
         @on-enter="onEnter"
         class="searchInput fs-search"
       >
-        <img class="searchImg" src="../../assets/images/搜索.png" @click="onEnter" slot="right" alt>
+        <img class="fs-addNew" src="../../assets/images/搜索.png" @click="onEnter" slot="right" alt>
       </x-input>
       <div class="cancel" @click="searchCancel">取消</div>
     </section>
@@ -252,12 +254,13 @@ export default {
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
 .contractList {
+  .fs-addNew {
+    @include wh(18px, 18px);
+    margin-left: 10px;
+  }
   height: 100%;
   .header {
     box-shadow: 0 0px 0px 0 #fff !important; //重叠头部
-  }
-  .addImg {
-    margin-left: 34px;
   }
   .searchPart {
     padding: 0 40px;

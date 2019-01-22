@@ -146,11 +146,6 @@ export default {
     }
     this.onLoad();
   },
-  computed: {
-    ...mapState([
-      "scrollTop" //vuex中的存放的滚动条的位置
-    ])
-  },
   activated() {
     if (!this.$route.meta.isBack || this.isFirstEnter) {
       // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
@@ -169,7 +164,7 @@ export default {
     this.isFirstEnter = false;
   },
   computed: {
-    ...mapState(["toPageName", "clientDetail", "reserveObj"])
+    ...mapState(["toPageName", "clientDetail", "reserveObj",'scrollTop'])
   },
   methods: {
     save() {
@@ -208,7 +203,7 @@ export default {
     },
     openStatus() {},
     getClient() {
-      this.$router.push({
+      this.$router.replace({
         name: "clientList"
       });
     }

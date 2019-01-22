@@ -61,7 +61,6 @@ export default {
   opacity: 0;
 }
 #app {
-  font-family: $fr;
   height: 100%;
   .header {
     background-color: #fff;

@@ -1,3 +1,5 @@
+@import "src/assets/sass/mixin";
+
 body,
 div,
 span,
@@ -37,10 +39,36 @@ figcaption,
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
+  font-family: $fr;
 
   &:hover {
     outline: none;
   }
+}
+
+// input占位符颜色
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  /* WebKit browsers */
+  @include sc(30px, rgba(209, 209, 209, 1));
+}
+
+input:-moz-placeholder,
+textarea:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  @include sc(30px, rgba(209, 209, 209, 1));
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  @include sc(30px, rgba(209, 209, 209, 1));
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  /* Internet Explorer 10+ */
+  @include sc(30px, rgba(209, 209, 209, 1));
 }
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/

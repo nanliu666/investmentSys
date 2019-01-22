@@ -83,10 +83,10 @@ export default [{
       path: '/unitInfoALL', //单元信息所有
       name: 'unitInfoALL',
       component: unitInfoALL,
-      meta: { //单元信息所有的模块的keepalive有问题
-        keepAlive: true,
-        isBack: false
-      }
+      // meta: { //单元信息所有的模块的keepalive有问题
+      //   keepAlive: true,
+      //   isBack: false
+      // }
     },
 
 
