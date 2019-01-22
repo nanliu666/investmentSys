@@ -232,12 +232,12 @@ export default {
       this.$router.back(-1);
     },
     getClient() {
-      this.$router.replace({
+      this.$router.push({
         name: "clientList"
       });
     },
     getUint() {
-      this.$router.replace({
+      this.$router.push({
         name: "unitInfoALL"
       });
     },
