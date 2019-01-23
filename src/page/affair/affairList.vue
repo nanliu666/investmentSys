@@ -1,6 +1,11 @@
 <template>
   <div class="affairList">
-    <x-header class="header" :left-options="{backText: ''}" v-if="!hasSearch">
+    <x-header
+      class="header"
+      :left-options="{backText: '', preventGoBack: true}"
+      @on-click-back="goback"
+      v-if="!hasSearch"
+    >
       事务管理
       <img
         class="searchImg"
@@ -136,6 +141,13 @@ export default {
     this.isFirstEnter = false;
   },
   methods: {
+    goback() {
+      if (this.$route.query.type === "menu") {
+        cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
+      } else {
+        this.$router.go(-1);
+      }
+    },
     onDeviceReady() {
       cordova.exec(
         this.successCallBack,

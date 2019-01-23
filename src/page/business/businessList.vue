@@ -1,6 +1,11 @@
 <template>
   <div class="contractList">
-    <x-header :left-options="{backText: ''}" class="header" v-if="!hasSearch">
+    <x-header
+      :left-options="{backText: '', preventGoBack: true}"
+      class="header"
+      @on-click-back="goback"
+      v-if="!hasSearch"
+    >
       商机管理
       <img
         class="fs-addNew"
@@ -9,7 +14,13 @@
         slot="right"
         alt
       >
-      <img src="../../assets/images/addNew.png" @click="addBusiness" slot="right" class="fs-addNew" alt>
+      <img
+        src="../../assets/images/addNew.png"
+        @click="addBusiness"
+        slot="right"
+        class="fs-addNew"
+        alt
+      >
     </x-header>
     <section class="searchPart" v-if="hasSearch">
       <x-input
@@ -157,6 +168,13 @@ export default {
     this.isFirstEnter = false;
   },
   methods: {
+    goback() {
+      if (this.$route.query.type === "menu") {
+        cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
+      } else {
+        this.$router.go(-1);
+      }
+    },
     addBusiness() {
       this.$router.push({
         name: "businessAdd"

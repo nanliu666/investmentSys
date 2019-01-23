@@ -48,7 +48,6 @@ Vue.prototype.toAbsURL = function (url) {
 
 
 
-
 //页面位置保存
 Vue.use(VueRouter)
 const router = new VueRouter({

@@ -1,6 +1,10 @@
 <template>
   <div class="contractList">
-    <x-header :left-options="{backText: ''}" class="header">消息列表</x-header>
+    <x-header
+      :left-options="{backText: '', preventGoBack: true}"
+      class="header"
+      @on-click-back="goback"
+    >消息列表</x-header>
     <!--mescroll滚动区域的基本结构-->
     <mescroll-vue
       class="mescroll"
@@ -87,6 +91,13 @@ export default {
     next();
   },
   methods: {
+    goback() {
+      if (this.$route.query.type === "menu") {
+        cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
+      } else {
+        this.$router.go(-1);
+      }
+    },
     getDetail(data) {
       console.log(data);
     },

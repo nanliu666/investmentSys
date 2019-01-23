@@ -31,25 +31,25 @@
       </section>
       <section class="homeBottom">
         <ul class="nav">
-          <router-link tag="li" to="/unitInfoAll">
+          <router-link tag="li" :to="{name: 'unitInfoALL'}">
             <span>
               <img src="../../assets/images/分组 11.png" alt>
             </span>
             <span>单元信息</span>
           </router-link>
-          <router-link tag="li" to="/reserveList">
+          <router-link tag="li" :to="{name: 'reserveList'}">
             <span>
               <img src="../../assets/images/分组 4.png" alt>
             </span>
             <span>预定管理</span>
           </router-link>
-          <router-link tag="li" to="/businessList">
+          <router-link tag="li" :to="{name: 'businessList'}">
             <span>
               <img src="../../assets/images/分组 5.png" alt>
             </span>
             <span>商机管理</span>
           </router-link>
-          <router-link tag="li" to="/affairList">
+          <router-link tag="li" :to="{name: 'affairList'}">
             <span>
               <img src="../../assets/images/分组 6.png" alt>
             </span>
@@ -134,7 +134,6 @@ export default {
       });
     },
     onLoad() {
-      console.log(this.gotoTop);
       const PageNEWData = {
         Datetime: moment()
           .locale("zh-cn")

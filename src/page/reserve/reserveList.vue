@@ -1,6 +1,11 @@
 <template>
   <div class="contractList">
-    <x-header :left-options="{backText: ''}" class="header" v-if="!hasSearch">
+    <x-header
+      :left-options="{backText: '', preventGoBack: true}"
+      class="header"
+      @on-click-back="goback"
+      v-if="!hasSearch"
+    >
       预定管理
       <img
         class="searchImg"
@@ -158,6 +163,13 @@ export default {
     this.isFirstEnter = false;
   },
   methods: {
+    goback() {
+      if (this.$route.query.type === "menu") {
+        cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
+      } else {
+        this.$router.go(-1);
+      }
+    },
     addReserve() {
       this.$router.push({
         name: "reserveAdd"
@@ -220,7 +232,7 @@ export default {
       };
       this.$router.push({
         name: "reserveDetail",
-        params: { id: requestData.Reservemgmt.Bookid, data: requestData, }
+        params: { id: requestData.Reservemgmt.Bookid, data: requestData }
       });
     },
     getbusinessStatus(data) {

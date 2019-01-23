@@ -1,7 +1,11 @@
 <template>
   <div class="unit">
     <div class="allHeader">
-      <x-header :left-options="{backText: ''}" class="header">
+      <x-header
+        :left-options="{backText: '', preventGoBack: true}"
+        class="header"
+        @on-click-back="goback"
+      >
         <div class="headerTittle" @click="openProjecySelct">{{headerTittle}}</div>
         <span class="imgBox">
           <img
@@ -310,6 +314,13 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
+    goback() {
+      if (this.$route.query.type === "menu") {
+        cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
+      } else {
+        this.$router.go(-1);
+      }
+    },
     goTop() {
       this.goAnchor("#anchorScroll");
       this.gotoTop = !this.gotoTop;
