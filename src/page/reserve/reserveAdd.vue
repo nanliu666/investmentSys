@@ -56,18 +56,37 @@
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
-        <li class="groupLi" @click="chancesource">
+        <li class="groupLi" @click="getStartTime">
           <div class="liLeft">
-            <span>商机来源</span>
+            <span>预定开始日期</span>
           </div>
-          <div
-            class="liRight"
-            :class="[!!radioOptionsValue ? 'cellValueClass' : 'placeholderClass']"
-          >
-            <span>{{!!radioOptionsValue ? radioOptionsValue : '商机来源'}}</span>
+          <div class="liRight" :class="[!!reseveStartTime ? 'cellValueClass' : 'placeholderClass']">
+            <input
+              readonly
+              type="text"
+              placeholder="请选择预定日期"
+              style="text-align: right"
+              v-model="reseveStartTime"
+            >
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
+        <li class="groupLi" @click="getEndTime">
+          <div class="liLeft">
+            <span>预定结束日期</span>
+          </div>
+          <div class="liRight" :class="[!!reseveEndTime ? 'cellValueClass' : 'placeholderClass']">
+            <input
+              readonly
+              type="text"
+              placeholder="请选择预定日期"
+              style="text-align: right"
+              v-model="reseveEndTime"
+            >
+            <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
+          </div>
+        </li>
+
         <li class="groupLi">
           <div class="liLeft">
             <span>面积(m²)</span>
@@ -88,9 +107,8 @@
           </div>
           <div class="liRight" :class="[!!unitArea ? 'cellValueClass' : 'placeholderClass']">
             <input
-              readonly
               type="number"
-              placeholder="请填写面积"
+              placeholder="请填写定金金额"
               style="text-align: right"
               v-model="unitArea"
             >
@@ -136,11 +154,11 @@
 import {
   XHeader,
   Group,
-  Cell,
   Picker,
   XButton,
   PopupHeader,
   Radio,
+  Datetime,
   Popup
 } from "vux";
 // api
@@ -150,6 +168,10 @@ export default {
   name: "reserve",
   data() {
     return {
+      nowDate: "",
+      nextDate: "",
+      reseveStartTime: "",
+      reseveEndTime: "",
       businessNewObj: {
         Bizopportunity: {
           Prospectid: 0, //商机ID，如果是新增就为0
@@ -176,7 +198,7 @@ export default {
       radioOptionsValue: "", //选中商机来源值
       radioOptionsSelect: [], //选中商机来源值--传递的值
       unitArea: "", //铺位面积
-      chanceValue: false, //商机来源默认值 --popup判断
+      chanceValue: false //商机来源默认值 --popup判断
     };
   },
   created() {
@@ -187,7 +209,7 @@ export default {
     Group,
     Picker,
     XButton,
-    Cell,
+    Datetime,
     PopupHeader,
     Popup,
     Radio
@@ -205,8 +227,34 @@ export default {
       this.hasUint = !this.hasUint;
     }
     this.onLoad();
+    this.nowDate = moment(new Date()).format("YYYY-MM-DD");
+    this.nextDate = moment(new Date())
+      .add(1, "months")
+      .format("YYYY-MM-DD");
   },
   methods: {
+    getStartTime() {
+      this.$vux.datetime.show({
+        cancelText: "取消",
+        confirmText: "确定",
+        format: "YYYY-MM-DD",
+        value: this.nowDate,
+        onConfirm: val => {
+          this.reseveStartTime = val;
+        }
+      });
+    },
+    getEndTime() {
+      this.$vux.datetime.show({
+        cancelText: "取消",
+        confirmText: "确定",
+        format: "YYYY-MM-DD",
+        value: this.nextDate,
+        onConfirm: val => {
+          this.reseveEndTime = val;
+        }
+      });
+    },
     openStatus() {
       this.hasStatus = !this.hasStatus;
     },
@@ -241,7 +289,7 @@ export default {
       this.clientDataName = this.clientDetail.Name;
       this.businessNewObj.Bizopportunity.Accountid = this.clientDetail.Accountid; //存起来客户ID
       this.clientDataPhone = this.clientDetail.Phone;
-      if (!!this.uintDetailList) {
+      if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
         this.businessNewObj.Bizopportunity.Units.Jsondata = this.uintDetailList; //存起来选择的单元信息
         this.businessList = this.uintDetailList.map(item => {
           return item.Unitno;

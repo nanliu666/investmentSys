@@ -141,6 +141,7 @@ export default {
   font-family: $fr;
   .time {
     @include flexCenter;
+    margin-bottom: 14px;
     @include sc(24px, rgba(136, 136, 136, 1));
   }
   .mescrollLi {
