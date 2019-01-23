@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <div class="appTop"></div>
     <transition name="fade" mode="out-in">
       <keep-alive>
         <router-view v-if="$route.meta.keepAlive"></router-view>
@@ -27,7 +26,6 @@ export default {
         script.setAttribute("src", "./scripts/android_cordova.js");
       }
     }
-
     var heads = document.getElementsByTagName("head");
     if (heads.length) {
       heads[0].appendChild(script);
@@ -37,6 +35,7 @@ export default {
 
     document.addEventListener("deviceready", this.onDeviceReady, false);
   },
+
   methods: {
     onDeviceReady() {
       if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
@@ -61,10 +60,8 @@ export default {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
+
 #app {
-  .appTop {
-    margin-top: 46px;
-  }
   height: 100%;
   .header {
     background-color: #fff;

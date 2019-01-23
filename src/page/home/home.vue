@@ -15,7 +15,7 @@
             </span>
           </div>
           <div class="signNum">
-            <span class="signMoeny">{{signMoeny | formatNumber(0)}}</span>
+            <span class="signMoeny">{{signMoeny | formatNumber}}</span>
           </div>
           <div class="Expire">
             <div class="ExpireLeft">

@@ -10,7 +10,9 @@ import VueClipboard from 'vue-clipboard2';
 Vue.use(VueClipboard)
 //注册到vue原型上
 //暂时解决 vue-loader 打包太大
-import { DatetimePlugin } from 'vux'
+import {
+  DatetimePlugin
+} from 'vux'
 import ToastPlugin from 'vux/src/plugins/toast/index.js'
 import PopupPicker from 'vux/src/components/popup-picker/index.vue'
 import {
@@ -74,8 +76,6 @@ const router = new VueRouter({
     }
   }
 })
-
-
 new Vue({
   el: '#app',
   router,
