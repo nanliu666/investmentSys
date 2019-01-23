@@ -33,7 +33,7 @@
             <span class="tailTopLiBottom">{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span>
           </div>
         </div>
-        <div class="tailBottom">查看跟踪记录 >></div>
+        <div class="tailBottom" @click="getTrack">查看跟踪记录 >></div>
       </section>
       <section class="businessInfo">
         <div class="infoTittle">商机信息</div>
@@ -91,7 +91,6 @@ export default {
       }
     };
   },
-
   created() {
     let jsonData = {
       Bizopportunity: {
@@ -107,6 +106,11 @@ export default {
     Actionsheet
   },
   methods: {
+    getTrack() {
+      this.$router.push({
+        name: "businessTrack"
+      });
+    },
     businessAct(key, item) {
       console.log(item);
       switch (item) {
