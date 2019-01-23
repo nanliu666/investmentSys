@@ -83,6 +83,7 @@ import {
   XButton,
   VScale
 } from "vux";
+import { mapMutations, mapState } from "vuex";
 import {
   GetAgentDefaultPageNEW,
   GetAgentDefaultPageChartNEW,
@@ -103,7 +104,12 @@ export default {
   created() {
     this.onLoad();
   },
+  beforeRouteLeave(to, from, next) {
+    this.TO_PAGE_NAME(from.name); //离开的时候在vuex存起来本组件的路由名称
+    next();
+  },
   methods: {
+    ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
     gotoNew() {
       this.$router.push({
         name: "homeNew"
