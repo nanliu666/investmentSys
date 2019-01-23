@@ -1,6 +1,6 @@
 <template>
   <div class="reservePart">
-    <section class="businessHeader">
+    <section class="businessHeader fs-header">
       <div @click="goback">
         <img src="../../assets/images/返回@2x.png" alt>
       </div>
@@ -33,7 +33,7 @@
             <span class="tailTopLiBottom">{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span>
           </div>
         </div>
-        <div class="tailBottom" @click="getTrack">查看跟踪记录 >></div>
+        <div class="tailBottom" @click="getTrack(item)">查看跟踪记录 >></div>
       </section>
       <section class="businessInfo">
         <div class="infoTittle">商机信息</div>
@@ -106,9 +106,11 @@ export default {
     Actionsheet
   },
   methods: {
-    getTrack() {
+    getTrack(data) {
       this.$router.push({
-        name: "businessTrack"
+        name: "businessTrack",params: {
+          data: data
+        }
       });
     },
     businessAct(key, item) {
@@ -172,9 +174,11 @@ export default {
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
 .reservePart {
+  .fs-header {
+    @include wh(100%, 40px);
+  }
   .businessHeader {
     @include fj;
-    @include wh(100%, 80px);
     @include flexHCenter;
     padding: 18px 40px;
     font-family: $fm;

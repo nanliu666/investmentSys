@@ -2,6 +2,8 @@ import {
   get,
   post
 } from './http'
+import axios from "axios"
+
 // 单元信息接口
 const baseHead = `http://10.122.10.244:82/ydzs/WebService/MobileMerchants/`
 const platformHead = ` http://gz.ifca.com.cn:9999/RMSApp6.0/api/`
@@ -63,7 +65,7 @@ export const GetToDoFlows = p => post(`${baseHead}Workflow.asmx/GetToDoFlows`, p
 export const GetUserMessage = p => post(`${baseHead}Message.asmx/GetUserMessage`, p); //获取当前用户消息通知
 export const GetUserMessageTotal = p => post(`${baseHead}Message.asmx/GetUserMessageTotal`, p); //获取当前用户消息通知总数
 
-// 预览下载  //这个接口不一样！！
+// 预览下载  //这个接口不一样
 export const DocumentLibrary = p => get(`DocumentLibrary/Download.ashx`, p)
 
 // 待办列表
