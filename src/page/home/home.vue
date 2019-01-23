@@ -1,6 +1,7 @@
 <template>
   <div style="height:100%;">
     <view-box ref="viewBox">
+    <div class="appTopHome"></div>
       <section class="homeTop">
         <div class="message" @click="gotoNew">
           <img src="../../assets/images/分组 12.png">

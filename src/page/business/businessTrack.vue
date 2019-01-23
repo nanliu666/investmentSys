@@ -1,5 +1,7 @@
 <template>
   <div class="businessTrack">
+    <div class="appTopOther"></div>
+
     <x-header :left-options="{backText: ''}" class="header">跟踪记录</x-header>
     <div v-if="TrackList.length !== 0">
       <div class="uintNumber">下次跟踪时间: {{TrackList[0].Nextfollowupdate | dataFrm('YYYY-MM-DD') }}</div>

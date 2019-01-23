@@ -1,5 +1,6 @@
 <template>
   <div class="contractList">
+    <div class="appTopOther"></div>
     <x-header
       :left-options="{backText: '', preventGoBack: true}"
       class="header"
@@ -143,6 +144,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
+
 .mescroll {
   @include cl;
   position: fixed;

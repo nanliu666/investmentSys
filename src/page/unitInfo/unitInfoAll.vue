@@ -1,6 +1,7 @@
 <template>
   <div class="unit">
     <div class="allHeader">
+      <div class="appTopOther"></div>
       <x-header
         :left-options="{backText: '', preventGoBack: true}"
         class="header"

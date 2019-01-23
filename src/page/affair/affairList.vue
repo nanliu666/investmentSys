@@ -1,5 +1,6 @@
 <template>
   <div class="affairList">
+    <div class="appTopOther"></div>
     <x-header
       class="header"
       :left-options="{backText: '', preventGoBack: true}"

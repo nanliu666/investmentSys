@@ -1,5 +1,7 @@
 <template>
   <div>
+    <div class="appTopOther"></div>
+
     <x-header
       :left-options="{backText: '', preventGoBack: true}"
       @on-click-back="goback"

@@ -1,5 +1,7 @@
 <template>
   <div class="contractDetail">
+    <div class="appTopOther"></div>
+
     <x-header :left-options="{backText: ''}" class="header">合同详情</x-header>
     <div style="height:44px;">
       <sticky ref="sticky" :disabled="disabled" :check-sticky-support="false">

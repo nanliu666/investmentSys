@@ -1,5 +1,7 @@
 <template>
   <div class="reservePart">
+    <div class="appTopHome"></div>
+
     <section class="businessHeader fs-header">
       <div @click="goback">
         <img src="../../assets/images/返回@2x.png" alt>

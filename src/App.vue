@@ -60,7 +60,18 @@ export default {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
-
+.appTopHome {
+  @include wh(100%, 46px);
+  background: linear-gradient(
+    to right,
+    rgba(103, 185, 255, 1),
+    rgba(92, 128, 255, 1)
+  );
+}
+.appTopOther {
+  @include wh(100%, 46px);
+  background-color: #fff;
+}
 #app {
   height: 100%;
   .header {

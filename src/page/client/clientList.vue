@@ -1,5 +1,7 @@
 <template>
   <div>
+    <div class="appTopOther"></div>
+
     <x-header
       :left-options="{backText: '', preventGoBack: true}"
       class="header"
@@ -12,7 +14,7 @@
       @on-change="getResult"
       position="absolute"
       auto-scroll-to-top
-      top="46px"
+      top="70px"
       ref="search"
       @on-cancel="searchCancel"
       @on-focus="getFocus"
@@ -24,14 +26,14 @@
           class="searchMain"
           v-for="(item, index) in searchList"
           :key="index"
-          @click="getDeatil(item)"
+          @click="getDeatil(item.Name)"
         >
           <span>{{item.Name | strSubstring(1)}}</span>
           <span>{{item.Name}}</span>
         </li>
       </div>
     </section>
-    <section class="clientMain" v-for="(Item, index) in actualAlphabetList" :key="index">
+    <section class="clientMain" v-show="!hasSearch" v-for="(Item, index) in actualAlphabetList" :key="index">
       <div class="navTo" :id="'anchor-'+ Item">{{Item}}</div>
       <section class="nameList">
         <li
@@ -184,6 +186,7 @@ export default {
       this.$router.push({ name: "clientAdd" });
     },
     getDeatil(data) {
+      console.log(data)
       // 去联系人详情页面
       let selectData = this._.filter(this.clientAllData, item => {
         return item.Name === data;
@@ -215,10 +218,10 @@ export default {
 
 .searchContent {
   position: fixed;
-  top: 170px;
+  top: 240px;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 1000%;
   background-color: #f8f8ff;
   z-index: 10;
   .searchResult {

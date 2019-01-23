@@ -1,5 +1,7 @@
 <template>
   <div class="reservePart">
+    <div class="appTopOther"></div>
+
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
       新增商机
