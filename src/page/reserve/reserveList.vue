@@ -218,10 +218,10 @@ export default {
           Bookid: data.Bookid
         }
       };
-      // this.$router.push({
-      //   name: "reserveDetail",
-      //   params: { id: requestData.Reservemgmt.Bookid, data: requestData, }
-      // });
+      this.$router.push({
+        name: "reserveDetail",
+        params: { id: requestData.Reservemgmt.Bookid, data: requestData, }
+      });
     },
     getbusinessStatus(data) {
       let strDatd = this.$options.filters.firstUpperCase(data);
