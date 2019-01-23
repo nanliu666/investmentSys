@@ -11,7 +11,15 @@
             alt
           >
         </span>
-        <x-icon type="ios-arrow-up" size="23" v-show="hasprojectStatus"></x-icon>
+        <span class="imgBox">
+          <img
+            src="../../assets/images/下拉@3x.png"
+            class="fs-dropImg"
+            v-show="hasprojectStatus"
+            alt
+            style="transform:rotate(180deg);"
+          >
+        </span>
       </x-header>
       <tab
         v-if="!hasUintNumber"
@@ -402,7 +410,7 @@ export default {
       this.UINT_DETAIL(this.uintVuexList);
     },
     onLoad() {
-      this.UINT_DETAIL()
+      this.UINT_DETAIL();
       this.requestData = {
         Blockid: 0,
         Statucode: "",
@@ -812,7 +820,7 @@ export default {
 }
 .nav {
   height: 100% !important;
-  top: 100px;
+  top: 140px;
   background-color: #fff;
   box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
   .close {

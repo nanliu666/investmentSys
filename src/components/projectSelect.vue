@@ -5,6 +5,15 @@
       <span class="imgBox">
         <img src="../assets/images/下拉@3x.png" class="fs-dropImg" v-show="!hasprojectStatus" alt>
       </span>
+      <span class="imgBox">
+        <img
+          src="../assets/images/下拉@3x.png"
+          class="fs-dropImg"
+          style="transform:rotate(180deg);"
+          v-show="hasprojectStatus"
+          alt
+        >
+      </span>
       <popup v-model="hasprojectStatus" :show-mask="showMask" class="nav">
         <div class="close" @click="openProjectStatus">
           <i class="iconfont icon-guanbi"></i>
@@ -51,6 +60,15 @@
       <span class="filterTitle" @click="openStatus">状态</span>
       <span class="imgBox">
         <img src="../assets/images/下拉@3x.png" class="fs-dropImg" v-show="!hasStatus" alt>
+      </span>
+      <span class="imgBox">
+        <img
+          src="../assets/images/下拉@3x.png"
+          class="fs-dropImg"
+          style="transform:rotate(180deg);"
+          v-show="hasStatus"
+          alt
+        >
       </span>
       <!-- 选择状态 -->
       <transition
@@ -214,7 +232,7 @@ export default {
   }
   .nav {
     height: 100% !important;
-    top: 100px;
+    top: 150px;
     background-color: #fff;
     box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
     .close {
@@ -272,7 +290,7 @@ export default {
     position: absolute;
     z-index: 100;
     right: 4px;
-    top: 186px;
+    top: 230px;
     width: 100%;
     background-color: #fff;
     @include fd(column);
