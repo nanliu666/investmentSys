@@ -9,7 +9,13 @@
         slot="right"
         alt
       >
-      <i class="iconfont icon-jia" slot="right" @click="addReserve"></i>
+      <img
+        src="../../assets/images/addNew.png"
+        @click="addReserve"
+        slot="right"
+        class="fs-addNew"
+        alt
+      >
     </x-header>
     <section class="searchPart" v-if="hasSearch">
       <x-input
@@ -277,7 +283,10 @@ export default {
       margin: 10px;
     }
   }
-
+  .fs-addNew {
+    @include wh(18px, 18px);
+    margin-left: 10px;
+  }
   .searchPart {
     padding: 0 40px;
     @include fj(space-between);

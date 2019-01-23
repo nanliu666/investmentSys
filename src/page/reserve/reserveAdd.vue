@@ -1,6 +1,9 @@
 <template>
   <div class="reservePart">
-    <x-header :left-options="{backText: ''}" class="header">预定新增</x-header>
+    <x-header :left-options="{showBack: false}" class="header">
+      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
+      新增预定
+    </x-header>
     <section class="content">
       <div class="reseveTitle" v-if="hasUint">
         <div class="danyuan">当前预定单元</div>
@@ -16,74 +19,115 @@
           </div>
         </div>
       </div>
-      <group
-        label-width="6em"
-        label-margin-right="2em"
-        label-align="left"
-        class="firstGroup"
-        v-if="!hasUint"
-      >
-        <cell title="预定单元" value="请选择" value-align="right" is-link></cell>
-      </group>
-      <group title="客户信息" label-width="6em" label-margin-right="2em" label-align="left">
-        <cell
-          title="客户姓名"
-          value-align="right"
-          v-model="clientDataName"
-          is-link
-          @click.native="getClient"
-        ></cell>
-        <cell title="电话号码" value-align="right" v-model="clientDataPhone"></cell>
-      </group>
-      <group title="客户信息" label-width="6em" label-margin-right="2em" label-align="left">
-        <x-input
-          title="定金(￥)"
-          placeholder="请填入定金金额"
-          v-model="depositMoney"
-          type="number"
-          @on-change="depositMoneyChange"
-          placeholder-align="right"
-          value-align="right"
-          text-align="right"
-        ></x-input>
-        <x-input
-          title="面积(m²)"
-          placeholder="请填入面积"
-          placeholder-align="right"
-          v-model="area"
-          @on-change="areaChange"
-          type="number"
-          value-align="right"
-          text-align="right"
-        ></x-input>
-        <datetime
-          class="dateTime"
-          v-model="startTime"
-          @on-change="startChange"
-          format="YYYY-MM-DD"
-          title="预定日期"
-        ></datetime>
-        <datetime
-          class="dateTime"
-          v-model="endTime"
-          @on-change="endChange"
-          format="YYYY-MM-DD"
-          title="预定结束日期"
-        ></datetime>
-        <x-textarea
-          title="备注"
-          @on-change="textAreaChange"
-          v-model="remark"
-          placeholder="请输入备注"
-          class="textArea"
-        ></x-textarea>
-      </group>
-      <div class="button">
-        <button class="save" @click="save">保存</button>
-        <button class="submit" @click="submit">提交</button>
+      <div class="group">
+        <div class="cientInfo">客户信息</div>
+        <li class="groupLi" @click="getClient">
+          <div class="liLeft">
+            <span>客户姓名</span>
+            <span class="badge">*</span>
+          </div>
+          <div class="liRight" :class="[!!clientDataName ? 'cellValueClass' : 'placeholderClass']">
+            <span>{{!!clientDataName ? clientDataName : '请选择联系人'}}</span>
+            <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
+          </div>
+        </li>
+        <li class="groupLi">
+          <div class="liLeft">
+            <span>手机号码</span>
+            <span class="badge">*</span>
+          </div>
+          <div class="liRight" :class="[!!clientDataPhone ? 'cellValueClass' : 'placeholderClass']">
+            <span>{{!!clientDataPhone ? clientDataPhone : '请选择联系人'}}</span>
+          </div>
+        </li>
+        <div class="cientInfo">单元信息</div>
+        <li class="groupLi" @click="getUint">
+          <div class="liLeft">
+            <span>预定单元</span>
+          </div>
+          <div
+            class="liRight"
+            :class="[businessList.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span v-if="businessList.length === 0">请选择意向单元</span>
+            <span v-if="businessList.length !== 0" class="liRightContent">
+              <span v-for="(item, index) in businessList" :key="index">{{item}}</span>
+            </span>
+            <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
+          </div>
+        </li>
+        <li class="groupLi" @click="chancesource">
+          <div class="liLeft">
+            <span>商机来源</span>
+          </div>
+          <div
+            class="liRight"
+            :class="[!!radioOptionsValue ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{!!radioOptionsValue ? radioOptionsValue : '商机来源'}}</span>
+            <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
+          </div>
+        </li>
+        <li class="groupLi">
+          <div class="liLeft">
+            <span>面积(m²)</span>
+          </div>
+          <div class="liRight" :class="[!!unitArea ? 'cellValueClass' : 'placeholderClass']">
+            <input
+              readonly
+              type="number"
+              placeholder="请填写面积"
+              style="text-align: right"
+              v-model="unitArea"
+            >
+          </div>
+        </li>
+        <li class="groupLi">
+          <div class="liLeft">
+            <span>定金(￥)</span>
+          </div>
+          <div class="liRight" :class="[!!unitArea ? 'cellValueClass' : 'placeholderClass']">
+            <input
+              readonly
+              type="number"
+              placeholder="请填写面积"
+              style="text-align: right"
+              v-model="unitArea"
+            >
+          </div>
+        </li>
+        <li class="groupLi">
+          <div class="liLeft">
+            <span>备注</span>
+          </div>
+          <div class="liRight" :class="[!!Remark ? 'cellValueClass' : 'placeholderClass']">
+            <input
+              type="text"
+              placeholder="请填写备注"
+              style="text-align: right"
+              v-model="Remark"
+              @input="TextAreaChange()"
+            >
+          </div>
+        </li>
+        <popup v-model="chanceValue">
+          <popup-header
+            left-text="取消"
+            right-text="确认"
+            title="请选择商机来源"
+            :show-bottom-border="false"
+            @on-click-left="chanceValue = false"
+            @on-click-right="chanceValue = false"
+          ></popup-header>
+          <group gutter="0">
+            <radio :options="radioOptions" @on-change="getBusinessChange"></radio>
+          </group>
+        </popup>
       </div>
+      <section class="button">
+        <x-button class="submit" @click.native="submit">保存</x-button>
+      </section>
     </section>
-    <router-view/>
   </div>
 </template>
 
@@ -93,124 +137,147 @@ import {
   XHeader,
   Group,
   Cell,
-  XInput,
-  PopupPicker,
-  XTextarea,
-  Confirm,
-  Datetime,
-  Toast
+  Picker,
+  XButton,
+  PopupHeader,
+  Radio,
+  Popup
 } from "vux";
+// api
+import { EditBizOpportunity } from "@/axios/api";
 import { mapMutations, mapState } from "vuex";
 export default {
-  name: "reserveAdd",
+  name: "reserve",
+  data() {
+    return {
+      businessNewObj: {
+        Bizopportunity: {
+          Prospectid: 0, //商机ID，如果是新增就为0
+          Sourceid: "", //商机来源id
+          Priorityid: "", //紧急程度id
+          Remark: "", //备注
+          Propertyid: "", //项目id
+          Companyid: "", //公司id
+          Accountid: "", //客户id
+          Units: {
+            //选择的单元信息
+            Jsondata: {}
+          }
+        }
+      },
+      hasStatus: false,
+      hasUint: "",
+      Remark: "", //备注
+      clientDataName: "", //姓名
+      clientDataPhone: "", //电话
+      businessList: [], //当前意向
+      radioOptions: [], //商机来源列表
+      radioOptionsList: [], //实际商机来源列表
+      radioOptionsValue: "", //选中商机来源值
+      radioOptionsSelect: [], //选中商机来源值--传递的值
+      unitArea: "", //铺位面积
+      chanceValue: false, //商机来源默认值 --popup判断
+    };
+  },
+  created() {
+    this.onLoad();
+  },
   components: {
     XHeader,
     Group,
-    PopupPicker,
-    XTextarea,
-    Toast,
-    Confirm,
+    Picker,
+    XButton,
     Cell,
-    Datetime,
-    XInput
-  },
-  data() {
-    return {
-      area: "",
-      clientDataName: "",
-      clientDataPhone: "",
-      depositMoney: "",
-      remark: "",
-      hasStatus: false,
-      hasUint: false,
-      startTime: "",
-      endTime: ""
-    };
+    PopupHeader,
+    Popup,
+    Radio
   },
   beforeRouteLeave(to, from, next) {
     this.TO_PAGE_NAME(from.name); //离开的时候在vuex存起来本组件的路由名称
     next();
   },
-  beforeRouteEnter(to, from, next) {
-    if (from.name === "clientList") {
-      to.meta.isBack = true;
-    }
-    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
-    next();
+  computed: {
+    ...mapState(["uintDetailList", "clientDetail"])
   },
   created() {
     this.isFirstEnter = true;
-    console.log(this.$route.params.data);
     if (!!this.$route.params.data) {
       this.hasUint = !this.hasUint;
     }
     this.onLoad();
   },
-  activated() {
-    if (!this.$route.meta.isBack || this.isFirstEnter) {
-      // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
-      // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
-      // this.area = ""; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
-      // this.clientDataName = "";
-      // this.clientDataPhone = "";
-      // this.depositMoney = "";
-      // this.remark = "";
-      // this.startTime = "";
-      // this.endTime = "";
-      this.onLoad(); // ajax获取数据方法
-    }
-    // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
-    this.$route.meta.isBack = false;
-    this.isFirstEnter = false;
-  },
-  computed: {
-    ...mapState(["toPageName", "clientDetail", "reserveObj",'scrollTop'])
-  },
   methods: {
-    save() {
-      this.RESERVEADD({ clientDataName: this.clientDataName });
-      this.RESERVEADD({ clientDataPhone: this.clientDataPhone });
-      console.log(this.reserveObj);
+    openStatus() {
+      this.hasStatus = !this.hasStatus;
     },
-    submit() {
-      console.log(1);
-    },
-    textAreaChange: _.debounce(function(value) {
-      this.RESERVEADD({ remark: value });
-    }, 1000),
-    depositMoneyChange: _.debounce(function(value) {
-      this.RESERVEADD({ depositMoney: value });
-    }, 1000),
-    areaChange: _.debounce(function(value) {
-      this.RESERVEADD({ area: value });
+    TextAreaChange: _.debounce(function() {
+      this.businessNewObj.Bizopportunity.Remark = this.Remark; //存起来成交几率
     }, 1000),
     ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
-    onLoad() {
-      this.clientDataName = this.clientDetail.Name;
-      this.clientDataPhone = this.clientDetail.Phone;
-      this.depositMoney = this.reserveObj.depositMoney;
-      this.area = this.reserveObj.area;
-      this.startTime = this.reserveObj.startTime;
-      this.endTime = this.reserveObj.endTime;
-      this.remark = this.reserveObj.remark;
-      console.log(this.reserveObj);
+    goback() {
+      this.$router.back(-1);
     },
-    startChange(value) {
-      this.RESERVEADD({ startTime: value });
-    },
-    endChange(value) {
-      this.RESERVEADD({ endTime: value });
-    },
-    openStatus() {},
     getClient() {
-      this.$router.replace({
+      this.$router.push({
         name: "clientList"
       });
+    },
+    getUint() {
+      this.$router.push({
+        name: "unitInfoALL"
+      });
+    },
+    getBusinessChange(value) {
+      this.radioOptionsValue = value;
+      this.radioOptionsSelect = this._.filter(this.radioOptionsList, item => {
+        return item.Text === value;
+      });
+      this.businessNewObj.Bizopportunity.Sourceid = this.radioOptionsSelect[0].Value; //存起来商机来源
+    },
+    chancesource() {
+      this.chanceValue = !this.chanceValue;
+    },
+    onLoad() {
+      this.clientDataName = this.clientDetail.Name;
+      this.businessNewObj.Bizopportunity.Accountid = this.clientDetail.Accountid; //存起来客户ID
+      this.clientDataPhone = this.clientDetail.Phone;
+      if (!!this.uintDetailList) {
+        this.businessNewObj.Bizopportunity.Units.Jsondata = this.uintDetailList; //存起来选择的单元信息
+        this.businessList = this.uintDetailList.map(item => {
+          return item.Unitno;
+        });
+        let A = this.uintDetailList.map(item => {
+          return Number(item.Builduparea);
+        });
+        this.unitArea = A.reduce(function(prev, curr, idx, arr) {
+          return prev + curr;
+        });
+      }
+    },
+    submit() {
+      console.log(this.businessNewObj);
     }
   }
 };
 </script>
-
+<style lang="scss">
+@import "src/assets/sass/mixin";
+.cellValueClass {
+  font-family: $fr;
+  @include sc(30px, rgba(30, 30, 30, 1));
+}
+.placeholderClass {
+  font-family: $fr;
+  @include sc(30px, rgba(209, 209, 209, 1));
+}
+.fs-backICon {
+  @include wh(7px, 13px);
+}
+.fs-goaheadICon {
+  margin-left: 4px;
+  @include wh(6px, 10px);
+}
+</style>
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
 .reservePart {
@@ -241,28 +308,70 @@ export default {
         }
       }
     }
-    .firstGroup {
-      margin-top: -40px;
+    .cientInfo {
+      @include sc(28px, rgba(136, 136, 136, 1));
+      padding: 16px 40px;
+      background-color: $bc;
     }
     .button {
       @include fj(space-around);
       button {
-        @include wh(320px, 88px);
+        @include wh(640px, 88px);
         @include sc(36px, $fc);
         @include borderRadius(44px);
         font-family: $fm;
         margin-top: 40px;
         box-shadow: 0 4px 20px 0 rgba(96, 137, 210, 0.17);
       }
-      .save {
-        background: rgba(120, 202, 255, 1);
-      }
       .submit {
-        background: rgba(105, 167, 254, 1);
+        background: linear-gradient(
+          to left,
+          rgba(56, 153, 255, 1),
+          rgba(74, 116, 226, 1)
+        );
+      }
+    }
+    .group {
+      .groupLi {
+        background-color: #fff;
+        @include wh(100%, 96px);
+        @include fj;
+        padding: 0 40px;
+        @include flexHCenter;
+        border-bottom: 4px solid #f4f6f8;
+        .liLeft {
+          width: 36%;
+          @include fj(flex-start);
+          @include sc(30px, rgba(136, 136, 136, 1));
+          .badge {
+            margin-left: 4px;
+            @include flexCenter;
+            background-color: #fff;
+            color: red;
+          }
+        }
+        .liRight {
+          @include fj(flex-end);
+          @include flexHCenter;
+          width: 64%;
+          .liRightContent {
+            text-align: right;
+            width: 100%;
+            @include ellipsis;
+            span {
+              margin-left: 5px;
+            }
+          }
+          input {
+            width: 100%;
+          }
+          // @include sc(30px, rgba(209, 209, 209, 1));
+        }
       }
     }
   }
 }
 </style>
+
 
 

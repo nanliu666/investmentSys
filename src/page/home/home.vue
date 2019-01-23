@@ -103,32 +103,7 @@ export default {
   created() {
     this.onLoad();
   },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      document.addEventListener("deviceready", vm.onHomeDeviceReady, false);
-    });
-  },
-  beforeRouteLeave(to, from, next) {
-    document.addEventListener("deviceready", this.onLeaveDeviceReady, false);
-    next();
-  },
   methods: {
-    onHomeDeviceReady() {
-      //设置导航栏是蓝色
-      cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
-        103,
-        185,
-        255
-      ]);
-    },
-    onLeaveDeviceReady() {
-      //设置导航栏颜色的接口
-      cordova.exec(null, null, "ifcaPlugIns", "setStatusBarColorFunc", [
-        255,
-        255,
-        255
-      ]);
-    },
     gotoNew() {
       this.$router.push({
         name: "homeNew"
