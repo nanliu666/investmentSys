@@ -7,13 +7,15 @@
           <span class="badge">{{messageNum}}</span>
         </div>
         <div class="signCount">
-          <div class="signTittle">本月签约合同</div>
-          <div class="signNum">
-            <span class="signMoeny">{{signMoeny | formatNumber(0)}}</span>
+          <div class="signTT">
+            <span class="signTittle">本月签约金额</span>
             <span class="getContranct" @click="gotoContranctMonth">
               <span class="getContranctTittle">查看合同</span>
               <i class="iconfont icon-youjiantou"></i>
             </span>
+          </div>
+          <div class="signNum">
+            <span class="signMoeny">{{signMoeny | formatNumber(0)}}</span>
           </div>
           <div class="Expire">
             <div class="ExpireLeft">
@@ -227,13 +229,20 @@ export default {
     }
   }
   .signCount {
-    .signTittle {
-      padding: 0 40px 16px;
+    .signTT {
+      padding: 20px 40px 0px;
       font-size: 28px;
+      @include fj;
+      .getContranct {
+        .icon-youjiantou {
+          margin-left: 8px;
+          font-size: 28px;
+        }
+      }
     }
     .signNum {
       font-family: $fr;
-      padding: 0 40px 94px;
+      padding: 40px;
       @include fj;
       align-items: flex-end;
       .signMoeny {
@@ -243,13 +252,6 @@ export default {
         @include sc(84px, $fc);
         font-family: Hiragino Kaku Gothic ProN W3;
         font-weight: normal;
-      }
-      .getContranct {
-        font-size: 28px;
-        .icon-youjiantou {
-          margin-left: 8px;
-          font-size: 28px;
-        }
       }
     }
     .Expire {
