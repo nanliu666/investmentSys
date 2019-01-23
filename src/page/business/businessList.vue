@@ -284,7 +284,7 @@ export default {
     @include cl;
     padding: 0 40px;
     position: fixed;
-    top: 180px;
+    top: 230px;
     margin-top: 30px;
     bottom: 0;
     height: auto;

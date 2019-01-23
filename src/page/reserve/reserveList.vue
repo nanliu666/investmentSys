@@ -310,7 +310,7 @@ export default {
     @include cl;
     padding: 0 40px;
     position: fixed;
-    top: 200px;
+    top: 250px;
     bottom: 0;
     height: auto;
     li {

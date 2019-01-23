@@ -1,6 +1,6 @@
 <template>
   <div class="affairDetail">
-    <view-box ref="viewBox">
+    <view-box ref="viewBox" class="viewBox">
       <x-header :left-options="{backText: ''}" class="header">审批详情</x-header>
       <div style="height:44px;">
         <sticky
@@ -406,15 +406,17 @@ export default {
 };
 </script>
 <style lang="scss">
-  .weui-tab__panel {
-    padding-bottom: 0 !important;
-  }
+.weui-tab__panel {
+  padding-bottom: 0 !important;
+}
 </style>
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
 .affairDetail {
   height: 100%;
-
+  .header {
+    margin-top: 46px;
+  }
   .contractTitle {
     @include fj;
     @include sc(28px, rgba(136, 136, 136, 1));

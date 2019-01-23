@@ -135,7 +135,7 @@ export default {
 .mescroll {
   @include cl;
   position: fixed;
-  top: 120px;
+  top: 160px;
   bottom: 0;
   height: auto;
   font-family: $fr;

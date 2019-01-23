@@ -265,7 +265,7 @@ export default {
 .mescroll {
   @include cl;
   position: fixed;
-  top: 180px;
+  top: 230px;
   bottom: 0;
   height: auto;
   .newLi {

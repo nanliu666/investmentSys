@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <div class="appTop"></div>
     <transition name="fade" mode="out-in">
       <keep-alive>
         <router-view v-if="$route.meta.keepAlive"></router-view>
@@ -61,6 +62,9 @@ export default {
   opacity: 0;
 }
 #app {
+  .appTop {
+    margin-top: 46px;
+  }
   height: 100%;
   .header {
     background-color: #fff;
