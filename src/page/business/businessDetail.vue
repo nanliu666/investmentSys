@@ -12,7 +12,7 @@
     <section v-for="(item, index) in businessDetail" :key="index">
       <section class="client">
         <div class="clientTittle">意向客户</div>
-        <div class="clientName">{{item.Agentname}}</div>
+        <div class="clientName">{{item.Accountname}}</div>
         <div class="clientPhone">
           <span class="iconfont icon-002dianhua"></span>
           <span class="phone">{{item.Phone}}</span>

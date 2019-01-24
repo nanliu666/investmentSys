@@ -1,7 +1,7 @@
 <template>
-  <div style="height:100%;">
+  <div style="height:100%;" class="home">
     <view-box ref="viewBox">
-    <div class="appTopHome"></div>
+      <div class="appTopHome"></div>
       <section class="homeTop">
         <div class="message" @click="gotoNew">
           <img src="../../assets/images/分组 12.png">
@@ -10,13 +10,13 @@
         <div class="signCount">
           <div class="signTT">
             <span class="signTittle">本月签约金额</span>
+          </div>
+          <div class="signNum">
+            <span class="signMoeny">{{signMoeny}}</span>
             <span class="getContranct" @click="gotoContranctMonth">
               <span class="getContranctTittle">查看合同</span>
               <i class="iconfont icon-youjiantou"></i>
             </span>
-          </div>
-          <div class="signNum">
-            <span class="signMoeny">{{signMoeny | formatNumber}}</span>
           </div>
           <div class="Expire">
             <div class="ExpireLeft">
@@ -59,7 +59,6 @@
         </ul>
         <div class="performance">
           <div class="performanceTitle">我的业绩完成率</div>
-
           <div class="performanceSheet">
             <v-chart ref="demo" :data="data">
               <v-scale x field="year"/>
@@ -142,6 +141,14 @@ export default {
       };
       GetAgentDefaultPageNEW(PageNEWData).then(res => {
         this.signMoeny = res.Currmonthamt;
+        if (res.Currmonthamt > 10000) {
+          this.signMoeny = `${Math.round(parseInt(res.Currmonthamt) / 100) /
+            100}万`;
+        } else {
+          this.signMoeny = this.$options.filters[formatNumber](
+            res.Currmonthamt
+          );
+        }
         this.ExpireNum = res.Overduesoon;
       });
       GetAgentDefaultPageChartNEW(PageNEWData).then(res => {
@@ -197,10 +204,13 @@ export default {
   }
 };
 </script>
-
+<style lang="scss">
+.weui-tab__panel {
+  padding-bottom: 0 !important;
+}
+</style>
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
-
 .homeTop {
   background: linear-gradient(
     to right,
@@ -212,7 +222,7 @@ export default {
   .message {
     position: relative;
     @include fd(row-reverse);
-    padding: 36px 54px 0;
+    padding: 40px 54px 0;
     img {
       @include wh(42px, 32px);
     }
@@ -221,37 +231,38 @@ export default {
       background-color: rgba(255, 66, 66, 1);
       @include sc(24px, rgba(255, 255, 255, 1));
       @include flexCenter;
-      @include wh(34px, 34px);
-      border-radius: 17px;
-      padding: 0px 8px;
-      right: 40px;
-      top: 20px;
+      @include wh(40px,40px);
+      border-radius: 20px;
+      right: 38px;
+      top: 22px;
     }
   }
   .signCount {
     .signTT {
-      padding: 20px 40px 0px;
+      padding: 90px 40px 0;
       font-size: 28px;
       @include fj;
-      .getContranct {
-        .icon-youjiantou {
-          margin-left: 8px;
-          font-size: 28px;
-        }
-      }
     }
     .signNum {
       font-family: $fr;
-      padding: 40px;
+      padding: 40px 40px 90px;
       @include fj;
       align-items: flex-end;
       .signMoeny {
         display: flex;
         flex-wrap: wrap;
-        width: 78%;
         @include sc(84px, $fc);
         font-family: Hiragino Kaku Gothic ProN W3;
         font-weight: normal;
+      }
+      .getContranct {
+        .getContranctTittle {
+          @include sc(28px, rgba(255, 255, 255, 1));
+        }
+        .icon-youjiantou {
+          margin-left: 8px;
+          font-size: 28px;
+        }
       }
     }
     .Expire {
@@ -265,7 +276,7 @@ export default {
         .ExpireNum {
           @include sc(28px, rgba(248, 231, 28, 1));
           font-family: $fs;
-          font-weight: 500;
+          font-weight: bolder;
           margin-left: 10px;
         }
       }
@@ -279,14 +290,17 @@ export default {
   }
 }
 .homeBottom {
+  height: 60%;
   background-color: rgba(244, 246, 248, 1);
   font-family: $fr;
 
   .nav {
     background-color: rgba(255, 255, 255, 1);
-    padding: 30px 40px;
+    padding: 0 40px;
+    height: 20%;
+    @include flexHCenter;
     @include fj;
-    margin-bottom: 20px;
+    margin-bottom: 5%;
     li {
       @include fd(column);
       span {
@@ -300,9 +314,12 @@ export default {
     }
   }
   .performance {
+    height: 75%;
     background-color: #fff;
     .performanceTitle {
-      padding: 20px 40px;
+      height: 15%;
+      @include flexHCenter;
+      padding: 0 40px;
       border-bottom: 4px solid rgba(244, 246, 248, 1);
       @include flexHCenter;
       @include sc(30px, rgba(30, 30, 30, 1));

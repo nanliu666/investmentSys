@@ -1,24 +1,25 @@
 <template>
   <div>
+    <div class="allHeader">
     <div class="appTopOther"></div>
-
-    <x-header
-      :left-options="{backText: '', preventGoBack: true}"
-      class="header"
-      @on-click-back="goback"
-    >
-      客户管理
-      <a class="add" slot="right" @click="gotoAdd">＋</a>
-    </x-header>
-    <search
-      @on-change="getResult"
-      position="absolute"
-      auto-scroll-to-top
-      top="70px"
-      ref="search"
-      @on-cancel="searchCancel"
-      @on-focus="getFocus"
-    ></search>
+      <x-header
+        :left-options="{backText: '', preventGoBack: true}"
+        class="header"
+        @on-click-back="goback"
+      >
+        客户管理
+        <a class="add" slot="right" @click="gotoAdd">＋</a>
+      </x-header>
+      <search
+        @on-change="getResult"
+        position="absolute"
+        auto-scroll-to-top
+        top="70px"
+        ref="search"
+        @on-cancel="searchCancel"
+        @on-focus="getFocus"
+      ></search>
+    </div>
     <section class="searchContent" v-show="hasSearch">
       <div class="searchResult">
         <div class="searchTitle">找到{{searchList.length}}个联系人</div>
@@ -33,20 +34,27 @@
         </li>
       </div>
     </section>
-    <section class="clientMain" v-show="!hasSearch" v-for="(Item, index) in actualAlphabetList" :key="index">
-      <div class="navTo" :id="'anchor-'+ Item">{{Item}}</div>
-      <section class="nameList">
-        <li
-          class="nameLi"
-          v-for="(item, index) in nameList[index]"
-          :key="index"
-          @click="getDeatil(item)"
-        >
-          <span>{{item | strSubstring(1)}}</span>
-          <span>{{item}}</span>
-        </li>
+    <div class="clientList">
+      <section
+        class="clientMain"
+        v-show="!hasSearch"
+        v-for="(Item, index) in actualAlphabetList"
+        :key="index"
+      >
+        <div class="navTo" :id="'anchor-'+ Item">{{Item}}</div>
+        <section class="nameList">
+          <li
+            class="nameLi"
+            v-for="(item, index) in nameList[index]"
+            :key="index"
+            @click="getDeatil(item)"
+          >
+            <span>{{item | strSubstring(1)}}</span>
+            <span>{{item}}</span>
+          </li>
+        </section>
       </section>
-    </section>
+    </div>
     <section class="rightNav">
       <div
         class="alphabet"
@@ -186,7 +194,7 @@ export default {
       this.$router.push({ name: "clientAdd" });
     },
     getDeatil(data) {
-      console.log(data)
+      console.log(data);
       // 去联系人详情页面
       let selectData = this._.filter(this.clientAllData, item => {
         return item.Name === data;
@@ -211,6 +219,17 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
+.allHeader {
+  background-color: #fff;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1;
+  box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
+}
+.clientList {
+  margin-top: 230px;
+}
 .add {
   font-size: 44px !important;
   color: rgba(136, 136, 136, 1) !important;
@@ -218,7 +237,7 @@ export default {
 
 .searchContent {
   position: fixed;
-  top: 240px;
+  top: 260px;
   left: 0;
   width: 100%;
   height: 1000%;

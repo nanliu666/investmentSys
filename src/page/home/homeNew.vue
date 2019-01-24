@@ -38,7 +38,7 @@
 </template>
 <script>
 import { XHeader } from "vux";
-import { GetUserMessage } from "@/axios/api";
+import { GetUserMessage, GetToDoDetailFromMsg } from "@/axios/api";
 // 引入下拉组件
 import MescrollVue from "mescroll.js/mescroll.vue";
 import imgSrc from "../../assets/images/分组.png"; //无数据显示
@@ -100,7 +100,12 @@ export default {
       }
     },
     getDetail(data) {
-      console.log(data);
+      this.$router.push({
+        name: "affairDetail",
+        params: {
+          id: data.Datakey,
+        }
+      });
     },
     // mescroll组件初始化的回调,可获取到mescroll对象 (如果this.mescroll并没有使用到,可不用写mescrollInit)
     mescrollInit(mescroll) {
@@ -136,8 +141,7 @@ export default {
           // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;
           mescroll.endErr();
         });
-    },
-    gotoDetail(data) {}
+    }
   }
 };
 </script>

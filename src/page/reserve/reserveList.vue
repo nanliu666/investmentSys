@@ -267,7 +267,7 @@ export default {
           return "未提交";
           break;
         case "Approved":
-          return "审批中";
+          return "已审批";
           break;
         case "Signed":
           return "已签约";
@@ -276,7 +276,7 @@ export default {
           return "已驳回";
           break;
         case "Submitted":
-          return "已审批";
+          return "审批中";
           break;
         case "Voided":
           return "已作废";
