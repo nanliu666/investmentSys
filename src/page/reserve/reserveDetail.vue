@@ -10,7 +10,7 @@
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
       预定详情
     </x-header>
-    <actionsheet :menus="menus" v-model="showMenus" show-cancel></actionsheet>
+    <actionsheet @on-click-menu="getMenu" :menus="menus" v-model="showMenus" show-cancel></actionsheet>
     <section class="content" v-for="(item, index) in reseveDetail" :key="index">
       <div class="group">
         <div class="cientInfo">客户信息</div>
@@ -45,12 +45,10 @@
           </div>
           <div
             class="liRight"
-            :class="[businessList.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!item.Resunitdesc ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span v-if="businessList.length === 0">暂无意向单元</span>
-            <span v-if="businessList.length !== 0" class="liRightContent">
-              <span v-for="(item, index) in businessList" :key="index">{{item}}</span>
-            </span>
+            <span v-if="!!item.Resunitdesc">{{item.Resunitdesc }}</span>
+            <span v-if="!item.Defaultstartdate">暂无预定单元</span>
           </div>
         </li>
         <li class="groupLi">
@@ -96,9 +94,9 @@
           <div class="liLeft">
             <span>定金(￥)</span>
           </div>
-          <div class="liRight" :class="[!!item.Remark ? 'cellValueClass' : 'placeholderClass']">
-            <span v-if="!!item.Remark">{{item.Remark }}</span>
-            <span v-if="!item.Remark">暂无预定定金金额</span>
+          <div class="liRight" :class="[!!item.Bookamt ? 'cellValueClass' : 'placeholderClass']">
+            <span v-if="!!item.Bookamt">{{item.Bookamt }}</span>
+            <span v-if="!item.Bookamt">暂无预定定金金额</span>
           </div>
         </li>
         <li class="groupLi">
@@ -127,7 +125,7 @@ import {
   Datetime,
   Popup
 } from "vux";
-import { GetReserveMgmtDetail } from "@/axios/api";
+import { GetReserveMgmtDetail, DeleteReserveMgmt } from "@/axios/api";
 import { mapMutations, mapState } from "vuex";
 export default {
   name: "reserve",
@@ -169,6 +167,31 @@ export default {
     this.onLoad();
   },
   methods: {
+    getMenu(menuKey, menuItem) {
+      switch (menuItem) {
+        case "编辑":
+          this.$router.push({
+            name: "reserveAdd",
+            query: {
+              from: "reserveDetail"
+            },
+            params:{
+              data: this.reseveDetail[0]
+            }
+          });
+          break;
+        case "删除":
+          let data = {
+            Bookid: this.$route.params.data.Bookid
+          };
+          DeleteReserveMgmt(data).then(res => {
+            if (!!res.Success) {
+              this.$router.push({ name: "reserveList" });
+            }
+          });
+          break;
+      }
+    },
     ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
     goback() {
       this.$router.back(-1);

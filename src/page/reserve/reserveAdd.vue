@@ -28,8 +28,11 @@
             <span>客户姓名</span>
             <span class="badge">*</span>
           </div>
-          <div class="liRight" :class="[!!clientDataName ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!clientDataName ? clientDataName : '请选择联系人'}}</span>
+          <div
+            class="liRight"
+            :class="[!!businessNewObj.clientDataName ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{!!businessNewObj.clientDataName ? businessNewObj.clientDataName : '请选择联系人'}}</span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
@@ -38,8 +41,11 @@
             <span>手机号码</span>
             <span class="badge">*</span>
           </div>
-          <div class="liRight" :class="[!!clientDataPhone ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!clientDataPhone ? clientDataPhone : '请选择联系人'}}</span>
+          <div
+            class="liRight"
+            :class="[!!businessNewObj.clientDataPhone ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{!!businessNewObj.clientDataPhone ? businessNewObj.clientDataPhone : '请选择联系人'}}</span>
           </div>
         </li>
         <div class="cientInfo">单元信息</div>
@@ -49,11 +55,14 @@
           </div>
           <div
             class="liRight"
-            :class="[businessList.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
+            :class="[businessNewObj.Units.Jsondata.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span v-if="businessList.length === 0">请选择意向单元</span>
-            <span v-if="businessList.length !== 0" class="liRightContent">
-              <span v-for="(item, index) in businessList" :key="index">{{item}}</span>
+            <span v-if="businessNewObj.Units.Jsondata.length === 0">请选择意向单元</span>
+            <span v-if="businessNewObj.Units.Jsondata.length !== 0" class="liRightContent">
+              <span
+                v-for="(item, index) in businessNewObj.Units.Jsondata"
+                :key="index"
+              >{{item.Unitno}}</span>
             </span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
@@ -62,13 +71,16 @@
           <div class="liLeft">
             <span>预定开始日期</span>
           </div>
-          <div class="liRight" :class="[!!reseveStartTime ? 'cellValueClass' : 'placeholderClass']">
+          <div
+            class="liRight"
+            :class="[!!businessNewObj.reseveStartTime ? 'cellValueClass' : 'placeholderClass']"
+          >
             <input
               readonly
               type="text"
               placeholder="请选择预定日期"
               style="text-align: right"
-              v-model="reseveStartTime"
+              v-model="businessNewObj.reseveStartTime"
             >
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
@@ -77,13 +89,16 @@
           <div class="liLeft">
             <span>预定结束日期</span>
           </div>
-          <div class="liRight" :class="[!!reseveEndTime ? 'cellValueClass' : 'placeholderClass']">
+          <div
+            class="liRight"
+            :class="[!!businessNewObj.reseveEndTime ? 'cellValueClass' : 'placeholderClass']"
+          >
             <input
               readonly
               type="text"
               placeholder="请选择预定日期"
               style="text-align: right"
-              v-model="reseveEndTime"
+              v-model="businessNewObj.reseveEndTime"
             >
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
@@ -93,13 +108,16 @@
           <div class="liLeft">
             <span>面积(m²)</span>
           </div>
-          <div class="liRight" :class="[!!unitArea ? 'cellValueClass' : 'placeholderClass']">
+          <div
+            class="liRight"
+            :class="[!!businessNewObj.unitArea ? 'cellValueClass' : 'placeholderClass']"
+          >
             <input
               readonly
               type="number"
               placeholder="请填写面积"
               style="text-align: right"
-              v-model="unitArea"
+              v-model="businessNewObj.unitArea"
             >
           </div>
         </li>
@@ -107,12 +125,15 @@
           <div class="liLeft">
             <span>定金(￥)</span>
           </div>
-          <div class="liRight" :class="[!!unitArea ? 'cellValueClass' : 'placeholderClass']">
+          <div
+            class="liRight"
+            :class="[!!businessNewObj.reserveMoney ? 'cellValueClass' : 'placeholderClass']"
+          >
             <input
               type="number"
-              placeholder="请填写定金金额"
+              placeholder="请填写定金金额请求后端补全定金"
               style="text-align: right"
-              v-model="unitArea"
+              v-model="businessNewObj.reserveMoney"
             >
           </div>
         </li>
@@ -120,29 +141,18 @@
           <div class="liLeft">
             <span>备注</span>
           </div>
-          <div class="liRight" :class="[!!Remark ? 'cellValueClass' : 'placeholderClass']">
+          <div
+            class="liRight"
+            :class="[!!businessNewObj.Remark ? 'cellValueClass' : 'placeholderClass']"
+          >
             <input
               type="text"
               placeholder="请填写备注"
               style="text-align: right"
-              v-model="Remark"
-              @input="TextAreaChange()"
+              v-model="businessNewObj.Remark"
             >
           </div>
         </li>
-        <popup v-model="chanceValue">
-          <popup-header
-            left-text="取消"
-            right-text="确认"
-            title="请选择商机来源"
-            :show-bottom-border="false"
-            @on-click-left="chanceValue = false"
-            @on-click-right="chanceValue = false"
-          ></popup-header>
-          <group gutter="0">
-            <radio :options="radioOptions" @on-change="getBusinessChange"></radio>
-          </group>
-        </popup>
       </div>
       <section class="button">
         <x-button class="submit" @click.native="submit">保存</x-button>
@@ -172,35 +182,27 @@ export default {
     return {
       nowDate: "",
       nextDate: "",
-      reseveStartTime: "",
-      reseveEndTime: "",
       businessNewObj: {
-        Bizopportunity: {
-          Prospectid: 0, //商机ID，如果是新增就为0
-          Sourceid: "", //商机来源id
-          Priorityid: "", //紧急程度id
-          Remark: "", //备注
-          Propertyid: "", //项目id
-          Companyid: "", //公司id
-          Accountid: "", //客户id
-          Units: {
-            //选择的单元信息
-            Jsondata: {}
-          }
+        reseveEndTime: "", //预定开始日期
+        reseveStartTime: "", //预定结束日期
+        reserveMoney: "",
+        Prospectid: 0, //商机ID，如果是新增就为0
+        Sourceid: "", //商机来源id
+        Priorityid: "", //紧急程度id
+        Remark: "", //备注
+        Propertyid: "", //项目id
+        Companyid: "", //公司id
+        Accountid: "", //客户id
+        clientDataName: "", //客户名称
+        unitArea: "",
+        clientDataPhone: "", //客户手机
+        Units: {
+          //选择的单元信息
+          Jsondata: []
         }
       },
       hasStatus: false,
-      hasUint: "",
-      Remark: "", //备注
-      clientDataName: "", //姓名
-      clientDataPhone: "", //电话
-      businessList: [], //当前意向
-      radioOptions: [], //商机来源列表
-      radioOptionsList: [], //实际商机来源列表
-      radioOptionsValue: "", //选中商机来源值
-      radioOptionsSelect: [], //选中商机来源值--传递的值
-      unitArea: "", //铺位面积
-      chanceValue: false //商机来源默认值 --popup判断
+      hasUint: false
     };
   },
   created() {
@@ -224,15 +226,7 @@ export default {
     ...mapState(["uintDetailList", "clientDetail"])
   },
   created() {
-    this.isFirstEnter = true;
-    if (!!this.$route.params.data) {
-      this.hasUint = !this.hasUint;
-    }
     this.onLoad();
-    this.nowDate = moment(new Date()).format("YYYY-MM-DD");
-    this.nextDate = moment(new Date())
-      .add(1, "months")
-      .format("YYYY-MM-DD");
   },
   methods: {
     getStartTime() {
@@ -242,7 +236,7 @@ export default {
         format: "YYYY-MM-DD",
         value: this.nowDate,
         onConfirm: val => {
-          this.reseveStartTime = val;
+          this.businessNewObj.reseveStartTime = val;
         }
       });
     },
@@ -253,16 +247,13 @@ export default {
         format: "YYYY-MM-DD",
         value: this.nextDate,
         onConfirm: val => {
-          this.reseveEndTime = val;
+          this.businessNewObj.reseveEndTime = val;
         }
       });
     },
     openStatus() {
       this.hasStatus = !this.hasStatus;
     },
-    TextAreaChange: _.debounce(function() {
-      this.businessNewObj.Bizopportunity.Remark = this.Remark; //存起来成交几率
-    }, 1000),
     ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
     goback() {
       this.$router.back(-1);
@@ -277,31 +268,38 @@ export default {
         name: "unitInfoALL"
       });
     },
-    getBusinessChange(value) {
-      this.radioOptionsValue = value;
-      this.radioOptionsSelect = this._.filter(this.radioOptionsList, item => {
-        return item.Text === value;
-      });
-      this.businessNewObj.Bizopportunity.Sourceid = this.radioOptionsSelect[0].Value; //存起来商机来源
-    },
-    chancesource() {
-      this.chanceValue = !this.chanceValue;
-    },
     onLoad() {
-      this.clientDataName = this.clientDetail.Name;
-      this.businessNewObj.Bizopportunity.Accountid = this.clientDetail.Accountid; //存起来客户ID
-      this.clientDataPhone = this.clientDetail.Phone;
-      if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
-        this.businessNewObj.Bizopportunity.Units.Jsondata = this.uintDetailList; //存起来选择的单元信息
-        this.businessList = this.uintDetailList.map(item => {
-          return item.Unitno;
-        });
-        let A = this.uintDetailList.map(item => {
-          return Number(item.Builduparea);
-        });
-        this.unitArea = A.reduce(function(prev, curr, idx, arr) {
-          return prev + curr;
-        });
+      this.nowDate = moment(new Date()).format("YYYY-MM-DD");
+      this.nextDate = moment(new Date())
+        .add(1, "months")
+        .format("YYYY-MM-DD");
+      if (this.$route.query.from === "unitInfoAll") {
+        //从单元所有过来，商机部分有展示
+        this.hasUint = !this.hasUint;
+      }
+      if (this.$route.query.from === "reserveDetail") {
+        this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
+        this.businessNewObj.Accountid = this.$route.params.data.Accountid;
+        this.businessNewObj.clientDataPhone = `预定详情接口没有返回联系人手机号`;
+        console.log("===", this.businessNewObj.clientDataName);
+      } else {
+        this.businessNewObj.clientDataName = this.clientDetail.Name;
+        this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
+        this.businessNewObj.clientDataPhone = this.clientDetail.Phone;
+        if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
+          this.businessNewObj.Units.Jsondata = this.uintDetailList;
+          let A = this.uintDetailList.map(item => {
+            return Number(item.Builduparea);
+          });
+          this.businessNewObj.unitArea = A.reduce(function(
+            prev,
+            curr,
+            idx,
+            arr
+          ) {
+            return prev + curr;
+          });
+        }
       }
     },
     submit() {

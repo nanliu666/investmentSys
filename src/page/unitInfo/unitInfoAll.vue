@@ -37,9 +37,7 @@
         default-color="rgba(136, 136, 136, 1)"
       >
         <tab-item selected @on-item-click="getStatus(4)">
-          <div class="tabDiv">
-            <div class="all">1</div>全部
-          </div>
+          <div class="tabDiv">全部</div>
         </tab-item>
         <tab-item @on-item-click="getStatus(0)">
           <div class="tabDiv">
@@ -265,7 +263,7 @@ export default {
       floorList: [],
       floorListCount: 1,
       floorListDisplay: [],
-      barActiveColor: "#78caff",
+      barActiveColor: "#4879e6",
       hasprojectStatus: false,
       hasUnitDetail: false,
       disabled:
@@ -393,6 +391,8 @@ export default {
       this.blockSelect = "";
     },
     floorLi(key, item) {
+      // this.allBlock = item[0]
+      // this.getFloorData()
       this.activeClass = key;
       const selector = `#anchor-${item[0].Floor}`;
       this.goAnchor(selector);
@@ -437,10 +437,7 @@ export default {
         this.requestData.Statucode = "UnitAvailable";
         this.hasUintNumber = !this.hasUintNumber;
       }
-      GetUnitByBlock(this.requestData).then(res => {
-        this.allBlock = res.Content;
-        this.hasProject();
-      });
+      this.getUnitBlock();
       this.getCompany();
     },
     getUintList() {
@@ -547,19 +544,14 @@ export default {
     },
     getStatus(index) {
       if (index === 0) {
-        this.barActiveColor = "#78caff";
         this.requestData.Statucode = "UnitAvailable";
       } else if (index === 1) {
-        this.barActiveColor = "#4879e6";
         this.requestData.Statucode = "RT_RentalStatus_Booked";
       } else if (index === 2) {
-        this.barActiveColor = "#ffab56";
         this.requestData.Statucode = "UnitINACTIVE";
       } else if (index === 3) {
-        this.barActiveColor = "rgba(206, 223, 234, 1)";
         this.requestData.Statucode = "UnitActive";
       } else {
-        this.barActiveColor = "rgb(102, 153, 255)";
         this.requestData.Statucode = "";
       }
       this.getUnitBlock();
@@ -572,47 +564,48 @@ export default {
         this.hasProject();
       });
     },
+    getFloorData() {
+      this.blockSelect = this.allBlock[0].Blockname;
+      this.headerTittle = `${this.allBlock[0].Projectname}·${this.blockSelect}`;
+      this.floorList = this._.chain(this.allBlock[0].Floorlist)
+        .groupBy("Floor")
+        .orderBy(
+          function(item) {
+            return item[0].Floor;
+          },
+          ["desc"]
+        )
+        .filter(item => {
+          return item[0].Unitlist.length !== 0;
+        })
+        .value();
+      let B = [];
+      this.floorList.map(item => {
+        B.push(item[0].Unitlist.length);
+      });
+      this.uintNumber = B.reduce(function(prev, cur) {
+        return prev + cur;
+      }, 0);
+      let unitNull = 0; //判断有没有数据
+      this.floorList.map(item => {
+        if (item[0].Unitlist.length === 0) {
+          unitNull += 1;
+        }
+      });
+      if (unitNull === this.floorList.length) {
+        //没有数据展示
+        this.noData = true;
+      } else {
+        this.noData = false;
+      }
+      this.floorListDisplay = this.floorList.slice(0, 5);
+    },
     hasProject() {
       if (this.allBlock.length === 0) {
         //没有数据返回
       } else if (this.allBlock.length === 1) {
         //该用户只有一个项目
-        this.blockSelect = this.allBlock[0].Blockname;
-        this.headerTittle = `${this.allBlock[0].Projectname}·${
-          this.blockSelect
-        }`;
-        this.floorList = this._.chain(this.allBlock[0].Floorlist)
-          .groupBy("Floor")
-          .orderBy(
-            function(item) {
-              return item[0].Floor;
-            },
-            ["desc"]
-          )
-          .filter(item => {
-            return item[0].Unitlist.length !== 0;
-          })
-          .value();
-        let B = [];
-        this.floorList.map(item => {
-          B.push(item[0].Unitlist.length);
-        });
-        this.uintNumber = B.reduce(function(prev, cur) {
-          return prev + cur;
-        }, 0);
-        let unitNull = 0; //判断有没有数据
-        this.floorList.map(item => {
-          if (item[0].Unitlist.length === 0) {
-            unitNull += 1;
-          }
-        });
-        if (unitNull === this.floorList.length) {
-          //没有数据展示
-          this.noData = true;
-        } else {
-          this.noData = false;
-        }
-        this.floorListDisplay = this.floorList.slice(0, 5);
+        this.getFloorData();
       } else {
         //该用户有多个项目，需要选择项目
       }
@@ -702,6 +695,13 @@ export default {
 .tab {
   margin-top: -2px;
   @include fj;
+  &:first-child {
+    background-color: red;
+    div {
+      width: 0;
+      margin-right: 0px;
+    }
+  }
   .tabDiv {
     @include flexCenter;
     div {
@@ -711,9 +711,7 @@ export default {
     }
   }
 }
-.all {
-  background-color: rgb(102, 153, 255);
-}
+
 .toRent {
   background: #78caff;
 }

@@ -192,13 +192,15 @@ export default {
     // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
     upCallback(page, mescroll) {
       // 上拉下拉不区分状态、项目请求
-      // this.affairCond.LoginName = "yujing";
+      if (typeof cordova !== "function") {
+        this.affairCond.LoginName = "yujing";
+      }
       this.affairCond.PageIndex = page.num;
       this.affairCond.PageSize = page.size;
-      console.log(this.affairCond);
       getTodoList(this.affairCond)
         .then(res => {
           let arr = res.Content;
+          console.log(arr);
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.affairList = [];
           // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
