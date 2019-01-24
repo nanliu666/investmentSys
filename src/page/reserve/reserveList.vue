@@ -211,7 +211,6 @@ export default {
       GetReserveMgmt(data)
         .then(res => {
           let arr = JSON.parse(res.Content);
-          console.log(arr);
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表
@@ -227,14 +226,9 @@ export default {
         });
     },
     gotoDetail(data) {
-      const requestData = {
-        Reservemgmt: {
-          Bookid: data.Bookid
-        }
-      };
       this.$router.push({
         name: "reserveDetail",
-        params: { id: requestData.Reservemgmt.Bookid, data: requestData }
+        params: { id: data.Bookid, data: data }
       });
     },
     getbusinessStatus(data) {

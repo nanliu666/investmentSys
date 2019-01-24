@@ -1,22 +1,26 @@
 <template>
   <div class="reservePart">
     <div class="appTopOther"></div>
-
-    <x-header :left-options="{showBack: false}" class="header">
+    <x-header
+      :left-options="{showBack: false}"
+      class="header"
+      :right-options="{showMore: true}"
+      @on-click-more="showMenus = true"
+    >
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
       预定详情
     </x-header>
+    <actionsheet :menus="menus" v-model="showMenus" show-cancel></actionsheet>
     <section class="content">
       <div class="group">
         <div class="cientInfo">客户信息</div>
-        <li class="groupLi" @click="getClient">
+        <li class="groupLi">
           <div class="liLeft">
             <span>客户姓名</span>
             <span class="badge">*</span>
           </div>
           <div class="liRight" :class="[!!clientDataName ? 'cellValueClass' : 'placeholderClass']">
             <span>{{!!clientDataName ? clientDataName : '请选择联系人'}}</span>
-            <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
         <li class="groupLi">
@@ -134,19 +138,24 @@
 import {
   XHeader,
   Group,
+  Actionsheet,
   Picker,
   PopupHeader,
   Radio,
   Datetime,
   Popup
 } from "vux";
-// api
 import { EditBizOpportunity } from "@/axios/api";
 import { mapMutations, mapState } from "vuex";
 export default {
   name: "reserve",
   data() {
     return {
+      showMenus: false,
+      menus: {
+        menu1: "编辑",
+        menu2: "删除"
+      },
       nowDate: "",
       nextDate: "",
       reseveStartTime: "",
@@ -180,11 +189,9 @@ export default {
       chanceValue: false //商机来源默认值 --popup判断
     };
   },
-  created() {
-    this.onLoad();
-  },
   components: {
     XHeader,
+    Actionsheet,
     Group,
     Picker,
     Datetime,
@@ -200,6 +207,7 @@ export default {
     ...mapState(["uintDetailList", "clientDetail"])
   },
   created() {
+    console.log(this.$route.params)
     this.isFirstEnter = true;
     if (!!this.$route.params.data) {
       this.hasUint = !this.hasUint;
@@ -243,11 +251,7 @@ export default {
     goback() {
       this.$router.back(-1);
     },
-    getClient() {
-      this.$router.push({
-        name: "clientList"
-      });
-    },
+
     getUint() {
       this.$router.push({
         name: "unitInfoALL"
