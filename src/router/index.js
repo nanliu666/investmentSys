@@ -162,7 +162,7 @@ export default [{
       }
     },
     {
-      path: '/reserveDetail:id', //预定详情
+      path: '/reserveDetail/:id', //预定详情
       name: 'reserveDetail',
       component: reserveDetail,
     },

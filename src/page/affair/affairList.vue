@@ -192,7 +192,7 @@ export default {
     // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
     upCallback(page, mescroll) {
       // 上拉下拉不区分状态、项目请求
-      // this.affairCond.LoginName = "qw";
+      this.affairCond.LoginName = "yujing";
       this.affairCond.PageIndex = page.num;
       this.affairCond.PageSize = page.size;
       console.log(this.affairCond);

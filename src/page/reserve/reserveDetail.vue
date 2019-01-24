@@ -11,7 +11,7 @@
       预定详情
     </x-header>
     <actionsheet :menus="menus" v-model="showMenus" show-cancel></actionsheet>
-    <section class="content">
+    <section class="content" v-for="(item, index) in reseveDetail" :key="index">
       <div class="group">
         <div class="cientInfo">客户信息</div>
         <li class="groupLi">
@@ -19,8 +19,11 @@
             <span>客户姓名</span>
             <span class="badge">*</span>
           </div>
-          <div class="liRight" :class="[!!clientDataName ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!clientDataName ? clientDataName : '请选择联系人'}}</span>
+          <div
+            class="liRight"
+            :class="[!!item.Accountname ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{!!item.Accountname ? item.Accountname : '暂无联系人'}}</span>
           </div>
         </li>
         <li class="groupLi">
@@ -28,8 +31,11 @@
             <span>手机号码</span>
             <span class="badge">*</span>
           </div>
-          <div class="liRight" :class="[!!clientDataPhone ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!clientDataPhone ? clientDataPhone : '请选择联系人'}}</span>
+          <div
+            class="liRight"
+            :class="[!!item.Accountname ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{!!item.Accountname ? item.Accountname : '暂无联系人电话'}}</span>
           </div>
         </li>
         <div class="cientInfo">单元信息</div>
@@ -41,41 +47,34 @@
             class="liRight"
             :class="[businessList.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span v-if="businessList.length === 0">请选择意向单元</span>
+            <span v-if="businessList.length === 0">暂无意向单元</span>
             <span v-if="businessList.length !== 0" class="liRightContent">
               <span v-for="(item, index) in businessList" :key="index">{{item}}</span>
             </span>
-            <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
         <li class="groupLi">
           <div class="liLeft">
             <span>预定开始日期</span>
           </div>
-          <div class="liRight" :class="[!!reseveStartTime ? 'cellValueClass' : 'placeholderClass']">
-            <input
-              readonly
-              type="text"
-              placeholder="请选择预定日期"
-              style="text-align: right"
-              v-model="reseveStartTime"
-            >
-            <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
+          <div
+            class="liRight"
+            :class="[!!item.Defaultstartdate ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span v-if="!!item.Defaultstartdate">{{item.Defaultstartdate | dataFrm('YYYY-MM-DD')}}</span>
+            <span v-if="!item.Defaultstartdate">暂无预定开始日期</span>
           </div>
         </li>
         <li class="groupLi">
           <div class="liLeft">
             <span>预定结束日期</span>
           </div>
-          <div class="liRight" :class="[!!reseveEndTime ? 'cellValueClass' : 'placeholderClass']">
-            <input
-              readonly
-              type="text"
-              placeholder="请选择预定日期"
-              style="text-align: right"
-              v-model="reseveEndTime"
-            >
-            <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
+          <div
+            class="liRight"
+            :class="[!!item.Defaultexpirydate ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span v-if="!!item.Defaultexpirydate">{{item.Defaultexpirydate | dataFrm('YYYY-MM-DD')}}</span>
+            <span v-if="!item.Defaultexpirydate">暂无预定结束日期</span>
           </div>
         </li>
 
@@ -87,7 +86,7 @@
             <input
               readonly
               type="number"
-              placeholder="请填写面积"
+              placeholder="暂无预定单元面积"
               style="text-align: right"
               v-model="unitArea"
             >
@@ -97,16 +96,18 @@
           <div class="liLeft">
             <span>定金(￥)</span>
           </div>
-          <div class="liRight" :class="[!!unitArea ? 'cellValueClass' : 'placeholderClass']">
-            <input type="number" placeholder="请填写定金金额" style="text-align: right" v-model="unitArea">
+          <div class="liRight" :class="[!!item.Remark ? 'cellValueClass' : 'placeholderClass']">
+            <span v-if="!!item.Remark">{{item.Remark }}</span>
+            <span v-if="!item.Remark">暂无预定定金金额</span>
           </div>
         </li>
         <li class="groupLi">
           <div class="liLeft">
             <span>备注</span>
           </div>
-          <div class="liRight" :class="[!!Remark ? 'cellValueClass' : 'placeholderClass']">
-            <input type="text" placeholder="请填写备注" style="text-align: right" v-model="Remark">
+          <div class="liRight" :class="[!!item.Remark ? 'cellValueClass' : 'placeholderClass']">
+            <span v-if="!!item.Remark">{{item.Remark }}</span>
+            <span v-if="!item.Remark">暂无备注</span>
           </div>
         </li>
       </div>
@@ -126,7 +127,7 @@ import {
   Datetime,
   Popup
 } from "vux";
-import { EditBizOpportunity } from "@/axios/api";
+import { GetReserveMgmtDetail } from "@/axios/api";
 import { mapMutations, mapState } from "vuex";
 export default {
   name: "reserve",
@@ -137,35 +138,14 @@ export default {
         menu1: "编辑",
         menu2: "删除"
       },
-      nowDate: "",
-      nextDate: "",
+      reseveDetail: [],
       reseveStartTime: "",
       reseveEndTime: "",
-      businessNewObj: {
-        Bizopportunity: {
-          Prospectid: 0, //商机ID，如果是新增就为0
-          Sourceid: "", //商机来源id
-          Priorityid: "", //紧急程度id
-          Remark: "", //备注
-          Propertyid: "", //项目id
-          Companyid: "", //公司id
-          Accountid: "", //客户id
-          Units: {
-            //选择的单元信息
-            Jsondata: {}
-          }
-        }
-      },
       Remark: "", //备注
       clientDataName: "", //姓名
       clientDataPhone: "", //电话
       businessList: [], //当前意向
-      radioOptions: [], //商机来源列表
-      radioOptionsList: [], //实际商机来源列表
-      radioOptionsValue: "", //选中商机来源值
-      radioOptionsSelect: [], //选中商机来源值--传递的值
-      unitArea: "", //铺位面积
-      chanceValue: false //商机来源默认值 --popup判断
+      unitArea: "" //铺位面积
     };
   },
   components: {
@@ -194,21 +174,15 @@ export default {
       this.$router.back(-1);
     },
     onLoad() {
-      this.clientDataName = this.clientDetail.Name;
-      this.businessNewObj.Bizopportunity.Accountid = this.clientDetail.Accountid; //存起来客户ID
-      this.clientDataPhone = this.clientDetail.Phone;
-      if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
-        this.businessNewObj.Bizopportunity.Units.Jsondata = this.uintDetailList; //存起来选择的单元信息
-        this.businessList = this.uintDetailList.map(item => {
-          return item.Unitno;
-        });
-        let A = this.uintDetailList.map(item => {
-          return Number(item.Builduparea);
-        });
-        this.unitArea = A.reduce(function(prev, curr, idx, arr) {
-          return prev + curr;
-        });
-      }
+      const data = {
+        Reservemgmt: {
+          Bookid: this.$route.params.data.Bookid
+        }
+      };
+      GetReserveMgmtDetail(data).then(res => {
+        this.reseveDetail = res.Datasource;
+        console.log(this.reseveDetail);
+      });
     }
   }
 };

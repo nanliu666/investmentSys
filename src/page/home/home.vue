@@ -231,7 +231,7 @@ export default {
       background-color: rgba(255, 66, 66, 1);
       @include sc(24px, rgba(255, 255, 255, 1));
       @include flexCenter;
-      @include wh(40px,40px);
+      @include wh(40px, 40px);
       border-radius: 20px;
       right: 38px;
       top: 22px;
@@ -245,7 +245,7 @@ export default {
     }
     .signNum {
       font-family: $fr;
-      padding: 40px 40px 90px;
+      padding: 20px 40px 90px;
       @include fj;
       align-items: flex-end;
       .signMoeny {
@@ -256,6 +256,7 @@ export default {
         font-weight: normal;
       }
       .getContranct {
+        padding-bottom: 10px;
         .getContranctTittle {
           @include sc(28px, rgba(255, 255, 255, 1));
         }
@@ -268,13 +269,13 @@ export default {
     .Expire {
       @include fj;
       @include flexHCenter;
-      @include wh(100%, 100px);
+      @include wh(100%, 120px);
       padding: 0 40px;
       background: rgba(255, 255, 255, 0.2);
-      font-size: 28px;
+      font-size: 32px;
       .ExpireLeft {
         .ExpireNum {
-          @include sc(28px, rgba(248, 231, 28, 1));
+          @include sc(36px, rgba(248, 231, 28, 1));
           font-family: $fs;
           font-weight: bolder;
           margin-left: 10px;
