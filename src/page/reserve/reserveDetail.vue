@@ -33,7 +33,7 @@
           </div>
         </li>
         <div class="cientInfo">单元信息</div>
-        <li class="groupLi" @click="getUint">
+        <li class="groupLi">
           <div class="liLeft">
             <span>预定单元</span>
           </div>
@@ -48,7 +48,7 @@
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
-        <li class="groupLi" @click="getStartTime">
+        <li class="groupLi">
           <div class="liLeft">
             <span>预定开始日期</span>
           </div>
@@ -63,7 +63,7 @@
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
-        <li class="groupLi" @click="getEndTime">
+        <li class="groupLi">
           <div class="liLeft">
             <span>预定结束日期</span>
           </div>
@@ -106,28 +106,9 @@
             <span>备注</span>
           </div>
           <div class="liRight" :class="[!!Remark ? 'cellValueClass' : 'placeholderClass']">
-            <input
-              type="text"
-              placeholder="请填写备注"
-              style="text-align: right"
-              v-model="Remark"
-              @input="TextAreaChange()"
-            >
+            <input type="text" placeholder="请填写备注" style="text-align: right" v-model="Remark">
           </div>
         </li>
-        <popup v-model="chanceValue">
-          <popup-header
-            left-text="取消"
-            right-text="确认"
-            title="请选择商机来源"
-            :show-bottom-border="false"
-            @on-click-left="chanceValue = false"
-            @on-click-right="chanceValue = false"
-          ></popup-header>
-          <group gutter="0">
-            <radio :options="radioOptions" @on-change="getBusinessChange"></radio>
-          </group>
-        </popup>
       </div>
     </section>
   </div>
@@ -175,8 +156,6 @@ export default {
           }
         }
       },
-      hasStatus: false,
-      hasUint: "",
       Remark: "", //备注
       clientDataName: "", //姓名
       clientDataPhone: "", //电话
@@ -207,65 +186,12 @@ export default {
     ...mapState(["uintDetailList", "clientDetail"])
   },
   created() {
-    console.log(this.$route.params)
-    this.isFirstEnter = true;
-    if (!!this.$route.params.data) {
-      this.hasUint = !this.hasUint;
-    }
     this.onLoad();
-    this.nowDate = moment(new Date()).format("YYYY-MM-DD");
-    this.nextDate = moment(new Date())
-      .add(1, "months")
-      .format("YYYY-MM-DD");
   },
   methods: {
-    getStartTime() {
-      this.$vux.datetime.show({
-        cancelText: "取消",
-        confirmText: "确定",
-        format: "YYYY-MM-DD",
-        value: this.nowDate,
-        onConfirm: val => {
-          this.reseveStartTime = val;
-        }
-      });
-    },
-    getEndTime() {
-      this.$vux.datetime.show({
-        cancelText: "取消",
-        confirmText: "确定",
-        format: "YYYY-MM-DD",
-        value: this.nextDate,
-        onConfirm: val => {
-          this.reseveEndTime = val;
-        }
-      });
-    },
-    openStatus() {
-      this.hasStatus = !this.hasStatus;
-    },
-    TextAreaChange: _.debounce(function() {
-      this.businessNewObj.Bizopportunity.Remark = this.Remark; //存起来成交几率
-    }, 1000),
     ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
     goback() {
       this.$router.back(-1);
-    },
-
-    getUint() {
-      this.$router.push({
-        name: "unitInfoALL"
-      });
-    },
-    getBusinessChange(value) {
-      this.radioOptionsValue = value;
-      this.radioOptionsSelect = this._.filter(this.radioOptionsList, item => {
-        return item.Text === value;
-      });
-      this.businessNewObj.Bizopportunity.Sourceid = this.radioOptionsSelect[0].Value; //存起来商机来源
-    },
-    chancesource() {
-      this.chanceValue = !this.chanceValue;
     },
     onLoad() {
       this.clientDataName = this.clientDetail.Name;
@@ -283,9 +209,6 @@ export default {
           return prev + curr;
         });
       }
-    },
-    submit() {
-      console.log(this.businessNewObj);
     }
   }
 };

@@ -193,7 +193,6 @@ export default {
     upCallback(page, mescroll) {
       // 上拉下拉不区分状态、项目请求
       // this.affairCond.LoginName = "qw";
-      document.addEventListener("deviceready", this.onDeviceReady, false);
       this.affairCond.PageIndex = page.num;
       this.affairCond.PageSize = page.size;
       console.log(this.affairCond);
