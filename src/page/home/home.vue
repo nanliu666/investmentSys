@@ -15,7 +15,9 @@
             <span class="signMoeny">{{signMoeny}}</span>
             <span class="getContranct" @click="gotoContranctMonth">
               <span class="getContranctTittle">查看合同</span>
-              <i class="iconfont icon-youjiantou"></i>
+              <div class="rightImgBox">
+                <img class="rightImg" src="../../assets/images/路径 2.png" alt>
+              </div>
             </span>
           </div>
           <div class="Expire">
@@ -25,7 +27,10 @@
             </div>
             <div class="ExpireRight" @click="gotoContranctExpire">
               <span>立即处理</span>
-              <i class="iconfont icon-youjiantou"></i>
+              <div class="rightImgBox">
+                <img class="rightImg" src="../../assets/images/路径 2.png" alt>
+              </div>
+              <!-- <i class="iconfont icon-youjiantou"></i> -->
             </div>
           </div>
         </div>
@@ -61,10 +66,11 @@
           <div class="performanceTitle">我的业绩完成率</div>
           <div class="performanceSheet">
             <v-chart ref="demo" :data="data">
+              <v-legend disabled/>
               <v-scale x field="year"/>
               <v-scale y field="percent" :min="0" :max="0.5" :formatter="formatter"/>
               <v-bar series-field="country" adjust="stack" :colors="dataColor"/>
-              <v-tooltip show-value-in-legend/>
+              <v-tooltip :show-item-marker="false"/>
             </v-chart>
           </div>
         </div>
@@ -240,7 +246,7 @@ export default {
   .signCount {
     .signTT {
       padding: 90px 40px 0;
-      font-size: 28px;
+      font-size: 32px;
       @include fj;
     }
     .signNum {
@@ -256,14 +262,24 @@ export default {
         font-weight: normal;
       }
       .getContranct {
-        padding-bottom: 10px;
+        height: 40px;
+        line-height: 40px;
+        @include flexHCenter;
+        @include fj;
+        margin-bottom: 10px;
         .getContranctTittle {
-          @include sc(28px, rgba(255, 255, 255, 1));
+          @include sc(32px, rgba(255, 255, 255, 1));
         }
         .icon-youjiantou {
-          margin-left: 8px;
           font-size: 28px;
         }
+      }
+    }
+    .rightImgBox {
+      @include flexCenter;
+      margin-left: 10px;
+      .rightImg {
+        @include wh(16px, 26px);
       }
     }
     .Expire {
@@ -282,6 +298,7 @@ export default {
         }
       }
       .ExpireRight {
+        @include fj;
         .icon-youjiantou {
           margin-left: 8px;
           font-size: 28px;
@@ -301,7 +318,7 @@ export default {
     height: 20%;
     @include flexHCenter;
     @include fj;
-    margin-bottom: 5%;
+    margin-bottom: 2.5%;
     li {
       @include fd(column);
       span {
