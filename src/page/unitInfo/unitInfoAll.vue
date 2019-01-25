@@ -37,7 +37,7 @@
         default-color="rgba(136, 136, 136, 1)"
       >
         <tab-item selected @on-item-click="getStatus(4)">
-          <div class="tabDiv">全部</div>
+          <div class="tabDiv all">全部</div>
         </tab-item>
         <tab-item @on-item-click="getStatus(0)">
           <div class="tabDiv">
@@ -176,6 +176,7 @@
               :key="key"
             >{{item[0].Floor}} F</a>
           </div>
+          <div class="goAllPage" :class="activeClass == 1 ? 'active' : ''" @click="goALLFloor">全部</div>
           <div class="goNextPage" @click="goNextPage">
             <x-icon type="ios-arrow-down" class="icon"></x-icon>
           </div>
@@ -260,7 +261,9 @@ export default {
       activeClass: 0,
       requestData: {},
       allBlock: [],
+      allBlockFoorList: [],
       floorList: [],
+      FloorSelectlist: [],
       floorListCount: 1,
       floorListDisplay: [],
       barActiveColor: "#4879e6",
@@ -390,13 +393,7 @@ export default {
       this.PropertysSelect = "";
       this.blockSelect = "";
     },
-    floorLi(key, item) {
-      // this.allBlock = item[0]
-      // this.getFloorData()
-      this.activeClass = key;
-      const selector = `#anchor-${item[0].Floor}`;
-      this.goAnchor(selector);
-    },
+
     ...mapMutations(["UINT_DETAIL", "RESAVESCORLLTOP"]),
     //单元详细信息
     getUnitDetail(data) {
@@ -491,7 +488,7 @@ export default {
       this.floorListCount -= 1;
       if (this.floorListCount * 5 > 0) {
         this.activeClass = 0;
-        this.floorListDisplay = this.floorList.slice(
+        this.floorListDisplay = this.FloorSelectlist.slice(
           (this.floorListCount - 1) * 5,
           this.floorListCount * 5
         );
@@ -507,8 +504,8 @@ export default {
     goNextPage() {
       this.floorListCount += 1;
       this.activeClass = 0;
-      if (this.floorListCount * 5 < this.floorList.length + 5) {
-        this.floorListDisplay = this.floorList.slice(
+      if (this.floorListCount * 5 < this.FloorSelectlist.length + 5) {
+        this.floorListDisplay = this.FloorSelectlist.slice(
           (this.floorListCount - 1) * 5,
           this.floorListCount * 5
         );
@@ -520,6 +517,16 @@ export default {
           time: "1000"
         });
       }
+    },
+    goALLFloor() {
+      this.activeClass = 1;
+      this.allBlockFoorList = this.allBlock[0].Floorlist;
+      this.getFloorData();
+    },
+    floorLi(key, item) {
+      this.allBlockFoorList = item;
+      this.getFloorData();
+      this.activeClass = key;
     },
     getbusinessStatus(data) {
       let strDatd = this.$options.filters.firstUpperCase(data);
@@ -565,9 +572,7 @@ export default {
       });
     },
     getFloorData() {
-      this.blockSelect = this.allBlock[0].Blockname;
-      this.headerTittle = `${this.allBlock[0].Projectname}·${this.blockSelect}`;
-      this.floorList = this._.chain(this.allBlock[0].Floorlist)
+      this.floorList = this._.chain(this.allBlockFoorList)
         .groupBy("Floor")
         .orderBy(
           function(item) {
@@ -579,33 +584,51 @@ export default {
           return item[0].Unitlist.length !== 0;
         })
         .value();
-      let B = [];
-      this.floorList.map(item => {
-        B.push(item[0].Unitlist.length);
-      });
-      this.uintNumber = B.reduce(function(prev, cur) {
-        return prev + cur;
-      }, 0);
-      let unitNull = 0; //判断有没有数据
-      this.floorList.map(item => {
-        if (item[0].Unitlist.length === 0) {
-          unitNull += 1;
-        }
-      });
-      if (unitNull === this.floorList.length) {
-        //没有数据展示
-        this.noData = true;
-      } else {
-        this.noData = false;
-      }
-      this.floorListDisplay = this.floorList.slice(0, 5);
+      this.FloorSelectlist = this._.chain(this.allBlock[0].Floorlist)
+        .groupBy("Floor")
+        .orderBy(
+          function(item) {
+            return item[0].Floor;
+          },
+          ["desc"]
+        )
+        .filter(item => {
+          return item[0].Unitlist.length !== 0;
+        })
+        .value();
     },
     hasProject() {
       if (this.allBlock.length === 0) {
         //没有数据返回
       } else if (this.allBlock.length === 1) {
         //该用户只有一个项目
+        this.blockSelect = this.allBlock[0].Blockname;
+        this.headerTittle = `${this.allBlock[0].Projectname}·${
+          this.blockSelect
+        }`;
+        this.allBlockFoorList = this.allBlock[0].Floorlist;
         this.getFloorData();
+
+        let B = [];
+        this.FloorSelectlist.map(item => {
+          B.push(item[0].Unitlist.length);
+        });
+        this.uintNumber = B.reduce(function(prev, cur) {
+          return prev + cur;
+        }, 0);
+        let unitNull = 0; //判断有没有数据
+        this.FloorSelectlist.map(item => {
+          if (item[0].Unitlist.length === 0) {
+            unitNull += 1;
+          }
+        });
+        if (unitNull === this.FloorSelectlist.length) {
+          //没有数据展示
+          this.noData = true;
+        } else {
+          this.noData = false;
+        }
+        this.floorListDisplay = this.FloorSelectlist.slice(0, 5);
       } else {
         //该用户有多个项目，需要选择项目
       }
@@ -695,19 +718,24 @@ export default {
 .tab {
   margin-top: -2px;
   @include fj;
-  &:first-child {
-    background-color: red;
-    div {
-      width: 0;
-      margin-right: 0px;
-    }
-  }
   .tabDiv {
+    @include sc(28px, rgba(30, 30, 30, 1));
     @include flexCenter;
     div {
       @include wh(24px, 24px);
       margin-right: 10px;
       color: transparent;
+    }
+  }
+  .all {
+    position: relative;
+    &::before {
+      position: absolute;
+      content: "";
+      background-color: rgba(219, 219, 219, 1);
+      width: 1px;
+      height: 24px;
+      right: 0;
     }
   }
 }
@@ -736,9 +764,18 @@ export default {
       background-color: #fff;
       position: relative;
       .goPrePage,
-      .goNextPage {
+      .goNextPage,
+      .goAllPage {
         @include flexCenter;
         height: 108px;
+      }
+      .goAllPage {
+        color: rgba(136, 136, 136, 1);
+        border-top: 1px solid rgba(235, 237, 239, 1);
+        border-bottom: 1px solid rgba(235, 237, 239, 1);
+      }
+      .active {
+        color: rgba(30, 30, 30, 1);
       }
       .icon {
         @include sc(52px, rgba(219, 219, 219, 1));
@@ -754,9 +791,9 @@ export default {
           height: 108px;
           @include sc(36px, rgba(136, 136, 136, 1));
           font-family: $fr;
-          border-bottom: 1px solid rgba(235, 237, 239, 1);
-          &:first-child {
-            border-top: 1px solid rgba(235, 237, 239, 1);
+          border-top: 1px solid rgba(235, 237, 239, 1);
+          &:last-child {
+            border-bottom: 1px solid rgba(235, 237, 239, 1);
           }
         }
         .active {
