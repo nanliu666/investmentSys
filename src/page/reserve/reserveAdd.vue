@@ -4,7 +4,8 @@
 
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
-      新增预定
+      <span v-if="hasDeatil">预定详情</span>
+      <span v-if="!hasDeatil">预定新增</span>
     </x-header>
     <section class="content">
       <div class="reseveTitle" v-if="hasUint">
@@ -73,14 +74,14 @@
           </div>
           <div
             class="liRight"
-            :class="[!!businessNewObj.reseveStartTime ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!businessNewObj.Bookstartdate ? 'cellValueClass' : 'placeholderClass']"
           >
             <input
               readonly
               type="text"
               placeholder="请选择预定日期"
               style="text-align: right"
-              v-model="businessNewObj.reseveStartTime"
+              v-model="businessNewObj.Bookstartdate"
             >
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
@@ -91,14 +92,14 @@
           </div>
           <div
             class="liRight"
-            :class="[!!businessNewObj.reseveEndTime ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!businessNewObj.Bookexpirydate ? 'cellValueClass' : 'placeholderClass']"
           >
             <input
               readonly
               type="text"
               placeholder="请选择预定日期"
               style="text-align: right"
-              v-model="businessNewObj.reseveEndTime"
+              v-model="businessNewObj.Bookexpirydate"
             >
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
@@ -127,13 +128,13 @@
           </div>
           <div
             class="liRight"
-            :class="[!!businessNewObj.reserveMoney ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!businessNewObj.Bookamt ? 'cellValueClass' : 'placeholderClass']"
           >
             <input
               type="number"
               placeholder="请填写定金金额请求后端补全定金"
               style="text-align: right"
-              v-model="businessNewObj.reserveMoney"
+              v-model="businessNewObj.Bookamt"
             >
           </div>
         </li>
@@ -180,15 +181,15 @@ export default {
   name: "reserve",
   data() {
     return {
+      hasDeatil: false,
       nowDate: "",
       nextDate: "",
       businessNewObj: {
-        reseveEndTime: "", //预定开始日期
-        reseveStartTime: "", //预定结束日期
-        reserveMoney: "",
+        Bookexpirydate: "", //预定开始日期
+        Bookstartdate: "", //预定结束日期
+        Bookamt: "", //定金
         Prospectid: 0, //商机ID，如果是新增就为0
         Sourceid: "", //商机来源id
-        Priorityid: "", //紧急程度id
         Remark: "", //备注
         Propertyid: "", //项目id
         Companyid: "", //公司id
@@ -236,7 +237,7 @@ export default {
         format: "YYYY-MM-DD",
         value: this.nowDate,
         onConfirm: val => {
-          this.businessNewObj.reseveStartTime = val;
+          this.businessNewObj.Bookstartdate = val;
         }
       });
     },
@@ -247,7 +248,7 @@ export default {
         format: "YYYY-MM-DD",
         value: this.nextDate,
         onConfirm: val => {
-          this.businessNewObj.reseveEndTime = val;
+          this.businessNewObj.Bookexpirydate = val;
         }
       });
     },
@@ -278,10 +279,24 @@ export default {
         this.hasUint = !this.hasUint;
       }
       if (this.$route.query.from === "reserveDetail") {
+        this.hasDeatil = !this.hasDeatil;
         this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
         this.businessNewObj.Accountid = this.$route.params.data.Accountid;
         this.businessNewObj.clientDataPhone = `预定详情接口没有返回联系人手机号`;
-        console.log("===", this.businessNewObj.clientDataName);
+        this.businessNewObj.Bookstartdate = this.$options.filters.dataFrm(
+          this.$route.params.data.Bookexpirydate,
+          "YYYY-MM-DD"
+        );
+        this.businessNewObj.Bookexpirydate = this.$options.filters.dataFrm(
+          this.$route.params.data.Bookexpirydate,
+          "YYYY-MM-DD"
+        );
+        this.businessNewObj.Remark = this.$route.params.data.Remark;
+        this.businessNewObj.Bookamt = this.$route.params.data.Bookamt;
+        this.businessNewObj.Prospectid = this.$route.params.data.Prospectid;
+        this.businessNewObj.Propertyid = this.$route.params.data.Propertyid;
+        this.businessNewObj.Companyid = this.$route.params.data.Companyid;
+        this.businessNewObj.Units.Jsondata =  JSON.parse(this.$route.params.data.Resunitinfjson);
       } else {
         this.businessNewObj.clientDataName = this.clientDetail.Name;
         this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
@@ -291,6 +306,7 @@ export default {
           let A = this.uintDetailList.map(item => {
             return Number(item.Builduparea);
           });
+          console.log(this.businessNewObj.Units.Jsondata);
           this.businessNewObj.unitArea = A.reduce(function(
             prev,
             curr,
