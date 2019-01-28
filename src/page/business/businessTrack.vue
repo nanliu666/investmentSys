@@ -1,8 +1,19 @@
 <template>
   <div class="businessTrack">
     <div class="appTopOther"></div>
-
-    <x-header :left-options="{backText: ''}" class="header">跟踪记录</x-header>
+    <x-header
+      :left-options="{backText: ''}"
+      class="header"
+    >
+      跟踪记录
+      <img
+        src="../../assets/images/addNew.png"
+        @click="addTrack"
+        slot="right"
+        class="fs-addNew"
+        alt
+      >
+    </x-header>
     <div v-if="TrackList.length !== 0">
       <div class="uintNumber">下次跟踪时间: {{TrackList[0].Nextfollowupdate | dataFrm('YYYY-MM-DD') }}</div>
       <section class="ApprovalFlow" id="const">
@@ -23,8 +34,12 @@
               <div class="main">
                 <div class="mainTop">
                   <div class="mainTopT">
-                    <span>跟踪状态: {{item.Probability}}</span>
-                    <span>···</span>
+                    <span class="trackTittle">跟踪状态: {{item.Probability}}</span>
+                    <span class="trackDot" @click="EditTrack">···</span>
+                    <div class="menu" v-show="showMenus">
+                      <span @click="EditorTrack(item)">编辑</span>
+                      <span @click="deleteTrack(item)">删除</span>
+                    </div>
                   </div>
                   <div class="mainTopB">
                     <span>跟踪人: {{item.Agentname}}</span>
@@ -38,7 +53,7 @@
         </ul>
       </section>
     </div>
-    <section class="noData" v-if="TrackList.length === 0">
+    <section class="noData" v-if="hasNodata">
       <div class="imgBox">
         <img src="../../assets/images/分组.png" alt>
         <div class="nodataTittle">暂无跟踪记录</div>
@@ -50,12 +65,18 @@
 
 <script>
 import { XHeader } from "vux";
-import { GetFollowUp } from "@/axios/api";
+import { GetFollowUp, EditFollowUp, DeleteFollowup } from "@/axios/api";
 import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      TrackList: []
+      TrackList: [],
+      hasNodata: false,
+      showMenus: false,
+      menus: {
+        menu1: "编辑",
+        menu2: "删除"
+      }
     };
   },
   components: {
@@ -74,6 +95,35 @@ export default {
       GetFollowUp(data).then(res => {
         console.log(JSON.parse(res.Content));
         this.TrackList = JSON.parse(res.Content);
+        if (this.TrackList.length === 0) {
+          this.hasNodata = !this.hasNodata;
+        }
+      });
+    },
+    addTrack() {},
+    EditTrack() {
+      this.showMenus = !this.showMenus;
+    },
+    EditorTrack(data) {
+      console.log(data);
+    },
+    deleteTrack(data) {
+      let jsonData = {
+        Prospectfollowupid: data.Prospectfollowupid
+      };
+      DeleteFollowup(jsonData).then(res => {
+        if (!!res.Success) {
+          this.$vux.toast.show({
+            text: "删除失败！",
+            type: "warn"
+          });
+        } else {
+          this.$vux.toast.show({
+            text: "删除成功！",
+            type: "success"
+          });
+        }
+        this.onLoad();
       });
     }
   }
@@ -149,17 +199,33 @@ export default {
             .mainTop {
               margin-bottom: 30px;
               .mainTopT {
+                position: relative;
                 height: 44px;
                 line-height: 44px;
                 margin-bottom: 10px;
                 @include fj;
-                span:first-child {
+                .trackTittle {
                   font-family: $fm;
                   @include sc(32px, rgba(30, 30, 30, 1));
                 }
-                span:last-child {
+                .trackDot {
                   color: rgba(105, 167, 254, 1);
                   font-size: 50px;
+                }
+                .menu {
+                  font-family: $fm;
+                  @include sc(32px, rgba(30, 30, 30, 1));
+                  position: absolute;
+                  right: -10px;
+                  top: 40px;
+                  @include fd(column);
+                  border: 1px solid #ccc;
+                  span {
+                    padding: 10px;
+                  }
+                  span:last-child {
+                    border-top: 1px solid #ccc;
+                  }
                 }
               }
               .mainTopB {

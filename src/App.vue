@@ -72,6 +72,10 @@ export default {
   @include wh(100%, 46px);
   background-color: #fff;
 }
+.fs-addNew {
+  @include wh(18px, 18px);
+  margin-left: 10px;
+}
 #app {
   height: 100%;
   .header {

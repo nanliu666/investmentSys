@@ -58,22 +58,51 @@
           </li>
         </ul>
         <div class="reserveButton">
-          <button>预定</button>
+          <button @click="getReserve">预定</button>
         </div>
       </section>
     </section>
     <actionsheet :menus="menus" v-model="showMenus" show-cancel @on-click-menu="businessAct"></actionsheet>
+    <confirm :title="confirmTittle" v-model="confirShow" @on-confirm="onConfirm">
+      <group>
+        <radio v-if="hasliushi" :options="FailtypeDropdownListDisplay" @on-change="onLiushiChange"></radio>
+        <radio
+          v-if="hasyijiao"
+          :options="BizProspecttransferListDisplay"
+          @on-change="onYijiaoChange"
+        ></radio>
+        <input type="text" v-if="hasyijiao" v-model="yijiaoRemark" placeholder="请填写移交原因">
+      </group>
+    </confirm>
   </div>
 </template>
 
 
 <script>
-import { GetBizOpportunityDetail, DeleteBizOpportunity } from "@/axios/api";
-import { Actionsheet } from "vux";
+import {
+  GetBizOpportunityDetail,
+  DeleteBizOpportunity,
+  BizProspecttransfer,
+  DropProspecttransfer,
+  GetAgentsDropdown,
+  GetFailtypeDropdown
+} from "@/axios/api";
+import { Actionsheet, Confirm, Radio, Group } from "vux";
 export default {
   name: "businessDetail",
   data() {
     return {
+      hasliushi: false,
+      hasyijiao: false,
+      FailtypeDropdownList: [],
+      FailtypeDropdownListSelect: [],
+      FailtypeDropdownListDisplay: [],
+      BizProspecttransferList: [],
+      BizProspecttransferListSelect: [],
+      BizProspecttransferListDisplay: [],
+      yijiaoRemark: "",
+      confirShow: false,
+      confirmTittle: "",
       menus: {
         menu1: "编辑",
         menu2: "删除",
@@ -90,6 +119,15 @@ export default {
         Booked: "已预订 ",
         INACTIVE: "已删除 ",
         Used: "已使用"
+      },
+      ProspectData: {
+        //流失数据
+        Transfer: {
+          Prospectid: "",
+          Failtypeid: "",
+          Faildescription: "",
+          Faildate: ""
+        }
       }
     };
   },
@@ -101,28 +139,130 @@ export default {
     };
     GetBizOpportunityDetail(jsonData).then(res => {
       this.businessDetail = JSON.parse(res.Bizopprtunity).Datasource;
-      console.log(JSON.parse(res.Bizopprtunity));
+    });
+    GetAgentsDropdown("").then(res => {
+      this.BizProspecttransferList = res.Option.Dropdowntoagentid;
+      this.BizProspecttransferListDisplay = this.BizProspecttransferList.map(
+        item => {
+          return item.Text;
+        }
+      );
+    });
+    GetFailtypeDropdown("").then(res => {
+      this.FailtypeDropdownList = res.Option.Dropdownfailtypeid;
+      this.FailtypeDropdownListDisplay = this.FailtypeDropdownList.map(item => {
+        return item.Text;
+      });
     });
   },
   components: {
-    Actionsheet
+    Actionsheet,
+    Confirm,
+    Group,
+    Radio
   },
   methods: {
+    getReserve() {
+      this.$router.push({
+        name: "reserveAdd",
+        query: {
+          from: "businessDetail"
+        },
+        params: {
+          data: this.businessDetail[0]
+        }
+      });
+    },
+    onLiushiChange(val) {
+      this.FailtypeDropdownListSelect = this.FailtypeDropdownList.filter(
+        item => {
+          return item.Text === val;
+        }
+      );
+    },
+    onYijiaoChange(val) {
+      this.BizProspecttransferListSelect = this.BizProspecttransferList.filter(
+        item => {
+          return item.Text === val;
+        }
+      );
+    },
+    onConfirm() {
+      if (this.hasliushi) {
+        this.ProspectData.Transfer.Prospectid = this.businessDetail[0].Prospectid;
+        this.ProspectData.Transfer.Failtypeid = this.FailtypeDropdownListSelect[0].Value;
+        this.ProspectData.Transfer.Faildescription = this.FailtypeDropdownListSelect[0].Text;
+        this.ProspectData.Transfer.Faildate = moment();
+        DropProspecttransfer(this.ProspectData).then(res => {
+          if (!!res.Success) {
+            this.$vux.toast.show({
+              text: "流失失败！",
+              type: "warn"
+            });
+          } else {
+            this.$vux.toast.show({
+              text: "流失成功！",
+              type: "success"
+            });
+            this.gotobusinessList();
+          }
+        });
+      } else {
+        let data = {
+          Transfer: {
+            Prospectid: this.businessDetail[0].Prospectid,
+            Fromagentid: this.businessDetail[0].Agentid,
+            Toagentid: this.BizProspecttransferListSelect[0].Value,
+            Remark: this.yijiaoRemark
+          }
+        };
+        BizProspecttransfer(data).then(res => {
+          console.log(res);
+          if (!!res.Success) {
+            this.$vux.toast.show({
+              text: "移交失败！",
+              type: "warn"
+            });
+          } else {
+            this.$vux.toast.show({
+              text: "移交成功！",
+              type: "success"
+            });
+            this.gotobusinessList();
+          }
+        });
+      }
+    },
     getTrack(data) {
       this.$router.push({
-        name: "businessTrack",params: {
+        name: "businessTrack",
+        params: {
           data: data
         }
       });
     },
+    gotobusinessList() {
+      this.$router.push({
+        name: "businessList",
+        params: {
+          isLoad: true
+        }
+      });
+    },
     businessAct(key, item) {
-      console.log(item);
       switch (item) {
         case "编辑":
-          console.log("编辑");
+          this.$router.push({
+            name: "businessAdd",
+            query: {
+              from: "businessDetail"
+            },
+            params: {
+              data: this.businessDetail[0]
+            }
+          });
           break;
         case "删除":
-          console.log("删除");
           let data = {
             Prospectid: this.$route.params.id
           };
@@ -132,25 +272,25 @@ export default {
                 text: "删除成功！",
                 type: "success"
               });
-              this.$router.push({
-                name: "businessList",
-                params: {
-                  isLoad: true
-                }
-              });
+              this.gotobusinessList();
             } else {
               this.$vux.toast.show({
-                text: "此商机非新商机，不能删除！",
+                text: "删除失败！",
                 type: "warn"
               });
             }
           });
           break;
-        case "流失":
-          console.log("流失");
-          break;
         case "移交":
-          console.log("移交");
+          this.confirShow = !this.confirShow;
+          this.hasyijiao = !this.hasyijiao;
+          this.confirmTittle = "请选择移交人员";
+
+          break;
+        case "流失":
+          this.confirmTittle = "请选择流失原因";
+          this.confirShow = !this.confirShow;
+          this.hasliushi = !this.hasliushi;
           break;
       }
     },

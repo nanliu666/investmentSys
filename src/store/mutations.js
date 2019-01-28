@@ -21,7 +21,7 @@ export default {
     state.uintDetailList = value
   },
   [RESERVEADD](state, value) {
-    state.reserveObj = Object.assign(state.reserveObj, value)
+    state.reserveObj = value
   },
   [RESAVESCORLLTOP](state, value) {
     state.scrollTop = value

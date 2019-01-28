@@ -1,7 +1,6 @@
 <template>
   <div class="reservePart">
     <div class="appTopOther"></div>
-
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
       新增商机
@@ -217,10 +216,11 @@ export default {
   },
   created() {
     this.isFirstEnter = true;
-    if (!!this.$route.params.data) {
+    if (this.$route.query.from === 'unitInfoAll') {
       this.hasUint = !this.hasUint;
     }
     this.onLoad();
+    console.log(this.$route.params.data)
   },
   methods: {
     openStatus() {
@@ -267,7 +267,8 @@ export default {
       this.clientDataName = this.clientDetail.Name;
       this.businessNewObj.Bizopportunity.Accountid = this.clientDetail.Accountid; //存起来客户ID
       this.clientDataPhone = this.clientDetail.Phone;
-      if (!!this.uintDetailList ) {
+      if (this.uintDetailList.length !== 0) {
+        console.log(this.uintDetailList)
         this.businessNewObj.Bizopportunity.Units.Jsondata = this.uintDetailList; //存起来选择的单元信息
         this.businessList = this.uintDetailList.map(item => {
           return item.Unitno;
@@ -290,10 +291,8 @@ export default {
         });
       });
     },
-
     submit() {
       console.log(this.businessNewObj);
-
       // EditBizOpportunity().then(res => {
       //   console.log(res);
       // });

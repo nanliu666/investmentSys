@@ -1,7 +1,6 @@
 <template>
   <div class="contractList">
     <div class="appTopOther"></div>
-
     <x-header
       :left-options="{backText: '', preventGoBack: true}"
       class="header"
@@ -148,6 +147,7 @@ export default {
   beforeRouteLeave(to, from, next) {
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
     this.$refs.mescroll.beforeRouteLeave(); // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
+
     next();
   },
   created() {
@@ -174,7 +174,10 @@ export default {
     },
     addReserve() {
       this.$router.push({
-        name: "reserveAdd"
+        name: "reserveAdd",
+        query: {
+          from: "reseverList"
+        }
       });
     },
     FilterUpdate(data) {
@@ -228,7 +231,10 @@ export default {
     gotoDetail(data) {
       this.$router.push({
         name: "reserveDetail",
-        params: { id: data.Bookid, data: data }
+        params: { id: data.Bookid, data: data },
+        query: {
+          from: "reseverList"
+        }
       });
     },
     getbusinessStatus(data) {
@@ -290,10 +296,6 @@ export default {
     .iconfont {
       margin: 10px;
     }
-  }
-  .fs-addNew {
-    @include wh(18px, 18px);
-    margin-left: 10px;
   }
   .searchPart {
     padding: 0 40px;

@@ -33,9 +33,9 @@
           </div>
           <div
             class="liRight"
-            :class="[!!item.Accountname ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!item.Userphone ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span>{{!!item.Accountname ? item.Accountname : '暂无联系人电话'}}</span>
+            <span>{{!!item.Userphone ? item.Userphone : '暂无联系人电话'}}</span>
           </div>
         </li>
         <div class="cientInfo">单元信息</div>
@@ -80,13 +80,13 @@
           <div class="liLeft">
             <span>面积(m²)</span>
           </div>
-          <div class="liRight" :class="[!!unitArea ? 'cellValueClass' : 'placeholderClass']">
+          <div class="liRight" :class="[!!item.Rentalarea ? 'cellValueClass' : 'placeholderClass']">
             <input
               readonly
               type="number"
               placeholder="暂无预定单元面积"
               style="text-align: right"
-              v-model="unitArea"
+              v-model="item.Rentalarea"
             >
           </div>
         </li>

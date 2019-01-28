@@ -1,7 +1,6 @@
 <template>
   <div class="reservePart">
     <div class="appTopOther"></div>
-
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
       <span v-if="hasDeatil">预定详情</span>
@@ -114,7 +113,6 @@
             :class="[!!businessNewObj.unitArea ? 'cellValueClass' : 'placeholderClass']"
           >
             <input
-              readonly
               type="number"
               placeholder="请填写面积"
               style="text-align: right"
@@ -175,7 +173,7 @@ import {
   Popup
 } from "vux";
 // api
-import { EditBizOpportunity } from "@/axios/api";
+import { EditBizOpportunity, EditReserveMgmt } from "@/axios/api";
 import { mapMutations, mapState } from "vuex";
 export default {
   name: "reserve",
@@ -224,10 +222,7 @@ export default {
     next();
   },
   computed: {
-    ...mapState(["uintDetailList", "clientDetail"])
-  },
-  created() {
-    this.onLoad();
+    ...mapState(["uintDetailList", "clientDetail", "reserveObj"])
   },
   methods: {
     getStartTime() {
@@ -269,6 +264,31 @@ export default {
         name: "unitInfoALL"
       });
     },
+    fixDetail() {
+      this.hasDeatil = !this.hasDeatil;
+      this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
+      this.businessNewObj.Accountid = this.$route.params.data.Accountid;
+      this.businessNewObj.clientDataPhone = this.$route.params.data.Userphone;
+      this.businessNewObj.unitArea = this.$route.params.data.Rentalarea;
+      this.businessNewObj.Bookstartdate = this.$options.filters.dataFrm(
+        this.$route.params.data.Bookexpirydate,
+        "YYYY-MM-DD"
+      );
+      this.businessNewObj.Bookexpirydate = this.$options.filters.dataFrm(
+        this.$route.params.data.Bookexpirydate,
+        "YYYY-MM-DD"
+      );
+      this.businessNewObj.Remark = this.$route.params.data.Remark;
+      this.businessNewObj.Bookamt = this.$route.params.data.Bookamt;
+      this.businessNewObj.Prospectid = this.$route.params.data.Prospectid;
+      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid;
+      this.businessNewObj.Companyid = this.$route.params.data.Companyid;
+      this.businessNewObj.Units.Jsondata = JSON.parse(
+        this.$route.params.data.Resunitinfjson
+      );
+      this.RESERVEADD(this.businessNewObj);
+    },
+
     onLoad() {
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
@@ -278,25 +298,11 @@ export default {
         //从单元所有过来，商机部分有展示
         this.hasUint = !this.hasUint;
       }
+      if (this.$route.query.from !== "clientList") {
+        this.businessNewObj = this.reserveObj;
+      }
       if (this.$route.query.from === "reserveDetail") {
-        this.hasDeatil = !this.hasDeatil;
-        this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
-        this.businessNewObj.Accountid = this.$route.params.data.Accountid;
-        this.businessNewObj.clientDataPhone = `预定详情接口没有返回联系人手机号`;
-        this.businessNewObj.Bookstartdate = this.$options.filters.dataFrm(
-          this.$route.params.data.Bookexpirydate,
-          "YYYY-MM-DD"
-        );
-        this.businessNewObj.Bookexpirydate = this.$options.filters.dataFrm(
-          this.$route.params.data.Bookexpirydate,
-          "YYYY-MM-DD"
-        );
-        this.businessNewObj.Remark = this.$route.params.data.Remark;
-        this.businessNewObj.Bookamt = this.$route.params.data.Bookamt;
-        this.businessNewObj.Prospectid = this.$route.params.data.Prospectid;
-        this.businessNewObj.Propertyid = this.$route.params.data.Propertyid;
-        this.businessNewObj.Companyid = this.$route.params.data.Companyid;
-        this.businessNewObj.Units.Jsondata =  JSON.parse(this.$route.params.data.Resunitinfjson);
+        this.fixDetail();
       } else {
         this.businessNewObj.clientDataName = this.clientDetail.Name;
         this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
@@ -306,7 +312,6 @@ export default {
           let A = this.uintDetailList.map(item => {
             return Number(item.Builduparea);
           });
-          console.log(this.businessNewObj.Units.Jsondata);
           this.businessNewObj.unitArea = A.reduce(function(
             prev,
             curr,
@@ -319,7 +324,14 @@ export default {
       }
     },
     submit() {
-      console.log(this.businessNewObj);
+      this.RESERVEADD(this.businessNewObj);
+      let data = {
+        Reservemgmt: this.businessNewObj
+      };
+      console.log(data);
+      EditReserveMgmt(data).then(res => {
+        console.log(res);
+      });
     }
   }
 };

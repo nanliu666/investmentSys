@@ -568,6 +568,7 @@ export default {
     getUnitBlock() {
       GetUnitByBlock(this.requestData).then(res => {
         this.allBlock = res.Content;
+        console.log(this.allBlock)
         this.hasProject();
       });
     },
