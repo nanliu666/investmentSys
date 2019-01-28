@@ -377,11 +377,11 @@ export default {
         );
       });
     },
-
     getPropertyBlock(data) {
       this.blockSelect = data.Blockname;
       this.requestData.Blockid = data.Blockid;
       this.getUnitBlock();
+      localStorage.setItem("project", JSON.stringify(data));
       this.hasprojectStatus = !this.hasprojectStatus;
     },
     reselectCompany() {
@@ -425,16 +425,27 @@ export default {
         Statucode: "",
         Floorno: "",
         Startdate: "",
+        Companyid: "",
+        Bropertyid: "",
         Enddate: ""
       };
       if (
+        //底部删选信息
         this.toPageName === "reserveAdd" ||
         this.toPageName === "businessAdd"
       ) {
         this.requestData.Statucode = "UnitAvailable";
         this.hasUintNumber = !this.hasUintNumber;
       }
-      this.getUnitBlock();
+      let projectSelect = JSON.parse(localStorage.getItem("project"));
+      if (!!projectSelect) {
+        console.log(projectSelect);
+        this.requestData.Companyid = projectSelect.Companyid;
+        this.requestData.Propertyid = projectSelect.Propertyid;
+        this.getUnitBlock();
+      } else {
+        this.openProjecySelct();
+      }
       this.getCompany();
     },
     getUintList() {
@@ -562,13 +573,13 @@ export default {
         this.requestData.Statucode = "";
       }
       this.getUnitBlock();
-      this.$el.querySelector("#anchorScroll").scrollIntoView();
       this.floorList = [];
     },
     getUnitBlock() {
+      console.log("选择条件=>", this.requestData);
       GetUnitByBlock(this.requestData).then(res => {
         this.allBlock = res.Content;
-        console.log(this.allBlock)
+        console.log(this.allBlock);
         this.hasProject();
       });
     },
@@ -599,40 +610,31 @@ export default {
         .value();
     },
     hasProject() {
-      if (this.allBlock.length === 0) {
-        //没有数据返回
-      } else if (this.allBlock.length === 1) {
-        //该用户只有一个项目
-        this.blockSelect = this.allBlock[0].Blockname;
-        this.headerTittle = `${this.allBlock[0].Projectname}·${
-          this.blockSelect
-        }`;
-        this.allBlockFoorList = this.allBlock[0].Floorlist;
-        this.getFloorData();
-
-        let B = [];
-        this.FloorSelectlist.map(item => {
-          B.push(item[0].Unitlist.length);
-        });
-        this.uintNumber = B.reduce(function(prev, cur) {
-          return prev + cur;
-        }, 0);
-        let unitNull = 0; //判断有没有数据
-        this.FloorSelectlist.map(item => {
-          if (item[0].Unitlist.length === 0) {
-            unitNull += 1;
-          }
-        });
-        if (unitNull === this.FloorSelectlist.length) {
-          //没有数据展示
-          this.noData = true;
-        } else {
-          this.noData = false;
+      //项目数据
+      this.blockSelect = this.allBlock[0].Blockname;
+      this.headerTittle = `${this.allBlock[0].Projectname}·${this.blockSelect}`;
+      this.allBlockFoorList = this.allBlock[0].Floorlist;
+      this.getFloorData();
+      let B = [];
+      this.FloorSelectlist.map(item => {
+        B.push(item[0].Unitlist.length);
+      });
+      this.uintNumber = B.reduce(function(prev, cur) {
+        return prev + cur;
+      }, 0);
+      let unitNull = 0; //判断有没有数据
+      this.FloorSelectlist.map(item => {
+        if (item[0].Unitlist.length === 0) {
+          unitNull += 1;
         }
-        this.floorListDisplay = this.FloorSelectlist.slice(0, 5);
+      });
+      if (unitNull === this.FloorSelectlist.length) {
+        //没有数据展示
+        this.noData = true;
       } else {
-        //该用户有多个项目，需要选择项目
+        this.noData = false;
       }
+      this.floorListDisplay = this.FloorSelectlist.slice(0, 5);
     },
     openProjecySelct() {
       this.hasprojectStatus = !this.hasprojectStatus;

@@ -8,7 +8,6 @@ const homeNew = resolve => require(['@/page/home/homeNew'], resolve);
 const affairList = resolve => require(['@/page/affair/affairList'], resolve);
 const affairDetail = resolve => require(['@/page/affair/affairDetail'], resolve);
 //单元模块
-const unitInfoOption = resolve => require(['@/page/unitInfo/unitInfoOption'], resolve);
 const unitInfoALL = resolve => require(['@/page/unitInfo/unitInfoALL'], resolve);
 
 //预定模块
@@ -75,11 +74,6 @@ export default [{
     },
 
     //单元模块
-    {
-      path: '/unitInfoOption', //单元信息选择
-      name: 'unitInfoOption',
-      component: unitInfoOption,
-    },
     {
       path: '/unitInfoALL', //单元信息所有
       name: 'unitInfoALL',
