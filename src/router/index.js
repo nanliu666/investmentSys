@@ -1,5 +1,4 @@
 import App from '../App'
-const login = resolve => require(['@/page/login'], resolve);
 //首页模块
 const home = resolve => require(['@/page/home/home'], resolve);
 const homeNew = resolve => require(['@/page/home/homeNew'], resolve);
@@ -67,11 +66,7 @@ export default [{
       component: affairDetail,
       name: 'affairDetail'
     },
-    //登陆
-    {
-      path: '/login',
-      component: login
-    },
+
 
     //单元模块
     {

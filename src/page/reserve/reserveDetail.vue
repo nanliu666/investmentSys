@@ -199,7 +199,7 @@ export default {
     onLoad() {
       const data = {
         Reservemgmt: {
-          Bookid: this.$route.params.data.Bookid
+          Bookid: this.$route.params.id
         }
       };
       GetReserveMgmtDetail(data).then(res => {

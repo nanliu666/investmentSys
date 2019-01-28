@@ -12,7 +12,7 @@ export const GetCompanyies = p => post(`${baseHead}Unitinfo.asmx/GetCompanyies`,
 export const GetPropertys = p => post(`${baseHead}Unitinfo.asmx/GetPropertys`, p); //获取当前用户项目信息
 export const GetPropertyAreas = p => post(`${baseHead}Unitinfo.asmx/GetPropertyAreas`, p); //获取当前用户所有分区信息
 export const GetBlocks = p => post(`${baseHead}Unitinfo.asmx/GetBlocks`, p); //获取当前用户所有楼栋信息
-export const GetUnitByBlock = p => post(`${baseHead}Unitinfo.asmx/GetUnitByBlock`, p); //获取当前用户所有楼栋信息
+export const GetUnitByBlockCompanyProject = p => post(`${baseHead}Unitinfo.asmx/GetUnitByBlockCompanyProject`, p); //获取当前用户所有楼栋信息
 
 // 商机信息接口
 export const GetBizOpportunity = p => post(`${baseHead}BizOpportunity.asmx/GetBizOpportunity`, p); //获取商机信息

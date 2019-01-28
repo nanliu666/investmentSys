@@ -235,7 +235,7 @@
 <script>
 import {
   GetCompanyies,
-  GetUnitByBlock,
+  GetUnitByBlockCompanyProject,
   GetBlocks,
   GetPropertys
 } from "@/axios/api";
@@ -441,7 +441,7 @@ export default {
       if (!!projectSelect) {
         console.log(projectSelect);
         this.requestData.Companyid = projectSelect.Companyid;
-        this.requestData.Propertyid = projectSelect.Propertyid;
+        this.requestData.Projectid = projectSelect.Propertyid;
         this.getUnitBlock();
       } else {
         this.openProjecySelct();
@@ -577,7 +577,7 @@ export default {
     },
     getUnitBlock() {
       console.log("选择条件=>", this.requestData);
-      GetUnitByBlock(this.requestData).then(res => {
+      GetUnitByBlockCompanyProject(this.requestData).then(res => {
         this.allBlock = res.Content;
         console.log(this.allBlock);
         this.hasProject();

@@ -176,7 +176,7 @@ export default {
       this.$router.push({
         name: "reserveAdd",
         query: {
-          from: "reseverList"
+          from: "reserveList"
         }
       });
     },
@@ -233,7 +233,7 @@ export default {
         name: "reserveDetail",
         params: { id: data.Bookid, data: data },
         query: {
-          from: "reseverList"
+          from: "reserveList"
         }
       });
     },

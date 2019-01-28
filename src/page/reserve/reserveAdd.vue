@@ -130,7 +130,7 @@
           >
             <input
               type="number"
-              placeholder="请填写定金金额请求后端补全定金"
+              placeholder="请填写定金金额"
               style="text-align: right"
               v-model="businessNewObj.Bookamt"
             >
@@ -186,7 +186,8 @@ export default {
         Bookexpirydate: "", //预定开始日期
         Bookstartdate: "", //预定结束日期
         Bookamt: "", //定金
-        Prospectid: 0, //商机ID，如果是新增就为0
+        Prospectid: -1, //商机ID，没有为-1
+        Bookid: 0, //预定ID，新增为0
         Sourceid: "", //商机来源id
         Remark: "", //备注
         Propertyid: "", //项目id
@@ -250,21 +251,27 @@ export default {
     openStatus() {
       this.hasStatus = !this.hasStatus;
     },
-    ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
+    ...mapMutations([
+      "CLIENT_DETAIL",
+      "RESERVEADD",
+      "UINT_DETAIL",
+      "TO_PAGE_NAME"
+    ]),
     goback() {
       this.$router.back(-1);
     },
     getClient() {
-      this.$router.push({
+      this.$router.replace({
         name: "clientList"
       });
     },
     getUint() {
-      this.$router.push({
+      this.$router.replace({
         name: "unitInfoALL"
       });
     },
-    fixDetail() {
+    reserveDetailData() {
+      //来自预定详情的数据
       this.hasDeatil = !this.hasDeatil;
       this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
       this.businessNewObj.Accountid = this.$route.params.data.Accountid;
@@ -280,35 +287,78 @@ export default {
       );
       this.businessNewObj.Remark = this.$route.params.data.Remark;
       this.businessNewObj.Bookamt = this.$route.params.data.Bookamt;
-      this.businessNewObj.Prospectid = this.$route.params.data.Prospectid;
-      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid;
+      this.businessNewObj.Prospectid = this.$route.params.data.Prospectid; //项目ID
+      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
       this.businessNewObj.Companyid = this.$route.params.data.Companyid;
       this.businessNewObj.Units.Jsondata = JSON.parse(
         this.$route.params.data.Resunitinfjson
       );
       this.RESERVEADD(this.businessNewObj);
     },
-
+    businessDetailData() {
+      this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
+      this.businessNewObj.Accountid = this.$route.params.data.Accountid;
+      this.businessNewObj.clientDataPhone = this.$route.params.data.Phone;
+      this.businessNewObj.Bookstartdate = this.$options.filters.dataFrm(
+        this.$route.params.data.Modifydate,
+        "YYYY-MM-DD"
+      );
+      this.businessNewObj.Bookexpirydate = this.$options.filters.dataFrm(
+        this.$route.params.data.Lastdate,
+        "YYYY-MM-DD"
+      );
+      this.businessNewObj.unitArea = 'this.$route.params.data.Rentalarea';
+      this.businessNewObj.Bookamt = 'this.$route.params.data.Bookamt';
+      this.businessNewObj.Prospectid = this.$route.params.data.Prospectid; //项目ID
+      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
+      this.businessNewObj.Companyid = this.$route.params.data.Companyid;
+      this.businessNewObj.Units.Jsondata = JSON.parse(
+        this.$route.params.data.Unitinfjson
+      );
+      this.RESERVEADD(this.businessNewObj);
+    },
     onLoad() {
+      console.log(this.$route);
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
         .add(1, "months")
         .format("YYYY-MM-DD");
       if (this.$route.query.from === "unitInfoAll") {
-        //从单元所有过来，商机部分有展示
+        //从单元信息过来，商机部分有展示
         this.hasUint = !this.hasUint;
       }
-      if (this.$route.query.from !== "clientList") {
-        this.businessNewObj = this.reserveObj;
+      if (
+        this.$route.query.from !== "clientList" ||
+        this.$route.query.from !== "reserveDetail"
+      ) {
+        //除了联系人和预定详情过来的，并且vux里面有预定对象，渲染数据使用vux的对象
+        if (!!this.reserveObj) {
+          this.businessNewObj = this.reserveObj;
+        }
       }
-      if (this.$route.query.from === "reserveDetail") {
-        this.fixDetail();
+      if (this.$route.query.from === "reserveList") {
+        //从预订列表过来，完全新增，所有vux的都清除
+        this.CLIENT_DETAIL();
+        this.UINT_DETAIL();
+        this.RESERVEADD();
+      } else if (this.$route.query.from === "reserveDetail") {
+        // 来自预定详情的数据处理
+        this.reserveDetailData();
+      } else if (this.$route.query.from === "businessDetail") {
+        // 从商机详情过来，数据处理
+        this.businessDetailData();
       } else {
-        this.businessNewObj.clientDataName = this.clientDetail.Name;
-        this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
-        this.businessNewObj.clientDataPhone = this.clientDetail.Phone;
+        if (this.clientDetail) {
+          // 选择了联系人
+          this.businessNewObj.clientDataName = this.clientDetail.Name;
+          this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
+          this.businessNewObj.clientDataPhone = this.clientDetail.Phone;
+        }
         if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
+          // 选择了单元信息
           this.businessNewObj.Units.Jsondata = this.uintDetailList;
+          this.businessNewObj.Propertyid = this.uintDetailList[0].Projectid; //项目ID
+          this.businessNewObj.Companyid = this.uintDetailList[0].Companyid;
           let A = this.uintDetailList.map(item => {
             return Number(item.Builduparea);
           });
@@ -326,11 +376,23 @@ export default {
     submit() {
       this.RESERVEADD(this.businessNewObj);
       let data = {
-        Reservemgmt: this.businessNewObj
+        Reservemgmt: this._.omit(this.businessNewObj, "Units"),
+        Units: this.businessNewObj.Units
       };
-      console.log(data);
       EditReserveMgmt(data).then(res => {
         console.log(res);
+        // if (!!res) {
+        //   this.$vux.toast.show({
+        //     text: "新增成功！",
+        //     type: "success"
+        //   });
+        //   this.$router.push({
+        //     name: "reserveList",
+        //     params: {
+        //       isLoad: true
+        //     }
+        //   });
+        // }
       });
     }
   }
