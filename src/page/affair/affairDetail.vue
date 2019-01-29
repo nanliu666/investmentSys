@@ -1,9 +1,13 @@
 <template>
   <div class="affairDetail">
     <view-box ref="viewBox" class="viewBox">
-    <div class="appTopOther"></div>
-
+      <div class="appTopOther"></div>
       <x-header :left-options="{backText: ''}" class="header">审批详情</x-header>
+      <section class="footer">
+        <button class="addSign">加签</button>
+        <button class="reject">驳回</button>
+        <button class="submit">提交</button>
+      </section>
       <div style="height:44px;">
         <sticky
           ref="sticky"
@@ -416,6 +420,34 @@ export default {
 @import "src/assets/sass/mixin";
 .affairDetail {
   height: 100%;
+  .footer {
+    @include wh(100%, 96px);
+    box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);
+    padding: 0 40px;
+    line-height: 96px;
+    background-color: #fff;
+    position: fixed;
+    bottom: 0;
+    @include fd;
+    @include fj(flex-end);
+    @include flexHCenter;
+    button {
+      @include wh(168px, 60px);
+      @include flexCenter;
+      border-radius: 30px;
+      margin-left: 20px;
+      @include sc(30px, rgba(255, 255, 255, 1));
+    }
+    .addSign {
+      background-color: rgba(105, 167, 254, 1);
+    }
+    .reject {
+      background-color: rgba(255, 171, 86, 1);
+    }
+    .submit {
+      background-color: rgba(105, 167, 254, 1);
+    }
+  }
   .contractTitle {
     @include fj;
     @include sc(28px, rgba(136, 136, 136, 1));
@@ -633,7 +665,7 @@ export default {
   .nomore {
     @include sc(24px, rgba(174, 174, 174, 1));
     @include flexCenter;
-    margin: 30px;
+    margin: 30px 30px 120px;
   }
 
   .popupHistory {
