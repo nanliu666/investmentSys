@@ -179,7 +179,10 @@ export default {
     },
     addBusiness() {
       this.$router.push({
-        name: "businessAdd"
+        name: "businessAdd",
+        query: {
+          from : 'businessList'
+        }
       });
     },
     FilterUpdate(data) {
@@ -235,6 +238,9 @@ export default {
         params: {
           data: data,
           id: data.Prospectid
+        },
+        query : {
+          from: 'businessList'
         }
       });
     },

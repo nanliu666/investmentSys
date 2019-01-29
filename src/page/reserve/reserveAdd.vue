@@ -188,13 +188,12 @@ export default {
         Bookamt: "", //定金
         Prospectid: -1, //商机ID，没有为-1
         Bookid: 0, //预定ID，新增为0
-        Sourceid: "", //商机来源id
         Remark: "", //备注
         Propertyid: "", //项目id
         Companyid: "", //公司id
         Accountid: "", //客户id
         clientDataName: "", //客户名称
-        unitArea: "",
+        unitArea: "", //面积
         clientDataPhone: "", //客户手机
         Units: {
           //选择的单元信息
@@ -296,6 +295,7 @@ export default {
       this.RESERVEADD(this.businessNewObj);
     },
     businessDetailData() {
+      console.log(this.$route.params.data);
       this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
       this.businessNewObj.Accountid = this.$route.params.data.Accountid;
       this.businessNewObj.clientDataPhone = this.$route.params.data.Phone;
@@ -307,8 +307,8 @@ export default {
         this.$route.params.data.Lastdate,
         "YYYY-MM-DD"
       );
-      this.businessNewObj.unitArea = 'this.$route.params.data.Rentalarea';
-      this.businessNewObj.Bookamt = 'this.$route.params.data.Bookamt';
+      // this.businessNewObj.unitArea = "this.$route.params.data.Rentalarea";
+      // this.businessNewObj.Bookamt = "this.$route.params.data.Bookamt";
       this.businessNewObj.Prospectid = this.$route.params.data.Prospectid; //项目ID
       this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
       this.businessNewObj.Companyid = this.$route.params.data.Companyid;
@@ -318,7 +318,6 @@ export default {
       this.RESERVEADD(this.businessNewObj);
     },
     onLoad() {
-      console.log(this.$route);
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
         .add(1, "months")
@@ -375,25 +374,52 @@ export default {
     },
     submit() {
       this.RESERVEADD(this.businessNewObj);
+      let TempA = this.$options.filters.dataFrm(
+        this.businessNewObj.Bookstartdate,
+        "YYYY-MM-DD HH:mm:ss"
+      );
+      let TempB = this.$options.filters.dataFrm(
+        this.businessNewObj.Bookexpirydate,
+        "YYYY-MM-DD HH:mm:ss"
+      );
+      let TempObj = this._.omit(this.businessNewObj, "Units");
+      TempObj.Bookstartdate = TempA;
+      TempObj.Bookexpirydate = TempB;
       let data = {
-        Reservemgmt: this._.omit(this.businessNewObj, "Units"),
+        Reservemgmt: TempObj,
         Units: this.businessNewObj.Units
       };
-      EditReserveMgmt(data).then(res => {
-        console.log(res);
-        // if (!!res) {
-        //   this.$vux.toast.show({
-        //     text: "新增成功！",
-        //     type: "success"
-        //   });
-        //   this.$router.push({
-        //     name: "reserveList",
-        //     params: {
-        //       isLoad: true
-        //     }
-        //   });
-        // }
-      });
+      if (TempObj.Bookstartdate >= TempObj.Bookexpirydate) {
+        this.$vux.toast.show({
+          text: "开始时间必须小于等于结束时间",
+          type: "warn"
+        });
+      } else if (this.businessNewObj.Units.Jsondata.length === 0) {
+        this.$vux.toast.show({
+          text: "请选择意向单元",
+          type: "warn"
+        });
+      } else {
+        EditReserveMgmt(data).then(res => {
+          if (res.Success !== false) {
+            this.$vux.toast.show({
+              text: "新增成功！",
+              type: "success"
+            });
+            this.$router.push({
+              name: "reserveList",
+              params: {
+                isLoad: true
+              }
+            });
+          } else {
+            this.$vux.toast.show({
+              text: "新增失败!",
+              type: "warn"
+            });
+          }
+        });
+      }
     }
   }
 };

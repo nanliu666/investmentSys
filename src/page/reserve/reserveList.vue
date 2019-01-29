@@ -64,7 +64,7 @@
               <label class="phone">预定周期：</label>
               <span
                 class="text"
-              >{{item.Defaultstartdate | dataFrm('YYYY-MM-DD')}}&nbsp;至&nbsp;{{item.Defaultexpirydate | dataFrm('YYYY-MM-DD')}}</span>
+              >{{item.Bookstartdate | dataFrm('YYYY-MM-DD')}}&nbsp;至&nbsp;{{item.Bookexpirydate | dataFrm('YYYY-MM-DD')}}</span>
             </div>
           </div>
         </div>
@@ -135,7 +135,7 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === "reserveAdd") {
+    if (from.name === "reserveDetail") {
       to.meta.isBack = true;
     }
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
@@ -181,7 +181,6 @@ export default {
       });
     },
     FilterUpdate(data) {
-      console.log("子组件传递过来的修改的值", data);
       this.FilterCond = data;
       this.mescroll.resetUpScroll();
     },

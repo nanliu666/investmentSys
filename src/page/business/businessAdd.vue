@@ -3,7 +3,8 @@
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
-      新增商机
+      <span v-if="hasDeatil">商机详情</span>
+      <span v-if="!hasDeatil">新增商机</span>
     </x-header>
     <section class="content">
       <div class="reseveTitle" v-if="hasUint">
@@ -27,8 +28,11 @@
             <span>客户姓名</span>
             <span class="badge">*</span>
           </div>
-          <div class="liRight" :class="[!!clientDataName ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!clientDataName ? clientDataName : '请选择联系人'}}</span>
+          <div
+            class="liRight"
+            :class="[!!businessNewObj.clientDataName ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{!!businessNewObj.clientDataName ? businessNewObj.clientDataName : '请选择联系人'}}</span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
@@ -37,8 +41,11 @@
             <span>手机号码</span>
             <span class="badge">*</span>
           </div>
-          <div class="liRight" :class="[!!clientDataPhone ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!clientDataPhone ? clientDataPhone : '请选择联系人'}}</span>
+          <div
+            class="liRight"
+            :class="[!!businessNewObj.clientDataPhone ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{!!businessNewObj.clientDataPhone ? businessNewObj.clientDataPhone : '请选择联系人'}}</span>
           </div>
         </li>
         <div class="cientInfo">商机信息</div>
@@ -48,11 +55,14 @@
           </div>
           <div
             class="liRight"
-            :class="[businessList.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
+            :class="[businessNewObj.Units.Jsondata.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span v-if="businessList.length === 0">请选择意向单元</span>
-            <span v-if="businessList.length !== 0" class="liRightContent">
-              <span v-for="(item, index) in businessList" :key="index">{{item}}</span>
+            <span v-if="businessNewObj.Units.Jsondata.length === 0">请选择意向单元</span>
+            <span v-if="businessNewObj.Units.Jsondata.length !== 0" class="liRightContent">
+              <span
+                v-for="(item, index) in businessNewObj.Units.Jsondata"
+                :key="index"
+              >{{item.Unitno}}</span>
             </span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
@@ -63,9 +73,9 @@
           </div>
           <div
             class="liRight"
-            :class="[!!radioOptionsValue ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!businessNewObj.radioOptionsValue ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span>{{!!radioOptionsValue ? radioOptionsValue : '商机来源'}}</span>
+            <span>{{!!businessNewObj.radioOptionsValue ? businessNewObj.radioOptionsValue : '商机来源'}}</span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
@@ -73,13 +83,16 @@
           <div class="liLeft">
             <span>期望铺位面积(m²)</span>
           </div>
-          <div class="liRight" :class="[!!unitArea ? 'cellValueClass' : 'placeholderClass']">
+          <div
+            class="liRight"
+            :class="[!!businessNewObj.unitArea ? 'cellValueClass' : 'placeholderClass']"
+          >
             <input
               readonly
               type="number"
               placeholder="请填写面积"
               style="text-align: right"
-              v-model="unitArea"
+              v-model="businessNewObj.unitArea"
             >
           </div>
         </li>
@@ -87,8 +100,11 @@
           <div class="liLeft">
             <span>成交几率(范围)</span>
           </div>
-          <div class="liRight" :class="[!!urgencyValue ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!urgencyValue ? urgencyValue : '请选择成交几率'}}</span>
+          <div
+            class="liRight"
+            :class="[!!businessNewObj.urgencyValue ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{!!businessNewObj.urgencyValue ? businessNewObj.urgencyValue : '请选择成交几率'}}</span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
@@ -96,13 +112,15 @@
           <div class="liLeft">
             <span>备注</span>
           </div>
-          <div class="liRight" :class="[!!Remark ? 'cellValueClass' : 'placeholderClass']">
+          <div
+            class="liRight"
+            :class="[!!businessNewObj.Remark ? 'cellValueClass' : 'placeholderClass']"
+          >
             <input
               type="text"
               placeholder="请填写备注"
               style="text-align: right"
-              v-model="Remark"
-              @input="TextAreaChange()"
+              v-model="businessNewObj.Remark"
             >
           </div>
         </li>
@@ -159,38 +177,36 @@ export default {
   name: "reserve",
   data() {
     return {
+      hasDeatil: false,
       businessNewObj: {
-        Bizopportunity: {
-          Prospectid: 0, //商机ID，如果是新增就为0
-          Sourceid: "", //商机来源id
-          Priorityid: "", //紧急程度id
-          Remark: "", //备注
-          Propertyid: "", //项目id
-          Companyid: "", //公司id
-          Accountid: "", //客户id
-          Units: {
-            //选择的单元信息
-            Jsondata: {}
-          }
+        Prospectid: 0, //商机ID，如果是新增就为0
+        Sourceid: "", //商机来源id
+        radioOptionsValue: "", //选中商机来源值
+        Priorityid: "", //紧急程度id
+        urgencyValue: "", //紧急默认值
+        Remark: "", //备注
+        Propertyid: "", //项目id
+        Companyid: "", //公司id
+        Accountid: "", //客户id
+        clientDataName: "", //客户名称
+        unitArea: "", //面积
+        clientDataPhone: "", //客户手机
+        Units: {
+          //选择的单元信息
+          Jsondata: []
         }
       },
       hasStatus: false,
       hasUint: "",
-      Remark: "", //备注
-      clientDataName: "", //姓名
-      clientDataPhone: "", //电话
       businessList: [], //当前意向
       radioOptions: [], //商机来源列表
       radioOptionsList: [], //实际商机来源列表
-      radioOptionsValue: "", //选中商机来源值
       radioOptionsSelect: [], //选中商机来源值--传递的值
-      unitArea: "", //铺位面积
       chanceValue: false, //商机来源默认值 --popup判断
       hasUrgencySource: false, //商机来源默认值--popup判断
       urgencySource: [], //数据源
       urgencyList: [], //紧急程度处理后的数据源
-      urgencyObj: [], //紧急程度被传递的值
-      urgencyValue: "" //紧急默认值
+      urgencyObj: [] //紧急程度被传递的值
     };
   },
 
@@ -216,46 +232,42 @@ export default {
   },
   created() {
     this.isFirstEnter = true;
-    if (this.$route.query.from === 'unitInfoAll') {
+    if (this.$route.query.from === "unitInfoAll") {
       this.hasUint = !this.hasUint;
     }
     this.onLoad();
-    console.log(this.$route.params.data)
   },
   methods: {
     openStatus() {
       this.hasStatus = !this.hasStatus;
     },
-    TextAreaChange: _.debounce(function() {
-      this.businessNewObj.Bizopportunity.Remark = this.Remark; //存起来成交几率
-    }, 1000),
     ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
     goback() {
       this.$router.back(-1);
     },
     getClient() {
-      this.$router.push({
+      this.$router.replace({
         name: "clientList"
       });
     },
     getUint() {
-      this.$router.push({
+      this.$router.replace({
         name: "unitInfoALL"
       });
     },
     getUrgencyChange(value) {
-      this.urgencyValue = value;
+      this.businessNewObj.urgencyValue = value;
       this.urgencyObj = this._.filter(this.urgencySource, item => {
         return item.Text === value;
       });
-      this.businessNewObj.Bizopportunity.Priorityid = this.urgencyObj[0].Value; //存起来成交几率
+      this.businessNewObj.Priorityid = this.urgencyObj[0].Value; //存起来成交几率
     },
     getBusinessChange(value) {
-      this.radioOptionsValue = value;
+      this.businessNewObj.radioOptionsValue = value;
       this.radioOptionsSelect = this._.filter(this.radioOptionsList, item => {
         return item.Text === value;
       });
-      this.businessNewObj.Bizopportunity.Sourceid = this.radioOptionsSelect[0].Value; //存起来商机来源
+      this.businessNewObj.Sourceid = this.radioOptionsSelect[0].Value; //存起来商机来源
     },
     chancesource() {
       this.chanceValue = !this.chanceValue;
@@ -263,20 +275,54 @@ export default {
     getUrgencySource() {
       this.hasUrgencySource = !this.hasUrgencySource;
     },
+    ...mapMutations([
+      "CLIENT_DETAIL",
+      "RESERVEADD",
+      "UINT_DETAIL",
+      "TO_PAGE_NAME"
+    ]),
+    businessDetailData() {
+      //来自商机详情详情的数据
+      this.hasDeatil = !this.hasDeatil;
+      console.log( this.$route.params.data)
+      this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
+      this.businessNewObj.Accountid = this.$route.params.data.Accountid;
+      this.businessNewObj.clientDataPhone = this.$route.params.data.Phone;
+      this.businessNewObj.unitArea = this.$route.params.data.Rentalarea;
+      this.businessNewObj.Remark = this.$route.params.data.Remark;
+      this.businessNewObj.Prospectid = this.$route.params.data.Prospectid; //项目ID
+      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
+      this.businessNewObj.Companyid = this.$route.params.data.Companyid;
+      this.businessNewObj.Units.Jsondata = JSON.parse(
+        this.$route.params.data.Unitinfjson
+      );
+      this.RESERVEADD(this.businessNewObj);
+    },
     onLoad() {
-      this.clientDataName = this.clientDetail.Name;
-      this.businessNewObj.Bizopportunity.Accountid = this.clientDetail.Accountid; //存起来客户ID
-      this.clientDataPhone = this.clientDetail.Phone;
-      if (this.uintDetailList.length !== 0) {
-        console.log(this.uintDetailList)
-        this.businessNewObj.Bizopportunity.Units.Jsondata = this.uintDetailList; //存起来选择的单元信息
-        this.businessList = this.uintDetailList.map(item => {
-          return item.Unitno;
-        });
+      if (this.$route.query.from === "businessList") {
+        this.CLIENT_DETAIL();
+        this.UINT_DETAIL();
+        this.RESERVEADD();
+      }
+      if (this.clientDetail) {
+        // 选择了联系人
+        this.businessNewObj.clientDataName = this.clientDetail.Name;
+        this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
+        this.businessNewObj.clientDataPhone = this.clientDetail.Phone;
+      }
+      if (this.$route.query.from === "businessDetail") {
+        // 来自预定详情的数据处理
+        this.businessDetailData();
+      }
+      if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
+        // 选择了单元信息
+        this.businessNewObj.Units.Jsondata = this.uintDetailList;
+        this.businessNewObj.Propertyid = this.uintDetailList[0].Projectid; //项目ID
+        this.businessNewObj.Companyid = this.uintDetailList[0].Companyid;
         let A = this.uintDetailList.map(item => {
           return Number(item.Builduparea);
         });
-        this.unitArea = A.reduce(function(prev, curr, idx, arr) {
+        this.businessNewObj.unitArea = A.reduce(function(prev, curr, idx, arr) {
           return prev + curr;
         });
       }
@@ -292,10 +338,48 @@ export default {
       });
     },
     submit() {
-      console.log(this.businessNewObj);
-      // EditBizOpportunity().then(res => {
-      //   console.log(res);
-      // });
+      this.RESERVEADD(this.businessNewObj);
+      let TempObj = this._.omit(this.businessNewObj, "Units");
+      let data = {
+        Bizopportunity: TempObj,
+        Units: this.businessNewObj.Units
+      };
+      if (!!this.businessNewObj.Sourceid === false) {
+        this.$vux.toast.show({
+          text: "请选择商机来源",
+          type: "warn"
+        });
+      } else if (this.businessNewObj.Units.Jsondata.length === 0) {
+        this.$vux.toast.show({
+          text: "请选择意向单元",
+          type: "warn"
+        });
+      } else if (!!this.businessNewObj.Priorityid === false) {
+        this.$vux.toast.show({
+          text: "请选择成交几率",
+          type: "warn"
+        });
+      } else {
+        EditBizOpportunity(data).then(res => {
+          if (res.Success !== false) {
+            this.$vux.toast.show({
+              text: "新增成功！",
+              type: "success"
+            });
+            this.$router.push({
+              name: "businessList",
+              params: {
+                isLoad: true
+              }
+            });
+          } else {
+            this.$vux.toast.show({
+              text: "新增失败!",
+              type: "warn"
+            });
+          }
+        });
+      }
     }
   }
 };

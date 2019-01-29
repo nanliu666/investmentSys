@@ -283,12 +283,13 @@ export default {
           break;
         case "移交":
           this.confirShow = !this.confirShow;
-          this.hasyijiao = !this.hasyijiao;
+          this.hasyijiao = true;
           this.confirmTittle = "请选择移交人员";
 
           break;
         case "流失":
           this.confirmTittle = "请选择流失原因";
+          this.hasyijiao = false;
           this.confirShow = !this.confirShow;
           this.hasliushi = !this.hasliushi;
           break;

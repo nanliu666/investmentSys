@@ -185,7 +185,7 @@ export default {
             Bookid: this.$route.params.data.Bookid
           };
           DeleteReserveMgmt(data).then(res => {
-            if (!!res.Success) {
+            if (res.Success !== false) {
               this.$router.push({ name: "reserveList" });
             }
           });
