@@ -284,7 +284,6 @@ export default {
     businessDetailData() {
       //来自商机详情详情的数据
       this.hasDeatil = !this.hasDeatil;
-      console.log( this.$route.params.data)
       this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
       this.businessNewObj.Accountid = this.$route.params.data.Accountid;
       this.businessNewObj.clientDataPhone = this.$route.params.data.Phone;

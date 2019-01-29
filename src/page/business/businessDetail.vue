@@ -1,7 +1,6 @@
 <template>
   <div class="reservePart">
     <div class="appTopHome"></div>
-
     <section class="businessHeader fs-header">
       <div @click="goback">
         <img src="../../assets/images/返回@2x.png" alt>
@@ -131,29 +130,26 @@ export default {
       }
     };
   },
+    beforeRouteEnter(to, from, next) {
+    if (from.name === "businessTrackList") {
+      to.meta.isBack = true;
+    }
+    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
+    next();
+  },
+  activated() {
+    if (!this.$route.meta.isBack || this.isFirstEnter) {
+      // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
+      // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
+      this.businessDetail = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
+      this.onLoad(); // ajax获取数据方法
+    }
+    // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
+    this.$route.meta.isBack = false;
+    this.isFirstEnter = false;
+  },
   created() {
-    let jsonData = {
-      Bizopportunity: {
-        Prospectid: Number(this.$route.params.id)
-      }
-    };
-    GetBizOpportunityDetail(jsonData).then(res => {
-      this.businessDetail = JSON.parse(res.Bizopprtunity).Datasource;
-    });
-    GetAgentsDropdown("").then(res => {
-      this.BizProspecttransferList = res.Option.Dropdowntoagentid;
-      this.BizProspecttransferListDisplay = this.BizProspecttransferList.map(
-        item => {
-          return item.Text;
-        }
-      );
-    });
-    GetFailtypeDropdown("").then(res => {
-      this.FailtypeDropdownList = res.Option.Dropdownfailtypeid;
-      this.FailtypeDropdownListDisplay = this.FailtypeDropdownList.map(item => {
-        return item.Text;
-      });
-    });
+    this.isFirstEnter = true;
   },
   components: {
     Actionsheet,
@@ -162,6 +158,32 @@ export default {
     Radio
   },
   methods: {
+    onLoad() {
+      let jsonData = {
+        Bizopportunity: {
+          Prospectid: Number(this.$route.params.id)
+        }
+      };
+      GetBizOpportunityDetail(jsonData).then(res => {
+        this.businessDetail = JSON.parse(res.Bizopprtunity).Datasource;
+      });
+      GetAgentsDropdown("").then(res => {
+        this.BizProspecttransferList = res.Option.Dropdowntoagentid;
+        this.BizProspecttransferListDisplay = this.BizProspecttransferList.map(
+          item => {
+            return item.Text;
+          }
+        );
+      });
+      GetFailtypeDropdown("").then(res => {
+        this.FailtypeDropdownList = res.Option.Dropdownfailtypeid;
+        this.FailtypeDropdownListDisplay = this.FailtypeDropdownList.map(
+          item => {
+            return item.Text;
+          }
+        );
+      });
+    },
     getReserve() {
       this.$router.push({
         name: "reserveAdd",
@@ -234,9 +256,11 @@ export default {
       }
     },
     getTrack(data) {
+      sessionStorage.setItem('businessTrackList', JSON.stringify(data))
       this.$router.push({
-        name: "businessTrack",
+        name: "businessTrackList",
         params: {
+          id:data.Prospectid,
           data: data
         }
       });

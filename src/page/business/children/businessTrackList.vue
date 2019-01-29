@@ -1,5 +1,5 @@
 <template>
-  <div class="businessTrack">
+  <div class="businessTrackList">
     <div class="appTopOther"></div>
     <x-header
       :left-options="{backText: ''}"
@@ -7,7 +7,7 @@
     >
       跟踪记录
       <img
-        src="../../assets/images/addNew.png"
+        src="../../../assets/images/addNew.png"
         @click="addTrack"
         slot="right"
         class="fs-addNew"
@@ -35,8 +35,8 @@
                 <div class="mainTop">
                   <div class="mainTopT">
                     <span class="trackTittle">跟踪状态: {{item.Probability}}</span>
-                    <span class="trackDot" @click="EditTrack">···</span>
-                    <div class="menu" v-show="showMenus">
+                    <span class="trackDot" @click="EditTrack(index)">···</span>
+                    <div class="menu" v-show="showMenus === index">
                       <span @click="EditorTrack(item)">编辑</span>
                       <span @click="deleteTrack(item)">删除</span>
                     </div>
@@ -55,7 +55,7 @@
     </div>
     <section class="noData" v-if="hasNodata">
       <div class="imgBox">
-        <img src="../../assets/images/分组.png" alt>
+        <img src="../../../assets/images/分组.png" alt>
         <div class="nodataTittle">暂无跟踪记录</div>
       </div>
     </section>
@@ -72,7 +72,7 @@ export default {
     return {
       TrackList: [],
       hasNodata: false,
-      showMenus: false,
+      showMenus: -1,
       menus: {
         menu1: "编辑",
         menu2: "删除"
@@ -82,30 +82,47 @@ export default {
   components: {
     XHeader
   },
-  name: "businessTrack",
+  name: "businessTrackList",
   created() {
     this.onLoad();
   },
-
   methods: {
     onLoad() {
       let data = {
-        Prospectid: this.$route.params.data.Prospectid
+        Prospectid: this.$route.params.id
       };
       GetFollowUp(data).then(res => {
-        console.log(JSON.parse(res.Content));
         this.TrackList = JSON.parse(res.Content);
         if (this.TrackList.length === 0) {
           this.hasNodata = !this.hasNodata;
         }
       });
     },
-    addTrack() {},
-    EditTrack() {
-      this.showMenus = !this.showMenus;
+    addTrack() {
+      this.$router.push({
+        name: 'businessTackAdd',
+        query: {
+          from: 'businessTrackList'
+        },
+        params: {
+          data: JSON.parse(sessionStorage.getItem('businessTrackList'))
+        }
+      })
+    },
+    EditTrack(index) {
+      this.showMenus = index;
     },
     EditorTrack(data) {
-      console.log(data);
+      this.$router.push({
+        name: 'businessTackAdd',
+        query: {
+          from: 'businessTrackDeatil'
+        },
+        params: {
+          data: data,
+          id: data.Prospectid
+        }
+      })
     },
     deleteTrack(data) {
       let jsonData = {
@@ -132,7 +149,7 @@ export default {
 
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
-.businessTrack {
+.businessTrackList {
   height: 100%;
   .uintNumber {
     background-color: rgba(231, 237, 244, 1);

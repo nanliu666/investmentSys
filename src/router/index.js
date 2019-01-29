@@ -18,7 +18,8 @@ const reserveAdd = resolve => require(['@/page/reserve/reserveAdd'], resolve);
 const businessAdd = resolve => require(['@/page/business/businessAdd'], resolve);
 const businessDetail = resolve => require(['@/page/business/businessDetail'], resolve);
 const businessList = resolve => require(['@/page/business/businessList'], resolve);
-const businessTrack = resolve => require(['@/page/business/businessTrack'], resolve);
+const businessTrackList = resolve => require(['@/page/business/children/businessTrackList'], resolve);
+const businessTackAdd = resolve => require(['@/page/business/children/businessTackAdd'], resolve);
 
 // 客户模块
 const clientList = resolve => require(['@/page/client/clientList'], resolve);
@@ -90,11 +91,20 @@ export default [{
       path: '/businessDetail/:id', //商机详情
       name: 'businessDetail',
       component: businessDetail,
+      meta: {
+        keepAlive: true,
+        isBack: false
+      }
     },
     {
-      path: '/businessTrack', //商机跟踪记录
-      name: 'businessTrack',
-      component: businessTrack,
+      path: '/businessTrackList/:id', //商机跟踪记录
+      name: 'businessTrackList',
+      component: businessTrackList,
+    },
+    {
+      path: '/businessTackAdd', //商机跟踪记录新增
+      name: 'businessTackAdd',
+      component: businessTackAdd,
     },
     {
       path: '/businessList', //商机管理
