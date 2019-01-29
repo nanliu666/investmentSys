@@ -7,20 +7,6 @@
       <span v-if="!hasDeatil">新增商机</span>
     </x-header>
     <section class="content">
-      <div class="reseveTitle" v-if="hasUint">
-        <div class="danyuan">当前预定单元</div>
-        <div class="qi">星月湾·东街二期 &nbsp; 403</div>
-        <div class="shangji">
-          <div>
-            当前铺位已有
-            <span class="shangjiNum">&nbsp;2&nbsp;</span>条可直接载入商机
-          </div>
-          <div>
-            <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon>
-            <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon>
-          </div>
-        </div>
-      </div>
       <div class="group">
         <div class="cientInfo">客户信息</div>
         <li class="groupLi" @click="getClient">
@@ -197,7 +183,6 @@ export default {
         }
       },
       hasStatus: false,
-      hasUint: "",
       businessList: [], //当前意向
       radioOptions: [], //商机来源列表
       radioOptionsList: [], //实际商机来源列表
@@ -232,9 +217,6 @@ export default {
   },
   created() {
     this.isFirstEnter = true;
-    if (this.$route.query.from === "unitInfoAll") {
-      this.hasUint = !this.hasUint;
-    }
     this.onLoad();
   },
   methods: {
@@ -247,12 +229,18 @@ export default {
     },
     getClient() {
       this.$router.replace({
-        name: "clientList"
+        name: "clientList",
+        query: {
+          from: "businessAdd"
+        }
       });
     },
     getUint() {
       this.$router.replace({
-        name: "unitInfoALL"
+        name: "unitInfoALL",
+        query: {
+          from: "businessAdd"
+        }
       });
     },
     getUrgencyChange(value) {
@@ -297,8 +285,26 @@ export default {
       );
       this.RESERVEADD(this.businessNewObj);
     },
+    unitInfoData() {
+      //来自单元信息的数据
+      // console.log(this.$route.params.data);
+      this.businessNewObj.unitArea = this.$route.params.data.Builduparea; //面积
+      this.businessNewObj.Prospectid = this.$route.params.data.Projectid; //项目ID
+      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
+      this.businessNewObj.Companyid = this.$route.params.data.Companyid;
+      this.businessNewObj.Units.Jsondata.push({
+        Unitid: this.$route.params.data.Unitid,
+        Unitno: this.$route.params.data.Unitno
+      });
+      this.RESERVEADD(this.businessNewObj);
+    },
     onLoad() {
-      if (this.$route.query.from === "businessList") {
+      console.log(this.businessNewObj)
+
+      if (this.$route.query.from === "unitInfoAll") {
+        this.unitInfoData();
+      }
+      if (this.$route.query.from === "businessList" || this.$route.query.from === "unitInfoAll") {
         this.CLIENT_DETAIL();
         this.UINT_DETAIL();
         this.RESERVEADD();

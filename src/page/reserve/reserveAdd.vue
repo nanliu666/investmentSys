@@ -261,12 +261,18 @@ export default {
     },
     getClient() {
       this.$router.replace({
-        name: "clientList"
+        name: "clientList",
+        query: {
+          from: "businessAdd"
+        }
       });
     },
     getUint() {
       this.$router.replace({
-        name: "unitInfoALL"
+        name: "unitInfoALL",
+        query: {
+          from: "businessAdd"
+        }
       });
     },
     reserveDetailData() {
@@ -318,6 +324,7 @@ export default {
       this.RESERVEADD(this.businessNewObj);
     },
     onLoad() {
+      console.log(this.$route.params.data)
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
         .add(1, "months")

@@ -397,9 +397,11 @@ export default {
     ...mapMutations(["UINT_DETAIL", "RESAVESCORLLTOP"]),
     //单元详细信息
     getUnitDetail(data) {
-      if (this.toPageName === "reserveAdd") {
-        this.getUintID(data);
-      } else if (this.toPageName === "businessAdd") {
+      if (
+        //底部删选信息
+        this.$route.query.from === "reserveAdd" ||
+        this.$route.query.from === "businessAdd"
+      ) {
         this.getUintID(data);
       } else {
         this.hasUnitDetail = !this.hasUnitDetail;
@@ -431,15 +433,14 @@ export default {
       };
       if (
         //底部删选信息
-        this.toPageName === "reserveAdd" ||
-        this.toPageName === "businessAdd"
+        this.$route.query.from === "reserveAdd" ||
+        this.$route.query.from === "businessAdd"
       ) {
         this.requestData.Statucode = "UnitAvailable";
         this.hasUintNumber = !this.hasUintNumber;
       }
       let projectSelect = JSON.parse(localStorage.getItem("project"));
       if (!!projectSelect) {
-        console.log(projectSelect);
         this.requestData.Companyid = projectSelect.Companyid;
         this.requestData.Projectid = projectSelect.Propertyid;
         this.getUnitBlock();
@@ -479,6 +480,9 @@ export default {
         name: "reserveAdd",
         params: {
           data: data
+        },
+        query: {
+          from: "unitInfoAll"
         }
       });
     },
@@ -487,6 +491,9 @@ export default {
         name: "businessAdd",
         params: {
           data: data
+        },
+        query: {
+          from: "unitInfoAll"
         }
       });
     },
@@ -576,10 +583,8 @@ export default {
       this.floorList = [];
     },
     getUnitBlock() {
-      console.log("选择条件=>", this.requestData);
       GetUnitByBlockCompanyProject(this.requestData).then(res => {
         this.allBlock = res.Content;
-        console.log(this.allBlock);
         this.hasProject();
       });
     },
