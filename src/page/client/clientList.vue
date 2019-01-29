@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="allHeader">
-    <div class="appTopOther"></div>
+      <div class="appTopOther"></div>
       <x-header
         :left-options="{backText: '', preventGoBack: true}"
         class="header"
@@ -199,11 +199,16 @@ export default {
       let selectData = this._.filter(this.clientAllData, item => {
         return item.Name === data;
       });
-      if (this.toPageName === "reserveAdd") {
+      if (this.$route.query.from === "businessAdd--unitInfoAll") {
+        this.CLIENT_DETAIL(selectData[0]);
+        this.$router.replace({ name: "businessAdd" , query: {
+          from: 'unitInfoAll'
+        }});
+      } else if (this.$route.query.from === "reserveAdd") {
         //如果是从预订新增进来，把联系人存起去vuex，并且回去预订新增
         this.CLIENT_DETAIL(selectData[0]);
         this.$router.replace({ name: "reserveAdd" });
-      } else if (this.toPageName === "businessAdd") {
+      } else if (this.$route.query.from === "businessAdd") {
         this.CLIENT_DETAIL(selectData[0]);
         this.$router.replace({ name: "businessAdd" });
       } else {

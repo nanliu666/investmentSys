@@ -9,7 +9,9 @@
     <section class="content">
       <div class="reseveTitle" v-if="hasUint">
         <div class="danyuan">当前预定单元</div>
-        <div class="qi">星月湾·东街二期 &nbsp; 403</div>
+        <div
+          class="qi"
+        >{{businessNewObj.Companyname}}·{{businessNewObj.Projectname}} &nbsp; {{businessNewObj.Units.Jsondata[0].Unitno}}</div>
         <div class="shangji">
           <div>
             当前铺位已有
@@ -49,7 +51,7 @@
           </div>
         </li>
         <div class="cientInfo">单元信息</div>
-        <li class="groupLi" @click="getUint">
+        <li class="groupLi" @click="getUint" v-if="hasDanyuan">
           <div class="liLeft">
             <span>预定单元</span>
           </div>
@@ -180,9 +182,12 @@ export default {
   data() {
     return {
       hasDeatil: false,
+      hasDanyuan: true,
       nowDate: "",
       nextDate: "",
       businessNewObj: {
+        Companyname: "", //公司名称
+        Projectname: "", //项目名称
         Bookexpirydate: "", //预定开始日期
         Bookstartdate: "", //预定结束日期
         Bookamt: "", //定金
@@ -260,10 +265,16 @@ export default {
       this.$router.back(-1);
     },
     getClient() {
+      let fromName;
+      if (this.$route.query.from === "unitInfoAll") {
+        fromName = "businessAdd--unitInfoAll";
+      } else {
+        fromName = "businessAdd";
+      }
       this.$router.replace({
         name: "clientList",
         query: {
-          from: "businessAdd"
+          from: fromName
         }
       });
     },
@@ -301,7 +312,7 @@ export default {
       this.RESERVEADD(this.businessNewObj);
     },
     businessDetailData() {
-      console.log(this.$route.params.data);
+      //来自商机详情的数据
       this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
       this.businessNewObj.Accountid = this.$route.params.data.Accountid;
       this.businessNewObj.clientDataPhone = this.$route.params.data.Phone;
@@ -313,8 +324,6 @@ export default {
         this.$route.params.data.Lastdate,
         "YYYY-MM-DD"
       );
-      // this.businessNewObj.unitArea = "this.$route.params.data.Rentalarea";
-      // this.businessNewObj.Bookamt = "this.$route.params.data.Bookamt";
       this.businessNewObj.Prospectid = this.$route.params.data.Prospectid; //项目ID
       this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
       this.businessNewObj.Companyid = this.$route.params.data.Companyid;
@@ -323,8 +332,22 @@ export default {
       );
       this.RESERVEADD(this.businessNewObj);
     },
+    unitInfoData() {
+      //来自单元信息的数据
+      this.hasDanyuan = !this.hasDanyuan;
+      this.businessNewObj.Prospectid = this.$route.params.data.Projectid; //项目ID
+      this.businessNewObj.Projectname = this.$route.params.data.Projectname; //项目名称
+      this.businessNewObj.Companyid = this.$route.params.data.Companyid; //公司ID
+      this.businessNewObj.Companyname = this.$route.params.data.Companyname; //公司名称
+      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
+      this.businessNewObj.unitArea = this.$route.params.data.Builduparea;
+      this.businessNewObj.Units.Jsondata.push({
+        Unitid: this.$route.params.data.Unitid,
+        Unitno: this.$route.params.data.Unitno
+      });
+      this.RESERVEADD(this.businessNewObj);
+    },
     onLoad() {
-      console.log(this.$route.params.data)
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
         .add(1, "months")
@@ -332,6 +355,15 @@ export default {
       if (this.$route.query.from === "unitInfoAll") {
         //从单元信息过来，商机部分有展示
         this.hasUint = !this.hasUint;
+      }
+      if (
+        this.$route.query.from === "reserveList" ||
+        this.$route.query.from === "unitInfoAll"
+      ) {
+        //从预订列表过来，完全新增，所有vux的都清除
+        this.CLIENT_DETAIL();
+        this.UINT_DETAIL();
+        this.RESERVEADD();
       }
       if (
         this.$route.query.from !== "clientList" ||
@@ -342,11 +374,8 @@ export default {
           this.businessNewObj = this.reserveObj;
         }
       }
-      if (this.$route.query.from === "reserveList") {
-        //从预订列表过来，完全新增，所有vux的都清除
-        this.CLIENT_DETAIL();
-        this.UINT_DETAIL();
-        this.RESERVEADD();
+      if (this.$route.query.from === "unitInfoAll") {
+        this.unitInfoData();
       } else if (this.$route.query.from === "reserveDetail") {
         // 来自预定详情的数据处理
         this.reserveDetailData();

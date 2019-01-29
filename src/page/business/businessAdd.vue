@@ -213,7 +213,7 @@ export default {
     next();
   },
   computed: {
-    ...mapState(["uintDetailList", "clientDetail"])
+    ...mapState(["uintDetailList", "clientDetail", "reserveObj"])
   },
   created() {
     this.isFirstEnter = true;
@@ -277,8 +277,8 @@ export default {
       this.businessNewObj.clientDataPhone = this.$route.params.data.Phone;
       this.businessNewObj.unitArea = this.$route.params.data.Rentalarea;
       this.businessNewObj.Remark = this.$route.params.data.Remark;
-      this.businessNewObj.Prospectid = this.$route.params.data.Prospectid; //项目ID
-      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
+      this.businessNewObj.Prospectid = this.$route.params.data.Prospectid; //商机ID
+      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; // 项目ID
       this.businessNewObj.Companyid = this.$route.params.data.Companyid;
       this.businessNewObj.Units.Jsondata = JSON.parse(
         this.$route.params.data.Unitinfjson
@@ -287,11 +287,10 @@ export default {
     },
     unitInfoData() {
       //来自单元信息的数据
-      // console.log(this.$route.params.data);
+      this.businessNewObj.Prospectid = 0, // 新增商机
       this.businessNewObj.unitArea = this.$route.params.data.Builduparea; //面积
-      this.businessNewObj.Prospectid = this.$route.params.data.Projectid; //项目ID
-      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
-      this.businessNewObj.Companyid = this.$route.params.data.Companyid;
+      this.businessNewObj.Propertyid = this.$route.params.data.Projectid; //项目ID
+      this.businessNewObj.Companyid = this.$route.params.data.Companyid; //公司ID
       this.businessNewObj.Units.Jsondata.push({
         Unitid: this.$route.params.data.Unitid,
         Unitno: this.$route.params.data.Unitno
@@ -299,15 +298,19 @@ export default {
       this.RESERVEADD(this.businessNewObj);
     },
     onLoad() {
-      console.log(this.businessNewObj)
-
-      if (this.$route.query.from === "unitInfoAll") {
-        this.unitInfoData();
-      }
-      if (this.$route.query.from === "businessList" || this.$route.query.from === "unitInfoAll") {
+      if (
+        this.$route.query.from === "businessList" ||
+        this.$route.query.from === "unitInfoAll"
+      ) {
         this.CLIENT_DETAIL();
         this.UINT_DETAIL();
         this.RESERVEADD();
+      }
+      if (this.$route.query.from === "unitInfoAll") {
+        this.unitInfoData();
+      }
+      if (!!this.reserveObj) {
+        this.businessNewObj = this.reserveObj;
       }
       if (this.clientDetail) {
         // 选择了联系人
@@ -315,6 +318,7 @@ export default {
         this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
         this.businessNewObj.clientDataPhone = this.clientDetail.Phone;
       }
+
       if (this.$route.query.from === "businessDetail") {
         // 来自预定详情的数据处理
         this.businessDetailData();

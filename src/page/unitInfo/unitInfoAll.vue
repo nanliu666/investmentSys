@@ -153,10 +153,10 @@
         </li>
         <li>
           <span>当前商机数:</span>
-          <span>6条</span>
+          <span>6条这是死数据</span>
         </li>
       </div>
-      <div class="bottom">
+      <div class="bottom" v-if="getUintStatus(unitDetailSelect.Recordstatusstringcode) === '可租'">
         <button @click="addReserve(unitDetailSelect)">新增预定</button>
         <button @click="addNewBusiness(unitDetailSelect)">新增商机</button>
       </div>
