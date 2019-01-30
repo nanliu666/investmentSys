@@ -34,6 +34,7 @@ const contractList = resolve => require(['@/page/contract/contractList'], resolv
 
 // 工作流审批流程
 const addSign = resolve => require(['@/page/workFlow/addSign'], resolve);
+const workFlowSubmit = resolve => require(['@/page/workFlow/workFlowSubmit'], resolve);
 
 const notFound = resolve => require(['@/page/404/notFound'], resolve);
 
@@ -63,6 +64,11 @@ export default [{
       path: '/addSign', //审批加签
       component: addSign,
       name: 'addSign'
+    },
+    {
+      path: '/workFlowSubmit', //审批加签
+      component: workFlowSubmit,
+      name: 'workFlowSubmit'
     },
 
     //事务管理模块

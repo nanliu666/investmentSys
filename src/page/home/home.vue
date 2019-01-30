@@ -22,7 +22,7 @@
           </div>
           <div class="Expire">
             <div class="ExpireLeft">
-              <span>近三个月合同到期数</span>
+              <span>近三个月将到期合同数</span>
               <span class="ExpireNum">{{ExpireNum }}</span>
             </div>
             <div class="ExpireRight" @click="gotoContranctExpire">

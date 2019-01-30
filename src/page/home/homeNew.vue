@@ -131,6 +131,7 @@ export default {
           this.dataList = this._.groupBy(this.dataList, function(item) {
             return moment(item.Senddate).format("YYYY-MM");
           });
+          console.log(this.dataList)
           this.timeList = Object.keys(this.dataList);
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {

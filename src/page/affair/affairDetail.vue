@@ -268,11 +268,15 @@ export default {
   methods: {
     WorkFlowAddSign() {
       this.$router.push({
-        name: 'addSign'
-      })
+        name: "addSign"
+      });
     },
     WorkFlowReject() {},
-    WorkFlowSubmit() {},
+    WorkFlowSubmit() {
+      this.$router.push({
+        name: "workFlowSubmit"
+      });
+    },
     hasRejectShow(data) {
       //驳回
       if (data.SectionRows[0].Value.includes("驳回")) {

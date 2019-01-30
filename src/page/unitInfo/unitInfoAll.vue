@@ -144,7 +144,7 @@
           <span>{{unitDetailSelect.Builduparea | formatNumber}}M²</span>
         </li>
         <li>
-          <span>每平方米报价:</span>
+          <span>每平方米单价:</span>
           <span>{{unitDetailSelect.Minprice | formatNumber}}万元</span>
         </li>
         <li>

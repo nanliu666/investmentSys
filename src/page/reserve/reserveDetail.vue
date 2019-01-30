@@ -31,10 +31,7 @@
             <span>手机号码</span>
             <span class="badge">*</span>
           </div>
-          <div
-            class="liRight"
-            :class="[!!item.Userphone ? 'cellValueClass' : 'placeholderClass']"
-          >
+          <div class="liRight" :class="[!!item.Userphone ? 'cellValueClass' : 'placeholderClass']">
             <span>{{!!item.Userphone ? item.Userphone : '暂无联系人电话'}}</span>
           </div>
         </li>
@@ -109,6 +106,9 @@
           </div>
         </li>
       </div>
+      <section class="button">
+        <x-button class="submit" @click.native="submit">提交</x-button>
+      </section>
     </section>
   </div>
 </template>
@@ -121,6 +121,7 @@ import {
   Actionsheet,
   Picker,
   PopupHeader,
+  XButton,
   Radio,
   Datetime,
   Popup
@@ -148,6 +149,7 @@ export default {
   },
   components: {
     XHeader,
+    XButton,
     Actionsheet,
     Group,
     Picker,
@@ -167,6 +169,17 @@ export default {
     this.onLoad();
   },
   methods: {
+    submit() {
+      this.$router.push({
+        name: "workFlowSubmit",
+        query: {
+          from: "reserveDetail"
+        },
+        params: {
+          data: this.reseveDetail[0]
+        }
+      });
+    },
     getMenu(menuKey, menuItem) {
       switch (menuItem) {
         case "编辑":
@@ -175,7 +188,7 @@ export default {
             query: {
               from: "reserveDetail"
             },
-            params:{
+            params: {
               data: this.reseveDetail[0]
             }
           });
@@ -260,24 +273,7 @@ export default {
       padding: 16px 40px;
       background-color: $bc;
     }
-    .button {
-      @include fj(space-around);
-      button {
-        @include wh(640px, 88px);
-        @include sc(36px, $fc);
-        @include borderRadius(44px);
-        font-family: $fm;
-        margin-top: 40px;
-        box-shadow: 0 4px 20px 0 rgba(96, 137, 210, 0.17);
-      }
-      .submit {
-        background: linear-gradient(
-          to left,
-          rgba(56, 153, 255, 1),
-          rgba(74, 116, 226, 1)
-        );
-      }
-    }
+
     .group {
       .groupLi {
         background-color: #fff;
@@ -314,6 +310,20 @@ export default {
           }
         }
       }
+    }
+  }
+  .button {
+    @include fj(space-around);
+    button {
+      @include wh(640px, 88px);
+      @include sc(36px, $fc);
+      @include borderRadius(44px);
+      font-family: $fm;
+      margin-top: 40px;
+      box-shadow: 0 4px 20px 0 rgba(96, 137, 210, 0.17);
+    }
+    .submit {
+      background: rgba(105, 167, 254, 1);
     }
   }
 }

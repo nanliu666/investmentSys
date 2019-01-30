@@ -7,22 +7,7 @@
       <span v-if="!hasDeatil">预定新增</span>
     </x-header>
     <section class="content">
-      <div class="reseveTitle" v-if="hasUint">
-        <div class="danyuan">当前预定单元</div>
-        <div
-          class="qi"
-        >{{businessNewObj.Companyname}}·{{businessNewObj.Projectname}} &nbsp; {{businessNewObj.Units.Jsondata[0].Unitno}}</div>
-        <div class="shangji">
-          <div>
-            当前铺位已有
-            <span class="shangjiNum">&nbsp;2&nbsp;</span>条可直接载入商机
-          </div>
-          <div>
-            <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon>
-            <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon>
-          </div>
-        </div>
-      </div>
+
       <div class="group">
         <div class="cientInfo">客户信息</div>
         <li class="groupLi" @click="getClient">
@@ -206,7 +191,6 @@ export default {
         }
       },
       hasStatus: false,
-      hasUint: false
     };
   },
   created() {
@@ -349,7 +333,6 @@ export default {
       }
       if (this.$route.query.from === "reserveDetail") {
         //从单元信息过来，商机部分有展示
-        this.hasUint = !this.hasUint;
         this.reserveDetailData();
       } else if (this.$route.query.from === "businessDetail") {
         this.businessDetailData();
