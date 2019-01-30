@@ -278,6 +278,7 @@ export default {
       .groupLi {
         background-color: #fff;
         @include wh(100%, 96px);
+        line-height: 96px;
         @include fj;
         padding: 0 40px;
         @include flexHCenter;

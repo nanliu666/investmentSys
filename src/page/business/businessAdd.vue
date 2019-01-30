@@ -454,17 +454,15 @@ export default {
         box-shadow: 0 4px 20px 0 rgba(96, 137, 210, 0.17);
       }
       .submit {
-        background: linear-gradient(
-          to left,
-          rgba(56, 153, 255, 1),
-          rgba(74, 116, 226, 1)
-        );
+        background-color: rgba(105, 167, 254, 1);
       }
     }
     .group {
       .groupLi {
         background-color: #fff;
         @include wh(100%, 96px);
+        line-height: 96px;
+
         @include fj;
         padding: 0 40px;
         @include flexHCenter;
