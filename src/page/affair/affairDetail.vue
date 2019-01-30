@@ -4,9 +4,9 @@
       <div class="appTopOther"></div>
       <x-header :left-options="{backText: ''}" class="header">审批详情</x-header>
       <section class="footer">
-        <button class="addSign">加签</button>
-        <button class="reject">驳回</button>
-        <button class="submit">提交</button>
+        <button class="addSign" @click="WorkFlowAddSign">加签</button>
+        <button class="reject" @click="WorkFlowReject">驳回</button>
+        <button class="submit" @click="WorkFlowSubmit">提交</button>
       </section>
       <div style="height:44px;">
         <sticky
@@ -266,6 +266,13 @@ export default {
     this.onLoad();
   },
   methods: {
+    WorkFlowAddSign() {
+      this.$router.push({
+        name: 'addSign'
+      })
+    },
+    WorkFlowReject() {},
+    WorkFlowSubmit() {},
     hasRejectShow(data) {
       //驳回
       if (data.SectionRows[0].Value.includes("驳回")) {

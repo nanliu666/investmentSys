@@ -31,6 +31,10 @@ const clientDetail = resolve => require(['@/page/client/clientDetail'], resolve)
 const contractDetail = resolve => require(['@/page/contract/contractDetail'], resolve);
 const contractList = resolve => require(['@/page/contract/contractList'], resolve);
 
+
+// 工作流审批流程
+const addSign = resolve => require(['@/page/workFlow/addSign'], resolve);
+
 const notFound = resolve => require(['@/page/404/notFound'], resolve);
 
 export default [{
@@ -53,6 +57,14 @@ export default [{
       component: homeNew,
       name: 'homeNew'
     },
+
+    //工作流模块
+    {
+      path: '/addSign', //审批加签
+      component: addSign,
+      name: 'addSign'
+    },
+
     //事务管理模块
     {
       path: '/affairList', //事务列表

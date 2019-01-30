@@ -220,9 +220,6 @@ export default {
   font-family: $fr;
   @include sc(30px, rgba(209, 209, 209, 1));
 }
-.fs-backICon {
-  @include wh(7px, 13px);
-}
 .fs-goaheadICon {
   margin-left: 4px;
   @include wh(6px, 10px);
