@@ -4,6 +4,7 @@
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
       提交
+      <span slot="right">加签</span>
     </x-header>
     <section class="ApprovalFlow">
       <div class="contractTitle">审批流程</div>
@@ -14,12 +15,19 @@
               <div class="flowFlag">
                 <div class="flowCircle"></div>
               </div>
+              <div>提交</div>
             </div>
             <div class="shuxianBox">
               <div class="shuxian"></div>
             </div>
           </div>
-          <div class="flowRight">1111</div>
+          <div class="flowRight">
+            <div>
+              <span>发起人:</span>
+              <span class="RightName">张连峰</span>
+            </div>
+            <span></span>
+          </div>
         </li>
         <li>
           <div class="flowLeft">
@@ -27,12 +35,19 @@
               <div class="flowFlag">
                 <div class="flowCircle"></div>
               </div>
+              <div>提交</div>
             </div>
             <div class="shuxianBox">
               <div class="shuxian"></div>
             </div>
           </div>
-          <div class="flowRight">1111</div>
+          <div class="flowRight">
+            <div>
+              <span>审批人:</span>
+              <span class="RightName">张连峰</span>
+            </div>
+            <span class="getApprove">></span>
+          </div>
         </li>
       </ul>
     </section>
@@ -121,95 +136,65 @@ export default {
       padding: 30px 40px 0;
       font-family: $fr;
       li {
+        position: relative;
+        height: 100%;
         @include fd;
         &:last-child {
           .shuxian {
             width: 0 !important;
           }
         }
-        .flowLeftFlag {
-          @include flexWCenter;
-          margin-bottom: 4px;
-        }
         .flowLeft {
-          .flowFlag {
-            @include wh(46px, 46px);
-            background-color: rgb(230, 237, 247);
-            border-radius: 23px;
-            @include flexCenter;
-            .flowCircle {
-              @include wh(18px, 18px);
-              border-radius: 8px;
-              background-color: rgba(105, 167, 254, 1);
-            }
-          }
           width: 20%;
+          height: 100%;
           @include fd(column);
           margin-right: 24px;
+          .flowLeftFlag {
+            height: 20%;
+            @include fd(column);
+            @include flexCenter;
+            @include sc(28px, rgba(136, 136, 136, 1));
+            font-family: $fr;
+            margin-bottom: 4px;
+            .flowFlag {
+              @include wh(46px, 46px);
+              background-color: rgb(230, 237, 247);
+              border-radius: 23px;
+              @include flexCenter;
+              margin-bottom: 10px;
+              .flowCircle {
+                @include wh(18px, 18px);
+                border-radius: 8px;
+                background-color: rgba(105, 167, 254, 1);
+              }
+            }
+          }
           .shuxianBox {
+            left: 0;
             width: 100%;
             @include flexWCenter;
             margin-bottom: 10px;
             .shuxian {
               padding: 6px 0;
-              @include wh(2px, 208px);
-              background: rgba(244, 246, 248, 1);
+              @include wh(2px, 38px);
+              // background: rgba(244, 246, 248, 1);
+              background: red;
             }
           }
         }
         .flowRight {
-        }
-      }
-    }
-    .addContent {
-      @include sc(30px, rgba(136, 136, 136, 1));
-      font-family: $fr;
-      .addContentLi {
-        background-color: #fff;
-        @include wh(100%, 96px);
-        line-height: 96px;
-        @include fj;
-        @include flexHCenter;
-        padding: 40px;
-        margin-bottom: 4px;
-        &:last-child {
-          margin: 0;
-        }
-        .liRight {
           @include fj;
-          @include sc(30px, rgba(30, 30, 30, 1));
-
-          .radio-box {
-            display: inline-block;
-            @include fj;
-            position: relative;
-            margin-right: 30px;
-            &:last-child {
-              margin-right: 0px;
-            }
-            .flowFlag {
-              @include flexCenter;
-              margin-right: 10px;
-              img {
-                @include wh(46px, 46px);
-              }
-              .noCheched {
-                @include wh(46px, 46px);
-                border-radius: 23px;
-                border: 1px solid rgba(219, 219, 219, 1);
-              }
-            }
-            .input-radio {
-              display: inline-block;
-              position: absolute;
-              opacity: 0;
-              width: 25px;
-              height: 25px;
-              cursor: pointer;
-              left: 0px;
-              outline: none;
-              -webkit-appearance: none;
-            }
+          background-color: rgba(243, 247, 253, 1);
+          @include sc(30px, rgba(136, 136, 136, 1));
+          font-family: $fr;
+          @include wh(100%, 100px);
+          @include flexHCenter;
+          padding: 0 40px;
+          .RightName {
+            @include sc(30px, rgba(30, 30, 30, 1));
+          }
+          .getApprove {
+            float: right;
           }
         }
       }

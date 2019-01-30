@@ -313,6 +313,7 @@ export default {
       this.RESERVEADD(this.businessNewObj);
     },
     onLoad() {
+      console.log(this.$route.params)
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
         .add(1, "months")
