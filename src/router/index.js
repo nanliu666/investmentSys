@@ -13,6 +13,7 @@ const unitInfoALL = resolve => require(['@/page/unitInfo/unitInfoALL'], resolve)
 const reserveList = resolve => require(['@/page/reserve/reserveList'], resolve);
 const reserveDetail = resolve => require(['@/page/reserve/reserveDetail'], resolve);
 const reserveAdd = resolve => require(['@/page/reserve/reserveAdd'], resolve);
+const reserveAddFromUint = resolve => require(['@/page/reserve/reserveAddFromUint'], resolve);
 
 // 商机模块
 const businessAdd = resolve => require(['@/page/business/businessAdd'], resolve);
@@ -169,6 +170,11 @@ export default [{
       path: '/reserveAdd', //预定新增
       name: 'reserveAdd',
       component: reserveAdd,
+    },
+    {
+      path: '/reserveAddFromUint', //预定新增
+      name: 'reserveAddFromUint',
+      component: reserveAddFromUint,
     },
 
     {

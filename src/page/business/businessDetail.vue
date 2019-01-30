@@ -166,6 +166,7 @@ export default {
       };
       GetBizOpportunityDetail(jsonData).then(res => {
         this.businessDetail = JSON.parse(res.Bizopprtunity).Datasource.slice(0, 1);
+        console.log(JSON.parse(res.Bizopprtunity))
       });
       GetAgentsDropdown("").then(res => {
         this.BizProspecttransferList = res.Option.Dropdowntoagentid;

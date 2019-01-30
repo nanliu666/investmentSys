@@ -194,20 +194,21 @@ export default {
       this.$router.push({ name: "clientAdd" });
     },
     getDeatil(data) {
-      console.log(data);
       // 去联系人详情页面
       let selectData = this._.filter(this.clientAllData, item => {
         return item.Name === data;
       });
-      if (this.$route.query.from === "businessAdd--unitInfoAll") {
+      if (this.$route.query.from === "reserveAddFromUint") {
         this.CLIENT_DETAIL(selectData[0]);
-        this.$router.replace({ name: "businessAdd" , query: {
-          from: 'unitInfoAll'
-        }});
+        this.$router.replace({
+          name: "reserveAddFromUint"
+        });
       } else if (this.$route.query.from === "reserveAdd") {
         //如果是从预订新增进来，把联系人存起去vuex，并且回去预订新增
         this.CLIENT_DETAIL(selectData[0]);
-        this.$router.replace({ name: "reserveAdd" });
+        this.$router.replace({
+          name: "reserveAdd"
+        });
       } else if (this.$route.query.from === "businessAdd") {
         this.CLIENT_DETAIL(selectData[0]);
         this.$router.replace({ name: "businessAdd" });

@@ -3,11 +3,10 @@
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
-      <span v-if="hasDeatil">预定详情</span>
-      <span v-if="!hasDeatil">预定新增</span>
+      <span>预定新增</span>
     </x-header>
     <section class="content">
-      <div class="reseveTitle" v-if="hasUint">
+      <div class="reseveTitle">
         <div class="danyuan">当前预定单元</div>
         <div
           class="qi"
@@ -51,24 +50,6 @@
           </div>
         </li>
         <div class="cientInfo">单元信息</div>
-        <li class="groupLi" @click="getUint" v-if="hasDanyuan">
-          <div class="liLeft">
-            <span>预定单元</span>
-          </div>
-          <div
-            class="liRight"
-            :class="[businessNewObj.Units.Jsondata.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
-          >
-            <span v-if="businessNewObj.Units.Jsondata.length === 0">请选择意向单元</span>
-            <span v-if="businessNewObj.Units.Jsondata.length !== 0" class="liRightContent">
-              <span
-                v-for="(item, index) in businessNewObj.Units.Jsondata"
-                :key="index"
-              >{{item.Unitno}}</span>
-            </span>
-            <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
-          </div>
-        </li>
         <li class="groupLi" @click="getStartTime">
           <div class="liLeft">
             <span>预定开始日期</span>
@@ -178,10 +159,9 @@ import {
 import { EditBizOpportunity, EditReserveMgmt } from "@/axios/api";
 import { mapMutations, mapState } from "vuex";
 export default {
-  name: "reserve",
+  name: "reserveAddFromUint",
   data() {
     return {
-      hasDeatil: false,
       hasDanyuan: true,
       nowDate: "",
       nextDate: "",
@@ -206,7 +186,6 @@ export default {
         }
       },
       hasStatus: false,
-      hasUint: false
     };
   },
   created() {
@@ -271,7 +250,7 @@ export default {
           data: this.$route.params.data
         },
         query: {
-          from: "businessAdd"
+          from: "reserveAddFromUint"
         }
       });
     },
@@ -283,50 +262,21 @@ export default {
         }
       });
     },
-    reserveDetailData() {
-      //来自预定详情的数据
-      this.hasDeatil = !this.hasDeatil;
-      this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
-      this.businessNewObj.Accountid = this.$route.params.data.Accountid;
-      this.businessNewObj.clientDataPhone = this.$route.params.data.Userphone;
-      this.businessNewObj.unitArea = this.$route.params.data.Rentalarea;
-      this.businessNewObj.Bookstartdate = this.$options.filters.dataFrm(
-        this.$route.params.data.Bookexpirydate,
-        "YYYY-MM-DD"
-      );
-      this.businessNewObj.Bookexpirydate = this.$options.filters.dataFrm(
-        this.$route.params.data.Bookexpirydate,
-        "YYYY-MM-DD"
-      );
-      this.businessNewObj.Remark = this.$route.params.data.Remark;
-      this.businessNewObj.Bookamt = this.$route.params.data.Bookamt;
-      this.businessNewObj.Prospectid = this.$route.params.data.Prospectid; //项目ID
-      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
-      this.businessNewObj.Companyid = this.$route.params.data.Companyid;
-      this.businessNewObj.Units.Jsondata = JSON.parse(
-        this.$route.params.data.Resunitinfjson
-      );
-      this.RESERVEADD(this.businessNewObj);
-    },
-    businessDetailData() {
-      //来自商机详情的数据
-      this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
-      this.businessNewObj.Accountid = this.$route.params.data.Accountid;
-      this.businessNewObj.clientDataPhone = this.$route.params.data.Phone;
-      this.businessNewObj.Bookstartdate = this.$options.filters.dataFrm(
-        this.$route.params.data.Modifydate,
-        "YYYY-MM-DD"
-      );
-      this.businessNewObj.Bookexpirydate = this.$options.filters.dataFrm(
-        this.$route.params.data.Lastdate,
-        "YYYY-MM-DD"
-      );
-      this.businessNewObj.Prospectid = this.$route.params.data.Prospectid; //项目ID
-      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
-      this.businessNewObj.Companyid = this.$route.params.data.Companyid;
-      this.businessNewObj.Units.Jsondata = JSON.parse(
-        this.$route.params.data.Unitinfjson
-      );
+
+    unitInfoData() {
+      //来自单元信息的数据
+      console.log(this.$route.params.data)
+      this.hasDanyuan = !this.hasDanyuan;
+      this.businessNewObj.Prospectid = this.$route.params.data.Projectid; //项目ID
+      this.businessNewObj.Projectname = this.$route.params.data.Projectname; //项目名称
+      this.businessNewObj.Companyid = this.$route.params.data.Companyid; //公司ID
+      this.businessNewObj.Companyname = this.$route.params.data.Companyname; //公司名称
+      this.businessNewObj.Propertyid = this.$route.params.data.Projectid; //商机ID
+      this.businessNewObj.unitArea = this.$route.params.data.Builduparea;
+      this.businessNewObj.Units.Jsondata.push({
+        Unitid: this.$route.params.data.Unitid,
+        Unitno: this.$route.params.data.Unitno
+      });
       this.RESERVEADD(this.businessNewObj);
     },
     onLoad() {
@@ -334,10 +284,7 @@ export default {
       this.nextDate = moment(new Date())
         .add(1, "months")
         .format("YYYY-MM-DD");
-      if (
-        this.$route.query.from === "reserveList" ||
-        this.$route.query.from === "unitInfoAll"
-      ) {
+      if (this.$route.query.from === "unitInfoAll") {
         //从预订列表过来，完全新增，所有vux的都清除
         this.CLIENT_DETAIL();
         this.UINT_DETAIL();
@@ -346,36 +293,18 @@ export default {
       //vux里面有预定对象，渲染数据使用vux的对象
       if (!!this.reserveObj) {
         this.businessNewObj = this.reserveObj;
+        console.log(this.reserveObj);
       }
-      if (this.$route.query.from === "reserveDetail") {
+
+      if (this.$route.query.from === "unitInfoAll") {
         //从单元信息过来，商机部分有展示
-        this.hasUint = !this.hasUint;
-        this.reserveDetailData();
-      } else if (this.$route.query.from === "businessDetail") {
-        this.businessDetailData();
+        this.unitInfoData();
       } else {
         if (this.clientDetail) {
           // 选择了联系人
           this.businessNewObj.clientDataName = this.clientDetail.Name;
           this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
           this.businessNewObj.clientDataPhone = this.clientDetail.Phone;
-        }
-        if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
-          // 选择了单元信息
-          this.businessNewObj.Units.Jsondata = this.uintDetailList;
-          this.businessNewObj.Propertyid = this.uintDetailList[0].Projectid; //项目ID
-          this.businessNewObj.Companyid = this.uintDetailList[0].Companyid;
-          let A = this.uintDetailList.map(item => {
-            return Number(item.Builduparea);
-          });
-          this.businessNewObj.unitArea = A.reduce(function(
-            prev,
-            curr,
-            idx,
-            arr
-          ) {
-            return prev + curr;
-          });
         }
       }
     },

@@ -477,7 +477,7 @@ export default {
     },
     addReserve(data) {
       this.$router.push({
-        name: "reserveAdd",
+        name: "reserveAddFromUint",
         params: {
           data: data
         },
