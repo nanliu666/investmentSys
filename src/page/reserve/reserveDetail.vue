@@ -45,7 +45,7 @@
             :class="[!!item.Resunitdesc ? 'cellValueClass' : 'placeholderClass']"
           >
             <span v-if="!!item.Resunitdesc">{{item.Resunitdesc }}</span>
-            <span v-if="!item.Defaultstartdate">暂无预定单元</span>
+            <span v-if="!item.Resunitdesc">暂无预定单元</span>
           </div>
         </li>
         <li class="groupLi">
@@ -54,10 +54,10 @@
           </div>
           <div
             class="liRight"
-            :class="[!!item.Defaultstartdate ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!item.Createdate ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span v-if="!!item.Defaultstartdate">{{item.Defaultstartdate | dataFrm('YYYY-MM-DD')}}</span>
-            <span v-if="!item.Defaultstartdate">暂无预定开始日期</span>
+            <span v-if="!!item.Createdate">{{item.Createdate | dataFrm('YYYY-MM-DD')}}</span>
+            <span v-if="!item.Createdate">暂无预定开始日期</span>
           </div>
         </li>
         <li class="groupLi">
@@ -66,10 +66,10 @@
           </div>
           <div
             class="liRight"
-            :class="[!!item.Defaultexpirydate ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!item.Bookexpirydate ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span v-if="!!item.Defaultexpirydate">{{item.Defaultexpirydate | dataFrm('YYYY-MM-DD')}}</span>
-            <span v-if="!item.Defaultexpirydate">暂无预定结束日期</span>
+            <span v-if="!!item.Bookexpirydate">{{item.Bookexpirydate | dataFrm('YYYY-MM-DD')}}</span>
+            <span v-if="!item.Bookexpirydate">暂无预定结束日期</span>
           </div>
         </li>
 

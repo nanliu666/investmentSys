@@ -52,7 +52,7 @@
       <!--内容...-->
       <li v-for="(item) in dataList" :key="item.Rentalid" @click="gotoDetail(item)">
         <div class="top">
-          <span>{{item.Accountname}} {{item.Companyname}}</span>
+          <span>{{item.Accountname}}</span>
           <span
             :class="getbusinessStatus(item.Recordstatus)"
             v-text="statusDetail[item.Recordstatus]"
@@ -62,7 +62,7 @@
           <div class="client">
             <div>
               <label>意向单元：</label>
-              <span class="text">{{item.Unitdesc}}</span>
+              <span class="text">{{item.Companyname}}{{item.Projectname}}{{item.Unitdesc}}</span>
             </div>
             <div class="cycleText">
               <label>最后一次接触时间：</label>
