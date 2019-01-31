@@ -4,49 +4,91 @@
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
       提交
-      <span slot="right">加签</span>
+      <!-- <span slot="right" @click="getAddSgin">{{!!hasAddSign ? '取消': '加签'}}</span> -->
+      <span slot="right" v-if="hasAddSign" @click="getAddSgin(0)">取消</span>
+      <span slot="right" v-if="!hasAddSign" @click="getAddSgin(1)">加签</span>
     </x-header>
     <section class="ApprovalFlow">
       <div class="contractTitle">审批流程</div>
       <ul class="flowMain">
-        <li>
+        <li v-for="(item, index) in flowList" :key="index" :ref="'flowLi' + index">
           <div class="flowLeft">
             <div class="flowLeftFlag">
               <div class="flowFlag">
                 <div class="flowCircle"></div>
               </div>
-              <div>提交</div>
+              <div>提交{{item}}</div>
             </div>
             <div class="shuxianBox">
-              <div class="shuxian"></div>
+              <div class="shuxian shuxianH38px"></div>
             </div>
           </div>
-          <div class="flowRight">
-            <div>
-              <span>发起人:</span>
-              <span class="RightName">张连峰</span>
+          <div
+            class="flowRight flowRightH100"
+            :class="[!!hasAddSign ? 'flowRightW60' : 'flowRightW100']"
+          >
+            <div class="flowRightTop">
+              <div>
+                <span>发起人:</span>
+                <span class="RightName">张连峰</span>
+              </div>
+              <span class="getApprove">></span>
             </div>
-            <span></span>
+          </div>
+          <div class="addBox" v-show="hasAddSign">
+            <div class="addFlag" v-show="hasNewSgin !== index" @click="addNewSgin(index)">+</div>
           </div>
         </li>
-        <li>
+        <li ref="addSignLi" v-show="hasNewLi">
           <div class="flowLeft">
             <div class="flowLeftFlag">
               <div class="flowFlag">
                 <div class="flowCircle"></div>
               </div>
-              <div>提交</div>
+              <div>加签</div>
             </div>
             <div class="shuxianBox">
-              <div class="shuxian"></div>
+              <div class="shuxian shuxianH290px"></div>
             </div>
           </div>
-          <div class="flowRight">
-            <div>
-              <span>审批人:</span>
-              <span class="RightName">张连峰</span>
+          <div class="flowRight flowRightW60 flowRightH60">
+            <div class="flowRightTop">
+              <div>
+                <span>审批人:</span>
+                <span class="RightName">请选择</span>
+              </div>
+              <span class="getApprove">></span>
             </div>
-            <span class="getApprove">></span>
+            <div class="flowRightBottom">
+              <div class="flowOrder">
+                <div>审批顺序:</div>
+                <div class="allRadioBox">
+                  <div
+                    class="radio-box"
+                    v-for="(item,index) in radios"
+                    :key="index"
+                    @click="check(index)"
+                  >
+                    <div class="flowFlag">
+                      <img v-if="item.isChecked" src="../../assets/images/椭圆形@2x (2).png" alt>
+                      <span v-if="!item.isChecked" class="noCheched"></span>
+                    </div>
+                    <input
+                      v-model="radio"
+                      :value="item.value"
+                      class="input-radio"
+                      :checked="item.isChecked"
+                      type="radio"
+                    >
+                    {{item.label}}
+                  </div>
+                </div>
+              </div>
+              <div class="flowButton">
+                <button @click="cancelAdd">取消</button>
+                <button @click="ConfirmAdd">确定</button>
+              </div>
+            </div>
           </div>
         </li>
       </ul>
@@ -70,6 +112,11 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      flowList: [1, 2, 3],
+      flowListSelect: "", //选中后的index
+      hasAddSign: false, // 加签，取消切换
+      hasNewSgin: -1, //控制加号,通过index匹配
+      hasNewLi: false, //直接控制加签li显示
       TrackList: [],
       hasNodata: false,
       showMenus: -1,
@@ -80,12 +127,12 @@ export default {
       radio: "1",
       radios: [
         {
-          label: "前",
+          label: "顺序审批",
           value: "1",
           isChecked: true
         },
         {
-          label: "后",
+          label: "同时审批",
           value: "2",
           isChecked: false
         }
@@ -103,6 +150,32 @@ export default {
     this.onLoad();
   },
   methods: {
+    cancelAdd() {
+      this.hasNewSgin = -1;
+      this.hasNewLi = false;
+    },
+    ConfirmAdd() {
+      this.hasNewSgin = -1;
+      this.hasNewLi = false;
+      this.flowList.splice(this.flowListSelect + 1, 0, "加签");
+    },
+    getAddSgin(index) {
+      this.hasAddSign = !this.hasAddSign;
+      this.hasNewLi = false;
+      if (index === 1) {
+        this.hasNewSgin = -1;
+      }
+    },
+    addNewSgin(index) {
+      this.hasNewSgin = index;
+      this.flowListSelect = index; //存起来，用来添加加签后的li
+      this.hasNewLi = true;
+      let selectDomArr = Object.entries(this.$refs).filter(item => {
+        return item[0] === `flowLi${index}`;
+      });
+      selectDomArr[0][1][0].after(this.$refs.addSignLi);
+    },
+
     check(index) {
       // 先取消所有选中项
       this.radios.forEach(item => {
@@ -176,25 +249,131 @@ export default {
             margin-bottom: 10px;
             .shuxian {
               padding: 6px 0;
-              @include wh(2px, 38px);
+              width: 2px;
+              background-color: red;
               // background: rgba(244, 246, 248, 1);
-              background: red;
+            }
+            .shuxianH38px {
+              height: 38px;
+            }
+            .shuxianH290px {
+              height: 290px;
             }
           }
         }
         .flowRight {
-          @include fj;
-          background-color: rgba(243, 247, 253, 1);
-          @include sc(30px, rgba(136, 136, 136, 1));
-          font-family: $fr;
-          @include wh(100%, 100px);
-          @include flexHCenter;
-          padding: 0 40px;
-          .RightName {
-            @include sc(30px, rgba(30, 30, 30, 1));
+          position: relative;
+          &::before {
+            content: "";
+            position: absolute;
+            right: 100%;
+            top: 26px;
+            width: 0;
+            height: 0;
+            border-top: 13px solid transparent;
+            border-right: 26px solid rgba(243, 247, 253, 1);
+            border-bottom: 13px solid transparent;
           }
-          .getApprove {
-            float: right;
+          @include fd(column);
+          background-color: rgba(243, 247, 253, 1);
+          font-family: $fr;
+          margin-bottom: 30px;
+          // @include flexHCenter;
+          padding: 0 40px;
+          @include sc(30px, rgba(136, 136, 136, 1));
+          .flowRightTop {
+            @include fj;
+            margin-bottom: 10px;
+            height: 100px;
+            line-height: 100px;
+            width: 100%;
+            .RightName {
+              @include sc(30px, rgba(30, 30, 30, 1));
+            }
+            .getApprove {
+              float: right;
+            }
+          }
+          .flowRightBottom {
+            @include fd(column);
+            .flowOrder {
+              border-top: 1px solid rgba(154, 182, 221, 0.3);
+              padding: 20px 0;
+              @include fj;
+              .allRadioBox {
+                @include fd(column);
+                .radio-box {
+                  @include fj;
+                  position: relative;
+                  margin-bottom: 30px;
+                  height: 42px;
+                  @include flexCenter;
+                  .flowFlag {
+                    @include flexCenter;
+                    margin-right: 10px;
+                    img {
+                      @include wh(46px, 46px);
+                    }
+                    .noCheched {
+                      @include wh(46px, 46px);
+                      border-radius: 23px;
+                      border: 1px solid rgba(219, 219, 219, 1);
+                    }
+                  }
+                  .input-radio {
+                    display: inline-block;
+                    position: absolute;
+                    opacity: 0;
+                    width: 25px;
+                    height: 25px;
+                    cursor: pointer;
+                    left: 0px;
+                    outline: none;
+                    -webkit-appearance: none;
+                  }
+                }
+              }
+            }
+            .flowButton {
+              border-top: 1px solid rgba(154, 182, 221, 0.3);
+              padding: 40px 0 20px;
+              @include fj(space-around);
+              button {
+                @include wh(158px, 60px);
+                border-radius: 30px;
+                border: 1px solid rgba(105, 167, 254, 0.5);
+                background-color: #fff;
+                @include sc(30px, rgba(105, 167, 254, 1));
+                @include flexCenter;
+                font-family: $fr;
+              }
+            }
+          }
+        }
+        .flowRightW100 {
+          width: 100%;
+        }
+        .flowRightW60 {
+          width: 60%;
+        }
+        .flowRightH100 {
+          height: 100px;
+        }
+        .flowRightH60 {
+          height: 356px;
+        }
+        .addBox {
+          position: absolute;
+          right: 0;
+          @include flexCenter;
+          height: 100px;
+
+          .addFlag {
+            @include wh(42px, 42px);
+            border-radius: 21px;
+            border: 4px solid rgba(105, 167, 254, 1);
+            @include sc(42px, rgba(105, 167, 254, 1));
+            @include flexCenter;
           }
         }
       }
