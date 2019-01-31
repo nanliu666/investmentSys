@@ -4,19 +4,23 @@
 
 const path = require('path')
 
+const MODULE = process.env.MODULE_ENV || 'home'
+// 入口模板路径
+const htmlTemplate = `./src/modules/${MODULE}/index.html`
+
 module.exports = {
   dev: {
 
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
 
+    // Various Dev Server settings
     // host: '192.168.0.108', // 自己手机wifi IP地址
     host: '10.122.10.59', // 连接公司网线
     // host: '192.168.0.193', // 连接公司wifi
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: true,
+    port: 8086, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
@@ -24,7 +28,7 @@ module.exports = {
     // Use Eslint Loader?
     // If true, your code will be linted during bundling and
     // linting errors and warnings will be shown in the console.
-    useEslint: false,
+    useEslint: true,
     // If true, eslint errors and warnings will also be shown in the error overlay
     // in the browser.
     showEslintErrorsInOverlay: false,
@@ -46,11 +50,16 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
-
+    index: path.resolve(__dirname, '../dist', MODULE, 'index.html'),
+    // 加入html入口
+    htmlTemplate: htmlTemplate,
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    // assetsRoot: path.resolve(__dirname, '../dist', MODULE),
+    // 这里判断一下打包的模式，如果是分开打包，要把成果物放到以模块命名的文件夹中
+    assetsRoot: process.env.MODE_ENV === 'separate' ? path.resolve(__dirname, '../dist', MODULE) : path.resolve(__dirname, '../dist', MODULE),
     assetsSubDirectory: 'static',
+    // 这里的路径改成相对路径，原来是assetsPublicPath: '/',
+    // assetsPublicPath: '/',
     assetsPublicPath: './',
 
     /**

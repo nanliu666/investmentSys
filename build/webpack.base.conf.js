@@ -24,14 +24,20 @@ const createLintingRule = () => ({
 
 let webpackCofig = {
   context: path.resolve(__dirname, '../'),
-  entry: {
-    app: './src/main.js'
-  },
-  //优化外部插件的使用，比如moment
-  externals: {
-    'moment': 'moment',
-    'FastClick': 'FastClick',
-    // 'loadsh': 'loadsh',  //放弃CDN引入loadsh
+  // 入口修改
+  // entry: {
+  //   app: './src/main.js'
+  // },
+  entry() {
+    // 初始化入口配置
+    const entry = {}
+    // 所有模块的列表
+    const moduleToBuild = require('./module-conf').getModuleToBuild() || []
+    // 根据传入的待打包目录名称，构建多入口配置
+    for (let module of moduleToBuild) {
+      entry[module] = `./src/modules/${module}/main.js`
+    }
+    return entry
   },
   output: {
     path: config.build.assetsRoot,
@@ -99,11 +105,7 @@ let webpackCofig = {
   }
 }
 
-// module.exports = vuxLoader.merge(webpackCofig, {
-//   plugins: [{
-//     name: 'vux-ui'
-//   }]
-// })
+
 module.exports = vuxLoader.merge(webpackCofig, {
   plugins: ['vux-ui', 'progress-bar', 'duplicate-style', {
     name: 'after-less-parser',
