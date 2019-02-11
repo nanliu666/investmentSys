@@ -35,7 +35,11 @@ if ('addEventListener' in document) {
     }
   }, false);
 }
-
+Vue.prototype.toAbsURL = function (url) {
+  var a = document.createElement('a');
+  a.href = url;
+  return a.href;
+};
 //全局过滤器使用
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

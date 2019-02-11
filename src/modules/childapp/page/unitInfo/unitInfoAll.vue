@@ -244,7 +244,6 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      projectSelect: {},
       hasUintNumber: false,
       uintVuexList: [],
       uintNumber: "",
@@ -382,10 +381,9 @@ export default {
       this.blockSelect = data.Blockname;
       this.requestData.Blockid = data.Blockid;
       localStorage.setItem("project", JSON.stringify(data));
-      this.projectSelect = JSON.parse(localStorage.getItem("project"));
-
-      this.requestData.Companyid = this.projectSelect.Companyid;
-      this.requestData.Projectid = this.projectSelect.Propertyid;
+      let projectSelect = JSON.parse(localStorage.getItem("project"));
+      this.requestData.Companyid = projectSelect.Companyid;
+      this.requestData.Projectid = projectSelect.Propertyid;
       this.getUnitBlock();
       this.hasprojectStatus = !this.hasprojectStatus;
     },
@@ -444,10 +442,11 @@ export default {
         this.requestData.Statucode = "UnitAvailable";
         this.hasUintNumber = !this.hasUintNumber;
       }
-      console.log(Object.keys(this.projectSelect).length !== 0)
-      if (Object.keys(this.projectSelect).length !== 0) {
-        // this.requestData.Companyid = this.projectSelect.Companyid;
-        // this.requestData.Projectid = this.projectSelect.Propertyid;
+      let projectSelect = JSON.parse(localStorage.getItem("project"));
+
+      if (!!projectSelect) {
+        this.requestData.Companyid = projectSelect.Companyid;
+        this.requestData.Projectid = projectSelect.Propertyid;
         this.getUnitBlock();
       } else {
         this.openProjecySelct();

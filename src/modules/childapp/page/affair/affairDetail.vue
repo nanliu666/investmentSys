@@ -106,6 +106,7 @@
         </section>
         <section class="contractOther" id="other">
           <div class="contractTitle">附件</div>
+          <section v-if="fujianList.length === 0" class="noFujian">暂无附件</section>
           <section class="otherMain" v-if="fujianList.length !== 0">
             <div class="otherMainTitle">附件</div>
             <div class="otherfujianLi" v-for="(item, index) in fujianList" :key="index">
@@ -114,7 +115,14 @@
                   <svg
                     class="icon"
                     aria-hidden="true"
-                    v-show="postfixFileName(item.FileName)  ===( 'doc' || 'docx')"
+                    v-show="postfixFileName(item.FileName)  === 'docx'"
+                  >
+                    <use xlink:href="#icon-doc"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-show="postfixFileName(item.FileName)  ==='doc' "
                   >
                     <use xlink:href="#icon-doc"></use>
                   </svg>
@@ -128,14 +136,28 @@
                   <svg
                     class="icon"
                     aria-hidden="true"
-                    v-if="postfixFileName(item.FileName)  == ('xls' || 'xlsx')"
+                    v-if="postfixFileName(item.FileName)  == 'xls'"
                   >
                     <use xlink:href="#icon-excel"></use>
                   </svg>
                   <svg
                     class="icon"
                     aria-hidden="true"
-                    v-if="postfixFileName(item.FileName)  === ('jpg' || 'jpeg')"
+                    v-if="postfixFileName(item.FileName)  ==   'xlsx'"
+                  >
+                    <use xlink:href="#icon-excel"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  ===  'jpeg'"
+                  >
+                    <use xlink:href="#icon-jpg"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  === 'jpg' "
                   >
                     <use xlink:href="#icon-jpg"></use>
                   </svg>
@@ -163,7 +185,14 @@
                   <svg
                     class="icon"
                     aria-hidden="true"
-                    v-if="postfixFileName(item.FileName)  === ('ppt' || 'pptx')"
+                    v-if="postfixFileName(item.FileName)  === 'pptx' "
+                  >
+                    <use xlink:href="icon-ppt"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  === 'ppt' "
                   >
                     <use xlink:href="icon-ppt"></use>
                   </svg>
@@ -343,6 +372,7 @@ export default {
       });
       GetToDoFile(jsonData).then(res => {
         this.fujianList = res;
+        console.log(this.fujianList);
       });
     },
     postfixFileName(text) {
@@ -352,39 +382,25 @@ export default {
       return fileFormat;
     },
     getContractenclosure(data) {
-      switch (this.postfixFileName(data.FileName)) {
-        case "jpg" || "jpeg" || "png" || "gif" || "dwg":
-          console.log("我是图片");
-          break;
-        case "doc" || "docx":
-          console.log("我是word");
-          break;
-        case "xls" || "xlsx":
-          console.log("我是elcel");
-          break;
-        case "pdf":
-          console.log("我是pdf");
-          break;
-        case "ppt" || "pptx":
-          console.log("ppt");
-          break;
-        case "txt":
-          console.log("我是txt");
-          break;
-        case "rar":
-          console.log("我是rar");
-          break;
-        case "zip":
-          console.log("我是zip");
-          break;
+      //附件路径待解决
+      // console.log(data.FileUrl.split("&")[1].split("=")[1]);
+      if (typeof cordova === "function") {
+        cordova.exec(null, null, "ifcaPlugIns", "attachmentPreview", [
+          {
+            fileName: data.FileName,
+            fileUrl: this.toAbsURL(
+              "http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=" +
+                data.FileUrl.split("&")[1].split("=")[1]
+            )
+          }
+        ]);
+      } else {
+        window.open(
+          `http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=${
+            data.FileUrl.split("&")[1].split("=")[1]
+          }`
+        );
       }
-      console.log(this.postfixFileName(data.FileName) === ("xls" || "xlsx"));
-      //TODO 补充预览
-      // window.open(
-      //   `http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=${
-      //     data.Guid
-      //   }`
-      // );
     },
     goAnchor(data) {
       let selector = "";
@@ -431,6 +447,11 @@ export default {
 @import "src/assets/sass/mixin";
 .affairDetail {
   height: 100%;
+  .noFujian {
+    font-family: $fr;
+    @include sc(32px, rgba(136, 136, 136, 1));
+    @include flexCenter;
+  }
   .footer {
     @include wh(100%, 96px);
     box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);

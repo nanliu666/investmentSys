@@ -200,7 +200,6 @@ export default {
       getTodoList(this.affairCond)
         .then(res => {
           let arr = res.Content;
-          console.log(arr);
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.affairList = [];
           // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
