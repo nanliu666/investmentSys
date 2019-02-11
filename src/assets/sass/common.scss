@@ -29,8 +29,7 @@ button,
 input,
 select,
 figure,
-figcaption,
-  {
+figcaption {
   padding: 0;
   margin: 0;
   list-style: none;
@@ -44,6 +43,10 @@ figcaption,
   &:hover {
     outline: none;
   }
+}
+
+textarea {
+  color:  rgba(209, 209, 209, 1) !important
 }
 
 // input占位符颜色

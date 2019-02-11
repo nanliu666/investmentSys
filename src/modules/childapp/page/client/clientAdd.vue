@@ -31,7 +31,7 @@
         @on-change="onCustomChange"
         value-text-align="left"
       ></popup-picker>
-      <x-textarea title="备注" v-model="remark" placeholder="请输入备注" class="textArea"></x-textarea>
+      <x-textarea title="备注" v-model="remark" placeholder="请输入备注" class="textArea" autosize  :rows="1"></x-textarea>
     </group>
     <group title="其他联系人" label-width="4.5em" label-margin-right="2em" label-align="right">
       <x-input title="客户姓名" placeholder="请填入其他联系人姓名" v-model="clientOtherName"></x-input>
