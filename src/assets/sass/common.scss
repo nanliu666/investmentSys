@@ -219,7 +219,7 @@ body {
 
     .shangji {
       @include fj(space-between);
-      @include wh(100%, 96px);
+      @include wh(100%, 106px);
       @include flexHCenter;
       padding: 0 40px;
       font-family: $fr;
@@ -257,8 +257,8 @@ body {
   .group {
     .groupLi {
       background-color: #fff;
-      @include wh(100%, 96px);
-      line-height: 96px;
+      @include wh(100%, 106px);
+      line-height: 106px;
       @include fj;
       padding: 0 40px;
       @include flexHCenter;
