@@ -150,7 +150,7 @@
         <li>
           <span>总租金:</span>
           <span>{{unitDetailSelect.Toprice | formatNumber}}万元</span>
-        </li> -->
+        </li>-->
         <li>
           <span>当前商机数:</span>
           <span>6条这是死数据</span>
@@ -244,6 +244,7 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      projectSelect: {},
       hasUintNumber: false,
       uintVuexList: [],
       uintNumber: "",
@@ -380,8 +381,12 @@ export default {
     getPropertyBlock(data) {
       this.blockSelect = data.Blockname;
       this.requestData.Blockid = data.Blockid;
-      this.getUnitBlock();
       localStorage.setItem("project", JSON.stringify(data));
+      this.projectSelect = JSON.parse(localStorage.getItem("project"));
+
+      this.requestData.Companyid = this.projectSelect.Companyid;
+      this.requestData.Projectid = this.projectSelect.Propertyid;
+      this.getUnitBlock();
       this.hasprojectStatus = !this.hasprojectStatus;
     },
     reselectCompany() {
@@ -439,10 +444,10 @@ export default {
         this.requestData.Statucode = "UnitAvailable";
         this.hasUintNumber = !this.hasUintNumber;
       }
-      let projectSelect = JSON.parse(localStorage.getItem("project"));
-      if (!!projectSelect) {
-        this.requestData.Companyid = projectSelect.Companyid;
-        this.requestData.Projectid = projectSelect.Propertyid;
+      console.log(Object.keys(this.projectSelect).length !== 0)
+      if (Object.keys(this.projectSelect).length !== 0) {
+        // this.requestData.Companyid = this.projectSelect.Companyid;
+        // this.requestData.Projectid = this.projectSelect.Propertyid;
         this.getUnitBlock();
       } else {
         this.openProjecySelct();
@@ -583,6 +588,7 @@ export default {
       this.floorList = [];
     },
     getUnitBlock() {
+      console.log(this.requestData);
       GetUnitByBlockCompanyProject(this.requestData).then(res => {
         this.allBlock = res.Content;
         this.hasProject();

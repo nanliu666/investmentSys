@@ -356,28 +356,36 @@ export default {
             ]
           };
         }
-
         const data = { Customer };
-        console.log("传递的参数=>", data);
-        console.log("传递的性别参数=>", this.clientOtherSelectSex);
-        EditCustomer(data)
-          .then(res => {
-            if (!!res) {
-              this.$vux.toast.show({
-                //编辑和新增成功 toast
-                text: "成功",
-                type: "success",
-                onHide() {
-                  this.hasToast = !this.hasToast;
-                }
-              });
-              this.$router.push({ name: "clientList" });
+        if (data.Customer.Phone.length !== 11) {
+          this.$vux.toast.show({
+            //编辑和新增成功 toast
+            text: "请填入正确的电话号码",
+            type: "warn",
+            onHide() {
+              this.hasToast = !this.hasToast;
             }
-          })
-          .catch(err => {
-            //姓名相同
-            this.hasSameConfirm = !this.hasSameConfirm;
           });
+        } else {
+          EditCustomer(data)
+            .then(res => {
+              if (!!res) {
+                this.$vux.toast.show({
+                  //编辑和新增成功 toast
+                  text: "成功",
+                  type: "success",
+                  onHide() {
+                    this.hasToast = !this.hasToast;
+                  }
+                });
+                this.$router.replace({ name: "clientList" });
+              }
+            })
+            .catch(err => {
+              //姓名相同
+              this.hasSameConfirm = !this.hasSameConfirm;
+            });
+        }
       } else {
         //姓名、电话没填
         this.hasMustConfirm = !this.hasMustConfirm;

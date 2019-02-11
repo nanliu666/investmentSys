@@ -4,7 +4,6 @@
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
       提交
-      <!-- <span slot="right" @click="getAddSgin">{{!!hasAddSign ? '取消': '加签'}}</span> -->
       <span slot="right" v-if="hasAddSign" @click="getAddSgin(0)">取消</span>
       <span slot="right" v-if="!hasAddSign" @click="getAddSgin(1)">加签</span>
     </x-header>
@@ -30,68 +29,71 @@
             <div class="flowRightTop">
               <div>
                 <span>发起人:</span>
-                <span class="RightName">张连峰</span>
+                <span class="RightName">张连峰{{index}}</span>
               </div>
               <span class="getApprove">></span>
             </div>
+          </div>
+          <div class="removeAdd" v-if="hasRemove" @click="removeAdd(index)">
+            <span class="iconfont icon-lajitong"></span>
           </div>
           <div class="addBox" v-show="hasAddSign">
             <div class="addFlag" v-show="hasNewSgin !== index" @click="addNewSgin(index)">+</div>
           </div>
         </li>
-        <li ref="addSignLi" v-show="hasNewLi">
-          <div class="flowLeft">
-            <div class="flowLeftFlag">
-              <div class="flowFlag">
-                <div class="flowCircle"></div>
-              </div>
-              <div>加签</div>
+      </ul>
+      <li ref="addSignLi" v-show="hasNewLi">
+        <div class="flowLeft">
+          <div class="flowLeftFlag">
+            <div class="flowFlag">
+              <div class="flowCircle"></div>
             </div>
-            <div class="shuxianBox">
-              <div class="shuxian shuxianH290px"></div>
-            </div>
+            <div>加签</div>
           </div>
-          <div class="flowRight flowRightW60 flowRightH60">
-            <div class="flowRightTop">
-              <div>
-                <span>审批人:</span>
-                <span class="RightName">请选择</span>
-              </div>
-              <span class="getApprove">></span>
+          <div class="shuxianBox">
+            <div class="shuxian shuxianH290px"></div>
+          </div>
+        </div>
+        <div class="flowRight flowRightW60 flowRightH60">
+          <div class="flowRightTop">
+            <div>
+              <span>审批人:</span>
+              <span class="RightName">请选择</span>
             </div>
-            <div class="flowRightBottom">
-              <div class="flowOrder">
-                <div>审批顺序:</div>
-                <div class="allRadioBox">
-                  <div
-                    class="radio-box"
-                    v-for="(item,index) in radios"
-                    :key="index"
-                    @click="check(index)"
-                  >
-                    <div class="flowFlag">
-                      <img v-if="item.isChecked" src="../../assets/images/椭圆形@2x (2).png" alt>
-                      <span v-if="!item.isChecked" class="noCheched"></span>
-                    </div>
-                    <input
-                      v-model="radio"
-                      :value="item.value"
-                      class="input-radio"
-                      :checked="item.isChecked"
-                      type="radio"
-                    >
-                    {{item.label}}
+            <span class="getApprove">></span>
+          </div>
+          <div class="flowRightBottom">
+            <div class="flowOrder">
+              <div>审批顺序:</div>
+              <div class="allRadioBox">
+                <div
+                  class="radio-box"
+                  v-for="(item,index) in radios"
+                  :key="index"
+                  @click="check(index)"
+                >
+                  <div class="flowFlag">
+                    <img v-if="item.isChecked" src="../../assets/images/椭圆形@2x (2).png" alt>
+                    <span v-if="!item.isChecked" class="noCheched"></span>
                   </div>
+                  <input
+                    v-model="radio"
+                    :value="item.value"
+                    class="input-radio"
+                    :checked="item.isChecked"
+                    type="radio"
+                  >
+                  {{item.label}}
                 </div>
               </div>
-              <div class="flowButton">
-                <button @click="cancelAdd">取消</button>
-                <button @click="ConfirmAdd">确定</button>
-              </div>
+            </div>
+            <div class="flowButton">
+              <button @click="cancelAdd">取消</button>
+              <button @click="ConfirmAdd">确定</button>
             </div>
           </div>
-        </li>
-      </ul>
+        </div>
+      </li>
     </section>
     <section class="ApprovalFlow">
       <group title="提交意见">
@@ -116,6 +118,7 @@ export default {
       flowListSelect: "", //选中后的index
       hasAddSign: false, // 加签，取消切换
       hasNewSgin: -1, //控制加号,通过index匹配
+      hasRemove: -1, //控制删除垃圾桶显示
       hasNewLi: false, //直接控制加签li显示
       TrackList: [],
       hasNodata: false,
@@ -150,6 +153,10 @@ export default {
     this.onLoad();
   },
   methods: {
+    removeAdd(index) {
+      this.flowList.splice(index, 1)
+      console.log(this.flowListSelect)
+    },
     cancelAdd() {
       this.hasNewSgin = -1;
       this.hasNewLi = false;
@@ -175,7 +182,6 @@ export default {
       });
       selectDomArr[0][1][0].after(this.$refs.addSignLi);
     },
-
     check(index) {
       // 先取消所有选中项
       this.radios.forEach(item => {
@@ -250,8 +256,7 @@ export default {
             .shuxian {
               padding: 6px 0;
               width: 2px;
-              background-color: red;
-              // background: rgba(244, 246, 248, 1);
+              background: rgba(244, 246, 248, 1);
             }
             .shuxianH38px {
               height: 38px;
@@ -361,6 +366,12 @@ export default {
         }
         .flowRightH60 {
           height: 356px;
+        }
+        .removeAdd {
+          margin-bottom: 10px;
+          height: 100px;
+          line-height: 100px;
+          margin: 0 28px;
         }
         .addBox {
           position: absolute;
