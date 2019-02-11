@@ -11,8 +11,62 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
-const env = require('../config/prod.env')
+const env = process.env.NODE_ENV === 'testing'
+  ? require('../config/test.env')
+  : require('../config/prod.env')
+// 获取所有模块列表
+const moduleToBuild = require('./module-conf').getModuleToBuild() || []
+// 组装多个（有几个module就有几个htmlWebpackPlugin）htmlWebpackPlugin，然后追加到配置中
+const htmlWebpackPlugins = []
+// 判断一下是否为分开打包模式
+if (process.env.MODE_ENV === 'separate') {
+  // 分开打包时是通过重复运行指定模块打包命令实现的，所以每次都是单个html文件，只要配置一个htmlPlugin
+  htmlWebpackPlugins.push(new HtmlWebpackPlugin({
+    filename: process.env.NODE_ENV === 'testing'
+      ? 'index.html'
+      : config.build.index,
+    // template: 'index.html',
+    template: config.build.htmlTemplate,
+    prefix:"./",
+    inject: true,
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeAttributeQuotes: true
+      // more options:
+      // https://github.com/kangax/html-minifier#options-quick-reference
+    },
+    // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+    chunksSortMode: 'dependency'
+  }))
+} else {
+  // 一起打包时是通过多入口实现的，所以要配置多个htmlPlugin
+  for (let module of moduleToBuild) {
+    htmlWebpackPlugins.push(new HtmlWebpackPlugin({
+      filename: config.build.index,
+      template: `./src/modules/${module}/index.html`,
+      prefix:"./",
+      inject: true,
+      // 这里要指定把哪些chunks追加到html中，默认会把所有入口的chunks追加到html中，这样是不行的
+      chunks: ['vendor', 'manifest', module],
+      // filename: process.env.NODE_ENV === 'testing'
+      //   ? 'index.html'
+      //   : config.build.index,
+      // template: 'index.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+        // more options:
+        // https://github.com/kangax/html-minifier#options-quick-reference
+      },
+      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+      chunksSortMode: 'dependency'
+    }))
+  }
+}
 
+// 获取当前打包的目录名称
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
@@ -46,7 +100,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       filename: utils.assetsPath('css/[name].[contenthash].css'),
       // Setting the following option to `false` will not extract CSS from codesplit chunks.
       // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
-      // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`, 
+      // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`,
       // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
       allChunks: true,
     }),
@@ -60,20 +114,25 @@ const webpackConfig = merge(baseWebpackConfig, {
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: config.build.index,
-      template: 'index.html',
-      inject: true,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
-      },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
-    }),
+    /*
+     new HtmlWebpackPlugin({
+     filename: process.env.NODE_ENV === 'testing'
+     ? 'index.html'
+     : config.build.index,
+     // template: 'index.html',
+     template: config.build.htmlTemplate,
+     inject: true,
+     minify: {
+     removeComments: true,
+     collapseWhitespace: true,
+     removeAttributeQuotes: true
+     // more options:
+     // https://github.com/kangax/html-minifier#options-quick-reference
+     },
+     // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+     chunksSortMode: 'dependency'
+     }),
+     */
     // keep module.id stable when vendor modules does not change
     new webpack.HashedModuleIdsPlugin(),
     // enable scope hoisting
@@ -116,7 +175,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ])
-  ]
+  ].concat(htmlWebpackPlugins)
 })
 
 if (config.build.productionGzip) {

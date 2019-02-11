@@ -11,7 +11,6 @@ function resolve(dir) {
 }
 
 const createLintingRule = () => ({
-  //关闭eslint
   test: /\.(js|vue)$/,
   loader: 'eslint-loader',
   enforce: 'pre',
@@ -21,13 +20,8 @@ const createLintingRule = () => ({
     emitWarning: !config.dev.showEslintErrorsInOverlay
   }
 })
-
 let webpackCofig = {
   context: path.resolve(__dirname, '../'),
-  // 入口修改
-  // entry: {
-  //   app: './src/main.js'
-  // },
   entry() {
     // 初始化入口配置
     const entry = {}
@@ -43,7 +37,8 @@ let webpackCofig = {
     path: config.build.assetsRoot,
     filename: '[name].js',
     publicPath: process.env.NODE_ENV === 'production' ?
-      config.build.assetsPublicPath : config.dev.assetsPublicPath
+      config.build.assetsPublicPath :
+      config.dev.assetsPublicPath
   },
   resolve: {
     extensions: ['.js', '.vue', '.json', 'less'],
@@ -54,7 +49,7 @@ let webpackCofig = {
   },
   module: {
     rules: [
-      ...(config.dev.useEslint ? [createLintingRule()] : []),
+      ...(config.dev.useEslint ? [ /*createLintingRule()*/ ] : []),
       {
         test: /\.vue$/,
         loader: 'vue-loader',
