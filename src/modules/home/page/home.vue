@@ -182,8 +182,6 @@ export default {
         s = "",
         toFixedFix = function(n, prec) {
           var k = Math.pow(10, prec);
-          console.log();
-
           return (
             "" +
             parseFloat(
@@ -216,16 +214,12 @@ export default {
         if (res.Currmonthamt > 10000) {
           this.signMoeny = `${Math.round(parseInt(res.Currmonthamt) / 100) /
             100}万`;
-        } else if (res.Currmonthamt === 0) {
-          this.signMoeny = "暂无数据";
         } else {
           this.signMoeny = this.formatNumber(res.Currmonthamt);
         }
-        // console.log(res.Currmonthamt);
         this.ExpireNum = res.Overduesoon;
       });
       GetAgentDefaultPageChartNEW(PageNEWData).then(res => {
-        console.log(res)
         this.$set(this.data[0], "percent", res[0].Chartcompleteper);
         this.$set(this.data[1], "percent", res[0].Chartnotcompleteper);
         this.$set(this.data[2], "percent", res[1].Chartcompleteper);

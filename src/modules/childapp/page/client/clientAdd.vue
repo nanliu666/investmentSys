@@ -369,14 +369,16 @@ export default {
         } else {
           EditCustomer(data)
             .then(res => {
-              if (!!res) {
+              if (res.Success === false) {
                 this.$vux.toast.show({
                   //编辑和新增成功 toast
+                  text: res.Message,
+                  type: "warn"
+                });
+              } else {
+                this.$vux.toast.show({
                   text: "成功",
-                  type: "success",
-                  onHide() {
-                    this.hasToast = !this.hasToast;
-                  }
+                  type: "success"
                 });
                 this.$router.replace({ name: "clientList" });
               }

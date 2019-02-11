@@ -127,7 +127,7 @@ export default {
     goback() {
       if (this.$route.query.type === "menu") {
         cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
-      } else {
+      } else if(this.$route.query.from === 'businessAdd' || 'reserveAdd')  {
         this.$router.go(-1);
       }
     },
@@ -137,6 +137,7 @@ export default {
       this.$el.querySelector(selector).scrollIntoView();
     },
     onLoad() {
+      console.log(this.$route.query.from)
       const data = {
         Urlpara: {
           Pageindex: 1,

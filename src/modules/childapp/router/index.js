@@ -5,6 +5,7 @@ const affairList = resolve => require(['../page/affair/affairList'], resolve);
 const affairDetail = resolve => require(['../page/affair/affairDetail'], resolve);
 //单元模块
 const unitInfoALL = resolve => require(['../page/unitInfo/unitInfoALL'], resolve);
+const unitInfoAllMap = resolve => require(['../page/unitInfo/unitInfoAllMap'], resolve);
 
 //预定模块
 const reserveList = resolve => require(['../page/reserve/reserveList'], resolve);
@@ -78,6 +79,11 @@ export default [{
       //   keepAlive: true,
       //   isBack: false
       // }
+    },
+    {
+      path: '/unitInfoAllMap', //单元信息平面图
+      name: 'unitInfoAllMap',
+      component: unitInfoAllMap,
     },
 
 

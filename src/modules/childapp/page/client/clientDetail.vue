@@ -151,24 +151,22 @@ export default {
       const data = {
         Accountid: this.clientDeatil.Datasource[0].Accountid
       };
-      DeleteCustomer(data)
-        .then(res => {
-          console.log(res);
-          if (!!res) {
-            this.$router.push({ name: "clientList" });
-            this.$vux.toast.show({
-              //新增姓名相同
-              text: "删除成功",
-              type: "success",
-              onHide() {
-                this.hasToast = !this.hasToast;
-              }
-            });
-          }
-        })
-        .catch(err => {
-          this.alertShow = !this.alertShow;
-        });
+      DeleteCustomer(data).then(res => {
+        if (res.Success === false) {
+          this.$vux.toast.show({
+            //新增姓名相同
+            text: "客户已有业务数据",
+            type: "warn"
+          });
+        } else {
+          this.$vux.toast.show({
+            //新增姓名相同
+            text: "删除成功",
+            type: "success"
+          });
+          this.$router.push({ name: "clientList" });
+        }
+      });
     }
   }
 };

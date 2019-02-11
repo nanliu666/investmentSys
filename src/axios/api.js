@@ -7,6 +7,7 @@ import axios from "axios"
 // 单元信息接口
 const baseHead = `http://gz.ifca.com.cn:9999/ydzs/WebService/MobileMerchants/`
 const platformHead = ` http://gz.ifca.com.cn:9999/RMSApp6.0/api/`
+const mapHead = ` http://gz.ifca.com.cn:9999/rms284_test/` //平面图
 export const GetUnitinfoAll = p => post(`${baseHead}Unitinfo.asmx/GetUnitinfoAll`, p); //获取当前用户所有单元信息
 export const GetCompanyies = p => post(`${baseHead}Unitinfo.asmx/GetCompanyies`, p); //获取当前用户所有公司信息
 export const GetPropertys = p => post(`${baseHead}Unitinfo.asmx/GetPropertys`, p); //获取当前用户项目信息
@@ -70,3 +71,8 @@ export const DocumentLibrary = p => get(`DocumentLibrary/Download.ashx`, p)
 
 // 待办列表
 export const getTodoList = p => get(`${platformHead}Message/getTodoList`, p)
+
+//平面图接口
+export const GetFormatList = p => post(`${mapHead}PlanLayout/WebService/MapBusiness.asmx/GetFormatList
+`, p)
+
