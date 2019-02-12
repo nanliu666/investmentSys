@@ -234,6 +234,7 @@
 
 
 <script>
+import unitJson from "./unit.json";
 import {
   GetCompanyies,
   GetUnitByBlockCompanyProject,
@@ -321,37 +322,7 @@ export default {
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
-    new IFCA_VIEW(
-      "#unitInfoAllMap",
-      {
-        SystemCode: "Rental",
-        Blockid: "1",
-        Blockname: "饿了吧(C栋)",
-        Floorlist: [
-          {
-            Floorid: "1",
-            Floorno: "01",
-            Unitlist: [
-              {
-                Unitid: "1",
-                Unitno: "0101"
-              }
-            ]
-          },
-          {
-            Floorid: "2",
-            Floorno: "02",
-            Unitlist: [
-              {
-                Unitid: "1",
-                Unitno: "0101"
-              }
-            ]
-          }
-        ]
-      },
-      { Range: "2019-2-10" }
-    );
+    new IFCA_VIEW("#unitInfoAllMap", unitJson, { Range: "2019-2-10" });
   },
   destroyed() {
     window.removeEventListener("scroll", this.handleScroll);
