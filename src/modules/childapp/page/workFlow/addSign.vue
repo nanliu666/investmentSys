@@ -21,7 +21,7 @@
           <div class="flowRight">
             <div class="top">2018-11-12</div>
             <div class="main">
-              <div class="mainTop">审批人:张三</div>
+              <div class="mainTop">审批人:{{!!requestData.linkMan ? requestData.linkMan : '暂无当前审批人'}}</div>
             </div>
           </div>
         </li>
@@ -61,10 +61,12 @@
       </ul>
     </section>
     <section class="ApprovalFlow">
-      <!-- <div class="contractTitle">本人审批意见</div> -->
       <group title="本人审批意见">
-        <x-textarea placeholder="请填写审批意见" class="textarea" :max="200"></x-textarea>
+        <x-textarea placeholder="请填写审批意见" class="textarea" :max="200" v-model="requestData.Comment"></x-textarea>
       </group>
+    </section>
+    <section class="button">
+      <button class="submit" @click="submit">保存</button>
     </section>
   </div>
 </template>
@@ -77,6 +79,14 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      requestData: {
+        Platformkey: "",
+        linkMan: "",
+        Comment: "",
+        Currentruntflowid: 0, //当前节点为0
+        Addtype: "before", //前加签before，后加签after
+        Flowuserids: "" //加签人员ID
+      },
       TrackList: [],
       hasNodata: false,
       showMenus: -1,
@@ -118,11 +128,27 @@ export default {
       this.radio = this.radios[index].value;
       // 设置值，以供传递
       this.radios[index].isChecked = true;
+      console.log(index);
+      switch (index) {
+        case 0:
+          this.requestData.Addtype = "before";
+          break;
+        case 1:
+          this.requestData.Addtype = "after";
+          break;
+      }
     },
     goback() {
       this.$router.back(-1);
     },
-    onLoad() {}
+    onLoad() {
+      console.log(this.$route.params);
+      this.requestData.Platformkey = this.$route.params.Platformkey;
+      this.requestData.linkMan = this.$route.params.linkMan;
+    },
+    submit() {
+      console.log(this.requestData);
+    }
   }
 };
 </script>

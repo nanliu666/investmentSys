@@ -297,7 +297,12 @@ export default {
   methods: {
     WorkFlowAddSign() {
       this.$router.push({
-        name: "addSign"
+        name: "addSign",
+        params: {
+          id: this.$route.params.id,
+          linkMan: this.flowList[0].SectionRows[3].Value,
+          Platformkey: this.$route.params.id
+        }
       });
     },
     WorkFlowReject() {},
@@ -372,7 +377,6 @@ export default {
       });
       GetToDoFile(jsonData).then(res => {
         this.fujianList = res;
-        console.log(this.fujianList);
       });
     },
     postfixFileName(text) {
@@ -383,7 +387,6 @@ export default {
     },
     getContractenclosure(data) {
       //附件路径待解决
-      // console.log(data.FileUrl.split("&")[1].split("=")[1]);
       if (typeof cordova === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "attachmentPreview", [
           {
