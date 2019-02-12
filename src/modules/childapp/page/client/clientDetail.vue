@@ -1,25 +1,95 @@
 <template>
   <div>
     <div class="appTopOther"></div>
-
     <x-header
       :left-options="{backText: ''}"
       class="header"
       :right-options="{showMore: true}"
       @on-click-more="showMenus = true"
     >客户详情</x-header>
-    <group title="基本信息" label-width="4.5em" label-margin-right="2em" label-align="right">
-      <cell title="客户姓名" :value="clientName" value-align="left"></cell>
-      <cell title="电话号码" :value="clientPhone" value-align="left"></cell>
-      <cell title="性别" :value="clientSex" value-align="left"></cell>
-      <cell title="客户性质" :value="clientType" value-align="left"></cell>
-      <cell title="备注" :value="clientRemark" value-align="left"></cell>
-    </group>
-    <group title="其他联系人" label-width="4.5em" label-margin-right="2em" label-align="right">
-      <cell title="姓名" :value="clientOtherName" value-align="left"></cell>
-      <cell title="性别" :value="clientOtherSex" value-align="left"></cell>
-      <cell title="电话号码" :value="clientOtherPhone" value-align="left"></cell>
-    </group>
+    <section class="content" v-for="(item, index) in clientDeatil" :key="index">
+      <div class="group">
+        <div class="cientInfo">基本信息</div>
+        <li class="groupLi">
+          <div class="liLeft">
+            <span>客户姓名</span>
+          </div>
+          <div class="liRight" :class="[!!item.Name ? 'cellValueClass' : 'placeholderClass']">
+            <span>{{!!item.Name ? item.Name : '暂无联系人'}}</span>
+          </div>
+        </li>
+        <li class="groupLi">
+          <div class="liLeft">
+            <span>手机号码</span>
+          </div>
+          <div class="liRight" :class="[!!item.Phone ? 'cellValueClass' : 'placeholderClass']">
+            <span>{{!!item.Phone ? item.Phone : '暂无联系人电话'}}</span>
+          </div>
+        </li>
+        <li class="groupLi">
+          <div class="liLeft">
+            <span>客户性别</span>
+          </div>
+          <div class="liRight" :class="[!!sexText ? 'cellValueClass' : 'placeholderClass']">
+            <span>{{!!sexText ? sexText : '暂无联系人性别'}}</span>
+          </div>
+        </li>
+        <li class="groupLi">
+          <div class="liLeft">
+            <span>客户性质</span>
+          </div>
+          <div
+            class="liRight"
+            :class="[!!CustomertypeText ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{!!CustomertypeText ? CustomertypeText : '暂无客户性质'}}</span>
+          </div>
+        </li>
+        <li class="groupLi">
+          <div class="liLeft">
+            <span>备注</span>
+          </div>
+          <div class="liRight" :class="[!!item.Remark ? 'cellValueClass' : 'placeholderClass']">
+            <span>{{!!item.Remark ? item.Remark : '暂备注'}}</span>
+          </div>
+        </li>
+        <div class="cientInfo">其他联系人</div>
+        <li class="groupLi">
+          <div class="liLeft">
+            <span>姓名</span>
+          </div>
+          <div
+            class="liRight"
+            :class="[item.Otherinfo.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{item.Otherinfo.length !== 0 ? item.Otherinfo[0].Name : '暂无其他联系人'}}</span>
+          </div>
+        </li>
+        <li class="groupLi">
+          <div class="liLeft">
+            <span>手机号码</span>
+          </div>
+          <div
+            class="liRight"
+            :class="[item.Otherinfo.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{item.Otherinfo.length !== 0 ? item.Otherinfo[0].Mobilephone : '暂无其他联系人电话'}}</span>
+          </div>
+        </li>
+        <li class="groupLi">
+          <div class="liLeft">
+            <span>性别</span>
+          </div>
+          <div
+            class="liRight"
+            :class="[item.Otherinfo.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span>{{item.Otherinfo.length !== 0 ? OtherSexText : '暂无联系人性别'}}</span>
+          </div>
+        </li>
+      </div>
+    </section>
+
     <actionsheet
       v-model="showMenus"
       :menus="menus"
@@ -32,7 +102,11 @@
 </template>
 
 <script>
-import { GetCustomerDetail, DeleteCustomer } from "@/axios/api";
+import {
+  GetCustomerDetail,
+  DeleteCustomer,
+  GetCustomerDropdown
+} from "@/axios/api";
 import { XHeader, Actionsheet, Group, Cell, Alert } from "vux";
 
 export default {
@@ -47,15 +121,11 @@ export default {
   data() {
     return {
       alertShow: false,
-      clientDeatil: {}, //暂存当前客户所有数据
-      clientSex: "",
-      clientName: "",
-      clientPhone: "",
-      clientRemark: "",
-      clientType: "",
-      clientOtherName: "",
-      clientOtherSex: "",
-      clientOtherPhone: "",
+      clientDeatil: [], //暂存当前客户所有数据
+      sexText: "", //联系人性别
+      OtherSexText: "", //其他联系人性别
+      CustomertypeText: "", //客户性质
+      clientDeatilObj: {}, //暂存当前客户所有数据
       menus: {
         editor: "编辑",
         delete: "删除"
@@ -77,12 +147,37 @@ export default {
     if (!this.$route.meta.isBack || this.isFirstEnter) {
       // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
       // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
-      this.clientDeatil = ""; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
+      this.clientDeatil = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
       this.onLoad(); // ajax获取数据方法
     }
     // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
     this.$route.meta.isBack = false;
     this.isFirstEnter = false;
+  },
+  watch: {
+    clientDeatil() {
+      this.$nextTick(() => {
+        GetCustomerDropdown("").then(res => {
+          this.comSource = res.Option.Dropdowncustomertypeid; //公司
+          this.sexList = res.Option.Dropdownsexid; //本人联系人性别
+          this.otherSexList = res.Option.Dropdownsexid; //其他联系人
+          if (this.clientDeatil.length !== 0) {
+            let ATemp = this._.filter(this.sexList, item => {
+              return item.Value === this.clientDeatil[0].Sexid;
+            });
+            this.sexText = ATemp[0].Text;
+            let BTemp = this._.filter(this.comSource, item => {
+              return item.Value === this.clientDeatil[0].Customertypeid;
+            });
+            this.CustomertypeText = BTemp[0].Text;
+            let CTemp = this._.filter(this.otherSexList, item => {
+              return item.Value === this.clientDeatil[0].Otherinfo[0].Sexid;
+            });
+            this.OtherSexText = CTemp[0].Text;
+          }
+        });
+      });
+    }
   },
   methods: {
     onLoad() {
@@ -92,64 +187,21 @@ export default {
         }
       };
       GetCustomerDetail(data).then(res => {
-        this.clientDeatil = res;
-        if (!!res) {
-          //存在联系人数据
-          this.clientRemark = res.Datasource[0].Remark; // 有备注显示备注，没有显示空
-          this.clientName = res.Datasource[0].Name; //姓名、电话一定存在
-          this.clientPhone = res.Datasource[0].Phone;
-          const Sex = this._.filter(
-            //如果没有选择性别，就是默认未定义
-            res.Option.Dropdownsexid,
-            item => item.Value === res.Datasource[0].Sexid
-          )[0];
-          this.clientSex = !!JSON.stringify(Sex) ? Sex.Text : ""; //加盟商，如果在新增的时候没有加入，就默认空
-
-          const Type = this._.filter(
-            res.Option.Dropdowncustomertypeid,
-            item => item.Value === res.Datasource[0].Customertypeid
-          )[0];
-          this.clientType = !!JSON.stringify(Type) ? Type.Text : ""; //加盟商，如果在新增的时候没有加入，就默认空
-
-          // 其他联系人
-          if (!!res.Datasource[0].Otherinfo) {
-            //其他人的姓名没有显示为空
-            this.clientOtherName = res.Datasource[0].Otherinfo[0].Name
-              ? res.Datasource[0].Otherinfo[0].Name
-              : "";
-            // 其他人的电话，没有的时候显示为空
-            this.clientOtherPhone = res.Datasource[0].Otherinfo[0].Mobilephone
-              ? res.Datasource[0].Otherinfo[0].Mobilephone
-              : "";
-
-            const sexID = res.Datasource[0].Otherinfo[0].Sexid
-              ? res.Datasource[0].Otherinfo[0].Sexid
-              : 6502;
-            const Sex = this._.filter(
-              res.Option.Dropdownsexid,
-              item => item.Value === sexID
-            )[0];
-            //其他联系人的性别没有选择的时候，显示为未定义
-            this.clientOtherSex = Sex.Text;
-          } else {
-            // 没有其他联系人，姓名、电话显示为空，性别显示未定义
-            this.clientOtherName = "";
-            this.clientOtherPhone = "";
-            this.clientOtherSex = "未定义";
-          }
-        }
+        this.clientDeatilObj = res;
+        this.clientDeatil = res.Datasource;
+        // console.log(this.clientDeatil);
       });
     },
     // 编辑
     onEditor() {
       //todo 传入数据给新增
-      const clientDeatil = this.clientDeatil;
-      this.$router.push({ name: "clientAdd", params: { clientDeatil } });
+      const clientDeatilObj = this.clientDeatilObj;
+      this.$router.push({ name: "clientAdd", params: { clientDeatilObj } });
     },
     // 删除
     onDelete() {
       const data = {
-        Accountid: this.clientDeatil.Datasource[0].Accountid
+        Accountid: this.clientDeatil[0].Accountid
       };
       DeleteCustomer(data).then(res => {
         if (res.Success === false) {
