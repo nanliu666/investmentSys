@@ -137,7 +137,6 @@ export default {
       this.$el.querySelector(selector).scrollIntoView();
     },
     onLoad() {
-      console.log(this.$route.query.from)
       const data = {
         Urlpara: {
           Pageindex: 1,

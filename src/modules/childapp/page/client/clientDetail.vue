@@ -162,18 +162,25 @@ export default {
           this.sexList = res.Option.Dropdownsexid; //本人联系人性别
           this.otherSexList = res.Option.Dropdownsexid; //其他联系人
           if (this.clientDeatil.length !== 0) {
-            let ATemp = this._.filter(this.sexList, item => {
-              return item.Value === this.clientDeatil[0].Sexid;
-            });
-            this.sexText = ATemp[0].Text;
-            let BTemp = this._.filter(this.comSource, item => {
-              return item.Value === this.clientDeatil[0].Customertypeid;
-            });
-            this.CustomertypeText = BTemp[0].Text;
-            let CTemp = this._.filter(this.otherSexList, item => {
-              return item.Value === this.clientDeatil[0].Otherinfo[0].Sexid;
-            });
-            this.OtherSexText = CTemp[0].Text;
+            console.log(this.clientDeatil);
+            if (this.clientDeatil[0].Sexid !== 0) {
+              let ATemp = this._.filter(this.sexList, item => {
+                return item.Value === this.clientDeatil[0].Sexid;
+              });
+              this.sexText = ATemp[0].Text;
+            }
+            if(this.clientDeatil[0].Customertypeid !== 0) {
+              let BTemp = this._.filter(this.comSource, item => {
+                return item.Value === this.clientDeatil[0].Customertypeid;
+              });
+              this.CustomertypeText = BTemp[0].Text;
+            }
+            if(this.clientDeatil[0].Otherinfo.length !== 0 && this.clientDeatil[0].Otherinfo[0].Sexid !== 0) {
+              let CTemp = this._.filter(this.otherSexList, item => {
+                return item.Value === this.clientDeatil[0].Otherinfo[0].Sexid;
+              });
+              this.OtherSexText = CTemp[0].Text;
+            }
           }
         });
       });
