@@ -43,7 +43,7 @@ export default [{
 
     //工作流模块
     {
-      path: '/addSign', //审批加签
+      path: '/addSign/:id', //审批加签
       component: addSign,
       name: 'addSign'
     },

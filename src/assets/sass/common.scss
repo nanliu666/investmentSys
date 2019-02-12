@@ -45,9 +45,9 @@ figcaption {
   }
 }
 
-textarea {
-  color: rgba(209, 209, 209, 1) !important
-}
+// textarea {
+//   color: rgba(209, 209, 209, 1) !important
+// }
 
 // input占位符颜色
 input::-webkit-input-placeholder,
@@ -295,9 +295,24 @@ body {
         input {
           width: 100%;
         }
-
-        // @include sc(30px, rgba(209, 209, 209, 1));
       }
     }
+  }
+}
+
+.button {
+  @include fj(space-around);
+
+  button {
+    @include wh(640px, 88px);
+    @include sc(36px, $fc);
+    @include borderRadius(44px);
+    font-family: $fm;
+    margin-top: 40px;
+    box-shadow: 0 4px 20px 0 rgba(96, 137, 210, 0.17);
+  }
+
+  .submit {
+    background-color: rgba(105, 167, 254, 1);
   }
 }

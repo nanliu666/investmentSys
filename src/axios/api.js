@@ -57,22 +57,30 @@ export const GetUserInfo = p => post(`${baseHead}ReserveMgmt.asmx/GetUserInfo`, 
 export const GetAgentDefaultPageNEW = p => post(`${baseHead}DefaultPage.asmx/GetAgentDefaultPageNEW`, p); //获取业务员首页统计数据
 export const GetAgentDefaultPageChartNEW = p => post(`${baseHead}DefaultPage.asmx/GetAgentDefaultPageChartNEW`, p); //获取业务员首页图表统计数据
 
-// 工作流接口接口
+// 工作流接口
 export const GetToDoDetail = p => post(`${baseHead}Workflow.asmx/GetToDoDetail`, p); //获取工作流详情信息
 export const GetToDoHistory = p => post(`${baseHead}Workflow.asmx/GetToDoHistory`, p); //获取工作流历史信息
 export const GetToDoFile = p => post(`${baseHead}Workflow.asmx/GetToDoFile`, p); //获取工作流附件
 export const GetToDoFlows = p => post(`${baseHead}Workflow.asmx/GetToDoFlows`, p); //获取工作流流程状态
 
-// 消息通知接口接口
-export const GetUserMessage = p => post(`${baseHead}Message.asmx/GetUserMessage`, p); //获取当前用户消息通知
-export const GetUserMessageTotal = p => post(`${baseHead}Message.asmx/GetUserMessageTotal`, p); //获取当前用户消息通知总数
-
-// 预览下载  //这个接口不一样
-export const DocumentLibrary = p => get(`DocumentLibrary/Download.ashx`, p)
-
-// 待办列表
-export const getTodoList = p => get(`${platformHead}Message/getTodoList`, p)
+// 工作流业务操作接口
+export const ActionApprove = p => post(`${baseHead}Workflow.asmx/ActionApprove`, p); //审批
+export const ActionSubmit = p => post(`${baseHead}Workflow.asmx/ActionSubmit`, p); //提交
+export const RejectAction = p => post(`${baseHead}Workflow.asmx/RejectAction`, p); //驳回
+export const AddFlow = p => post(`${baseHead}Workflow.asmx/AddFlow`, p); //加签
 
 //平面图接口
 export const GetFormatList = p => post(`${mapHead}PlanLayout/WebService/MapBusiness.asmx/GetFormatList
 `, p)
+
+
+// 消息通知接口接口
+export const GetUserMessage = p => post(`${baseHead}Message.asmx/GetUserMessage`, p); //获取当前用户消息通知
+export const GetUserMessageTotal = p => post(`${baseHead}Message.asmx/GetUserMessageTotal`, p); //获取当前用户消息通知总数
+
+//以下为GET请求
+// 预览下载
+export const DocumentLibrary = p => get(`DocumentLibrary/Download.ashx`, p)
+
+// 待办列表
+export const getTodoList = p => get(`${platformHead}Message/getTodoList`, p)

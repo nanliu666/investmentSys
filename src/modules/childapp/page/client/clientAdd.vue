@@ -393,114 +393,6 @@ export default {
       } else {
         this.hasMustConfirm = !this.hasMustConfirm;
       }
-
-      // if (!!this.clientName && !!this.clientPhone) {
-      //   //必填项已经填了
-      //   if (!!clientDeatil) {
-      //     //编辑页面有数据传递过来
-      //     Customer = {
-      //       Accountid: this.clientDeatil.Datasource[0].Accountid, //一定有ID和姓名、联系电话
-      //       Name: this.clientName,
-      //       Phone: this.clientPhone,
-      //       Sexid:
-      //         this.SexSelect || this.clientDeatil.Datasource[0].Sexid || 6502, //有选择后=>有数据=>没有选择没有数据显示未定义性别
-      //       Customertypeid:
-      //         this.customSelect ||
-      //         this.clientDeatil.Datasource[0].Customertypeid ||
-      //         0, //没有选择为0
-      //       Remark: this.remark
-      //     };
-      //     if (!!clientDeatil.Datasource[0].Otherinfo) {
-      //       // 有其他联系人的数据，
-      //       // 没有改变其他联系人 -- 用带来的数据
-      //       // 选择了其他联系人 --用改变的数据
-      //       Otherinfo = {
-      //         Otherinfo: [
-      //           {
-      //             Contactid: this.clientDeatil.Datasource[0].Otherinfo[0]
-      //               .Contactid,
-      //             Name:
-      //               this.clientOtherName ||
-      //               this.clientDeatil.Datasource[0].Otherinfo[0].Name,
-      //             Mobilephone:
-      //               this.clientOtherPhone ||
-      //               this.clientDeatil.Datasource[0].Otherinfo[0].Mobilephone,
-      //             Sexid:
-      //               this.clientOtherSelectSex ||
-      //               this.clientDeatil.Datasource[0].Otherinfo[0].Sexid ||
-      //               6502
-      //           }
-      //         ]
-      //       };
-      //     } else {
-      //       // 编辑页面数据，没有其他联系人
-      //       Otherinfo = {
-      //         Otherinfo: [
-      //           {
-      //             Contactid: 0,
-      //             Name: this.clientOtherName || 0,
-      //             Mobilephone: this.clientOtherPhone || 0,
-      //             Sexid: this.clientOtherSelectSex || 6502
-      //           }
-      //         ]
-      //       };
-      //     }
-      //     Object.assign(Customer, Otherinfo);
-      //   } else {
-      //     Customer = {
-      //       //新增数据
-      //       Accountid: 0,
-      //       Name: this.clientName,
-      //       Phone: this.clientPhone,
-      //       Sexid: this.SexSelect || 0, //有选择操作=>没有选择为0
-      //       Customertypeid: this.customSelect || 0, //没有选择为0
-      //       Remark: this.remark,
-      //       Otherinfo: [
-      //         {
-      //           Contactid: 0, //新增其他联系人，直接是0
-      //           Name: this.clientOtherName || "",
-      //           Mobilephone: this.clientOtherPhone || "",
-      //           Sexid: this.clientOtherSelectSex || 6502 //没选择性别，传递未定义
-      //         }
-      //       ]
-      //     };
-      //   }
-      //   const data = { Customer };
-      //   if (data.Customer.Phone.length !== 11) {
-      //     this.$vux.toast.show({
-      //       //编辑和新增成功 toast
-      //       text: "请填入正确的电话号码",
-      //       type: "warn",
-      //       onHide() {
-      //         this.hasToast = !this.hasToast;
-      //       }
-      //     });
-      //   } else {
-      //     EditCustomer(data)
-      //       .then(res => {
-      //         if (res.Success === false) {
-      //           this.$vux.toast.show({
-      //             //编辑和新增成功 toast
-      //             text: res.Message,
-      //             type: "warn"
-      //           });
-      //         } else {
-      //           this.$vux.toast.show({
-      //             text: "成功",
-      //             type: "success"
-      //           });
-      //           this.$router.replace({ name: "clientList" });
-      //         }
-      //       })
-      //       .catch(err => {
-      //         //姓名相同
-      //         this.hasSameConfirm = !this.hasSameConfirm;
-      //       });
-      //   }
-      // } else {
-      //   //姓名、电话没填
-      //   this.hasMustConfirm = !this.hasMustConfirm;
-      // }
     }
   }
 };
@@ -510,20 +402,6 @@ export default {
 @import "src/assets/sass/mixin";
 input {
   text-align: right;
-}
-.button {
-  @include fj(space-around);
-  button {
-    @include wh(640px, 88px);
-    @include sc(36px, $fc);
-    @include borderRadius(44px);
-    font-family: $fm;
-    margin-top: 40px;
-    box-shadow: 0 4px 20px 0 rgba(96, 137, 210, 0.17);
-  }
-  .submit {
-    background-color: rgba(105, 167, 254, 1);
-  }
 }
 </style>
 
