@@ -74,12 +74,14 @@
 
 <script>
 import { XHeader, XTextarea, Group } from "vux";
-import { GetFollowUp, EditFollowUp, DeleteFollowup } from "@/axios/api";
+import { GetUserInfo } from "@/axios/api";
 import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
       requestData: {
+        Entiid: 0, //流程id，预定是28，合同是345。有平台业务主键时传0
+        Datakey: "",
         Platformkey: "",
         linkMan: "",
         Comment: "",
@@ -145,6 +147,15 @@ export default {
       console.log(this.$route.params);
       this.requestData.Platformkey = this.$route.params.Platformkey;
       this.requestData.linkMan = this.$route.params.linkMan;
+      let data = {
+        Urlpara: {
+          PageIndex: 1,
+          PageSize: 100
+        }
+      };
+      GetUserInfo(data).then(res => {
+        console.log(JSON.parse(res.Content));
+      });
     },
     submit() {
       console.log(this.requestData);

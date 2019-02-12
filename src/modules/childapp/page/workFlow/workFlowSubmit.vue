@@ -109,7 +109,12 @@
 
 <script>
 import { XHeader, XTextarea, XButton, Group } from "vux";
-import { GetFollowUp, EditFollowUp, DeleteFollowup } from "@/axios/api";
+import {
+  GetFollowUp,
+  EditFollowUp,
+  DeleteFollowup,
+  GetSubmitWorkflows
+} from "@/axios/api";
 import { mapState, mapMutations } from "vuex";
 export default {
   data() {
@@ -154,8 +159,8 @@ export default {
   },
   methods: {
     removeAdd(index) {
-      this.flowList.splice(index, 1)
-      console.log(this.flowListSelect)
+      this.flowList.splice(index, 1);
+      console.log(this.flowListSelect);
     },
     cancelAdd() {
       this.hasNewSgin = -1;
@@ -195,7 +200,16 @@ export default {
     goback() {
       this.$router.back(-1);
     },
-    onLoad() {}
+    onLoad() {
+      let data = {
+        entiId: 28,
+        dataKey: '2c066614-c5f4-4f66-823f-5b24d08abe7b',
+        userId: 1541, //yujing 账号的ID
+      }
+      GetSubmitWorkflows(data).then(res => {
+        console.log(res);
+      });
+    }
   }
 };
 </script>

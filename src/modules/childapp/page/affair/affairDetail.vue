@@ -6,7 +6,7 @@
       <section class="footer">
         <button class="addSign" @click="WorkFlowAddSign">加签</button>
         <button class="reject" @click="WorkFlowReject">驳回</button>
-        <button class="submit" @click="WorkFlowSubmit">提交</button>
+        <button class="submit" @click="WorkFlowSubmit">同意</button>
       </section>
       <div style="height:44px;">
         <sticky
@@ -298,6 +298,9 @@ export default {
     WorkFlowAddSign() {
       this.$router.push({
         name: "addSign",
+        query: {
+          from: "affairDetail"
+        },
         params: {
           id: this.$route.params.id,
           linkMan: this.flowList[0].SectionRows[3].Value,

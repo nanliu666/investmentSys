@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <div id="unitInfoAllMap"></div>
+  <div class="unitInfoAllMap">
     <div class="allHeader">
       <div class="appTopOther"></div>
       <x-header
@@ -144,14 +143,6 @@
           <span>租赁面积:</span>
           <span>{{unitDetailSelect.Builduparea | formatNumber}}M²</span>
         </li>
-        <!-- <li>
-          <span>每平方米单价:</span>
-          <span>{{unitDetailSelect.Minprice | formatNumber}}万元</span>
-        </li>
-        <li>
-          <span>总租金:</span>
-          <span>{{unitDetailSelect.Toprice | formatNumber}}万元</span>
-        </li>-->
         <li>
           <span>当前商机数:</span>
           <span>6条这是死数据</span>
@@ -186,32 +177,8 @@
           <img src="../../assets/images/分组 9.png" alt>
         </div>
       </section>
-      <section class="main" ref="scroll">
-        <div id="anchorScroll"></div>
-        <li
-          class="mainLi"
-          v-for="(item, index) in floorList"
-          :key="index"
-          :id="'anchor-'+ item[0].Floor"
-        >
-          <div
-            class="mainLiA"
-            v-for="(Item, index) in item[0].Unitlist"
-            :key="index"
-            @click="getUnitDetail(Item)"
-          >
-            <a
-              :class="[uintVuexList.indexOf(Item) !== -1 ? 'dispalyNo': getbusinessStatus(Item.Recordstatusstringcode) ]"
-            >{{Item.Unitno | strSubstring(4) }}</a>
-            <div
-              class="imgBox"
-              :class="[uintVuexList.indexOf(Item) !== -1 ?  'dispalyYes A-visited':  'dispalyNo' ]"
-            >
-              <img class="fs-img" src="../../assets/images/勾.png" alt>
-            </div>
-          </div>
-        </li>
-      </section>
+    <div id="unitInfoAllMap"></div>
+
     </section>
     <section class="noData" v-if="noData">
       <img src="../../assets/images/分组.png" alt>
@@ -247,14 +214,15 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      MapBlockList: [],
       hasUintNumber: false,
       uintVuexList: [],
       uintNumber: "",
       showMask: false,
+      noData: false,
       unitDetailSelect: {},
       headerTittle: "",
       gotoTop: false,
-      noData: false,
       companysSelect: "",
       PropertysSelect: "",
       blockSelect: "",
@@ -288,45 +256,33 @@ export default {
     next();
   },
   created() {
-    this.isFirstEnter = true;
     let data = {
       Blockid: 1,
       SystemCode: ""
     };
     GetFormatList(data).then(res => {
-      console.log(JSON.parse(res));
+      this.MapBlockList = JSON.parse(res);
+      console.log(this.MapBlockList);
     });
     this.onLoad();
   },
-
+  mounted() {
+    let NowDate = moment()
+      .format("YYYY-M-DD")
+      .toString();
+    console.log(this.MapBlockList);
+    var Map = new IFCA_VIEW(
+      "#unitInfoAllMap",
+      unitJson,
+      // this.MapBlockList,
+      { Range: NowDate, Align: "normal", floorListOff: false }
+    );
+    Map.setScreenSize('400px','300px')
+  },
   computed: {
     ...mapState(["scrollTop", "toPageName", "uintDetailList"])
   },
-  activated() {
-    if (!this.$route.meta.isBack || this.isFirstEnter) {
-      // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
-      // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
-      this.allBlock = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
-      this.onLoad(); // ajax获取数据方法
-    }
-    // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
-    this.$route.meta.isBack = false;
-    this.isFirstEnter = false;
-    //滚动条位置的监听放到activated是因为此页面被keep-alive缓存了
-    this.$refs.scroll.scrollTop = this.scrollTop; //this.$refs.scroll拿到滚动的dom，即scrollContainer，this.home_list_top是存入到vuex里的值
-    this.$refs.scroll.addEventListener("scroll", this.handleScroll); //添加绑定事件
-  },
-  deactivated() {
-    //keep-alive 的页面跳转时，移除scroll事件
-    this.$refs.scroll.removeEventListener("scroll", this.handleScroll); //清除绑定的scroll事件
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll);
-    new IFCA_VIEW("#unitInfoAllMap", unitJson, { Range: "2019-2-10" });
-  },
-  destroyed() {
-    window.removeEventListener("scroll", this.handleScroll);
-  },
+
   methods: {
     goback() {
       if (this.$route.query.type === "menu") {
@@ -339,17 +295,7 @@ export default {
       this.goAnchor("#anchorScroll");
       this.gotoTop = !this.gotoTop;
     },
-    handleScroll() {
-      //页面滚动高度
-      let scrolled =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop;
-      if (scrolled > 500) {
-        this.gotoTop = !this.gotoTop;
-      }
-      this.RESAVESCORLLTOP(this.$refs.scroll.scrollTop); //vuex暂存
-    },
+
     getCompany() {
       const data = {
         Companyid: 0
@@ -599,7 +545,6 @@ export default {
       this.floorList = [];
     },
     getUnitBlock() {
-      console.log(this.requestData);
       GetUnitByBlockCompanyProject(this.requestData).then(res => {
         this.allBlock = res.Content;
         this.hasProject();
@@ -667,9 +612,15 @@ export default {
 
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
-#unitInfoAllMap {
-  width: 100px;
-  height: 100px;
+.unitInfoAllMap {
+  height: 100%;
+  position: relative;
+  #unitInfoAllMap {
+    position: absolute;
+    @include flexCenter;
+    width: 100%;
+    height: 100%;
+  }
 }
 .allHeader {
   position: fixed;
@@ -836,59 +787,6 @@ export default {
       @include flexCenter;
       img {
         @include wh(58px, 40px);
-      }
-    }
-  }
-  .main {
-    position: fixed;
-    top: 260px;
-    margin-left: 6%;
-    @include cl;
-    width: 80%;
-    height: auto;
-    overflow-y: auto;
-    overflow-x: hidden;
-    .mainLi {
-      margin-bottom: 30px;
-      display: flex;
-      flex-wrap: wrap;
-      .mainLiA {
-        width: 20%;
-        height: 60px;
-        line-height: 60px;
-        @include flexCenter;
-
-        margin-right: 6.6%;
-        margin-bottom: 20px;
-        @include sc(30px, rgba(255, 255, 255, 1));
-        font-family: $fm;
-        &:nth-child(4n + 4) {
-          margin-right: 0;
-        }
-        a {
-          width: 100%;
-          @include flexCenter;
-          @include ellipsis;
-        }
-        .imgBox {
-          width: 100%;
-          height: 100%;
-          @include flexCenter;
-
-          .fs-img {
-            width: 20px;
-            height: 10px;
-          }
-        }
-      }
-      .A-visited {
-        background-color: rgba(90, 204, 155, 1);
-      }
-      .dispalyNo {
-        display: none !important ;
-      }
-      .dispalyYes {
-        display: block;
       }
     }
   }

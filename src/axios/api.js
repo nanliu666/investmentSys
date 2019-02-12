@@ -7,6 +7,7 @@ import axios from "axios"
 // 单元信息接口
 const baseHead = `http://gz.ifca.com.cn:9999/ydzs/WebService/MobileMerchants/`
 const platformHead = ` http://gz.ifca.com.cn:9999/RMSApp6.0/api/`
+const workFlowHead = ` http://gz.ifca.com.cn:9999/ydzs/`
 const mapHead = ` http://gz.ifca.com.cn:9999/rms284_test/` //平面图
 export const GetUnitinfoAll = p => post(`${baseHead}Unitinfo.asmx/GetUnitinfoAll`, p); //获取当前用户所有单元信息
 export const GetCompanyies = p => post(`${baseHead}Unitinfo.asmx/GetCompanyies`, p); //获取当前用户所有公司信息
@@ -51,7 +52,6 @@ export const GetReserveMgmtDetail = p => post(`${baseHead}ReserveMgmt.asmx/GetRe
 export const EditReserveMgmt = p => post(`${baseHead}ReserveMgmt.asmx/EditReserveMgmt`, p); //新增，修改预定信息
 export const DeleteReserveMgmt = p => post(`${baseHead}ReserveMgmt.asmx/DeleteReserveMgmt`, p); //删除预定信息
 export const VoidReserveMgmt = p => post(`${baseHead}ReserveMgmt.asmx/VoidReserveMgmt`, p); //预定作废
-export const GetUserInfo = p => post(`${baseHead}ReserveMgmt.asmx/GetUserInfo`, p); //获取加签用户信息
 
 // 首页信息接口
 export const GetAgentDefaultPageNEW = p => post(`${baseHead}DefaultPage.asmx/GetAgentDefaultPageNEW`, p); //获取业务员首页统计数据
@@ -68,6 +68,13 @@ export const ActionApprove = p => post(`${baseHead}Workflow.asmx/ActionApprove`,
 export const ActionSubmit = p => post(`${baseHead}Workflow.asmx/ActionSubmit`, p); //提交
 export const RejectAction = p => post(`${baseHead}Workflow.asmx/RejectAction`, p); //驳回
 export const AddFlow = p => post(`${baseHead}Workflow.asmx/AddFlow`, p); //加签
+export const GetUserInfo = p => post(`${baseHead}ReserveMgmt.asmx/GetUserInfo`, p); //获取加签用户信息
+
+//加签组织架构
+export const GetSubmitWorkflows = p => post(`${workFlowHead}/Workflow/Api/WFServices.asmx/GetSubmitWorkflows`, p); //获取加签列表
+export const GetUserId = p => post(`${workFlowHead}/Workflow/Api/WFServices.asmx/GetUserId`, p); //获取加签用户信息
+
+
 
 //平面图接口
 export const GetFormatList = p => post(`${mapHead}PlanLayout/WebService/MapBusiness.asmx/GetFormatList

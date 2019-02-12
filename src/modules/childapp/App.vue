@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { GetUserId } from "@/axios/api";
 export default {
   name: "App",
   mounted() {
@@ -45,8 +46,26 @@ export default {
         cordova.exec(null, null, "ifcaPlugIns", "enabledsystembackFunc", [
           false
         ]);
+        cordova.exec(
+          this.successCallBack,
+          this.errorCallBack,
+          "ifcaPlugIns",
+          "getAppInfoFunc",
+          []
+        );
       }
-    }
+    },
+    successCallBack(data) {
+      //获取用户名
+      GetUserId({
+        loginName: data["username"]
+      }).then(res => {
+        console.log(res);
+        localStorage.setItem("username", username);
+        localStorage.setItem("userid", data);
+      });
+    },
+    errorCallBack() {}
   }
 };
 </script>
