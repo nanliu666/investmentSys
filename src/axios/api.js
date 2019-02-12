@@ -38,6 +38,7 @@ export const GetCustomer = p => post(`${baseHead}CustomerMgmt.asmx/GetCustomer`,
 export const GetCustomerDetail = p => post(`${baseHead}CustomerMgmt.asmx/GetCustomerDetail`, p); //获取客户详细信息
 export const EditCustomer = p => post(`${baseHead}CustomerMgmt.asmx/EditCustomer`, p); //新增修改客户信息
 export const DeleteCustomer = p => post(`${baseHead}CustomerMgmt.asmx/DeleteCustomer`, p); //新增修改客户信息
+export const GetCustomerDropdown = p => post(`${baseHead}CustomerMgmt.asmx/GetCustomerDropdown`, p); //获取联系人下拉
 
 // 合同信息模块接口
 export const GetContractMgmt = p => post(`${baseHead}ContractMgmt.asmx/GetContractMgmt`, p); //获取合同列表信息
@@ -75,4 +76,3 @@ export const getTodoList = p => get(`${platformHead}Message/getTodoList`, p)
 //平面图接口
 export const GetFormatList = p => post(`${mapHead}PlanLayout/WebService/MapBusiness.asmx/GetFormatList
 `, p)
-
