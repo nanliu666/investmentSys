@@ -228,6 +228,7 @@ export default {
         });
     },
     gotoDetail(data) {
+      sessionStorage.setItem("reserveDetail", JSON.stringify(data));
       this.$router.push({
         name: "reserveDetail",
         params: { id: data.Bookid, data: data },

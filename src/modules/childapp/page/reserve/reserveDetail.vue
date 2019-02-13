@@ -52,10 +52,7 @@
           <div class="liLeft">
             <span>预定开始日期</span>
           </div>
-          <div
-            class="liRight"
-            :class="[!!item.Createdate ? 'cellValueClass' : 'placeholderClass']"
-          >
+          <div class="liRight" :class="[!!item.Createdate ? 'cellValueClass' : 'placeholderClass']">
             <span v-if="!!item.Createdate">{{item.Createdate | dataFrm('YYYY-MM-DD')}}</span>
             <span v-if="!item.Createdate">暂无预定开始日期</span>
           </div>
@@ -106,7 +103,7 @@
           </div>
         </li>
       </div>
-      <section class="button">
+      <section class="button" v-if="hasSubmit">
         <x-button class="submit" @click.native="submit">提交</x-button>
       </section>
     </section>
@@ -132,6 +129,7 @@ export default {
   name: "reserve",
   data() {
     return {
+      hasSubmit: false,
       showMenus: false,
       menus: {
         menu1: "编辑",
@@ -210,6 +208,9 @@ export default {
       this.$router.back(-1);
     },
     onLoad() {
+      if (JSON.parse(sessionStorage.getItem('reserveDetail')).Recordstatus === "ACTIVE") {
+        this.hasSubmit = !this.hasSubmit;
+      }
       const data = {
         Reservemgmt: {
           Bookid: this.$route.params.id
@@ -217,7 +218,6 @@ export default {
       };
       GetReserveMgmtDetail(data).then(res => {
         this.reseveDetail = res.Datasource;
-        console.log(this.reseveDetail);
       });
     }
   }

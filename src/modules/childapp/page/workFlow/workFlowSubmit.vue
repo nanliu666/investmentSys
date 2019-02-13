@@ -10,13 +10,18 @@
     <section class="ApprovalFlow">
       <div class="contractTitle">审批流程</div>
       <ul class="flowMain">
-        <li v-for="(item, index) in flowList" :key="index" :ref="'flowLi' + index">
+        <li
+          v-for="(item, index) in flowList"
+          class="flowMainLi"
+          :key="index"
+          :ref="'flowLi' + index"
+        >
           <div class="flowLeft">
             <div class="flowLeftFlag">
               <div class="flowFlag">
                 <div class="flowCircle"></div>
               </div>
-              <div>提交{{item}}</div>
+              <div>{{item.tittle}}</div>
             </div>
             <div class="shuxianBox">
               <div class="shuxian shuxianH38px"></div>
@@ -26,15 +31,15 @@
             class="flowRight flowRightH100"
             :class="[!!hasAddSign ? 'flowRightW60' : 'flowRightW100']"
           >
-            <div class="flowRightTop">
+            <div class="flowRightTop" @click="getClient(index)">
               <div>
-                <span>发起人:</span>
-                <span class="RightName">张连峰{{index}}</span>
+                <span>{{item.littleTittle}}:</span>
+                <span class="RightName">{{item.linkMan}}</span>
               </div>
-              <span class="getApprove">></span>
+              <span class="getApprove" v-if="index !== 0">></span>
             </div>
           </div>
-          <div class="removeAdd" v-if="hasRemove" @click="removeAdd(index)">
+          <div class="removeAdd" v-if="hasRemove  === index" @click="removeAdd(index)">
             <span class="iconfont icon-lajitong"></span>
           </div>
           <div class="addBox" v-show="hasAddSign">
@@ -42,7 +47,7 @@
           </div>
         </li>
       </ul>
-      <li ref="addSignLi" v-show="hasNewLi">
+      <section ref="addSignLi" class="addSignLi" v-show="hasNewLi">
         <div class="flowLeft">
           <div class="flowLeftFlag">
             <div class="flowFlag">
@@ -55,7 +60,7 @@
           </div>
         </div>
         <div class="flowRight flowRightW60 flowRightH60">
-          <div class="flowRightTop">
+          <div class="flowRightTop" @click="getClient(index)">
             <div>
               <span>审批人:</span>
               <span class="RightName">请选择</span>
@@ -93,40 +98,73 @@
             </div>
           </div>
         </div>
-      </li>
+      </section>
     </section>
-    <section class="ApprovalFlow">
-      <group title="提交意见">
-        <x-textarea placeholder="请填写提交意见" class="textarea" :max="200"></x-textarea>
-      </group>
-    </section>
+    <group title="提交意见">
+      <x-textarea placeholder="请填写提交意见" class="textarea" :max="200" v-model="submitData.Comment"></x-textarea>
+    </group>
     <section class="button">
       <x-button class="submit" @click.native="submit">提交</x-button>
     </section>
+    <popup v-model="hasClient">
+      <popup-header
+        left-text="取消"
+        right-text="确认"
+        title="请选择其他联系人性别"
+        :show-bottom-border="false"
+        @on-click-left="hasClient = false"
+        @on-click-right="hasClient = false"
+      ></popup-header>
+      <group gutter="0">
+        <radio :options="clientOptions" @on-change="getOtherChange"></radio>
+      </group>
+    </popup>
   </div>
 </template>
 
 
 <script>
-import { XHeader, XTextarea, XButton, Group } from "vux";
 import {
-  GetFollowUp,
-  EditFollowUp,
-  DeleteFollowup,
-  GetSubmitWorkflows
-} from "@/axios/api";
+  XHeader,
+  XTextarea,
+  XButton,
+  Group,
+  Popup,
+  Radio,
+  PopupHeader
+} from "vux";
+import { ActionSubmit, GetSubmitWorkflows } from "@/axios/api";
 import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      flowList: [1, 2, 3],
+      submitData: {
+        Platformkey: "", //提交的时候没有值
+        Comment: "", //审批意见
+        Entiid: 28, //预定提交28
+        Datakey: 28 //预定id
+      },
+      FlowsUserList: [], //联系人列表
+      getClientIndex: -1, //存第几个审批列表index
+      hasClient: false,
+      clientOptions: [], //联系人选择
+      flowList: [
+        {
+          tittle: "提交",
+          littleTittle: "提交人",
+          linkMan: "yujing(真机用户)"
+        },
+        {
+          tittle: "审批",
+          littleTittle: "审批人",
+          linkMan: ""
+        }
+      ],
       flowListSelect: "", //选中后的index
       hasAddSign: false, // 加签，取消切换
       hasNewSgin: -1, //控制加号,通过index匹配
       hasRemove: -1, //控制删除垃圾桶显示
       hasNewLi: false, //直接控制加签li显示
-      TrackList: [],
-      hasNodata: false,
       showMenus: -1,
       menus: {
         menu1: "编辑",
@@ -150,14 +188,35 @@ export default {
   components: {
     XHeader,
     XButton,
-    XTextarea,
-    Group
+    Popup,
+    PopupHeader,
+    Radio,
+    Group,
+    XTextarea
   },
   name: "addSign",
   created() {
     this.onLoad();
   },
   methods: {
+    submit() {
+      console.log(this.submitData);
+      // ActionSubmit(this.submitData).then(res => {
+      //   console.log(res);
+      // });
+    },
+    getOtherChange(value) {
+      this.flowList[this.getClientIndex].linkMan = value;
+      let ATemp = this.FlowsUserList.filter(item => {
+        return item.Name === value;
+      });
+      console.log(ATemp[0].UId);
+    },
+    getClient(index) {
+      if (index === 0) return false;
+      this.getClientIndex = index;
+      this.hasClient = !this.hasClient;
+    },
     removeAdd(index) {
       this.flowList.splice(index, 1);
       console.log(this.flowListSelect);
@@ -169,7 +228,10 @@ export default {
     ConfirmAdd() {
       this.hasNewSgin = -1;
       this.hasNewLi = false;
-      this.flowList.splice(this.flowListSelect + 1, 0, "加签");
+      this.flowList.splice(this.flowListSelect + 1, 0, {
+        tittle: "加签",
+        linkMan: "王午"
+      });
     },
     getAddSgin(index) {
       this.hasAddSign = !this.hasAddSign;
@@ -180,6 +242,7 @@ export default {
     },
     addNewSgin(index) {
       this.hasNewSgin = index;
+      this.hasRemove = index + 1;
       this.flowListSelect = index; //存起来，用来添加加签后的li
       this.hasNewLi = true;
       let selectDomArr = Object.entries(this.$refs).filter(item => {
@@ -201,13 +264,17 @@ export default {
       this.$router.back(-1);
     },
     onLoad() {
+      this.submitData.Datakey = JSON.parse(sessionStorage.getItem('reserveDetail')).Bookid;
       let data = {
         entiId: 28,
-        dataKey: '2c066614-c5f4-4f66-823f-5b24d08abe7b',
-        userId: 1541, //yujing 账号的ID
-      }
+        dataKey: "2c066614-c5f4-4f66-823f-5b24d08abe7b",
+        userId: 1541 //yujing 账号的ID
+      };
       GetSubmitWorkflows(data).then(res => {
-        console.log(res);
+        this.FlowsUserList = res[0].Flows[0].Users;
+        res[0].Flows[0].Users.map(item => {
+          this.clientOptions.push(item.Name);
+        });
       });
     }
   }
@@ -228,7 +295,8 @@ export default {
       background-color: #fff;
       padding: 30px 40px 0;
       font-family: $fr;
-      li {
+      .flowMainLi,
+      .addSignLi {
         position: relative;
         height: 100%;
         @include fd;
