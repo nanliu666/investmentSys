@@ -10,107 +10,100 @@
     <section class="ApprovalFlow">
       <div class="contractTitle">审批流程</div>
       <ul class="flowMain">
-        <li
-          v-for="(item, index) in flowList"
-          class="flowMainLi"
-          :key="index"
-          :ref="'flowLi' + index"
-        >
-          <div class="flowLeft">
-            <div class="flowLeftFlag">
-              <div class="flowFlag">
-                <div class="flowCircle"></div>
+        <li v-for="(item, index) in flowList" :key="index" :ref="'flowLi' + index">
+          <section class="flowMainLi">
+            <div class="flowLeft">
+              <div class="flowLeftFlag">
+                <div class="flowFlag">
+                  <div class="flowCircle"></div>
+                </div>
+                <div>{{item.tittle}}</div>
               </div>
-              <div>{{item.tittle}}</div>
-            </div>
-            <div class="shuxianBox">
-              <div class="shuxian shuxianH38px"></div>
-            </div>
-          </div>
-          <div
-            class="flowRight flowRightH100"
-            :class="[!!hasAddSign ? 'flowRightW60' : 'flowRightW100']"
-          >
-            <div class="flowRightTop" @click="getClient(index)">
-              <div>
-                <span>{{item.littleTittle}}:</span>
-                <span class="RightName">{{item.linkMan}}</span>
+              <div class="shuxianBox">
+                <div class="shuxian shuxianH38px"></div>
               </div>
-              <span class="getApprove" v-if="index !== 0">></span>
             </div>
-          </div>
-          <div class="removeAdd" v-if="hasRemove  === index" @click="removeAdd(index)">
-            <span class="iconfont icon-lajitong"></span>
-          </div>
-          <div class="addBox" v-show="hasAddSign">
-            <div class="addFlag" v-show="hasNewSgin !== index" @click="addNewSgin(index)">+</div>
-          </div>
-        </li>
-      </ul>
-      <section ref="addSignLi" class="addSignLi" v-show="hasNewLi">
-        <div class="flowLeft">
-          <div class="flowLeftFlag">
-            <div class="flowFlag">
-              <div class="flowCircle"></div>
+            <div
+              class="flowRight flowRightH100"
+              :class="[!!hasAddSign ? 'flowRightW60' : 'flowRightW100']"
+            >
+              <div class="flowRightTop" @click="getClient(index)">
+                <div>
+                  <span>{{item.littleTittle}}:</span>
+                  <span class="RightName">{{item.linkMan}}</span>
+                </div>
+                <span class="getApprove" v-if="index !== 0">></span>
+              </div>
             </div>
-            <div>加签</div>
-          </div>
-          <div class="shuxianBox">
-            <div class="shuxian shuxianH290px"></div>
-          </div>
-        </div>
-        <div class="flowRight flowRightW60 flowRightH60">
-          <div class="flowRightTop" @click="getClient(index)">
-            <div>
-              <span>审批人:</span>
-              <span class="RightName">请选择</span>
+            <div class="removeAdd" v-if="item.hasDelete" @click="removeAdd(index)">
+              <span class="iconfont icon-lajitong"></span>
             </div>
-            <span class="getApprove">></span>
-          </div>
-          <div class="flowRightBottom">
-            <div class="flowOrder">
-              <div>审批顺序:</div>
-              <div class="allRadioBox">
-                <div
-                  class="radio-box"
-                  v-for="(item,index) in radios"
-                  :key="index"
-                  @click="check(index)"
-                >
-                  <div class="flowFlag">
-                    <img v-if="item.isChecked" src="../../assets/images/椭圆形@2x (2).png" alt>
-                    <span v-if="!item.isChecked" class="noCheched"></span>
+            <div class="addBox" v-show="hasAddSign">
+              <div class="addFlag" v-show="hasNewSgin !== index" @click="addNewSgin(index)">+</div>
+            </div>
+          </section>
+          <section ref="addSignLi" class="addSignLi" v-show="hasNewLi === index">
+            <div class="flowLeft">
+              <div class="flowLeftFlag">
+                <div class="flowFlag">
+                  <div class="flowCircle"></div>
+                </div>
+                <div>加签</div>
+              </div>
+              <div class="shuxianBox">
+                <div class="shuxian shuxianH290px"></div>
+              </div>
+            </div>
+            <div class="flowRight flowRightW60 flowRightH60">
+              <div class="flowRightTop" @click="getClientByAdd(index)">
+                <div>
+                  <span>审批人:</span>
+                  <span
+                    class="RightName"
+                  >{{item.AddMan.length !== 0 ? item.AddMan.join(',') : '请选择审批人'}}</span>
+                </div>
+                <span class="getApprove">></span>
+              </div>
+              <div class="flowRightBottom">
+                <div class="flowOrder">
+                  <div>审批顺序:</div>
+                  <div class="allRadioBox">
+                    <div
+                      class="radio-box"
+                      v-for="(item,index) in radios"
+                      :key="index"
+                      @click="check(index)"
+                    >
+                      <div class="flowFlag">
+                        <img v-if="item.isChecked" src="../../assets/images/椭圆形@2x (2).png" alt>
+                        <span v-if="!item.isChecked" class="noCheched"></span>
+                      </div>
+                      <input
+                        v-model="radio"
+                        :value="item.value"
+                        class="input-radio"
+                        :checked="item.isChecked"
+                        type="radio"
+                      >
+                      {{item.label}}
+                    </div>
                   </div>
-                  <input
-                    v-model="radio"
-                    :value="item.value"
-                    class="input-radio"
-                    :checked="item.isChecked"
-                    type="radio"
-                  >
-                  {{item.label}}
+                </div>
+                <div class="flowButton">
+                  <button @click="cancelAdd">取消</button>
+                  <button @click="ConfirmAdd">确定</button>
                 </div>
               </div>
             </div>
-            <div class="flowButton">
-              <button @click="cancelAdd">取消</button>
-              <button @click="ConfirmAdd">确定</button>
-            </div>
-          </div>
-        </div>
-      </section>
-    </section>
-    <group title="提交意见">
-      <x-textarea placeholder="请填写提交意见" class="textarea" :max="200" v-model="submitData.Comment"></x-textarea>
-    </group>
-    <section class="button">
-      <x-button class="submit" @click.native="submit">提交</x-button>
+          </section>
+        </li>
+      </ul>
     </section>
     <popup v-model="hasClient">
       <popup-header
         left-text="取消"
         right-text="确认"
-        title="请选择其他联系人性别"
+        title="请选择审批人"
         :show-bottom-border="false"
         @on-click-left="hasClient = false"
         @on-click-right="hasClient = false"
@@ -119,6 +112,30 @@
         <radio :options="clientOptions" @on-change="getOtherChange"></radio>
       </group>
     </popup>
+    <popup v-model="hasADDClient">
+      <popup-header
+        left-text="取消"
+        right-text="确认"
+        title="请选择加签人"
+        :show-bottom-border="false"
+        @on-click-left="hasADDClient = false"
+        @on-click-right="hasADDClient = false"
+      ></popup-header>
+      <group gutter="0">
+        <checklist
+          required
+          :options="clientOptions"
+          v-model="Addchecklist"
+          @on-change="getAddChange"
+        ></checklist>
+      </group>
+    </popup>
+    <group title="提交意见">
+      <x-textarea placeholder="请填写提交意见" class="textarea" :max="200" v-model="submitData.Comment"></x-textarea>
+    </group>
+    <section class="button">
+      <button class="submit" @click="submit">提交</button>
+    </section>
   </div>
 </template>
 
@@ -131,6 +148,7 @@ import {
   Group,
   Popup,
   Radio,
+  Checklist,
   PopupHeader
 } from "vux";
 import { ActionSubmit, GetSubmitWorkflows } from "@/axios/api";
@@ -138,38 +156,51 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      Addchecklist: [],
       submitData: {
         Platformkey: "", //提交的时候没有值
         Comment: "", //审批意见
         Entiid: 28, //预定提交28
-        Datakey: 28 //预定id
+        Datakey: "AEEC68C1-119B-47F2-A434-79575D9EDF0C", //预定id
+        Selectedflows: [
+          {
+            RuntFlowId: 0,
+            FlowName: "提交",
+            FlowType: "Cosigner", //顺序审批 Cosigner 同时审批 Approve
+            FlowType2: "Add", //Add 新增 Normal正常
+            ContextGuid: "3f0907a1-2cfa-424e-bd27-b7217baac77a", //这一条的ID ,要用GUID生成
+            ParentContextGuid: "", //父节点id
+            Participants: "1539" //传选中的用户ID，用逗号（,）分开
+          }
+        ]
       },
       FlowsUserList: [], //联系人列表
       getClientIndex: -1, //存第几个审批列表index
+      getClientIndexByAdd: -1, //存第几个审批列表index
       hasClient: false,
+      hasADDClient: false,
       clientOptions: [], //联系人选择
       flowList: [
         {
           tittle: "提交",
+          AddMan: [],
           littleTittle: "提交人",
+          hasDelete: false,
           linkMan: "yujing(真机用户)"
         },
         {
           tittle: "审批",
           littleTittle: "审批人",
+          AddMan: [],
+          hasDelete: false,
           linkMan: ""
         }
       ],
       flowListSelect: "", //选中后的index
       hasAddSign: false, // 加签，取消切换
       hasNewSgin: -1, //控制加号,通过index匹配
-      hasRemove: -1, //控制删除垃圾桶显示
-      hasNewLi: false, //直接控制加签li显示
-      showMenus: -1,
-      menus: {
-        menu1: "编辑",
-        menu2: "删除"
-      },
+      hasNewLi: -1, //直接控制加签li显示
+      hasClientByADD: false,
       radio: "1",
       radios: [
         {
@@ -187,6 +218,7 @@ export default {
   },
   components: {
     XHeader,
+    Checklist,
     XButton,
     Popup,
     PopupHeader,
@@ -201,54 +233,86 @@ export default {
   methods: {
     submit() {
       console.log(this.submitData);
-      // ActionSubmit(this.submitData).then(res => {
-      //   console.log(res);
-      // });
+      ActionSubmit(this.submitData).then(res => {
+        console.log(res);
+      });
     },
     getOtherChange(value) {
       this.flowList[this.getClientIndex].linkMan = value;
-      let ATemp = this.FlowsUserList.filter(item => {
-        return item.Name === value;
-      });
-      console.log(ATemp[0].UId);
+      // let ATemp = this.FlowsUserList.filter(item => {
+      //   return item.Name === value;
+      // });
+      // console.log(ATemp[0].UId);
+    },
+
+    getAddChange(value) {
+      if (this.getClientIndexByAdd !== -1) {
+        this.flowList[this.getClientIndexByAdd].AddMan = this.Addchecklist;
+      }
     },
     getClient(index) {
+      this.hasClientByADD = false;
       if (index === 0) return false;
       this.getClientIndex = index;
       this.hasClient = !this.hasClient;
     },
+    getClientByAdd(index) {
+      this.hasClientByADD = true;
+      this.getClientIndexByAdd = index;
+      this.hasADDClient = !this.hasADDClient;
+    },
     removeAdd(index) {
       this.flowList.splice(index, 1);
-      console.log(this.flowListSelect);
     },
     cancelAdd() {
       this.hasNewSgin = -1;
-      this.hasNewLi = false;
+      this.hasNewLi = -1;
     },
     ConfirmAdd() {
-      this.hasNewSgin = -1;
-      this.hasNewLi = false;
-      this.flowList.splice(this.flowListSelect + 1, 0, {
-        tittle: "加签",
-        linkMan: "王午"
-      });
+      if (!!this.flowList[this.getClientIndexByAdd]) {
+        if (this.radio === "1") {
+          //顺序审批
+          this.Addchecklist.map(item => {
+            this.flowList.splice(this.flowListSelect + 1, 0, {
+              tittle: "加签",
+              littleTittle: "审批人",
+              hasDelete: true,
+              linkMan: item,
+              AddMan: []
+            });
+          });
+        } else {
+          //同时审批
+          this.flowList.splice(this.flowListSelect + 1, 0, {
+            tittle: "加签",
+            littleTittle: "审批人",
+            hasDelete: true,
+            linkMan: this.flowList[this.getClientIndexByAdd].AddMan.join(','),
+            AddMan: []
+          });
+        }
+        this.hasNewLi = -1;
+        this.hasNewSgin = -1;
+      } else {
+        this.$vux.toast.show({
+          text: "请选择审批人",
+          type: "cancel"
+        });
+      }
     },
     getAddSgin(index) {
       this.hasAddSign = !this.hasAddSign;
-      this.hasNewLi = false;
+      this.hasNewLi = -1;
       if (index === 1) {
-        this.hasNewSgin = -1;
+        this.hasNewSgin = -1; //关闭所有加号
+      } else {
+        this.flowList.map(item => (item.hasDelete = false)); //关闭所有垃圾桶
       }
     },
     addNewSgin(index) {
       this.hasNewSgin = index;
-      this.hasRemove = index + 1;
       this.flowListSelect = index; //存起来，用来添加加签后的li
-      this.hasNewLi = true;
-      let selectDomArr = Object.entries(this.$refs).filter(item => {
-        return item[0] === `flowLi${index}`;
-      });
-      selectDomArr[0][1][0].after(this.$refs.addSignLi);
+      this.hasNewLi = index;
     },
     check(index) {
       // 先取消所有选中项
@@ -264,13 +328,17 @@ export default {
       this.$router.back(-1);
     },
     onLoad() {
-      this.submitData.Datakey = JSON.parse(sessionStorage.getItem('reserveDetail')).Bookid;
+      this.submitData.Datakey = JSON.parse(
+        sessionStorage.getItem("reserveDetail")
+      ).Bookid;
+
       let data = {
         entiId: 28,
         dataKey: "2c066614-c5f4-4f66-823f-5b24d08abe7b",
         userId: 1541 //yujing 账号的ID
       };
       GetSubmitWorkflows(data).then(res => {
+        console.log(res);
         this.FlowsUserList = res[0].Flows[0].Users;
         res[0].Flows[0].Users.map(item => {
           this.clientOptions.push(item.Name);
