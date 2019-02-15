@@ -10,14 +10,14 @@
     <section class="ApprovalFlow">
       <div class="contractTitle">审批流程</div>
       <ul class="flowMain">
-        <li v-for="(item, index) in flowList" :key="index" :ref="'flowLi' + index">
+        <li v-for="(item, index) in submitData.Selectedflows" :key="index" :ref="'flowLi' + index">
           <section class="flowMainLi">
             <div class="flowLeft">
               <div class="flowLeftFlag">
                 <div class="flowFlag">
                   <div class="flowCircle"></div>
                 </div>
-                <div>{{item.tittle}}</div>
+                <div>{{item.FlowName}}</div>
               </div>
               <div class="shuxianBox">
                 <div class="shuxian shuxianH38px"></div>
@@ -27,8 +27,14 @@
               class="flowRight flowRightH100"
               :class="[!!hasAddSign ? 'flowRightW60' : 'flowRightW100']"
             >
-              <div class="flowRightTop" @click="getClient(index)">
-                <div>
+              <div class="flowRightTop" v-if="item.hasDelete">
+                <div class="RightNameDiv">
+                  <span>{{item.littleTittle}}:</span>
+                  <span class="RightName">{{item.linkMan}}</span>
+                </div>
+              </div>
+              <div class="flowRightTop" v-if="!item.hasDelete" @click="getClient(index)">
+                <div class="RightNameDiv">
                   <span>{{item.littleTittle}}:</span>
                   <span class="RightName">{{item.linkMan}}</span>
                 </div>
@@ -56,7 +62,7 @@
             </div>
             <div class="flowRight flowRightW60 flowRightH60">
               <div class="flowRightTop" @click="getClientByAdd(index)">
-                <div>
+                <div class="RightNameDiv">
                   <span>审批人:</span>
                   <span
                     class="RightName"
@@ -124,7 +130,7 @@
       <group gutter="0">
         <checklist
           required
-          :options="clientOptions"
+          :options="clientADDOptions"
           v-model="Addchecklist"
           @on-change="getAddChange"
         ></checklist>
@@ -151,56 +157,47 @@ import {
   Checklist,
   PopupHeader
 } from "vux";
-import { ActionSubmit, GetSubmitWorkflows } from "@/axios/api";
+import { ActionSubmit, GetSubmitWorkflows, GetUserInfo } from "@/axios/api";
 import { mapState, mapMutations } from "vuex";
+let ENTIID = 28; //表示预定，写死28
 export default {
   data() {
     return {
       Addchecklist: [],
+      AddLinkManlist: [], //数据
       submitData: {
         Platformkey: "", //提交的时候没有值
         Comment: "", //审批意见
-        Entiid: 28, //预定提交28
-        Datakey: "AEEC68C1-119B-47F2-A434-79575D9EDF0C", //预定id
+        Entiid: ENTIID, //预定提交28
+        Datakey: "", //预定id
         Selectedflows: [
           {
             RuntFlowId: 0,
             FlowName: "提交",
-            FlowType: "Cosigner", //顺序审批 Cosigner 同时审批 Approve
-            FlowType2: "Add", //Add 新增 Normal正常
-            ContextGuid: "3f0907a1-2cfa-424e-bd27-b7217baac77a", //这一条的ID ,要用GUID生成
-            ParentContextGuid: "", //父节点id
-            Participants: "1539" //传选中的用户ID，用逗号（,）分开
+            FlowType: "Approve", //默认为顺序审批 Cosigner 同时审批 Approve
+            FlowType2: "Add",
+            ContextGuid: "",
+            ParentContextGuid: "",
+            Participants: [],
+            AddMan: [],
+            littleTittle: "提交人",
+            hasDelete: false,
+            linkMan: "yujing(真机用户)"
           }
         ]
       },
       FlowsUserList: [], //联系人列表
+      FlowsIndex: -1, //判断是第几条数据
       getClientIndex: -1, //存第几个审批列表index
       getClientIndexByAdd: -1, //存第几个审批列表index
       hasClient: false,
       hasADDClient: false,
       clientOptions: [], //联系人选择
-      flowList: [
-        {
-          tittle: "提交",
-          AddMan: [],
-          littleTittle: "提交人",
-          hasDelete: false,
-          linkMan: "yujing(真机用户)"
-        },
-        {
-          tittle: "审批",
-          littleTittle: "审批人",
-          AddMan: [],
-          hasDelete: false,
-          linkMan: ""
-        }
-      ],
+      clientADDOptions: [], //联系人选择
       flowListSelect: "", //选中后的index
       hasAddSign: false, // 加签，取消切换
       hasNewSgin: -1, //控制加号,通过index匹配
       hasNewLi: -1, //直接控制加签li显示
-      hasClientByADD: false,
       radio: "1",
       radios: [
         {
@@ -231,50 +228,127 @@ export default {
     this.onLoad();
   },
   methods: {
+    generateKet() {
+      //生成密钥
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+        c
+      ) {
+        var r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    },
     submit() {
-      console.log(this.submitData);
-      ActionSubmit(this.submitData).then(res => {
-        console.log(res);
+      let submitData = [].concat(JSON.parse(JSON.stringify(this.submitData))); //拷贝数组
+      submitData[0].Selectedflows.shift();
+      console.log(submitData[0].Selectedflows);
+      // ActionSubmit(this.submitData).then(res => {
+      //   if (!!res) {
+      //     this.$vux.toast.show({
+      //       text: res.Message,
+      //       type: "warn"
+      //     });
+      //   } else {
+      //     this.$vux.toast.show({
+      //       text: "成功",
+      //       type: "success"
+      //     });
+      //     this.$router.push({ name: "reserveList" });
+      //   }
+      // });
+    },
+    onLoad() {
+      let reData = {
+        Urlpara: {
+          Pageindex: 1,
+          Pagesize: 100
+        }
+      };
+      GetUserInfo(reData).then(res => {
+        this.AddLinkManlist = JSON.parse(res.Content);
+        this.AddLinkManlist.map(item => {
+          this.clientADDOptions.push(item.Username);
+        });
+      });
+      this.submitData.Datakey = JSON.parse(
+        sessionStorage.getItem("reserveDetail")
+      ).Bookid;
+      let data = {
+        Entiid: ENTIID,
+        Platformkey: "",
+        Datakey: this.submitData.Datakey
+      };
+      GetSubmitWorkflows(data).then(res => {
+        this.FlowsUserList = res[0].Flows;
+        this.FlowsUserList.map(item => {
+          this.submitData.Selectedflows.push({
+            FlowName: item.Text,
+            littleTittle: "审批人",
+            AddMan: [],
+            hasDelete: false,
+            RuntFlowId: 0,
+            FlowType: item.Type, //默认为顺序审批 Cosigner 同时审批 Approve
+            FlowType2: item.FlowType2,
+            ContextGuid: item.Id,
+            ParentContextGuid: item.PId,
+            Participants: [item.Users[0].UId],
+            linkMan: item.Users[0].Name
+          });
+        });
       });
     },
     getOtherChange(value) {
-      this.flowList[this.getClientIndex].linkMan = value;
-      // let ATemp = this.FlowsUserList.filter(item => {
-      //   return item.Name === value;
-      // });
-      // console.log(ATemp[0].UId);
+      this.submitData.Selectedflows[this.getClientIndex].linkMan = value;
+      let ATemp = this.FlowsUserList[this.getClientIndex - 1].Users.filter(
+        item => {
+          return item.Name === value;
+        }
+      );
+      this.submitData.Selectedflows[this.getClientIndex].Participants = [];
+      this.submitData.Selectedflows[this.getClientIndex].Participants.push(
+        ATemp[0].UId
+      );
     },
-
     getAddChange(value) {
       if (this.getClientIndexByAdd !== -1) {
-        this.flowList[this.getClientIndexByAdd].AddMan = this.Addchecklist;
+        this.submitData.Selectedflows[
+          this.getClientIndexByAdd
+        ].AddMan = this.Addchecklist;
       }
     },
     getClient(index) {
-      this.hasClientByADD = false;
+      this.clientOptions = [];
+      this.FlowsUserList[index - 1].Users.map(item => {
+        this.clientOptions.push(item.Name);
+      });
       if (index === 0) return false;
       this.getClientIndex = index;
       this.hasClient = !this.hasClient;
     },
     getClientByAdd(index) {
-      this.hasClientByADD = true;
       this.getClientIndexByAdd = index;
       this.hasADDClient = !this.hasADDClient;
     },
     removeAdd(index) {
-      this.flowList.splice(index, 1);
+      this.submitData.Selectedflows.splice(index, 1);
     },
     cancelAdd() {
       this.hasNewSgin = -1;
       this.hasNewLi = -1;
     },
     ConfirmAdd() {
-      if (!!this.flowList[this.getClientIndexByAdd]) {
+      if (!!this.submitData.Selectedflows[this.getClientIndexByAdd]) {
         if (this.radio === "1") {
           //顺序审批
           this.Addchecklist.map(item => {
-            this.flowList.splice(this.flowListSelect + 1, 0, {
-              tittle: "加签",
+            this.submitData.Selectedflows.splice(this.flowListSelect + 1, 0, {
+              RuntFlowId: 0,
+              FlowType: "Cosigner", //默认为顺序审批 Cosigner 同时审批 Approve
+              FlowType2: "Add",
+              ContextGuid: "",
+              ParentContextGuid: "",
+              Participants: [],
+              FlowName: "加签",
               littleTittle: "审批人",
               hasDelete: true,
               linkMan: item,
@@ -283,11 +357,19 @@ export default {
           });
         } else {
           //同时审批
-          this.flowList.splice(this.flowListSelect + 1, 0, {
-            tittle: "加签",
+          this.submitData.Selectedflows.splice(this.flowListSelect + 1, 0, {
+            RuntFlowId: 0,
+            FlowType: "Approve", //默认为顺序审批 Cosigner 同时审批 Approve
+            FlowType2: "Add",
+            ContextGuid: "",
+            ParentContextGuid: "",
+            Participants: [],
+            FlowName: "加签",
             littleTittle: "审批人",
             hasDelete: true,
-            linkMan: this.flowList[this.getClientIndexByAdd].AddMan.join(','),
+            linkMan: this.submitData.Selectedflows[
+              this.getClientIndexByAdd
+            ].AddMan.join(","),
             AddMan: []
           });
         }
@@ -306,10 +388,11 @@ export default {
       if (index === 1) {
         this.hasNewSgin = -1; //关闭所有加号
       } else {
-        this.flowList.map(item => (item.hasDelete = false)); //关闭所有垃圾桶
+        this.submitData.Selectedflows.map(item => (item.hasDelete = false)); //关闭所有垃圾桶
       }
     },
     addNewSgin(index) {
+      this.FlowsIndex = index;
       this.hasNewSgin = index;
       this.flowListSelect = index; //存起来，用来添加加签后的li
       this.hasNewLi = index;
@@ -326,24 +409,6 @@ export default {
     },
     goback() {
       this.$router.back(-1);
-    },
-    onLoad() {
-      this.submitData.Datakey = JSON.parse(
-        sessionStorage.getItem("reserveDetail")
-      ).Bookid;
-
-      let data = {
-        entiId: 28,
-        dataKey: "2c066614-c5f4-4f66-823f-5b24d08abe7b",
-        userId: 1541 //yujing 账号的ID
-      };
-      GetSubmitWorkflows(data).then(res => {
-        console.log(res);
-        this.FlowsUserList = res[0].Flows[0].Users;
-        res[0].Flows[0].Users.map(item => {
-          this.clientOptions.push(item.Name);
-        });
-      });
     }
   }
 };
@@ -442,7 +507,17 @@ export default {
             height: 100px;
             line-height: 100px;
             width: 100%;
+            .RightNameDiv {
+              width: 100%;
+              @include fj;
+              span:first-child {
+                width: 30%;
+              }
+            }
             .RightName {
+              display: inline;
+              width: 70%;
+              @include ellipsis;
               @include sc(30px, rgba(30, 30, 30, 1));
             }
             .getApprove {

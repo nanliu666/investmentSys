@@ -123,7 +123,7 @@ export default {
       });
     },
     gotoContranctMonth() {
-      if (typeof cordova === undefined) {
+      if (typeof cordova === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "1000/index.html#/contractList?dateTime=currentMonth" }
         ]);
@@ -134,29 +134,57 @@ export default {
       }
     },
     gotoContranctExpire() {
-      cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-        { Url: "1000/index.html#/contractList?dateTime=threeMonth" }
-      ]);
+      if (typeof cordova === "function") {
+        cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+          { Url: "1000/index.html#/contractList?dateTime=threeMonth" }
+        ]);
+      } else {
+        window.open(
+          "http://10.122.10.59:8086/childapp/index.html#/contractList?dateTime=threeMonth"
+        );
+      }
     },
     gounitInfoALL() {
-      cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-        { Url: "1000/index.html#/unitInfoALL" }
-      ]);
+      if (typeof cordova === "function") {
+        cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+          { Url: "1000/index.html#/unitInfoALL" }
+        ]);
+      } else {
+        window.open(
+          "http://10.122.10.59:8086/childapp/index.html#/unitInfoALL"
+        );
+      }
     },
     goreserveList() {
-      cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-        { Url: "1000/index.html#/reserveList" }
-      ]);
+      if (typeof cordova === "function") {
+        cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+          { Url: "1000/index.html#/reserveList" }
+        ]);
+      } else {
+        window.open(
+          "http://10.122.10.59:8086/childapp/index.html#/reserveList"
+        );
+      }
     },
     gobusinessList() {
-      cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-        { Url: "1000/index.html#/businessList" }
-      ]);
+      if (typeof cordova === "function") {
+        cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+          { Url: "1000/index.html#/businessList" }
+        ]);
+      } else {
+        window.open(
+          "http://10.122.10.59:8086/childapp/index.html#/businessList"
+        );
+      }
     },
     goaffairList() {
-      cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-        { Url: "1000/index.html#/affairList" }
-      ]);
+      if (typeof cordova === "function") {
+        cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+          { Url: "1000/index.html#/affairList" }
+        ]);
+      } else {
+        window.open("http://10.122.10.59:8086/childapp/index.html#/affairList");
+      }
     },
     formatNumber(
       number,

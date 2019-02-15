@@ -27,7 +27,8 @@ axios.interceptors.response.use(
     if (!!response.data.d) { //黄鑫的接口
       if (response.data.d && response.data.d !== undefined) {
         Vue.$vux.loading.hide()
-        if (response.data.d.Success === true) {
+        // console.log(response.data.d)
+        if (!!response.data.d.Success) {
           return Promise.resolve(JSON.parse(response.data.d.Data));
         } else {
           Vue.$vux.toast.text(response.data.d.Message, 'top')
@@ -35,8 +36,6 @@ axios.interceptors.response.use(
         }
       }
     } else { //丘堃的接口
-    // console.log(response)
-
       if (response.status === 200) {
         Vue.$vux.loading.hide()
         return Promise.resolve(response.data);

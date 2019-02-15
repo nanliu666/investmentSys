@@ -22,7 +22,7 @@
 
 <script>
 import { XHeader, XTextarea, Group } from "vux";
-import { GetUserInfo } from "@/axios/api";
+import { ActionApprove } from "@/axios/api";
 import { mapState, mapMutations } from "vuex";
 export default {
   data() {
@@ -33,13 +33,8 @@ export default {
         Entiid: 0, //流程id，预定是28，合同是345。有平台业务主键时传0
         Datakey: "",
         Platformkey: "",
-        linkMan: "",
-        Comment: "",
-        Currentruntflowid: 0, //当前节点为0
-        Addtype: "before", //前加签before，后加签after
-        Flowuserids: "" //加签人员ID
-      },
-
+        Comment: ""
+      }
     };
   },
   components: {
@@ -61,21 +56,15 @@ export default {
       this.$router.back(-1);
     },
     onLoad() {
-      console.log(this.$route.params);
       this.requestData.Platformkey = this.$route.params.Platformkey;
-      this.requestData.linkMan = this.$route.params.linkMan;
-      let data = {
-        Urlpara: {
-          PageIndex: 1,
-          PageSize: 100
-        }
-      };
-      GetUserInfo(data).then(res => {
-        console.log(JSON.parse(res.Content));
-      });
     },
     submit() {
-      console.log(this.requestData);
+      ActionApprove(this.requestData).then(res => {
+        if (res.Success === false) {
+        } else {
+          this.$router.push({ name: "affairList" });
+        }
+      });
     }
   }
 };

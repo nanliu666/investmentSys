@@ -70,6 +70,7 @@ export const RejectAction = p => post(`${baseHead}Workflow.asmx/RejectAction`, p
 export const AddFlow = p => post(`${baseHead}Workflow.asmx/AddFlow`, p); //加签
 export const GetUserInfo = p => post(`${baseHead}ReserveMgmt.asmx/GetUserInfo`, p); //获取加签用户信息
 export const GetSubmitWorkflows = p => post(`${baseHead}Workflow.asmx/GetSubmitWorkflows`, p); //获取加签列表
+export const GetRejectWorkflows = p => post(`${baseHead}Workflow.asmx/GetRejectWorkflows`, p); //获取加签列表
 
 //加签组织架构
 export const GetUserId = p => post(`${workFlowHead}Workflow/Api/WFServices.asmx/GetUserId`, p); //获取加签用户信息
