@@ -174,6 +174,7 @@ export default {
           from: "reserveDetail"
         },
         params: {
+          id:this.reseveDetail[0].Bookid,
           data: this.reseveDetail[0]
         }
       });

@@ -33,6 +33,8 @@ const contractList = resolve => require(['../page/contract/contractList'], resol
 // 工作流审批流程
 const addSign = resolve => require(['../page/workFlow/addSign'], resolve);
 const workFlowSubmit = resolve => require(['../page/workFlow/workFlowSubmit'], resolve);
+const WorkFlowReject = resolve => require(['../page/workFlow/WorkFlowReject'], resolve);
+const WorkFlowAgree = resolve => require(['../page/workFlow/WorkFlowAgree'], resolve);
 
 const notFound = resolve => require(['../page/404/notFound'], resolve);
 
@@ -48,9 +50,19 @@ export default [{
       name: 'addSign'
     },
     {
-      path: '/workFlowSubmit', //审批加签
+      path: '/workFlowSubmit/:id', //提交
       component: workFlowSubmit,
       name: 'workFlowSubmit'
+    },
+    {
+      path: '/WorkFlowReject/:id', //审批驳回
+      component: WorkFlowReject,
+      name: 'WorkFlowReject'
+    },
+    {
+      path: '/WorkFlowAgree/:id', //审批同意
+      component: WorkFlowAgree,
+      name: 'WorkFlowAgree'
     },
 
     //事务管理模块

@@ -254,7 +254,7 @@ export default {
           data: this.$route.params.data
         },
         query: {
-          from: "businessAdd"
+          from: "reserveAdd"
         }
       });
     },
@@ -262,7 +262,7 @@ export default {
       this.$router.replace({
         name: "unitInfoALL",
         query: {
-          from: "businessAdd"
+          from: "reserveAdd"
         }
       });
     },

@@ -17,8 +17,8 @@ module.exports = {
 
     // Various Dev Server settings
     // host: '192.168.0.108', // 自己手机wifi IP地址
-    // host: '10.122.10.59', // 连接公司网线
-    host: '192.168.0.171', // 连接公司wifi
+    host: '10.122.10.59', // 连接公司网线
+    // host: '192.168.0.101', // 连接公司wifi
     port: 8086, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,

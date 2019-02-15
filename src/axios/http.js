@@ -10,7 +10,7 @@ axios.interceptors.request.use(
     })
     if (config.url.includes('/ydzs/WebService/MobileMerchants/')) { //黄鑫接口需要加一个参数
       config.params = {
-        'loginname': 'yujing'
+        'loginname': 'qw'
       };
     }
     return config
