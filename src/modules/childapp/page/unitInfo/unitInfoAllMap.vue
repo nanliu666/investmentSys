@@ -177,16 +177,15 @@
           <img src="../../assets/images/分组 9.png" alt>
         </div>
       </section>
-    <div id="unitInfoAllMap"></div>
-
+      <section class="MapDiv">
+        <div id="unitInfoAllMap"></div>
+      </section>
     </section>
     <section class="noData" v-if="noData">
       <img src="../../assets/images/分组.png" alt>
       <div class="noDataTittle">暂无数据</div>
     </section>
-    <section class="gotoTop" v-if="gotoTop" @click="goTop">
-      <img src="../../assets/images/gototop.png" alt>
-    </section>
+
     <section class="footer" v-if="hasUintNumber">
       <div class="footerLeft">
         <span class="leftTittle">已选中单元</span>
@@ -206,7 +205,7 @@ import {
   GetCompanyies,
   GetUnitByBlockCompanyProject,
   GetBlocks,
-  GetFormatList,
+  GetBlockList,
   GetPropertys
 } from "@/axios/api";
 import { XHeader, Tab, TabItem, Sticky, Popup } from "vux";
@@ -222,7 +221,6 @@ export default {
       noData: false,
       unitDetailSelect: {},
       headerTittle: "",
-      gotoTop: false,
       companysSelect: "",
       PropertysSelect: "",
       blockSelect: "",
@@ -239,11 +237,7 @@ export default {
       floorListDisplay: [],
       barActiveColor: "#4879e6",
       hasprojectStatus: false,
-      hasUnitDetail: false,
-      disabled:
-        typeof navigator !== "undefined" &&
-        /iphone/i.test(navigator.userAgent) &&
-        /ucbrowser/i.test(navigator.userAgent)
+      hasUnitDetail: false
     };
   },
   components: { XHeader, Tab, TabItem, Sticky, Popup },
@@ -256,28 +250,19 @@ export default {
     next();
   },
   created() {
-    let data = {
-      Blockid: 1,
-      SystemCode: ""
-    };
-    GetFormatList(data).then(res => {
-      this.MapBlockList = JSON.parse(res);
-      console.log(this.MapBlockList);
-    });
     this.onLoad();
   },
   mounted() {
     let NowDate = moment()
       .format("YYYY-M-DD")
       .toString();
-    console.log(this.MapBlockList);
-    var Map = new IFCA_VIEW(
-      "#unitInfoAllMap",
-      unitJson,
-      // this.MapBlockList,
-      { Range: NowDate, Align: "normal", floorListOff: false }
-    );
-    Map.setScreenSize('400px','300px')
+    var Map = new IFCA_VIEW("#unitInfoAllMap", unitJson, {
+      Range: NowDate,
+      Align: "center",
+      floorListOff: false,
+      MagnifierOff: false
+    });
+    Map.setScale(1);
   },
   computed: {
     ...mapState(["scrollTop", "toPageName", "uintDetailList"])
@@ -290,10 +275,6 @@ export default {
       } else {
         this.$router.go(-1);
       }
-    },
-    goTop() {
-      this.goAnchor("#anchorScroll");
-      this.gotoTop = !this.gotoTop;
     },
 
     getCompany() {
@@ -355,7 +336,7 @@ export default {
       this.blockSelect = "";
     },
 
-    ...mapMutations(["UINT_DETAIL", "RESAVESCORLLTOP"]),
+    ...mapMutations(["UINT_DETAIL"]),
     //单元详细信息
     getUnitDetail(data) {
       if (
@@ -459,11 +440,7 @@ export default {
         }
       });
     },
-    goAnchor(selector) {
-      this.$el
-        .querySelector(selector)
-        .scrollIntoView({ block: "start", behavior: "smooth" });
-    },
+
     goPrePage() {
       this.floorListCount -= 1;
       if (this.floorListCount * 5 > 0) {
@@ -480,8 +457,11 @@ export default {
           time: "1000"
         });
       }
+      console.log(112221)
+
     },
     goNextPage() {
+      console.log(111)
       this.floorListCount += 1;
       this.activeClass = 0;
       if (this.floorListCount * 5 < this.FloorSelectlist.length + 5) {
@@ -545,8 +525,17 @@ export default {
       this.floorList = [];
     },
     getUnitBlock() {
+      let data = {
+        Blockid: 15,
+        SystemCode: ""
+      };
+      GetBlockList(data).then(res => {
+        this.MapBlockList = JSON.parse(res);
+        console.log("bing", this.MapBlockList);
+      });
       GetUnitByBlockCompanyProject(this.requestData).then(res => {
         this.allBlock = res.Content;
+        console.log("鑫接口", this.allBlock);
         this.hasProject();
       });
     },
@@ -615,11 +604,16 @@ export default {
 .unitInfoAllMap {
   height: 100%;
   position: relative;
-  #unitInfoAllMap {
+  .MapDiv {
+    z-index: 1;
     position: absolute;
-    @include flexCenter;
+    top: 230px;
     width: 100%;
     height: 100%;
+    #unitInfoAllMap {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 .allHeader {
@@ -737,6 +731,7 @@ export default {
 .uintInfoAll {
   .navBar {
     position: fixed;
+    z-index: 99;
     top: 260px;
     @include wh(108px, 60%);
     .top {
@@ -853,15 +848,7 @@ export default {
     font-family: $fr;
   }
 }
-.gotoTop {
-  position: fixed;
-  bottom: 40px;
-  right: 40px;
-  img {
-    width: 60px;
-    height: 60px;
-  }
-}
+
 .UnitDetail {
   background-color: #fff;
   padding: 26px 40px;
