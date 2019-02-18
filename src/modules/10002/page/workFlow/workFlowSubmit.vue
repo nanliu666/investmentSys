@@ -240,33 +240,43 @@ export default {
     },
     ConfirmAdd() {
       if (!!this.submitData.Selectedflows[this.getClientIndexByAdd]) {
+        let AddManTemp = []; //暂存加签人
+        let AddManIDTemp = []; //暂存加签人ID
+        this.AddLinkManlist.map((item, index) => {
+          this.Addchecklist.map((Item, index) => {
+            if (Item === item.Username) {
+              AddManTemp.push(item);
+              AddManIDTemp.push(item.Userid);
+            }
+          });
+        });
         if (this.radio === "1") {
           //顺序审批
-          this.Addchecklist.map(item => {
+          AddManTemp.map((item, index) => {
             this.submitData.Selectedflows.splice(this.flowListSelect + 1, 0, {
               RuntFlowId: 0,
               FlowType: "Cosigner", //默认为顺序审批 Cosigner 同时审批 Approve
               FlowType2: "Add",
               ContextGuid: "",
               ParentContextGuid: "",
-              Participants: [],
+              Participants: [item.Userid],
               FlowName: "加签",
               littleTittle: "审批人",
               hasDelete: true,
-              linkMan: item,
+              linkMan: item.Username,
               AddMan: []
             });
           });
         } else {
-          console.log(this.submitData.Selectedflows[this.getClientIndexByAdd + 1])
           //同时审批
+          let atPresentId = this.generateKet(); //当前ID
           this.submitData.Selectedflows.splice(this.flowListSelect + 1, 0, {
             RuntFlowId: 0,
             FlowType: "Approve", //默认为顺序审批 Cosigner 同时审批 Approve
             FlowType2: "Add",
-            ContextGuid: '',
-            ParentContextGuid: '',
-            Participants: [],
+            ContextGuid: "",
+            ParentContextGuid: "",
+            Participants: AddManIDTemp,
             FlowName: "加签",
             littleTittle: "审批人",
             hasDelete: true,
@@ -288,7 +298,15 @@ export default {
     submit() {
       let submitData = [].concat(JSON.parse(JSON.stringify(this.submitData))); //拷贝数组
       submitData[0].Selectedflows.shift();
-      console.log(submitData[0].Selectedflows);
+      submitData[0].Selectedflows.map((item, index) => {
+        item.ContextGuid = this.generateKet();
+        if (index === 0) {
+          item.ParentContextGuid = this.generateKet();
+        } else {
+          item.ParentContextGuid =
+            submitData[0].Selectedflows[index - 1].ContextGuid;
+        }
+      });
       ActionSubmit(submitData[0]).then(res => {
         if (!!res) {
           this.$vux.toast.show({
