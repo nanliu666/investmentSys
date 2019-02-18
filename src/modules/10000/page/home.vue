@@ -125,65 +125,65 @@ export default {
     gotoContranctMonth() {
       if (typeof cordova === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "1000/index.html#/contractList?dateTime=currentMonth" }
+          { Url: "10002/index.html#/contractList?dateTime=currentMonth" }
         ]);
       } else {
         window.open(
-          "http://10.122.10.59:8086/childapp/index.html#/contractList?dateTime=currentMonth"
+          "http://10.122.10.59:8086/10002/index.html#/contractList?dateTime=currentMonth"
         );
       }
     },
     gotoContranctExpire() {
       if (typeof cordova === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "1000/index.html#/contractList?dateTime=threeMonth" }
+          { Url: "10002/index.html#/contractList?dateTime=threeMonth" }
         ]);
       } else {
         window.open(
-          "http://10.122.10.59:8086/childapp/index.html#/contractList?dateTime=threeMonth"
+          "http://10.122.10.59:8086/10002/index.html#/contractList?dateTime=threeMonth"
         );
       }
     },
     gounitInfoALL() {
       if (typeof cordova === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "1000/index.html#/unitInfoALL" }
+          { Url: "10002/index.html#/unitInfoALL" }
         ]);
       } else {
         window.open(
-          "http://10.122.10.59:8086/childapp/index.html#/unitInfoALL"
+          "http://10.122.10.59:8086/10002/index.html#/unitInfoALL"
         );
       }
     },
     goreserveList() {
       if (typeof cordova === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "1000/index.html#/reserveList" }
+          { Url: "10002/index.html#/reserveList" }
         ]);
       } else {
         window.open(
-          "http://10.122.10.59:8086/childapp/index.html#/reserveList"
+          "http://10.122.10.59:8086/10002/index.html#/reserveList"
         );
       }
     },
     gobusinessList() {
       if (typeof cordova === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "1000/index.html#/businessList" }
+          { Url: "10002/index.html#/businessList" }
         ]);
       } else {
         window.open(
-          "http://10.122.10.59:8086/childapp/index.html#/businessList"
+          "http://10.122.10.59:8086/10002/index.html#/businessList"
         );
       }
     },
     goaffairList() {
       if (typeof cordova === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "1000/index.html#/affairList" }
+          { Url: "10002/index.html#/affairList" }
         ]);
       } else {
-        window.open("http://10.122.10.59:8086/childapp/index.html#/affairList");
+        window.open("http://10.122.10.59:8086/10002/index.html#/affairList");
       }
     },
     formatNumber(

@@ -60,9 +60,17 @@ export default {
     },
     submit() {
       ActionApprove(this.requestData).then(res => {
-        if (res.Success === false) {
-        } else {
+        if (res === "") {
+          this.$vux.toast.show({
+            text: '成功',
+            type: "success"
+          });
           this.$router.push({ name: "affairList" });
+        } else {
+          this.$vux.toast.show({
+            text: res.Message,
+            type: "warn"
+          });
         }
       });
     }

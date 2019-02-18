@@ -3,12 +3,35 @@
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
-      驳回
+      加签
     </x-header>
     <section class="ApprovalFlow">
+      <div class="contractTitle">当前位置</div>
+      <ul class="flowMain">
+        <li>
+          <div class="flowLeft">
+            <div class="flowFlag">
+              <img src="../../assets/images/椭圆形@2x.png" alt>
+            </div>
+            <span class="iconTittle">待审</span>
+            <div class="shuxianBox">
+              <div class="shuxian"></div>
+            </div>
+          </div>
+          <div class="flowRight">
+            <div class="top">2018-11-12</div>
+            <div class="main">
+              <div class="mainTop">审批人:{{!!requestData.linkMan ? requestData.linkMan : '暂无当前审批人'}}</div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+    <section class="ApprovalFlow">
+      <div class="contractTitle">加签内容</div>
       <ul class="addContent">
         <li class="addContentLi">
-          <div>重走流程</div>
+          <div>加签位置</div>
           <div class="liRight">
             <div
               class="radio-box"
@@ -31,11 +54,19 @@
             </div>
           </div>
         </li>
-        <li class="addContentLi" v-if="isNewGo" @click="getClient">
-          <div>流程退回至</div>
-          <div class="liRight">{{requestData.linkMan ? requestData.linkMan : '请选择 >'}}</div>
+        <li class="addContentLi" @click="getClient">
+          <div>加签人</div>
+          <div class="liRight">{{requestData.Flowuser ? requestData.Flowuser : '请选择' }} ></div>
         </li>
       </ul>
+    </section>
+    <section class="ApprovalFlow">
+      <group title="本人审批意见">
+        <x-textarea placeholder="请填写审批意见" class="textarea" :max="200" v-model="requestData.Comment"></x-textarea>
+      </group>
+    </section>
+    <section class="button">
+      <button class="submit" @click="submit">保存</button>
     </section>
     <popup v-model="hasClient">
       <popup-header
@@ -50,50 +81,48 @@
         <radio :options="clientOptions" @on-change="getOtherChange"></radio>
       </group>
     </popup>
-    <section class="ApprovalFlow">
-      <group title="审批意见">
-        <x-textarea placeholder="请填写审批意见" class="textarea" :max="200" v-model="requestData.Comment"></x-textarea>
-        <section class="tipsWord">
-          <span v-for="(item, index) in tipsWordList" :key="index" @click="getTip(item)">{{item}}</span>
-        </section>
-      </group>
-    </section>
-    <section class="button">
-      <button class="submit" @click="submit">保存</button>
-    </section>
   </div>
 </template>
 
 
 <script>
 import { XHeader, XTextarea, Group, Popup, PopupHeader, Radio } from "vux";
-import { RejectAction, GetRejectWorkflows, GetToDoHistory } from "@/axios/api";
+import { GetUserInfo, AddFlow } from "@/axios/api";
 import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      clientOptions: [], //联系人选择
       hasClient: false,
-      CommentTemp: [],
-      tipsWordList: ["信息不完整，需补充", "请与我面谈"],
-      isNewGo: false,
+      clientOptions: [], //联系人选择
+      clientOptionsList: [], //联系人选择
       requestData: {
         Entiid: 0, //流程id，预定是28，合同是345。有平台业务主键时传0
-        Datakey: "", //在这传空值
-        Isstartover: "Return", //是否重走流程，是（Return），否（ReturnNotStartOver）
-        Platformkey: "", //父节点传过来的
-        Backtoruntflowid: 0, //驳回节点
-        Comment: ""
+        Datakey: "",
+        Platformkey: "",
+        linkMan: "",
+        Flowuser: "",
+        Flowtype: "Approve",
+        Comment: "",
+        Currentruntflowid: 0, //当前节点为0,默认为0
+        Addtype: "before", //前加签before，后加签after
+        Flowuserids: "" //加签人员ID
+      },
+      TrackList: [],
+      hasNodata: false,
+      showMenus: -1,
+      menus: {
+        menu1: "编辑",
+        menu2: "删除"
       },
       radio: "1",
       radios: [
         {
-          label: "是",
+          label: "前",
           value: "1",
           isChecked: true
         },
         {
-          label: "否",
+          label: "后",
           value: "2",
           isChecked: false
         }
@@ -102,32 +131,49 @@ export default {
   },
   components: {
     XHeader,
+    Popup,
     PopupHeader,
     Radio,
-    Popup,
     XTextarea,
     Group
   },
-  name: "WorkFlowReject",
+  name: "addSign",
   created() {
     this.onLoad();
   },
   methods: {
+    submit() {
+      if (!!this.requestData.Flowuserids) {
+        AddFlow(this.requestData).then(res => {
+          if (res === null) {
+            this.$vux.toast.show({
+              text: "加签成功",
+              type: "success"
+            });
+            this.$router.push({ name: "affairList" });
+          } else {
+            this.$vux.toast.show({
+              text: res.Message,
+              type: "warn"
+            });
+          }
+        });
+      } else {
+        this.$vux.toast.show({
+          text: "请选择加签人",
+          type: "warn"
+        });
+      }
+    },
     getOtherChange(value) {
-      this.requestData.linkMan = value;
-      let ATemp = this.FlowsUserList.filter(item => {
-        return item.FlowName === value;
+      this.requestData.Flowuser = value;
+      let ATemp = this.clientOptionsList.filter(item => {
+        return item.Username === value;
       });
-      this.requestData.Backtoruntflowid = 0;
-      this.requestData.Backtoruntflowid = ATemp[0].RuntFlowId;
+      this.requestData.Flowuserids = ATemp[0].Userid;
     },
-    getClient() {
+    getClient(index) {
       this.hasClient = !this.hasClient;
-    },
-    getTip(item) {
-      this.CommentTemp.push(item);
-      let A = this.CommentTemp.join(",");
-      this.requestData.Comment = A;
     },
     check(index) {
       // 先取消所有选中项
@@ -140,14 +186,10 @@ export default {
       this.radios[index].isChecked = true;
       switch (index) {
         case 0:
-          //需要重走流程
-          this.isNewGo = false;
-          this.requestData.Isstartover = "Return";
-          this.requestData.Backtoruntflowid = 0;
+          this.requestData.Addtype = "before";
           break;
         case 1:
-          this.isNewGo = true;
-          this.requestData.Isstartover = "ReturnNotStartOver";
+          this.requestData.Addtype = "after";
           break;
       }
     },
@@ -155,28 +197,19 @@ export default {
       this.$router.back(-1);
     },
     onLoad() {
-      this.requestData.Platformkey = this.$route.params.id;
-      let REdata = {
-        Entiid: 0,
-        Datakey: "",
-        Platformkey: this.$route.params.id
-      };
-      GetRejectWorkflows(REdata).then(res => {
-        this.FlowsUserList = res;
-        this.FlowsUserList.map(item => {
-          this.clientOptions.push(item.FlowName);
-        });
-      });
-    },
-    submit() {
-      RejectAction(this.requestData).then(res => {
-        if (res.Success && res.Success === false) {
-          console.log(11);
-        } else {
-          this.$router.push({
-            name: "affairList"
-          });
+      this.requestData.Platformkey = this.$route.params.Platformkey;
+      this.requestData.linkMan = this.$route.params.linkMan;
+      let data = {
+        Urlpara: {
+          PageIndex: 1,
+          PageSize: 100
         }
+      };
+      GetUserInfo(data).then(res => {
+        this.clientOptionsList = JSON.parse(res.Content);
+        this.clientOptionsList.map(item => {
+          this.clientOptions.push(item.Username);
+        });
       });
     }
   }
@@ -188,7 +221,6 @@ export default {
 .addSign {
   height: 100%;
   .ApprovalFlow {
-    position: relative;
     .contractTitle {
       @include fj;
       @include sc(28px, rgba(136, 136, 136, 1));
@@ -252,7 +284,6 @@ export default {
       }
     }
     .addContent {
-      margin-top: 20px;
       @include sc(30px, rgba(136, 136, 136, 1));
       font-family: $fr;
       .addContentLi {
@@ -304,17 +335,6 @@ export default {
           }
         }
       }
-    }
-  }
-  .tipsWord {
-    position: absolute;
-    bottom: 20px;
-    font-family: $fr;
-    @include sc(26px, rgba(136, 136, 136, 1));
-    span {
-      padding: 10px 16px;
-      background: rgba(247, 247, 247, 1);
-      margin: 10px;
     }
   }
 }

@@ -21,15 +21,28 @@ axios.interceptors.request.use(
     return Promise.reject(err)
   }
 )
+//检测是不是json字符串
+function isJsonString(str) {
+  try {
+    if (typeof JSON.parse(str) == "object") {
+      return true;
+    }
+  } catch (e) {}
+  return false;
+}
+
 //请求响应器
 axios.interceptors.response.use(
   response => {
     if (!!response.data.d) { //黄鑫的接口
       if (response.data.d && response.data.d !== undefined) {
         Vue.$vux.loading.hide()
-        // console.log(response.data.d)
         if (!!response.data.d.Success) {
-          return Promise.resolve(JSON.parse(response.data.d.Data));
+          if (isJsonString(response.data.d.Data)) {
+            return Promise.resolve(JSON.parse(response.data.d.Data));
+          } else {
+            return Promise.resolve(response.data.d.Data);
+          }
         } else {
           Vue.$vux.toast.text(response.data.d.Message, 'top')
           return Promise.resolve(response.data.d); //增加对错误的处理改正

@@ -238,24 +238,71 @@ export default {
         return v.toString(16);
       });
     },
+    ConfirmAdd() {
+      if (!!this.submitData.Selectedflows[this.getClientIndexByAdd]) {
+        if (this.radio === "1") {
+          //顺序审批
+          this.Addchecklist.map(item => {
+            this.submitData.Selectedflows.splice(this.flowListSelect + 1, 0, {
+              RuntFlowId: 0,
+              FlowType: "Cosigner", //默认为顺序审批 Cosigner 同时审批 Approve
+              FlowType2: "Add",
+              ContextGuid: "",
+              ParentContextGuid: "",
+              Participants: [],
+              FlowName: "加签",
+              littleTittle: "审批人",
+              hasDelete: true,
+              linkMan: item,
+              AddMan: []
+            });
+          });
+        } else {
+          console.log(this.submitData.Selectedflows[this.getClientIndexByAdd + 1])
+          //同时审批
+          this.submitData.Selectedflows.splice(this.flowListSelect + 1, 0, {
+            RuntFlowId: 0,
+            FlowType: "Approve", //默认为顺序审批 Cosigner 同时审批 Approve
+            FlowType2: "Add",
+            ContextGuid: '',
+            ParentContextGuid: '',
+            Participants: [],
+            FlowName: "加签",
+            littleTittle: "审批人",
+            hasDelete: true,
+            linkMan: this.submitData.Selectedflows[
+              this.getClientIndexByAdd
+            ].AddMan.join(","),
+            AddMan: []
+          });
+        }
+        this.hasNewLi = -1;
+        this.hasNewSgin = -1;
+      } else {
+        this.$vux.toast.show({
+          text: "请选择审批人",
+          type: "cancel"
+        });
+      }
+    },
     submit() {
       let submitData = [].concat(JSON.parse(JSON.stringify(this.submitData))); //拷贝数组
       submitData[0].Selectedflows.shift();
       console.log(submitData[0].Selectedflows);
-      // ActionSubmit(this.submitData).then(res => {
-      //   if (!!res) {
-      //     this.$vux.toast.show({
-      //       text: res.Message,
-      //       type: "warn"
-      //     });
-      //   } else {
-      //     this.$vux.toast.show({
-      //       text: "成功",
-      //       type: "success"
-      //     });
-      //     this.$router.push({ name: "reserveList" });
-      //   }
-      // });
+      ActionSubmit(submitData[0]).then(res => {
+        if (!!res) {
+          this.$vux.toast.show({
+            text: res.Message,
+            type: "warn"
+          });
+        } else {
+          this.$vux.toast.show({
+            text: "成功",
+            type: "success"
+          });
+          this.$router.push({ name: "reserveList" });
+        }
+      });
     },
     onLoad() {
       let reData = {
@@ -336,52 +383,7 @@ export default {
       this.hasNewSgin = -1;
       this.hasNewLi = -1;
     },
-    ConfirmAdd() {
-      if (!!this.submitData.Selectedflows[this.getClientIndexByAdd]) {
-        if (this.radio === "1") {
-          //顺序审批
-          this.Addchecklist.map(item => {
-            this.submitData.Selectedflows.splice(this.flowListSelect + 1, 0, {
-              RuntFlowId: 0,
-              FlowType: "Cosigner", //默认为顺序审批 Cosigner 同时审批 Approve
-              FlowType2: "Add",
-              ContextGuid: "",
-              ParentContextGuid: "",
-              Participants: [],
-              FlowName: "加签",
-              littleTittle: "审批人",
-              hasDelete: true,
-              linkMan: item,
-              AddMan: []
-            });
-          });
-        } else {
-          //同时审批
-          this.submitData.Selectedflows.splice(this.flowListSelect + 1, 0, {
-            RuntFlowId: 0,
-            FlowType: "Approve", //默认为顺序审批 Cosigner 同时审批 Approve
-            FlowType2: "Add",
-            ContextGuid: "",
-            ParentContextGuid: "",
-            Participants: [],
-            FlowName: "加签",
-            littleTittle: "审批人",
-            hasDelete: true,
-            linkMan: this.submitData.Selectedflows[
-              this.getClientIndexByAdd
-            ].AddMan.join(","),
-            AddMan: []
-          });
-        }
-        this.hasNewLi = -1;
-        this.hasNewSgin = -1;
-      } else {
-        this.$vux.toast.show({
-          text: "请选择审批人",
-          type: "cancel"
-        });
-      }
-    },
+
     getAddSgin(index) {
       this.hasAddSign = !this.hasAddSign;
       this.hasNewLi = -1;

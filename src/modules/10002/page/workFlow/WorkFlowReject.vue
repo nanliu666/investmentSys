@@ -3,35 +3,12 @@
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
-      加签
+      驳回
     </x-header>
     <section class="ApprovalFlow">
-      <div class="contractTitle">当前位置</div>
-      <ul class="flowMain">
-        <li>
-          <div class="flowLeft">
-            <div class="flowFlag">
-              <img src="../../assets/images/椭圆形@2x.png" alt>
-            </div>
-            <span class="iconTittle">待审</span>
-            <div class="shuxianBox">
-              <div class="shuxian"></div>
-            </div>
-          </div>
-          <div class="flowRight">
-            <div class="top">2018-11-12</div>
-            <div class="main">
-              <div class="mainTop">审批人:{{!!requestData.linkMan ? requestData.linkMan : '暂无当前审批人'}}</div>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </section>
-    <section class="ApprovalFlow">
-      <div class="contractTitle">加签内容</div>
       <ul class="addContent">
         <li class="addContentLi">
-          <div>加签位置</div>
+          <div>重走流程</div>
           <div class="liRight">
             <div
               class="radio-box"
@@ -54,15 +31,31 @@
             </div>
           </div>
         </li>
-        <li class="addContentLi">
-          <div>加签人</div>
-          <div class="liRight">请选择 ></div>
+        <li class="addContentLi" v-if="isNewGo" @click="getClient">
+          <div>流程退回至</div>
+          <div class="liRight">{{requestData.linkMan ? requestData.linkMan : '请选择 >'}}</div>
         </li>
       </ul>
     </section>
+    <popup v-model="hasClient">
+      <popup-header
+        left-text="取消"
+        right-text="确认"
+        title="请选择审批人"
+        :show-bottom-border="false"
+        @on-click-left="hasClient = false"
+        @on-click-right="hasClient = false"
+      ></popup-header>
+      <group gutter="0">
+        <radio :options="clientOptions" @on-change="getOtherChange"></radio>
+      </group>
+    </popup>
     <section class="ApprovalFlow">
-      <group title="本人审批意见">
+      <group title="审批意见">
         <x-textarea placeholder="请填写审批意见" class="textarea" :max="200" v-model="requestData.Comment"></x-textarea>
+        <section class="tipsWord">
+          <span v-for="(item, index) in tipsWordList" :key="index" @click="getTip(item)">{{item}}</span>
+        </section>
       </group>
     </section>
     <section class="button">
@@ -73,38 +66,34 @@
 
 
 <script>
-import { XHeader, XTextarea, Group } from "vux";
-import { GetUserInfo } from "@/axios/api";
+import { XHeader, XTextarea, Group, Popup, PopupHeader, Radio } from "vux";
+import { RejectAction, GetRejectWorkflows, GetToDoHistory } from "@/axios/api";
 import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      clientOptions: [], //联系人选择
+      hasClient: false,
+      CommentTemp: [],
+      tipsWordList: ["信息不完整，需补充", "请与我面谈"],
+      isNewGo: false,
       requestData: {
         Entiid: 0, //流程id，预定是28，合同是345。有平台业务主键时传0
-        Datakey: "",
-        Platformkey: "",
-        linkMan: "",
-        Comment: "",
-        Currentruntflowid: 0, //当前节点为0
-        Addtype: "before", //前加签before，后加签after
-        Flowuserids: "" //加签人员ID
-      },
-      TrackList: [],
-      hasNodata: false,
-      showMenus: -1,
-      menus: {
-        menu1: "编辑",
-        menu2: "删除"
+        Datakey: "", //在这传空值
+        Isstartover: "Return", //是否重走流程，是（Return），否（ReturnNotStartOver）
+        Platformkey: "", //父节点传过来的
+        Backtoruntflowid: 0, //驳回节点
+        Comment: ""
       },
       radio: "1",
       radios: [
         {
-          label: "前",
+          label: "是",
           value: "1",
           isChecked: true
         },
         {
-          label: "后",
+          label: "否",
           value: "2",
           isChecked: false
         }
@@ -113,14 +102,33 @@ export default {
   },
   components: {
     XHeader,
+    PopupHeader,
+    Radio,
+    Popup,
     XTextarea,
     Group
   },
-  name: "addSign",
+  name: "WorkFlowReject",
   created() {
     this.onLoad();
   },
   methods: {
+    getOtherChange(value) {
+      this.requestData.linkMan = value;
+      let ATemp = this.FlowsUserList.filter(item => {
+        return item.FlowName === value;
+      });
+      this.requestData.Backtoruntflowid = 0;
+      this.requestData.Backtoruntflowid = ATemp[0].RuntFlowId;
+    },
+    getClient() {
+      this.hasClient = !this.hasClient;
+    },
+    getTip(item) {
+      this.CommentTemp.push(item);
+      let A = this.CommentTemp.join(",");
+      this.requestData.Comment = A;
+    },
     check(index) {
       // 先取消所有选中项
       this.radios.forEach(item => {
@@ -130,13 +138,16 @@ export default {
       this.radio = this.radios[index].value;
       // 设置值，以供传递
       this.radios[index].isChecked = true;
-      console.log(index);
       switch (index) {
         case 0:
-          this.requestData.Addtype = "before";
+          //需要重走流程
+          this.isNewGo = false;
+          this.requestData.Isstartover = "Return";
+          this.requestData.Backtoruntflowid = 0;
           break;
         case 1:
-          this.requestData.Addtype = "after";
+          this.isNewGo = true;
+          this.requestData.Isstartover = "ReturnNotStartOver";
           break;
       }
     },
@@ -144,21 +155,36 @@ export default {
       this.$router.back(-1);
     },
     onLoad() {
-      console.log(this.$route.params);
-      this.requestData.Platformkey = this.$route.params.Platformkey;
-      this.requestData.linkMan = this.$route.params.linkMan;
-      let data = {
-        Urlpara: {
-          PageIndex: 1,
-          PageSize: 100
-        }
+      this.requestData.Platformkey = this.$route.params.id;
+      let REdata = {
+        Entiid: 0,
+        Datakey: "",
+        Platformkey: this.$route.params.id
       };
-      GetUserInfo(data).then(res => {
-        console.log(JSON.parse(res.Content));
+      GetRejectWorkflows(REdata).then(res => {
+        this.FlowsUserList = res;
+        this.FlowsUserList.map(item => {
+          this.clientOptions.push(item.FlowName);
+        });
       });
     },
     submit() {
-      console.log(this.requestData);
+      RejectAction(this.requestData).then(res => {
+        if (res === "") {
+          this.$vux.toast.show({
+            text: "成功",
+            type: "success"
+          });
+          this.$router.push({
+            name: "affairList"
+          });
+        } else {
+          this.$vux.toast.show({
+            text: res.Message,
+            type: "warn"
+          });
+        }
+      });
     }
   }
 };
@@ -169,6 +195,7 @@ export default {
 .addSign {
   height: 100%;
   .ApprovalFlow {
+    position: relative;
     .contractTitle {
       @include fj;
       @include sc(28px, rgba(136, 136, 136, 1));
@@ -232,6 +259,7 @@ export default {
       }
     }
     .addContent {
+      margin-top: 20px;
       @include sc(30px, rgba(136, 136, 136, 1));
       font-family: $fr;
       .addContentLi {
@@ -283,6 +311,17 @@ export default {
           }
         }
       }
+    }
+  }
+  .tipsWord {
+    position: absolute;
+    bottom: 20px;
+    font-family: $fr;
+    @include sc(26px, rgba(136, 136, 136, 1));
+    span {
+      padding: 10px 16px;
+      background: rgba(247, 247, 247, 1);
+      margin: 10px;
     }
   }
 }
