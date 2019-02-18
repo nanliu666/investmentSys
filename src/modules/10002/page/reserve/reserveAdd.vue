@@ -16,9 +16,9 @@
           </div>
           <div
             class="liRight"
-            :class="[!!businessNewObj.clientDataName ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!businessNewObj.Accountname ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span>{{!!businessNewObj.clientDataName ? businessNewObj.clientDataName : '请选择联系人'}}</span>
+            <span>{{!!businessNewObj.Accountname ? businessNewObj.Accountname : '请选择联系人'}}</span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
@@ -29,26 +29,24 @@
           </div>
           <div
             class="liRight"
-            :class="[!!businessNewObj.clientDataPhone ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!businessNewObj.Userphone ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span>{{!!businessNewObj.clientDataPhone ? businessNewObj.clientDataPhone : '请选择联系人'}}</span>
+            <span>{{!!businessNewObj.Userphone ? businessNewObj.Userphone : '请选择联系人'}}</span>
           </div>
         </li>
         <div class="cientInfo">单元信息</div>
         <li class="groupLi" @click="getUint" v-if="hasDanyuan">
           <div class="liLeft">
             <span>预定单元</span>
+            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
-            :class="[businessNewObj.Units.Jsondata.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
+            :class="[unitList.length !== 0 ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span v-if="businessNewObj.Units.Jsondata.length === 0">请选择意向单元</span>
-            <span v-if="businessNewObj.Units.Jsondata.length !== 0" class="liRightContent">
-              <span
-                v-for="(item, index) in businessNewObj.Units.Jsondata"
-                :key="index"
-              >{{item.Unitno}}</span>
+            <span v-if="unitList.length === 0">请选择意向单元</span>
+            <span v-if="unitList.length !== 0" class="liRightContent">
+              <span v-for="(item, index) in unitList" :key="index">{{item.Unitno}}</span>
             </span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
@@ -56,36 +54,32 @@
         <li class="groupLi" @click="getStartTime">
           <div class="liLeft">
             <span>预定开始日期</span>
+            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
             :class="[!!businessNewObj.Bookstartdate ? 'cellValueClass' : 'placeholderClass']"
           >
-            <input
-              readonly
-              type="text"
-              placeholder="请选择预定日期"
-              style="text-align: right"
-              v-model="businessNewObj.Bookstartdate"
-            >
+            <span
+              v-if="!!businessNewObj.Bookstartdate"
+            >{{businessNewObj.Bookstartdate | dataFrm('YYYY-MM-DD')}}</span>
+            <span v-if="!businessNewObj.Bookstartdate">请选择预定开始日期</span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
         <li class="groupLi" @click="getEndTime">
           <div class="liLeft">
             <span>预定结束日期</span>
+            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
             :class="[!!businessNewObj.Bookexpirydate ? 'cellValueClass' : 'placeholderClass']"
           >
-            <input
-              readonly
-              type="text"
-              placeholder="请选择预定日期"
-              style="text-align: right"
-              v-model="businessNewObj.Bookexpirydate"
-            >
+            <span
+              v-if="!!businessNewObj.Bookexpirydate"
+            >{{businessNewObj.Bookexpirydate | dataFrm('YYYY-MM-DD')}}</span>
+            <span v-if="!businessNewObj.Bookexpirydate">请选择预定结束日期</span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
@@ -96,13 +90,13 @@
           </div>
           <div
             class="liRight"
-            :class="[!!businessNewObj.unitArea ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!businessNewObj.Rentalarea ? 'cellValueClass' : 'placeholderClass']"
           >
             <input
               type="number"
               placeholder="请填写面积"
               style="text-align: right"
-              v-model="businessNewObj.unitArea"
+              v-model="businessNewObj.Rentalarea"
             >
           </div>
         </li>
@@ -170,25 +164,10 @@ export default {
       nowDate: "",
       nextDate: "",
       businessNewObj: {
-        Companyname: "", //公司名称
-        Projectname: "", //项目名称
-        Bookexpirydate: "", //预定开始日期
-        Bookstartdate: "", //预定结束日期
-        Bookamt: "", //定金
         Prospectid: -1, //商机ID，没有为-1
-        Bookid: 0, //预定ID，新增为0
-        Remark: "", //备注
-        Propertyid: "", //项目id
-        Companyid: "", //公司id
-        Accountid: "", //客户id
-        clientDataName: "", //客户名称
-        unitArea: "", //面积
-        clientDataPhone: "", //客户手机
-        Units: {
-          //选择的单元信息
-          Jsondata: []
-        }
+        Bookid: 0 //预定ID，新增为0
       },
+      unitList: [],
       hasStatus: false
     };
   },
@@ -219,8 +198,10 @@ export default {
         confirmText: "确定",
         format: "YYYY-MM-DD",
         value: this.nowDate,
+        startDate: this.nowDate,
         onConfirm: val => {
           this.businessNewObj.Bookstartdate = val;
+          console.log(this.businessNewObj.Bookstartdate);
         }
       });
     },
@@ -230,6 +211,7 @@ export default {
         confirmText: "确定",
         format: "YYYY-MM-DD",
         value: this.nextDate,
+        startDate: this.nextDate,
         onConfirm: val => {
           this.businessNewObj.Bookexpirydate = val;
         }
@@ -269,51 +251,16 @@ export default {
     reserveDetailData() {
       //来自预定详情的数据
       this.hasDeatil = !this.hasDeatil;
-      this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
-      this.businessNewObj.Accountid = this.$route.params.data.Accountid;
-      this.businessNewObj.clientDataPhone = this.$route.params.data.Userphone;
-      this.businessNewObj.unitArea = this.$route.params.data.Rentalarea;
-      this.businessNewObj.Bookstartdate = this.$options.filters.dataFrm(
-        this.$route.params.data.Bookexpirydate,
-        "YYYY-MM-DD"
-      );
-      this.businessNewObj.Bookexpirydate = this.$options.filters.dataFrm(
-        this.$route.params.data.Bookexpirydate,
-        "YYYY-MM-DD"
-      );
-      this.businessNewObj.Remark = this.$route.params.data.Remark;
-      this.businessNewObj.Bookamt = this.$route.params.data.Bookamt;
-      this.businessNewObj.Prospectid = this.$route.params.data.Prospectid; //项目ID
-      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
-      this.businessNewObj.Companyid = this.$route.params.data.Companyid;
-      this.businessNewObj.Units.Jsondata = JSON.parse(
-        this.$route.params.data.Resunitinfjson
-      );
+      this.businessNewObj = this.$route.params.data;
+      this.unitList = JSON.parse(this.$route.params.data.Resunitinfjson);
       this.RESERVEADD(this.businessNewObj);
     },
     businessDetailData() {
       //来自商机详情的数据
-      this.businessNewObj.clientDataName = this.$route.params.data.Accountname;
-      this.businessNewObj.Accountid = this.$route.params.data.Accountid;
-      this.businessNewObj.clientDataPhone = this.$route.params.data.Phone;
-      this.businessNewObj.Bookstartdate = this.$options.filters.dataFrm(
-        this.$route.params.data.Modifydate,
-        "YYYY-MM-DD"
-      );
-      this.businessNewObj.Bookexpirydate = this.$options.filters.dataFrm(
-        this.$route.params.data.Lastdate,
-        "YYYY-MM-DD"
-      );
-      this.businessNewObj.Prospectid = this.$route.params.data.Prospectid; //项目ID
-      this.businessNewObj.Propertyid = this.$route.params.data.Propertyid; //商机ID
-      this.businessNewObj.Companyid = this.$route.params.data.Companyid;
-      this.businessNewObj.Units.Jsondata = JSON.parse(
-        this.$route.params.data.Unitinfjson
-      );
+      this.businessNewObj = this.$route.params.data;
       this.RESERVEADD(this.businessNewObj);
     },
     onLoad() {
-      console.log(this.$route.params)
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
         .add(1, "months")
@@ -329,7 +276,7 @@ export default {
       }
       //vux里面有预定对象，渲染数据使用vux的对象
       if (!!this.reserveObj) {
-        this.businessNewObj = this.reserveObj;
+        this.businessNewObj = Object.assign(this.businessNewObj, this.reserveObj);
       }
       if (this.$route.query.from === "reserveDetail") {
         //从单元信息过来，商机部分有展示
@@ -339,19 +286,19 @@ export default {
       } else {
         if (this.clientDetail) {
           // 选择了联系人
-          this.businessNewObj.clientDataName = this.clientDetail.Name;
+          this.businessNewObj.Accountname = this.clientDetail.Name;
           this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
-          this.businessNewObj.clientDataPhone = this.clientDetail.Phone;
+          this.businessNewObj.Userphone = this.clientDetail.Phone;
         }
         if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
           // 选择了单元信息
-          this.businessNewObj.Units.Jsondata = this.uintDetailList;
+          this.unitList = this.uintDetailList;
           this.businessNewObj.Propertyid = this.uintDetailList[0].Projectid; //项目ID
           this.businessNewObj.Companyid = this.uintDetailList[0].Companyid;
           let A = this.uintDetailList.map(item => {
             return Number(item.Builduparea);
           });
-          this.businessNewObj.unitArea = A.reduce(function(
+          this.businessNewObj.Rentalarea = A.reduce(function(
             prev,
             curr,
             idx,
@@ -364,27 +311,20 @@ export default {
     },
     submit() {
       this.RESERVEADD(this.businessNewObj);
-      let TempA = this.$options.filters.dataFrm(
-        this.businessNewObj.Bookstartdate,
-        "YYYY-MM-DD HH:mm:ss"
-      );
-      let TempB = this.$options.filters.dataFrm(
-        this.businessNewObj.Bookexpirydate,
-        "YYYY-MM-DD HH:mm:ss"
-      );
-      let TempObj = this._.omit(this.businessNewObj, "Units");
-      TempObj.Bookstartdate = TempA;
-      TempObj.Bookexpirydate = TempB;
       let data = {
-        Reservemgmt: TempObj,
-        Units: this.businessNewObj.Units
+        Reservemgmt: this.businessNewObj,
+        Units: {
+          Jsondata: this.unitList
+        }
       };
-      if (TempObj.Bookstartdate >= TempObj.Bookexpirydate) {
+      if (
+        this.businessNewObj.Bookstartdate >= this.businessNewObj.Bookexpirydate
+      ) {
         this.$vux.toast.show({
           text: "开始时间必须小于等于结束时间",
           type: "warn"
         });
-      } else if (this.businessNewObj.Units.Jsondata.length === 0) {
+      } else if (this.unitList.length === 0) {
         this.$vux.toast.show({
           text: "请选择意向单元",
           type: "warn"
@@ -393,7 +333,7 @@ export default {
         EditReserveMgmt(data).then(res => {
           if (res.Success !== false) {
             this.$vux.toast.show({
-              text: "新增成功！",
+              text: "成功！",
               type: "success"
             });
             this.$router.push({
@@ -404,7 +344,7 @@ export default {
             });
           } else {
             this.$vux.toast.show({
-              text: "新增失败!",
+              text: res.Message,
               type: "warn"
             });
           }
