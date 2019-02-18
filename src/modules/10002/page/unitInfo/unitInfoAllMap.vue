@@ -60,7 +60,7 @@
           </div>
         </tab-item>
       </tab>
-      <div class="uintNumber" v-if="hasUintNumber">当前楼盘可租单元: {{uintNumber}}</div>
+      <!-- <div class="uintNumber" v-if="hasUintNumber">当前楼盘可租单元: {{uintNumber}}</div> -->
     </div>
     <popup v-model="hasprojectStatus" position="bottom" class="nav" :show-mask="showMask">
       <div class="close" @click="openProjecySelct">
@@ -166,7 +166,7 @@
               v-for="(item, key) in floorListDisplay"
               :class="activeClass == key ? 'active' : ''"
               :key="key"
-            >{{item[0].Floor}} F</a>
+            >{{item.Floorno}} F</a>
           </div>
           <div class="goAllPage" :class="activeClass == 1 ? 'active' : ''" @click="goALLFloor">全部</div>
           <div class="goNextPage" @click="goNextPage">
@@ -205,7 +205,7 @@ import {
   GetCompanyies,
   GetUnitByBlockCompanyProject,
   GetBlocks,
-  GetBlockList,
+  // GetBlockList,
   GetPropertys
 } from "@/axios/api";
 import { XHeader, Tab, TabItem, Sticky, Popup } from "vux";
@@ -213,6 +213,7 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      localStorageProject: {},
       MapBlockList: [],
       hasUintNumber: false,
       uintVuexList: [],
@@ -251,18 +252,6 @@ export default {
   },
   created() {
     this.onLoad();
-  },
-  mounted() {
-    let NowDate = moment()
-      .format("YYYY-M-DD")
-      .toString();
-    var Map = new IFCA_VIEW("#unitInfoAllMap", unitJson, {
-      Range: NowDate,
-      Align: "center",
-      floorListOff: false,
-      MagnifierOff: false
-    });
-    Map.setScale(1);
   },
   computed: {
     ...mapState(["scrollTop", "toPageName", "uintDetailList"])
@@ -318,11 +307,8 @@ export default {
     },
     getPropertyBlock(data) {
       this.blockSelect = data.Blockname;
-      this.requestData.Blockid = data.Blockid;
       localStorage.setItem("project", JSON.stringify(data));
-      let projectSelect = JSON.parse(localStorage.getItem("project"));
-      this.requestData.Companyid = projectSelect.Companyid;
-      this.requestData.Projectid = projectSelect.Propertyid;
+      this.localStorageProject = JSON.parse(localStorage.getItem("project"));
       this.getUnitBlock();
       this.hasprojectStatus = !this.hasprojectStatus;
     },
@@ -364,28 +350,11 @@ export default {
     },
     onLoad() {
       this.UINT_DETAIL();
-      this.requestData = {
-        Blockid: 0,
-        Statucode: "",
-        Floorno: "",
-        Startdate: "",
-        Companyid: "",
-        Bropertyid: "",
-        Enddate: ""
-      };
-      if (
-        //底部删选信息
-        this.$route.query.from === "reserveAdd" ||
-        this.$route.query.from === "businessAdd"
-      ) {
-        this.requestData.Statucode = "UnitAvailable";
-        this.hasUintNumber = !this.hasUintNumber;
-      }
-      let projectSelect = JSON.parse(localStorage.getItem("project"));
 
-      if (!!projectSelect) {
-        this.requestData.Companyid = projectSelect.Companyid;
-        this.requestData.Projectid = projectSelect.Propertyid;
+      this.localStorageProject = JSON.parse(localStorage.getItem("project"));
+      if (!!this.localStorageProject) {
+        this.requestData.Companyid = this.localStorageProject.Companyid;
+        this.requestData.Projectid = this.localStorageProject.Propertyid;
         this.getUnitBlock();
       } else {
         this.openProjecySelct();
@@ -445,7 +414,7 @@ export default {
       this.floorListCount -= 1;
       if (this.floorListCount * 5 > 0) {
         this.activeClass = 0;
-        this.floorListDisplay = this.FloorSelectlist.slice(
+        this.floorListDisplay = this.FloorSelectlist[0].slice(
           (this.floorListCount - 1) * 5,
           this.floorListCount * 5
         );
@@ -457,15 +426,12 @@ export default {
           time: "1000"
         });
       }
-      console.log(112221)
-
     },
     goNextPage() {
-      console.log(111)
       this.floorListCount += 1;
       this.activeClass = 0;
-      if (this.floorListCount * 5 < this.FloorSelectlist.length + 5) {
-        this.floorListDisplay = this.FloorSelectlist.slice(
+      if (this.floorListCount * 5 < this.FloorSelectlist[0].length + 5) {
+        this.floorListDisplay = this.FloorSelectlist[0].slice(
           (this.floorListCount - 1) * 5,
           this.floorListCount * 5
         );
@@ -480,7 +446,7 @@ export default {
     },
     goALLFloor() {
       this.activeClass = 1;
-      this.allBlockFoorList = this.allBlock[0].Floorlist;
+      this.allBlockFoorList = this.allBlock.Floorlist;
       this.getFloorData();
     },
     floorLi(key, item) {
@@ -526,18 +492,32 @@ export default {
     },
     getUnitBlock() {
       let data = {
-        Blockid: 15,
+        Blockid: this.localStorageProject.Blockid,
         SystemCode: ""
       };
-      GetBlockList(data).then(res => {
-        this.MapBlockList = JSON.parse(res);
-        console.log("bing", this.MapBlockList);
-      });
-      GetUnitByBlockCompanyProject(this.requestData).then(res => {
-        this.allBlock = res.Content;
-        console.log("鑫接口", this.allBlock);
-        this.hasProject();
-      });
+      this.$http
+        .post(
+          this.HOST + "PlanLayout/WebService/MapBusiness.asmx/GetBlockList",
+          data
+        )
+        .then(res => {
+          this.allBlock = JSON.parse(res);
+          this.hasProject();
+          let NowDate = moment()
+            .format("YYYY-M-DD")
+            .toString();
+          console.log(this.allBlock);
+          var Map = new IFCA_VIEW("#unitInfoAllMap", this.allBlock, {
+            Range: NowDate,
+            Align: "center",
+            floorListOff: false,
+            MagnifierOff: false
+          });
+          Map.setScale(1);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     getFloorData() {
       this.floorList = this._.chain(this.allBlockFoorList)
@@ -552,7 +532,7 @@ export default {
           return item[0].Unitlist.length !== 0;
         })
         .value();
-      this.FloorSelectlist = this._.chain(this.allBlock[0].Floorlist)
+      this.FloorSelectlist = this._.chain(this.allBlock.Floorlist)
         .groupBy("Floor")
         .orderBy(
           function(item) {
@@ -564,33 +544,35 @@ export default {
           return item[0].Unitlist.length !== 0;
         })
         .value();
+      console.log(this.FloorSelectlist);
     },
     hasProject() {
       //项目数据
-      this.blockSelect = this.allBlock[0].Blockname;
-      this.headerTittle = `${this.allBlock[0].Projectname}·${this.blockSelect}`;
-      this.allBlockFoorList = this.allBlock[0].Floorlist;
+      this.blockSelect = this.allBlock.Blockname;
+      this.headerTittle = `${this.localStorageProject.Blockname}·${this.blockSelect}`;
+      this.allBlockFoorList = this.allBlock.Floorlist;
       this.getFloorData();
-      let B = [];
-      this.FloorSelectlist.map(item => {
-        B.push(item[0].Unitlist.length);
-      });
-      this.uintNumber = B.reduce(function(prev, cur) {
-        return prev + cur;
-      }, 0);
-      let unitNull = 0; //判断有没有数据
-      this.FloorSelectlist.map(item => {
-        if (item[0].Unitlist.length === 0) {
-          unitNull += 1;
-        }
-      });
-      if (unitNull === this.FloorSelectlist.length) {
-        //没有数据展示
-        this.noData = true;
-      } else {
-        this.noData = false;
-      }
-      this.floorListDisplay = this.FloorSelectlist.slice(0, 5);
+      this.floorListDisplay = this.FloorSelectlist[0].slice(0, 5);
+
+      // let B = [];
+      // this.FloorSelectlist[0].map(item => {
+      //   B.push(item[0].Unitlist.length);
+      // });
+      // this.uintNumber = B.reduce(function(prev, cur) {
+      //   return prev + cur;
+      // }, 0);
+      // let unitNull = 0; //判断有没有数据
+      // this.FloorSelectlist[0].map(item => {
+      //   if (item[0].Unitlist.length === 0) {
+      //     unitNull += 1;
+      //   }
+      // });
+      // if (unitNull === this.FloorSelectlist[0].length) {
+      //   //没有数据展示
+      //   this.noData = true;
+      // } else {
+      //   this.noData = false;
+      // }
     },
     openProjecySelct() {
       this.hasprojectStatus = !this.hasprojectStatus;

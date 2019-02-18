@@ -4,7 +4,7 @@
     <x-header
       :left-options="{showBack: false}"
       class="header"
-      :right-options="{showMore: true}"
+      :right-options="{showMore: showMore}"
       @on-click-more="showMenus = true"
     >
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
@@ -17,7 +17,6 @@
         <li class="groupLi">
           <div class="liLeft">
             <span>客户姓名</span>
-            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
@@ -29,7 +28,6 @@
         <li class="groupLi">
           <div class="liLeft">
             <span>手机号码</span>
-            <span class="badge">*</span>
           </div>
           <div class="liRight" :class="[!!item.Userphone ? 'cellValueClass' : 'placeholderClass']">
             <span>{{!!item.Userphone ? item.Userphone : '暂无联系人电话'}}</span>
@@ -52,9 +50,12 @@
           <div class="liLeft">
             <span>预定开始日期</span>
           </div>
-          <div class="liRight" :class="[!!item.Createdate ? 'cellValueClass' : 'placeholderClass']">
-            <span v-if="!!item.Createdate">{{item.Createdate | dataFrm('YYYY-MM-DD')}}</span>
-            <span v-if="!item.Createdate">暂无预定开始日期</span>
+          <div
+            class="liRight"
+            :class="[!!item.Bookstartdate ? 'cellValueClass' : 'placeholderClass']"
+          >
+            <span v-if="!!item.Bookstartdate">{{item.Bookstartdate | dataFrm('YYYY-MM-DD')}}</span>
+            <span v-if="!item.Bookstartdate">暂无预定开始日期</span>
           </div>
         </li>
         <li class="groupLi">
@@ -129,7 +130,8 @@ export default {
   name: "reserve",
   data() {
     return {
-      hasSubmit: false,
+      hasSubmit: true,
+      showMore: true,
       showMenus: false,
       menus: {
         menu1: "编辑",
@@ -174,7 +176,7 @@ export default {
           from: "reserveDetail"
         },
         params: {
-          id:this.reseveDetail[0].Bookid,
+          id: this.reseveDetail[0].Bookid,
           data: this.reseveDetail[0]
         }
       });
@@ -209,8 +211,13 @@ export default {
       this.$router.back(-1);
     },
     onLoad() {
-      if (JSON.parse(sessionStorage.getItem('reserveDetail')).Recordstatus === "ACTIVE") {
+      if (
+        JSON.parse(sessionStorage.getItem("reserveDetail")).Recordstatus !==
+        "ACTIVE"
+      ) {
         this.hasSubmit = !this.hasSubmit;
+        this.showMore = !this.showMore;
+        console.log(this.showMore)
       }
       const data = {
         Reservemgmt: {

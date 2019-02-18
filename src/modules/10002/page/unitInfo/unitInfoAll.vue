@@ -143,14 +143,6 @@
           <span>租赁面积:</span>
           <span>{{unitDetailSelect.Builduparea | formatNumber}}M²</span>
         </li>
-        <!-- <li>
-          <span>每平方米单价:</span>
-          <span>{{unitDetailSelect.Minprice | formatNumber}}万元</span>
-        </li>
-        <li>
-          <span>总租金:</span>
-          <span>{{unitDetailSelect.Toprice | formatNumber}}万元</span>
-        </li>-->
         <li>
           <span>当前商机数:</span>
           <span>6条这是死数据</span>

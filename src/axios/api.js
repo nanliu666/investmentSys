@@ -8,7 +8,7 @@ import axios from "axios"
 const baseHead = `http://gz.ifca.com.cn:9999/ydzs/WebService/MobileMerchants/`
 const platformHead = ` http://gz.ifca.com.cn:9999/RMSApp6.0/api/`
 const workFlowHead = ` http://gz.ifca.com.cn:9999/ydzs/`
-const mapHead = `http://demo.ifca.com.cn/ifca_rms2843/` //平面图
+// const mapHead = `http://demo.ifca.com.cn/ifca_rms2843/` //平面图
 export const GetUnitinfoAll = p => post(`${baseHead}Unitinfo.asmx/GetUnitinfoAll`, p); //获取当前用户所有单元信息
 export const GetCompanyies = p => post(`${baseHead}Unitinfo.asmx/GetCompanyies`, p); //获取当前用户所有公司信息
 export const GetPropertys = p => post(`${baseHead}Unitinfo.asmx/GetPropertys`, p); //获取当前用户项目信息
@@ -78,8 +78,8 @@ export const GetUserId = p => post(`${workFlowHead}Workflow/Api/WFServices.asmx/
 
 
 //平面图接口
-export const GetBlockList = p => post(`${mapHead}PlanLayout/WebService/MapBusiness.asmx/GetBlockList
-`, p)
+// export const GetBlockList = p => post(`/bingAPI/PlanLayout/WebService/MapBusiness.asmx/GetBlockList
+// `, p)
 
 
 // 消息通知接口接口

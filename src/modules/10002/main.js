@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import axios from 'axios'
 import VueRouter from 'vue-router'
 import routes from './router'
 import App from './App'
@@ -6,6 +7,8 @@ import store from './store/index'
 import * as filters from './assets/js/filters'
 import _ from './assets/js/lodash' //loadsh待改进
 Vue.prototype._ = _
+Vue.prototype.$http = axios
+Vue.prototype.HOST = '/api'
 import VueClipboard from 'vue-clipboard2';
 Vue.use(VueClipboard)
 //注册到vue原型上

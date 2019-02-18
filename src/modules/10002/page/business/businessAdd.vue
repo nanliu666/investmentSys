@@ -56,6 +56,8 @@
         <li class="groupLi" @click="chancesource">
           <div class="liLeft">
             <span>商机来源</span>
+            <span class="badge">*</span>
+
           </div>
           <div
             class="liRight"

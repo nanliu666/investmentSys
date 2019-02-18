@@ -1,35 +1,35 @@
 @import "src/assets/sass/mixin";
 
-body,
-div,
-span,
-header,
-footer,
-nav,
-section,
-aside,
+a,
 article,
-ul,
+aside,
+b,
+body,
+button,
+dd,
+div,
 dl,
 dt,
-dd,
-li,
-a,
-p,
+figcaption,
+figure,
+footer,
 h1,
 h2,
 h3,
 h4,
 h5,
 h6,
+header,
 i,
-b,
-textarea,
-button,
 input,
+li,
+nav,
+p,
+section,
 select,
-figure,
-figcaption {
+span,
+textarea,
+ul {
   padding: 0;
   margin: 0;
   list-style: none;
@@ -76,8 +76,8 @@ textarea:-ms-input-placeholder {
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
   background-color: #F5F5F5;
 }
 
@@ -96,9 +96,9 @@ textarea:-ms-input-placeholder {
 }
 
 input[type="button"],
-input[type="submit"],
+input[type="reset"],
 input[type="search"],
-input[type="reset"] {
+input[type="submit"] {
   -webkit-appearance: none;
 }
 
@@ -106,12 +106,11 @@ textarea {
   -webkit-appearance: none;
 }
 
-html,
-body {
+body,
+html {
   height: 100%;
   width: 100%;
 }
-
 
 .clear:after {
   content: '';
@@ -157,26 +156,25 @@ body {
 .paddingTop {
   padding-top: 1.95rem;
 }
-
 @keyframes backOpacity {
   0% {
-    opacity: 1
+    opacity: 1;
   }
 
   25% {
-    opacity: .5
+    opacity: .5;
   }
 
   50% {
-    opacity: 1
+    opacity: 1;
   }
 
   75% {
-    opacity: .5
+    opacity: .5;
   }
 
   100% {
-    opacity: 1
+    opacity: 1;
   }
 }
 
@@ -281,6 +279,13 @@ body {
         @include fj(flex-end);
         @include flexHCenter;
         width: 64%;
+        height: 96px;
+        line-height: 96px;
+
+        input {
+          height: 96px;
+          line-height: 96px;
+        }
 
         .liRightContent {
           text-align: right;

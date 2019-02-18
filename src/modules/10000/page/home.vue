@@ -113,6 +113,25 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     this.TO_PAGE_NAME(from.name); //离开的时候在vuex存起来本组件的路由名称
+    //离开隐藏底部栏
+    if (typeof cordova === "Object") {
+      cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [true]);
+    } else {
+      window.open(
+        "http://10.122.10.59:8086/10002/index.html#/contractList?dateTime=currentMonth"
+      );
+    }
+    next();
+  },
+  beforeRouteEnter(to, from, next) {
+    //进入开启隐藏底部栏
+    if (typeof cordova === "Object") {
+      cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [false]);
+    } else {
+      window.open(
+        "http://10.122.10.59:8086/10002/index.html#/contractList?dateTime=currentMonth"
+      );
+    }
     next();
   },
   methods: {
@@ -123,7 +142,7 @@ export default {
       });
     },
     gotoContranctMonth() {
-      if (typeof cordova === "function") {
+      if (typeof cordova === "Object") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/contractList?dateTime=currentMonth" }
         ]);
@@ -134,7 +153,7 @@ export default {
       }
     },
     gotoContranctExpire() {
-      if (typeof cordova === "function") {
+      if (typeof cordova === "Object") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/contractList?dateTime=threeMonth" }
         ]);
@@ -145,40 +164,34 @@ export default {
       }
     },
     gounitInfoALL() {
-      if (typeof cordova === "function") {
+      if (typeof cordova === "Object") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/unitInfoALL" }
         ]);
       } else {
-        window.open(
-          "http://10.122.10.59:8086/10002/index.html#/unitInfoALL"
-        );
+        window.open("http://10.122.10.59:8086/10002/index.html#/unitInfoALL");
       }
     },
     goreserveList() {
-      if (typeof cordova === "function") {
+      if (typeof cordova === "Object") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/reserveList" }
         ]);
       } else {
-        window.open(
-          "http://10.122.10.59:8086/10002/index.html#/reserveList"
-        );
+        window.open("http://10.122.10.59:8086/10002/index.html#/reserveList");
       }
     },
     gobusinessList() {
-      if (typeof cordova === "function") {
+      if (typeof cordova === "Object") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/businessList" }
         ]);
       } else {
-        window.open(
-          "http://10.122.10.59:8086/10002/index.html#/businessList"
-        );
+        window.open("http://10.122.10.59:8086/10002/index.html#/businessList");
       }
     },
     goaffairList() {
-      if (typeof cordova === "function") {
+      if (typeof cordova === "Object") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/affairList" }
         ]);
