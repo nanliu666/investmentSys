@@ -250,6 +250,32 @@ html {
     .submit {
       background-color: rgba(105, 167, 254, 1);
     }
+
+    .save {
+      background-color: rgba(120, 202, 255, 1);
+    }
+  }
+
+  .Xbutton {
+    @include fj(space-around);
+    padding: 0 44px;
+
+    button {
+      @include wh(320px, 88px);
+      @include sc(36px, $fc);
+      @include borderRadius(44px);
+      font-family: $fm;
+      margin-top: 40px;
+      box-shadow: 0 4px 20px 0 rgba(96, 137, 210, 0.17);
+    }
+
+    .submit {
+      background-color: rgba(105, 167, 254, 1);
+    }
+
+    .save {
+      background-color: rgba(120, 202, 255, 1);
+    }
   }
 
   .group {

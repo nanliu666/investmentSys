@@ -56,7 +56,6 @@
         <li class="groupLi" @click="chancesource">
           <div class="liLeft">
             <span>商机来源</span>
-            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
@@ -167,9 +166,9 @@ export default {
       hasDeatil: false,
       businessNewObj: {
         Prospectid: 0, //商机ID，如果是新增就为0
-        Sourceid: "", //商机来源id
+        Sourceid: 0, //商机来源id
         radioOptionsValue: "", //选中商机来源值
-        Priorityid: "", //紧急程度id
+        Priorityid: 0, //紧急程度id
         urgencyValue: "", //紧急默认值
         Remark: "", //备注
         Propertyid: "", //项目id
@@ -354,22 +353,23 @@ export default {
         Bizopportunity: TempObj,
         Units: this.businessNewObj.Units
       };
-      if (!!this.businessNewObj.Sourceid === false) {
-        this.$vux.toast.show({
-          text: "请选择商机来源",
-          type: "warn"
-        });
-      } else if (this.businessNewObj.Units.Jsondata.length === 0) {
+      //      if (!!this.businessNewObj.Sourceid === false) {
+      //   this.$vux.toast.show({
+      //     text: "请选择商机来源",
+      //     type: "warn"
+      //   });
+      // }else if (!!this.businessNewObj.Priorityid === false) {
+      //   this.$vux.toast.show({
+      //     text: "请选择成交几率",
+      //     type: "warn"
+      //   });
+      // }
+   if (this.businessNewObj.Units.Jsondata.length === 0) {
         this.$vux.toast.show({
           text: "请选择意向单元",
           type: "warn"
         });
-      } else if (!!this.businessNewObj.Priorityid === false) {
-        this.$vux.toast.show({
-          text: "请选择成交几率",
-          type: "warn"
-        });
-      } else {
+      }  else {
         EditBizOpportunity(data).then(res => {
           if (res.Success !== false) {
             this.$vux.toast.show({

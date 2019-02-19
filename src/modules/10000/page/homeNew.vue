@@ -101,7 +101,7 @@ export default {
     },
     getDetail(data) {
       sessionStorage.setItem('affairDetail', JSON.stringify(data))
-      if (process.env.NODE_ENV !== 'development') {
+      if (typeof cordova === "object") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: `10002/index.html#/affairDetail/${data.Platformkey}` }
         ]);

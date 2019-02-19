@@ -133,8 +133,9 @@
           </div>
         </li>
       </div>
-      <section class="button">
-        <x-button class="submit" @click.native="submit">保存</x-button>
+      <section class="Xbutton">
+        <x-button class="save" @click.native="save">保存</x-button>
+        <x-button class="submit" @click.native="submit">提交</x-button>
       </section>
     </section>
   </div>
@@ -315,6 +316,46 @@ export default {
       }
     },
     submit() {
+      this.RESERVEADD(this.businessNewObj);
+      let data = {
+        Reservemgmt: this.businessNewObj,
+        Units: {
+          Jsondata: this.unitList
+        }
+      };
+      if (
+        this.businessNewObj.Bookstartdate >= this.businessNewObj.Bookexpirydate
+      ) {
+        this.$vux.toast.show({
+          text: "开始时间必须小于等于结束时间",
+          type: "warn"
+        });
+      } else if (this.unitList.length === 0) {
+        this.$vux.toast.show({
+          text: "请选择意向单元",
+          type: "warn"
+        });
+      } else {
+        EditReserveMgmt(data).then(res => {
+          if (res.Success !== false) {
+            sessionStorage.setItem("reserveDetail", JSON.stringify(res.Datasource[0]));
+            this.$vux.toast.show({
+              text: "成功！",
+              type: "success"
+            });
+            this.$router.push({
+              name: "workFlowSubmit",
+            });
+          } else {
+            this.$vux.toast.show({
+              text: res.Message,
+              type: "warn"
+            });
+          }
+        });
+      }
+    },
+    save() {
       this.RESERVEADD(this.businessNewObj);
       let data = {
         Reservemgmt: this.businessNewObj,

@@ -418,7 +418,7 @@ export default {
     },
     getContractenclosure(data) {
       //附件路径待解决
-      if (process.env.NODE_ENV !== 'development') {
+      if (typeof cordova === "object") {
         cordova.exec(null, null, "ifcaPlugIns", "attachmentPreview", [
           {
             fileName: data.FileName,
