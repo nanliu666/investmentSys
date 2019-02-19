@@ -100,12 +100,14 @@ export default {
       }
     },
     getDetail(data) {
-      this.$router.push({
-        name: "affairDetail",
-        params: {
-          id: data.Datakey,
-        }
-      });
+      if (typeof cordova === "Object") {
+        cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+          { Url: `10002/index.html#/affairDetail/${data.Datakey}` }
+        ]);
+      } else {
+        //开发打开
+        window.open(`http://192.168.43.171:8086/10002/index.html#/affairDetail/${data.Datakey}`);
+      }
     },
     // mescroll组件初始化的回调,可获取到mescroll对象 (如果this.mescroll并没有使用到,可不用写mescrollInit)
     mescrollInit(mescroll) {
@@ -131,7 +133,7 @@ export default {
           this.dataList = this._.groupBy(this.dataList, function(item) {
             return moment(item.Senddate).format("YYYY-MM");
           });
-          console.log(this.dataList)
+          console.log(this.dataList);
           this.timeList = Object.keys(this.dataList);
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {

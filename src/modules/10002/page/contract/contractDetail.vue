@@ -1,31 +1,27 @@
 <template>
   <div class="contractDetail">
-    <div class="appTopOther"></div>
-
-    <x-header :left-options="{backText: ''}" class="header">合同详情</x-header>
-    <div style="height:44px;">
-      <sticky ref="sticky" :disabled="disabled" :check-sticky-support="false">
-        <tab
-          :line-width="1"
-          custom-bar-width="60px"
-          bar-active-color="rgba(105, 167, 254, 1)"
-          active-color="rgba(30, 30, 30, 1)"
-          default-color="rgba(136, 136, 136, 1)"
-        >
-          <tab-item
-            class="vux-center"
-            :selected="tabSelect === item"
-            v-for="(item, index) in infoList"
-            :key="index"
-            @on-item-click="goAnchor(item)"
-          >{{item}}</tab-item>
-        </tab>
-      </sticky>
+    <div class="headerTab">
+      <div class="appTopOther"></div>
+      <x-header :left-options="{backText: ''}" class="header">合同详情</x-header>
+      <tab
+        :line-width="1"
+        custom-bar-width="60px"
+        bar-active-color="rgba(105, 167, 254, 1)"
+        active-color="rgba(30, 30, 30, 1)"
+        default-color="rgba(136, 136, 136, 1)"
+      >
+        <tab-item
+          class="vux-center"
+          :selected="tabSelect === item"
+          v-for="(item, index) in infoList"
+          :key="index"
+          @on-item-click="goAnchor(item)"
+        >{{item}}</tab-item>
+      </tab>
     </div>
-    <div class="vux-sticky-fill" style="height:44px;"></div>
-    <section>
+    <section id="main" class="mainSection">
       <section class="contractMain" v-for="item in Contactmain" :key="item.Rentalid">
-        <div class="contractTitle" ref="main" id="main">合同主体</div>
+        <div class="contractTitle" ref="main">合同主体</div>
         <li class="contractLi">
           <span>合同编号</span>
           <span class="Rentalid">{{item.Rentalid}}</span>
@@ -89,8 +85,23 @@
               <span>{{item.Rentstandardtypestring|| ''}}</span>
               <span>
                 {{item.Calculatemethodstring|| ''}}
-                <x-icon type="ios-arrow-down" size="25" v-show="index !== isStatus"></x-icon>
-                <x-icon type="ios-arrow-up" size="25" v-show="index === isStatus"></x-icon>
+                <i class="imgBox">
+                  <img
+                    src="../../assets/images/下拉@3x.png"
+                    class="fs-dropImg"
+                    v-show="index !== isStatus"
+                    alt
+                  >
+                </i>
+                <i class="imgBox">
+                  <img
+                    src="../../assets/images/下拉@3x.png"
+                    class="fs-dropImg"
+                    style="transform:rotate(180deg);"
+                    v-show="index === isStatus"
+                    alt
+                  >
+                </i>
               </span>
             </div>
             <div class="contractClassifyDetail" v-if="index === isStatus">
@@ -108,11 +119,13 @@
               </li>
               <li>
                 <span>首期开始日期:</span>
-                <span>{{item.Paymentstartdate | dataFrm('YYYY-MM-DD')}}</span>
+                <span v-if="item.Paymentstartdate === '1900-01-01T00:00:00'"></span>
+                <span v-else>{{item.Paymentstartdate | dataFrm('YYYY-MM-DD')}}</span>
               </li>
               <li>
                 <span>首期结束日期:</span>
-                <span>{{item.Paymentenddate | dataFrm('YYYY-MM-DD')}}</span>
+                <span v-if="item.Paymentenddate === '1900-01-01T00:00:00'"></span>
+                <span  v-else>{{item.Paymentenddate | dataFrm('YYYY-MM-DD')}}</span>
               </li>
               <li>
                 <span>计费周期:</span>
@@ -427,6 +440,7 @@ export default {
         this.Contactmain = JSON.parse(res.Contactmain); //合同主体
         this.ContractDeposit = JSON.parse(res.ContractDeposit); //保证金
         this.Contractcharges = JSON.parse(res.Contractcharges); //管理费用
+        console.log( this.Contractcharges)
         this.Contractrentfree = JSON.parse(res.Contractrentfree); //免租期
         this.Contractcommission = JSON.parse(res.Contractcommission); //抽成
         this.Contractoptions = JSON.parse(res.Contractoptions); //权利条款
@@ -444,6 +458,20 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
+.headerTab {
+  background-color: #fff;
+  position: fixed;
+  width: 100%;
+}
+.mainSection {
+  padding-top: 240px;
+}
+.imgBox {
+  @include flexCenter;
+  .fs-dropImg {
+    @include wh(11px, 6px);
+  }
+}
 .contractDetail {
   font-family: $fr;
 }
@@ -518,6 +546,8 @@ export default {
     }
 
     .contractClassifyDetail {
+      padding: 0px 40px;
+
       margin-bottom: 2px;
       border-top: 2px solid rgba(244, 246, 248, 1);
       &:last-child {
@@ -525,14 +555,14 @@ export default {
       }
       li {
         //每个li
-        font-size: 28px;
+        font-size: 30px;
         padding: 10px 0;
         span {
           &:first-child {
-            @include sc(28px, rgba(136, 136, 136, 1));
+            @include sc(30px, rgba(136, 136, 136, 1));
           }
           &:last-child {
-            @include sc(28px, rgba(30, 30, 30, 1));
+            @include sc(30px, rgba(30, 30, 30, 1));
           }
         }
       }
