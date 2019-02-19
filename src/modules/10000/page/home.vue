@@ -114,14 +114,14 @@ export default {
   beforeRouteLeave(to, from, next) {
     this.TO_PAGE_NAME(from.name); //离开的时候在vuex存起来本组件的路由名称
     //离开隐藏底部栏
-    if (!!cordova) {
+    if (process.env.NODE_ENV !== 'development') {
       cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [true]);
     }
     next();
   },
   beforeRouteEnter(to, from, next) {
     //进入开启隐藏底部栏
-    if (!!cordova) {
+    if (process.env.NODE_ENV !== 'development') {
       cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [false]);
     }
     next();
@@ -134,7 +134,7 @@ export default {
       });
     },
     gotoContranctMonth() {
-      if (!!cordova) {
+      if (process.env.NODE_ENV !== 'development') {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/contractList?dateTime=currentMonth" }
         ]);
@@ -145,7 +145,7 @@ export default {
       }
     },
     gotoContranctExpire() {
-      if (!!cordova) {
+      if (process.env.NODE_ENV !== 'development') {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/contractList?dateTime=threeMonth" }
         ]);
@@ -156,7 +156,7 @@ export default {
       }
     },
     gounitInfoALL() {
-      if (!!cordova) {
+      if (process.env.NODE_ENV !== 'development') {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/unitInfoALL" }
         ]);
@@ -165,7 +165,7 @@ export default {
       }
     },
     goreserveList() {
-      if (!!cordova) {
+      if (process.env.NODE_ENV !== 'development') {
         window.open("http://10.122.10.59:8086/10002/index.html#/reserveList");
       } else {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
@@ -174,7 +174,7 @@ export default {
       }
     },
     gobusinessList() {
-      if (!!cordova) {
+      if (process.env.NODE_ENV !== 'development') {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/businessList" }
         ]);
@@ -183,7 +183,7 @@ export default {
       }
     },
     goaffairList() {
-      if (!!cordova) {
+      if (process.env.NODE_ENV !== 'development') {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/affairList" }
         ]);

@@ -100,15 +100,16 @@ export default {
       }
     },
     getDetail(data) {
-      if (!!cordova) {
+      sessionStorage.setItem('affairDetail', JSON.stringify(data))
+      if (process.env.NODE_ENV !== 'development') {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: `10002/index.html#/affairDetail/${data.Datakey}` }
+          { Url: `10002/index.html#/affairDetail/${data.Platformkey}` }
         ]);
       } else {
         //开发打开
         window.open(
-          `http://192.168.43.171:8086/10002/index.html#/affairDetail/${
-            data.Datakey
+          `http://10.122.10.59:8086/10002/index.html#/affairDetail/${
+            data.Platformkey
           }`
         );
       }

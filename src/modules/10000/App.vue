@@ -21,9 +21,9 @@ export default {
       script.setAttribute("src", "ifcaapp://cordova.js");
     } else {
       if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
-        script.setAttribute("src", "../../../static/js/ios_cordova.js");
+        script.setAttribute("src", "./static/js/ios_cordova.js");
       } else {
-        script.setAttribute("src", "../../../static/js/android_cordova.js");
+        script.setAttribute("src", "./static/js/android_cordova.js");
       }
     }
     var heads = document.getElementsByTagName("head");
