@@ -100,13 +100,17 @@ export default {
       }
     },
     getDetail(data) {
-      if (typeof cordova === "Object") {
+      if (!!cordova) {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: `10002/index.html#/affairDetail/${data.Datakey}` }
         ]);
       } else {
         //开发打开
-        window.open(`http://192.168.43.171:8086/10002/index.html#/affairDetail/${data.Datakey}`);
+        window.open(
+          `http://192.168.43.171:8086/10002/index.html#/affairDetail/${
+            data.Datakey
+          }`
+        );
       }
     },
     // mescroll组件初始化的回调,可获取到mescroll对象 (如果this.mescroll并没有使用到,可不用写mescrollInit)

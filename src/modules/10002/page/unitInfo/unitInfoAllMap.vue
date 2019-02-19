@@ -491,13 +491,15 @@ export default {
       this.floorList = [];
     },
     getUnitBlock() {
+      console.log(this.HOST)
       let data = {
         Blockid: this.localStorageProject.Blockid,
         SystemCode: ""
       };
       this.$http
         .post(
-          this.HOST + "PlanLayout/WebService/MapBusiness.asmx/GetBlockList",
+          // `${this.HOST}PlanLayout/WebService/MapBusiness.asmx/GetBlockList`,
+          `http://gz.ifca.com.cn:9999/ydzs/PlanLayout/WebService/MapBusiness.asmx/GetBlockList`,
           data
         )
         .then(res => {

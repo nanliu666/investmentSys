@@ -1,234 +1,78 @@
 <template>
   <div class="affairDetail">
     <!-- <view-box ref="viewBox" class="viewBox"> -->
-      <div class="headerTab">
-        <div class="appTopOther"></div>
-        <x-header :left-options="{backText: ''}" class="header">审批详情</x-header>
-        <!-- <sticky
+    <div class="headerTab">
+      <div class="appTopOther"></div>
+      <x-header :left-options="{backText: ''}" class="header">审批详情</x-header>
+      <!-- <sticky
           ref="sticky"
           :disabled="disabled"
           scroll-box="vux_view_box_body"
           :check-sticky-support="false"
-        >-->
-        <tab
-          :line-width="1"
-          custom-bar-width="60px"
-          bar-active-color="rgba(105, 167, 254, 1)"
-          active-color="rgba(30, 30, 30, 1)"
-          default-color="rgba(136, 136, 136, 1)"
-        >
-          <tab-item
-            class="vux-center"
-            :selected="tabSelect === item"
-            v-for="(item, index) in infoList"
-            :key="index"
-            @on-item-click="goAnchor(item)"
-          >{{item}}</tab-item>
-        </tab>
-        <!-- </sticky> -->
-      </div>
-      <!-- <div class="vux-sticky-fill" style="height:44px;"></div> -->
-      <div class="mainSection" id="main">
-        <section >
-          <section class="contractMain" v-for="(item, index) in contractMainList" :key="index">
-            <div class="contractTitle" ref="main">单据详情</div>
-            <li class="contractLi">
-              <span>预定单元</span>
-              <span class="Rentalid">{{item.companys}}</span>
-            </li>
-            <li class="contractLi">
-              <span>客户姓名</span>
-              <span>{{item.clientName}}</span>
-            </li>
-            <li class="contractLi">
-              <span>面积</span>
-              <span>{{item.area}}</span>
-            </li>
-            <li class="contractLi">
-              <span>定金</span>
-              <span class="Rentalid">￥ {{item.deposit}}</span>
-            </li>
-            <li class="contractLi">
-              <span>租赁单元</span>
-              <span>{{item.danyuan}}</span>
-            </li>
-            <li class="contractLi">
-              <span>预定日期</span>
-              <span>{{item.yuding}}</span>
-            </li>
-            <li class="contractLi">
-              <span>预定开始日期</span>
-              <span>{{item.yudingStart}}</span>
-            </li>
-            <li class="contractLi">
-              <span>预定结束日期</span>
-              <span>{{item.yudingEnd}}</span>
-            </li>
-            <li class="contractLi">
-              <span>备注</span>
-              <span>{{item.remask}}</span>
-            </li>
-          </section>
-          <section class="ApprovalFlow" id="const">
-            <div class="contractTitle">
-              审批流程
-              <span class="approveHistory" @click="getHistoryDetail">审批历史&nbsp;>></span>
-            </div>
-            <ul class="flowMain">
-              <li v-for="(item, index) in flowListActual" :key="index">
-                <div class="flowLeft">
-                  <div class="flowFlag">
-                    <img v-if="hasCheckShow(item)" src="../../assets/images/椭圆形@2x.png" alt>
-                    <img v-if="hasRejectShow(item)" src="../../assets/images/椭圆形@2x (1).png" alt>
-                    <img v-if="hasAgreeShow(item)" src="../../assets/images/椭圆形@2x (2).png" alt>
-                  </div>
-                  <span class="iconTittle">{{item.SectionRows[0].Value}}</span>
-                  <div class="shuxianBox">
-                    <div class="shuxian"></div>
-                  </div>
-                </div>
-                <div class="flowRight">
-                  <div class="top">{{item.SectionRows[2].Value | dataFrm('YYYY-MM-DD')}}</div>
-                  <div class="main">
-                    <div class="mainTop">审批人:{{item.SectionRows[3].Value}}</div>
-                    <div class="mainBottom">审批意见: {{item.SectionRows[1].Value}}</div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <div class="getAll" @click="getFlowAll" v-if="!hasGetAll">查看全部</div>
-            <div class="getAll" @click="getFlowPart" v-if="hasGetAll">隐藏部分</div>
-          </section>
-          <section class="contractOther" id="other">
-            <div class="contractTitle">附件</div>
-            <section v-if="fujianList.length === 0" class="noFujian">暂无附件</section>
-            <section class="otherMain" v-if="fujianList.length !== 0">
-              <div class="otherMainTitle">附件</div>
-              <div class="otherfujianLi" v-for="(item, index) in fujianList" :key="index">
-                <div>
-                  <span>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-show="postfixFileName(item.FileName)  === 'docx'"
-                    >
-                      <use xlink:href="#icon-doc"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-show="postfixFileName(item.FileName)  ==='doc' "
-                    >
-                      <use xlink:href="#icon-doc"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  === 'pdf'"
-                    >
-                      <use xlink:href="#icon-PDFtubiao"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  == 'xls'"
-                    >
-                      <use xlink:href="#icon-excel"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  ==   'xlsx'"
-                    >
-                      <use xlink:href="#icon-excel"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  ===  'jpeg'"
-                    >
-                      <use xlink:href="#icon-jpg"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  === 'jpg' "
-                    >
-                      <use xlink:href="#icon-jpg"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  === 'png'"
-                    >
-                      <use xlink:href="#icon-PNG"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  === 'gif'"
-                    >
-                      <use xlink:href="#icon-GIF"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  === 'dwg'"
-                    >
-                      <use xlink:href="#icon-DWG"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  === 'pptx' "
-                    >
-                      <use xlink:href="icon-ppt"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  === 'ppt' "
-                    >
-                      <use xlink:href="icon-ppt"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  === 'txt'"
-                    >
-                      <use xlink:href="#icon-filetext"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  === 'rar'"
-                    >
-                      <use xlink:href="#icon-RARtubiao"></use>
-                    </svg>
-                    <svg
-                      class="icon"
-                      aria-hidden="true"
-                      v-if="postfixFileName(item.FileName)  === 'zip'"
-                    >
-                      <use xlink:href="#icon-RARtubiao"></use>
-                    </svg>
-                  </span>
-                  <span>{{item.FileName | splitFileName}}</span>
-                </div>
-                <button @click="getContractenclosure(item)">查看</button>
-              </div>
-            </section>
-          </section>
+      >-->
+      <tab
+        :line-width="1"
+        custom-bar-width="60px"
+        bar-active-color="rgba(105, 167, 254, 1)"
+        active-color="rgba(30, 30, 30, 1)"
+        default-color="rgba(136, 136, 136, 1)"
+      >
+        <tab-item
+          class="vux-center"
+          :selected="tabSelect === item"
+          v-for="(item, index) in infoList"
+          :key="index"
+          @on-item-click="goAnchor(item)"
+        >{{item}}</tab-item>
+      </tab>
+      <!-- </sticky> -->
+    </div>
+    <!-- <div class="vux-sticky-fill" style="height:44px;"></div> -->
+    <div class="mainSection" id="main">
+      <section>
+        <section class="contractMain" v-for="(item, index) in contractMainList" :key="index">
+          <div class="contractTitle" ref="main">单据详情</div>
+          <li class="contractLi">
+            <span>预定单元</span>
+            <span class="Rentalid">{{item.companys}}</span>
+          </li>
+          <li class="contractLi">
+            <span>客户姓名</span>
+            <span>{{item.clientName}}</span>
+          </li>
+          <li class="contractLi">
+            <span>面积</span>
+            <span>{{item.area}}</span>
+          </li>
+          <li class="contractLi">
+            <span>定金</span>
+            <span class="Rentalid">￥ {{item.deposit}}</span>
+          </li>
+          <li class="contractLi">
+            <span>租赁单元</span>
+            <span>{{item.danyuan}}</span>
+          </li>
+          <li class="contractLi">
+            <span>预定日期</span>
+            <span>{{item.yuding}}</span>
+          </li>
+          <li class="contractLi">
+            <span>预定开始日期</span>
+            <span>{{item.yudingStart}}</span>
+          </li>
+          <li class="contractLi">
+            <span>预定结束日期</span>
+            <span>{{item.yudingEnd}}</span>
+          </li>
+          <li class="contractLi">
+            <span>备注</span>
+            <span>{{item.remask}}</span>
+          </li>
         </section>
-        <section class="footer">
-          <button class="addSign" @click="WorkFlowAddSign">加签</button>
-          <button class="reject" @click="WorkFlowReject">驳回</button>
-          <button class="submit" @click="WorkFlowAgree">同意</button>
-        </section>
-        <section class="nomore">没有更多了</section>
-        <popup v-model="haspopup" position="bottom" class="popupHistory">
-          <div class="close" @click="getHistoryDetail">
-            <i class="iconfont icon-guanbi"></i>
+        <section class="ApprovalFlow" id="const">
+          <div class="contractTitle">
+            审批流程
+            <span class="approveHistory" @click="getHistoryDetail">审批历史&nbsp;>></span>
           </div>
           <ul class="flowMain">
             <li v-for="(item, index) in flowListActual" :key="index">
@@ -252,8 +96,164 @@
               </div>
             </li>
           </ul>
-        </popup>
-      </div>
+          <div class="getAll" @click="getFlowAll" v-if="!hasGetAll">查看全部</div>
+          <div class="getAll" @click="getFlowPart" v-if="hasGetAll">隐藏部分</div>
+        </section>
+        <section class="contractOther" id="other">
+          <div class="contractTitle">附件</div>
+          <section v-if="fujianList.length === 0" class="noFujian">暂无附件</section>
+          <section class="otherMain" v-if="fujianList.length !== 0">
+            <div class="otherMainTitle">附件</div>
+            <div class="otherfujianLi" v-for="(item, index) in fujianList" :key="index">
+              <div>
+                <span>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-show="postfixFileName(item.FileName)  === 'docx'"
+                  >
+                    <use xlink:href="#icon-doc"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-show="postfixFileName(item.FileName)  ==='doc' "
+                  >
+                    <use xlink:href="#icon-doc"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  === 'pdf'"
+                  >
+                    <use xlink:href="#icon-PDFtubiao"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  == 'xls'"
+                  >
+                    <use xlink:href="#icon-excel"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  ==   'xlsx'"
+                  >
+                    <use xlink:href="#icon-excel"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  ===  'jpeg'"
+                  >
+                    <use xlink:href="#icon-jpg"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  === 'jpg' "
+                  >
+                    <use xlink:href="#icon-jpg"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  === 'png'"
+                  >
+                    <use xlink:href="#icon-PNG"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  === 'gif'"
+                  >
+                    <use xlink:href="#icon-GIF"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  === 'dwg'"
+                  >
+                    <use xlink:href="#icon-DWG"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  === 'pptx' "
+                  >
+                    <use xlink:href="icon-ppt"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  === 'ppt' "
+                  >
+                    <use xlink:href="icon-ppt"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  === 'txt'"
+                  >
+                    <use xlink:href="#icon-filetext"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  === 'rar'"
+                  >
+                    <use xlink:href="#icon-RARtubiao"></use>
+                  </svg>
+                  <svg
+                    class="icon"
+                    aria-hidden="true"
+                    v-if="postfixFileName(item.FileName)  === 'zip'"
+                  >
+                    <use xlink:href="#icon-RARtubiao"></use>
+                  </svg>
+                </span>
+                <span>{{item.FileName | splitFileName}}</span>
+              </div>
+              <button @click="getContractenclosure(item)">查看</button>
+            </div>
+          </section>
+        </section>
+      </section>
+      <section class="footer" v-if="hasHandle">
+        <button class="addSign" @click="WorkFlowAddSign">加签</button>
+        <button class="reject" @click="WorkFlowReject">驳回</button>
+        <button class="submit" @click="WorkFlowAgree">同意</button>
+      </section>
+      <section class="nomore">没有更多了</section>
+      <popup v-model="haspopup" position="bottom" class="popupHistory">
+        <div class="close" @click="getHistoryDetail">
+          <i class="iconfont icon-guanbi"></i>
+        </div>
+        <ul class="flowMain">
+          <li v-for="(item, index) in flowListActual" :key="index">
+            <div class="flowLeft">
+              <div class="flowFlag">
+                <img v-if="hasCheckShow(item)" src="../../assets/images/椭圆形@2x.png" alt>
+                <img v-if="hasRejectShow(item)" src="../../assets/images/椭圆形@2x (1).png" alt>
+                <img v-if="hasAgreeShow(item)" src="../../assets/images/椭圆形@2x (2).png" alt>
+              </div>
+              <span class="iconTittle">{{item.SectionRows[0].Value}}</span>
+              <div class="shuxianBox">
+                <div class="shuxian"></div>
+              </div>
+            </div>
+            <div class="flowRight">
+              <div class="top">{{item.SectionRows[2].Value | dataFrm('YYYY-MM-DD')}}</div>
+              <div class="main">
+                <div class="mainTop">审批人:{{item.SectionRows[3].Value}}</div>
+                <div class="mainBottom">审批意见: {{item.SectionRows[1].Value}}</div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </popup>
+    </div>
     <!-- </view-box> -->
   </div>
 </template>
@@ -269,6 +269,7 @@ export default {
   name: "contractList",
   data() {
     return {
+      hasHandle: true,
       affairDetail: {},
       haspopup: false,
       hasGetAll: false,
@@ -376,8 +377,10 @@ export default {
       this.hasGetAll = !this.hasGetAll;
     },
     onLoad() {
-       this.affairDetail = JSON.parse(sessionStorage.getItem("affairDetail"))
-      console.log(this.affairDetail)
+      this.affairDetail = JSON.parse(sessionStorage.getItem("affairDetail"));
+      if (this.affairDetail.Status !== 0) {
+        this.hasHandle = false;
+      }
       // if()
       const jsonData = {
         Platformkey: this.$route.params.id
@@ -415,7 +418,7 @@ export default {
     },
     getContractenclosure(data) {
       //附件路径待解决
-      if (typeof cordova === "Object") {
+      if (!!cordova) {
         cordova.exec(null, null, "ifcaPlugIns", "attachmentPreview", [
           {
             fileName: data.FileName,

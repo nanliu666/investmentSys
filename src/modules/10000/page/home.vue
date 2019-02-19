@@ -114,23 +114,15 @@ export default {
   beforeRouteLeave(to, from, next) {
     this.TO_PAGE_NAME(from.name); //离开的时候在vuex存起来本组件的路由名称
     //离开隐藏底部栏
-    if (typeof cordova === "Object") {
+    if (!!cordova) {
       cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [true]);
-    } else {
-      window.open(
-        "http://10.122.10.59:8086/10002/index.html#/contractList?dateTime=currentMonth"
-      );
     }
     next();
   },
   beforeRouteEnter(to, from, next) {
     //进入开启隐藏底部栏
-    if (typeof cordova === "Object") {
+    if (!!cordova) {
       cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [false]);
-    } else {
-      window.open(
-        "http://10.122.10.59:8086/10002/index.html#/contractList?dateTime=currentMonth"
-      );
     }
     next();
   },
@@ -142,7 +134,7 @@ export default {
       });
     },
     gotoContranctMonth() {
-      if (typeof cordova === "Object") {
+      if (!!cordova) {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/contractList?dateTime=currentMonth" }
         ]);
@@ -153,7 +145,7 @@ export default {
       }
     },
     gotoContranctExpire() {
-      if (typeof cordova === "Object") {
+      if (!!cordova) {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/contractList?dateTime=threeMonth" }
         ]);
@@ -164,7 +156,7 @@ export default {
       }
     },
     gounitInfoALL() {
-      if (typeof cordova === "Object") {
+      if (!!cordova) {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/unitInfoALL" }
         ]);
@@ -173,29 +165,29 @@ export default {
       }
     },
     goreserveList() {
-      if (typeof cordova === "Object") {
+      if (!!cordova) {
+        window.open("http://10.122.10.59:8086/10002/index.html#/reserveList");
+      } else {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/reserveList" }
         ]);
-      } else {
-        window.open("http://10.122.10.59:8086/10002/index.html#/reserveList");
       }
     },
     gobusinessList() {
-      if (typeof cordova === "Object") {
+      if (!!cordova) {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/businessList" }
         ]);
-      } else {
+        } else {
         window.open("http://10.122.10.59:8086/10002/index.html#/businessList");
       }
     },
     goaffairList() {
-      if (typeof cordova === "Object") {
+      if (!!cordova) {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/affairList" }
         ]);
-      } else {
+        } else {
         window.open("http://10.122.10.59:8086/10002/index.html#/affairList");
       }
     },
@@ -261,7 +253,7 @@ export default {
         this.ExpireNum = res.Overduesoon;
       });
       GetAgentDefaultPageChartNEW(PageNEWData).then(res => {
-        console.log('tuxing===', res)
+        // console.log('tuxing===', res)
         this.$set(this.data[0], "percent", res[0].Chartcompleteper);
         this.$set(this.data[1], "percent", res[0].Chartnotcompleteper);
         this.$set(this.data[2], "percent", res[1].Chartcompleteper);
@@ -284,12 +276,12 @@ export default {
       data: [
         {
           country: "完成率",
-          year: "交易金额",
+          year: "交易金额"
           // percent: 1.1
         },
         {
           country: "未完成率",
-          year: "交易金额",
+          year: "交易金额"
           // percent: 0
         },
         {
