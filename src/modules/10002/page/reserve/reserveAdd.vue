@@ -164,6 +164,8 @@ export default {
       nowDate: "",
       nextDate: "",
       businessNewObj: {
+        Bookstartdate: "",
+        Bookexpirydate: "",
         Prospectid: -1, //商机ID，没有为-1
         Bookid: 0 //预定ID，新增为0
       },
@@ -276,7 +278,10 @@ export default {
       }
       //vux里面有预定对象，渲染数据使用vux的对象
       if (!!this.reserveObj) {
-        this.businessNewObj = Object.assign(this.businessNewObj, this.reserveObj);
+        this.businessNewObj = Object.assign(
+          this.businessNewObj,
+          this.reserveObj
+        );
       }
       if (this.$route.query.from === "reserveDetail") {
         //从单元信息过来，商机部分有展示

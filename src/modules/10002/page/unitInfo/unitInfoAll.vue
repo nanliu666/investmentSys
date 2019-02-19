@@ -145,7 +145,7 @@
         </li>
         <li>
           <span>当前商机数:</span>
-          <span>6条这是死数据</span>
+          <span>{{unitDetailSelect.Prospectnum}}</span>
         </li>
       </div>
       <div class="bottom" v-if="getUintStatus(unitDetailSelect.Recordstatusstringcode) === '可租'">
@@ -579,9 +579,9 @@ export default {
       this.floorList = [];
     },
     getUnitBlock() {
-      console.log(this.requestData);
       GetUnitByBlockCompanyProject(this.requestData).then(res => {
         this.allBlock = res.Content;
+        console.log(this.allBlock);
         this.hasProject();
       });
     },

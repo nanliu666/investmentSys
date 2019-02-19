@@ -14,7 +14,7 @@
         <div class="shangji">
           <div>
             当前铺位已有
-            <span class="shangjiNum">&nbsp;2&nbsp;</span>条可直接载入商机
+            <span class="shangjiNum">&nbsp;{{businessNewObj.Prospectnum}}&nbsp;</span>条可直接载入商机
           </div>
           <div>
             <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon>
@@ -58,13 +58,7 @@
             class="liRight"
             :class="[!!businessNewObj.Bookstartdate ? 'cellValueClass' : 'placeholderClass']"
           >
-            <input
-              readonly
-              type="text"
-              placeholder="请选择预定日期"
-              style="text-align: right"
-              v-model="businessNewObj.Bookstartdate"
-            >
+            <span>{{!!businessNewObj.Bookstartdate ? businessNewObj.Bookstartdate : '请选择预定开始日期'}}</span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
@@ -76,13 +70,7 @@
             class="liRight"
             :class="[!!businessNewObj.Bookexpirydate ? 'cellValueClass' : 'placeholderClass']"
           >
-            <input
-              readonly
-              type="text"
-              placeholder="请选择预定日期"
-              style="text-align: right"
-              v-model="businessNewObj.Bookexpirydate"
-            >
+            <span>{{!!businessNewObj.Bookexpirydate ? businessNewObj.Bookexpirydate : '请选择预定结束日期'}}</span>
             <img src="../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
@@ -93,14 +81,9 @@
           </div>
           <div
             class="liRight"
-            :class="[!!businessNewObj.unitArea ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!businessNewObj.Builduparea ? 'cellValueClass' : 'placeholderClass']"
           >
-            <input
-              type="number"
-              placeholder="请填写面积"
-              style="text-align: right"
-              v-model="businessNewObj.unitArea"
-            >
+            <span>{{!!businessNewObj.Builduparea ? businessNewObj.Builduparea : '暂无面积'}}</span>
           </div>
         </li>
         <li class="groupLi">
@@ -166,19 +149,14 @@ export default {
       nowDate: "",
       nextDate: "",
       businessNewObj: {
-        Companyname: "", //公司名称
-        Projectname: "", //项目名称
-        Bookexpirydate: "", //预定开始日期
-        Bookstartdate: "", //预定结束日期
-        Bookamt: "", //定金
-        Prospectid: -1, //商机ID，没有为-1
-        Bookid: 0, //预定ID，新增为0
+        Bookstartdate: '',
+        Bookexpirydate: '',
+        Prospectid: -1, //商机ID，没有为-1 默认-1
+        Bookid: 0, //预定ID，新增为0 -默认0
+        Propertyid: "",
         Remark: "", //备注
-        Propertyid: "", //项目id
-        Companyid: "", //公司id
         Accountid: "", //客户id
         clientDataName: "", //客户名称
-        unitArea: "", //面积
         clientDataPhone: "", //客户手机
         Units: {
           //选择的单元信息
@@ -214,6 +192,7 @@ export default {
         cancelText: "取消",
         confirmText: "确定",
         format: "YYYY-MM-DD",
+        startDate: this.nowDate,
         value: this.nowDate,
         onConfirm: val => {
           this.businessNewObj.Bookstartdate = val;
@@ -225,9 +204,11 @@ export default {
         cancelText: "取消",
         confirmText: "确定",
         format: "YYYY-MM-DD",
+        startDate: this.nextDate,
         value: this.nextDate,
         onConfirm: val => {
           this.businessNewObj.Bookexpirydate = val;
+          console.log("shijian==", this.businessNewObj.Bookexpirydate);
         }
       });
     },
@@ -265,18 +246,17 @@ export default {
 
     unitInfoData() {
       //来自单元信息的数据
-      console.log(this.$route.params.data);
       this.hasDanyuan = !this.hasDanyuan;
-      this.businessNewObj.Prospectid = this.$route.params.data.Projectid; //项目ID
-      this.businessNewObj.Projectname = this.$route.params.data.Projectname; //项目名称
-      this.businessNewObj.Companyid = this.$route.params.data.Companyid; //公司ID
-      this.businessNewObj.Companyname = this.$route.params.data.Companyname; //公司名称
+      this.businessNewObj = Object.assign(
+        this.businessNewObj,
+        this.$route.params.data
+      );
       this.businessNewObj.Propertyid = this.$route.params.data.Projectid; //商机ID
-      this.businessNewObj.unitArea = this.$route.params.data.Builduparea;
       this.businessNewObj.Units.Jsondata.push({
         Unitid: this.$route.params.data.Unitid,
         Unitno: this.$route.params.data.Unitno
       });
+      console.log("cun==", this.businessNewObj);
       this.RESERVEADD(this.businessNewObj);
     },
     onLoad() {
@@ -292,8 +272,10 @@ export default {
       }
       //vux里面有预定对象，渲染数据使用vux的对象
       if (!!this.reserveObj) {
-        this.businessNewObj = this.reserveObj;
-        console.log(this.reserveObj);
+        this.businessNewObj = Object.assign(
+          this.businessNewObj,
+          this.reserveObj
+        );
       }
 
       if (this.$route.query.from === "unitInfoAll") {
@@ -310,22 +292,13 @@ export default {
     },
     submit() {
       this.RESERVEADD(this.businessNewObj);
-      let TempA = this.$options.filters.dataFrm(
-        this.businessNewObj.Bookstartdate,
-        "YYYY-MM-DD HH:mm:ss"
-      );
-      let TempB = this.$options.filters.dataFrm(
-        this.businessNewObj.Bookexpirydate,
-        "YYYY-MM-DD HH:mm:ss"
-      );
-      let TempObj = this._.omit(this.businessNewObj, "Units");
-      TempObj.Bookstartdate = TempA;
-      TempObj.Bookexpirydate = TempB;
       let data = {
-        Reservemgmt: TempObj,
+        Reservemgmt: this.businessNewObj,
         Units: this.businessNewObj.Units
       };
-      if (TempObj.Bookstartdate >= TempObj.Bookexpirydate) {
+      if (
+        this.businessNewObj.Bookstartdate >= this.businessNewObj.Bookexpirydate
+      ) {
         this.$vux.toast.show({
           text: "开始时间必须小于等于结束时间",
           type: "warn"
@@ -350,7 +323,7 @@ export default {
             });
           } else {
             this.$vux.toast.show({
-              text: "新增失败!",
+              text: res.Message,
               type: "warn"
             });
           }

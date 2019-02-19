@@ -43,6 +43,10 @@ export default [{
   component: App, //顶层路由，对应index.html
   children: [ //二级路由。对应App.vue
 
+    {
+      path: '',
+      redirect: '/affairList'
+    },
     //工作流模块
     {
       path: '/addSign/:id', //审批加签

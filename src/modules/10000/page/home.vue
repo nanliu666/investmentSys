@@ -261,6 +261,7 @@ export default {
         this.ExpireNum = res.Overduesoon;
       });
       GetAgentDefaultPageChartNEW(PageNEWData).then(res => {
+        console.log('tuxing===', res)
         this.$set(this.data[0], "percent", res[0].Chartcompleteper);
         this.$set(this.data[1], "percent", res[0].Chartnotcompleteper);
         this.$set(this.data[2], "percent", res[1].Chartcompleteper);
@@ -283,11 +284,13 @@ export default {
       data: [
         {
           country: "完成率",
-          year: "交易金额"
+          year: "交易金额",
+          // percent: 1.1
         },
         {
           country: "未完成率",
-          year: "交易金额"
+          year: "交易金额",
+          // percent: 0
         },
         {
           country: "完成率",
