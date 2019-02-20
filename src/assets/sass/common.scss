@@ -45,9 +45,6 @@ ul {
   }
 }
 
-// textarea {
-//   color: rgba(209, 209, 209, 1) !important
-// }
 
 // input占位符颜色
 input::-webkit-input-placeholder,
@@ -68,11 +65,7 @@ textarea::-moz-placeholder {
   @include sc(32px, rgba(209, 209, 209, 1));
 }
 
-input:-ms-input-placeholder,
-textarea:-ms-input-placeholder {
-  /* Internet Explorer 10+ */
-  @include sc(32px, rgba(209, 209, 209, 1));
-}
+
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar {
@@ -156,6 +149,7 @@ html {
 .paddingTop {
   padding-top: 1.95rem;
 }
+
 @keyframes backOpacity {
   0% {
     opacity: 1;
@@ -195,6 +189,19 @@ html {
 .fs-goaheadICon {
   margin-left: 4px;
   @include wh(6px, 10px);
+}
+
+//存放图片
+.imgBox {
+  @include flexCenter;
+
+  .fs-dropImg {
+    @include wh(11px, 6px);
+  }
+
+  .fs-dropDownImg {
+    @include wh(10px, 10px);
+  }
 }
 
 .content {
@@ -279,7 +286,8 @@ html {
   }
 
   .group {
-    .groupLi {
+
+    .groupLi,.groupLiT {
       background-color: #fff;
       @include wh(100%, 106px);
       line-height: 106px;
@@ -305,14 +313,11 @@ html {
         @include fj(flex-end);
         @include flexHCenter;
         width: 64%;
-        height: 96px;
-        line-height: 96px;
 
         input {
           height: 96px;
           line-height: 96px;
         }
-
         .liRightContent {
           text-align: right;
           width: 100%;

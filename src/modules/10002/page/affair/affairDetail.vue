@@ -386,11 +386,10 @@ export default {
       this.hasGetAll = !this.hasGetAll;
     },
     onLoad() {
-      this.affairDetail = JSON.parse(sessionStorage.getItem("affairDetail"));
+      this.affairDetail = JSON.parse(localStorage.getItem("affairDetail"));
       if (this.affairDetail.Status !== 0) {
         this.hasHandle = false;
       }
-      // if()
       const jsonData = {
         Platformkey: this.$route.params.id
       };

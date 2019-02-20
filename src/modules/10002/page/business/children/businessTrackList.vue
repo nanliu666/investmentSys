@@ -59,7 +59,7 @@
     </div>
     <section class="noData" v-if="hasNodata">
       <div class="imgBox">
-        <img src="../../../assets/images/分组.png" alt>
+        <img src="../../../assets/images/noData.png" alt>
         <div class="nodataTittle">暂无跟踪记录</div>
       </div>
     </section>

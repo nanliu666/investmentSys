@@ -2,7 +2,13 @@
   <div class="reservePart">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="gobackByrouter()">
+      <img
+        src="../../assets/images/返回@3x.png"
+        slot="left"
+        class="fs-backICon"
+        alt
+        @click="gobackByrouter()"
+      >
       <span>预定新增</span>
     </x-header>
     <section class="content">
@@ -17,8 +23,25 @@
             <span class="shangjiNum">&nbsp;{{businessNewObj.Prospectnum}}&nbsp;</span>条可直接载入商机
           </div>
           <div>
-            <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon>
-            <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon>
+            <span class="imgBox" @click="openStatus">
+              <img
+                src="../../assets/images/dropDown.png"
+                class="fs-dropDownImg"
+                v-show="!hasStatus"
+                alt
+              >
+            </span>
+            <span class="imgBox" @click="openStatus">
+              <img
+                src="../../assets/images/dropDown.png"
+                class="fs-dropDownImg"
+                style="transform:rotate(180deg);"
+                v-show="hasStatus"
+                alt
+              >
+            </span>
+            <!-- <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon> -->
+            <!-- <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon> -->
           </div>
         </div>
       </div>
@@ -46,13 +69,14 @@
             class="liRight"
             :class="[!!businessNewObj.clientDataPhone ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span>{{!!businessNewObj.clientDataPhone ? businessNewObj.clientDataPhone : '请选择联系人'}}</span>
+            <span>{{!!businessNewObj.clientDataPhone ? businessNewObj.clientDataPhone : '请填写手机号码'}}</span>
           </div>
         </li>
         <div class="cientInfo">单元信息</div>
         <li class="groupLi" @click="getStartTime">
           <div class="liLeft">
             <span>预定开始日期</span>
+            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
@@ -65,6 +89,7 @@
         <li class="groupLi" @click="getEndTime">
           <div class="liLeft">
             <span>预定结束日期</span>
+            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
@@ -89,6 +114,7 @@
         <li class="groupLi">
           <div class="liLeft">
             <span>定金(￥)</span>
+            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
@@ -110,17 +136,17 @@
             class="liRight"
             :class="[!!businessNewObj.Remark ? 'cellValueClass' : 'placeholderClass']"
           >
-            <input
-              type="text"
-              placeholder="请填写备注"
-              style="text-align: right"
+            <textarea
               v-model="businessNewObj.Remark"
-            >
+              placeholder="请填写备注"
+              style="vertical-align:top;outline:none;text-align: righ"
+            ></textarea>
           </div>
         </li>
       </div>
-      <section class="button">
-        <x-button class="submit" @click.native="submit">保存</x-button>
+      <section class="Xbutton">
+        <x-button class="save" @click.native="save">保存</x-button>
+        <x-button class="submit" @click.native="submit">提交</x-button>
       </section>
     </section>
   </div>
@@ -149,8 +175,8 @@ export default {
       nowDate: "",
       nextDate: "",
       businessNewObj: {
-        Bookstartdate: '',
-        Bookexpirydate: '',
+        Bookstartdate: "",
+        Bookexpirydate: "",
         Prospectid: -1, //商机ID，没有为-1 默认-1
         Bookid: 0, //预定ID，新增为0 -默认0
         Propertyid: "",
@@ -311,6 +337,48 @@ export default {
           if (res.Success !== false) {
             this.$vux.toast.show({
               text: "新增成功！",
+              type: "success"
+            });
+            this.$router.push({
+              name: "reserveList",
+              params: {
+                isLoad: true
+              }
+            });
+          } else {
+            this.$vux.toast.show({
+              text: res.Message,
+              type: "warn"
+            });
+          }
+        });
+      }
+    },
+    save() {
+      this.RESERVEADD(this.businessNewObj);
+      let data = {
+        Reservemgmt: this.businessNewObj,
+        Units: {
+          Jsondata: this.unitList
+        }
+      };
+      if (
+        this.businessNewObj.Bookstartdate >= this.businessNewObj.Bookexpirydate
+      ) {
+        this.$vux.toast.show({
+          text: "开始时间必须小于等于结束时间",
+          type: "warn"
+        });
+      } else if (this.unitList.length === 0) {
+        this.$vux.toast.show({
+          text: "请选择意向单元",
+          type: "warn"
+        });
+      } else {
+        EditReserveMgmt(data).then(res => {
+          if (res.Success !== false) {
+            this.$vux.toast.show({
+              text: "成功！",
               type: "success"
             });
             this.$router.push({

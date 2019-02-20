@@ -106,6 +106,7 @@ export default {
   data() {
     return {
       activeClass: "所有状态",
+      statusDetailSelect: 'all',
       showMask: false,
       hasStatus: false,
       hasprojectStatus: false,
@@ -169,6 +170,7 @@ export default {
     getStatus() {
       //点击状态，选择状态，自定义搜索字段
       if (this.statusDetailSelect === "all") {
+
         this.FilterCond = {};
       } else {
         switch (this.comName) {
@@ -223,12 +225,7 @@ export default {
       font-family: $fr;
       margin-right: 12px;
     }
-    .imgBox {
-      @include flexCenter;
-      .fs-dropImg {
-        @include wh(11px, 6px);
-      }
-    }
+
   }
   .nav {
     height: 100% !important;

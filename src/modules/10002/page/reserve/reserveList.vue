@@ -78,7 +78,7 @@ import { XHeader, Search, Popup, XInput } from "vux";
 import { GetReserveMgmt, GetCompanyies, GetPropertys } from "@/axios/api";
 // 引入下拉组件
 import MescrollVue from "mescroll.js/mescroll.vue";
-import imgSrc from "../../assets/images/分组.png";
+import imgSrc from "../../assets/images/noData.png";
 import topimgSrc from "../../assets/images/gototop.png";
 export default {
   name: "reserveList",

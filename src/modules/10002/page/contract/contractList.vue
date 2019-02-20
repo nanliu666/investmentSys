@@ -85,7 +85,7 @@ import { XHeader, Search, Popup, XInput } from "vux";
 import { GetContractMgmt, GetCompanyies, GetPropertys } from "@/axios/api";
 // 引入下拉组件
 import MescrollVue from "mescroll.js/mescroll.vue";
-import imgSrc from "../../assets/images/分组.png";
+import imgSrc from "../../assets/images/noData.png";
 import topimgSrc from "../../assets/images/gototop.png";
 export default {
   name: "contractList",
@@ -161,6 +161,7 @@ export default {
   methods: {
     FilterUpdate(data) {
       this.FilterCond = data;
+      console.log('组件返回参数===', this.FilterCond)
       this.mescroll.resetUpScroll();
     },
     onEnter(value) {

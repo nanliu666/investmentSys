@@ -62,7 +62,7 @@
 import { XHeader, XInput } from "vux";
 import { getTodoList } from "@/axios/api";
 import MescrollVue from "mescroll.js/mescroll.vue";
-import imgSrc from "../../assets/images/分组.png";
+import imgSrc from "../../assets/images/noData.png";
 import topimgSrc from "../../assets/images/gototop.png";
 export default {
   name: "affairList",
@@ -162,7 +162,7 @@ export default {
       console.log(data);
     },
     getDeatil(data) {
-      sessionStorage.setItem("affairDetail", JSON.stringify(data));
+      localStorage.setItem("affairDetail", JSON.stringify(data));
       this.$router.push({
         name: "affairDetail",
         params: {

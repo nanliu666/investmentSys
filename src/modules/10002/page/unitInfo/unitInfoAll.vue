@@ -208,7 +208,7 @@
       </section>
     </section>
     <section class="noData" v-if="noData">
-      <img src="../../assets/images/分组.png" alt>
+      <img src="../../assets/images/noData.png" alt>
       <div class="noDataTittle">暂无数据</div>
     </section>
     <section class="gotoTop" v-if="gotoTop" @click="goTop">
@@ -388,6 +388,7 @@ export default {
     ...mapMutations(["UINT_DETAIL", "RESAVESCORLLTOP"]),
     //单元详细信息
     getUnitDetail(data) {
+      // debugger
       if (
         //底部删选信息
         this.$route.query.from === "reserveAdd" ||
@@ -650,12 +651,7 @@ export default {
   top: 0;
   z-index: 1;
   box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
-  .imgBox {
-    @include flexCenter;
-    .fs-dropImg {
-      @include wh(11px, 6px);
-    }
-  }
+
 }
 .footer {
   position: fixed;

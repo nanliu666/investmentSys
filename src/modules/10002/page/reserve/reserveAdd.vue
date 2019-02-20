@@ -2,7 +2,13 @@
   <div class="reservePart">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="gobackByrouter()">
+      <img
+        src="../../assets/images/返回@3x.png"
+        slot="left"
+        class="fs-backICon"
+        alt
+        @click="gobackByrouter()"
+      >
       <span v-if="hasDeatil">预定详情</span>
       <span v-if="!hasDeatil">预定新增</span>
     </x-header>
@@ -103,6 +109,7 @@
         <li class="groupLi">
           <div class="liLeft">
             <span>定金(￥)</span>
+            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
@@ -124,12 +131,11 @@
             class="liRight"
             :class="[!!businessNewObj.Remark ? 'cellValueClass' : 'placeholderClass']"
           >
-            <input
-              type="text"
-              placeholder="请填写备注"
-              style="text-align: right"
+            <textarea
               v-model="businessNewObj.Remark"
-            >
+              placeholder="请填写备注"
+              style="outline:none;text-align: right"
+            ></textarea>
           </div>
         </li>
       </div>
@@ -336,13 +342,16 @@ export default {
       } else {
         EditReserveMgmt(data).then(res => {
           if (res.Success !== false) {
-            sessionStorage.setItem("reserveDetail", JSON.stringify(res.Datasource[0]));
+            sessionStorage.setItem(
+              "reserveDetail",
+              JSON.stringify(res.Datasource[0])
+            );
             this.$vux.toast.show({
               text: "成功！",
               type: "success"
             });
             this.$router.push({
-              name: "workFlowSubmit",
+              name: "workFlowSubmit"
             });
           } else {
             this.$vux.toast.show({

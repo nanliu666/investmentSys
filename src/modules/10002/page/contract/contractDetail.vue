@@ -33,7 +33,7 @@
         <div class="contractTitle" ref="main">合同主体</div>
         <li class="contractLi">
           <span>合同编号</span>
-          <span class="Rentalid">{{item.Rentalid}}</span>
+          <span class="Rentalid">{{item.Contractno}}</span>
         </li>
         <li class="contractLi">
           <span>客户</span>
@@ -398,48 +398,8 @@ export default {
         );
       }
     },
-    getContractenclosure(data) {
-      console.log("合同data===", data);
-      switch (this.postfixFileName(data.Documentname)) {
-        case "jpg" || "jpeg" || "png" || "gif" || "dwg":
-          console.log("我是图片");
-          break;
-        case "doc" || "docx":
-          console.log("我是word");
-          break;
-        case "xls" || "xlsx":
-          console.log("我是elcel");
-          break;
-        case "pdf":
-          console.log("我是pdf");
-          break;
-        case "ppt" || "pptx":
-          console.log("ppt");
-          break;
-        case "txt":
-          console.log("我是txt");
-          break;
-        case "rar":
-          console.log("我是rar");
-          break;
-        case "zip":
-          console.log("我是zip");
-          break;
-      }
-      const jsonData = {
-        id: data.Guid
-      };
-      console.log(data.Guid);
-      //TODO 补充预览
-      // window.open(
-      //   `http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=${
-      //     data.Guid
-      //   }`
-      // );
-    },
     goAnchor(data) {
       let selector = "";
-      // this.tabSelect = data;
       switch (data) {
         case "合同主体":
           selector = "#main";
@@ -478,9 +438,10 @@ export default {
       GetContractMgmtDetail(data).then(res => {
         this.contractData = res;
         this.Contactmain = JSON.parse(res.Contactmain); //合同主体
+        console.log(this.Contactmain)
         this.ContractDeposit = JSON.parse(res.ContractDeposit); //保证金
         this.Contractcharges = JSON.parse(res.Contractcharges); //管理费用
-        console.log(this.Contractcharges);
+        // console.log(this.Contractcharges);
         this.Contractrentfree = JSON.parse(res.Contractrentfree); //免租期
         this.Contractcommission = JSON.parse(res.Contractcommission); //抽成
         this.Contractoptions = JSON.parse(res.Contractoptions); //权利条款
@@ -499,6 +460,7 @@ export default {
 <style lang="scss" scoped>
 @import "src/assets/sass/mixin";
 .headerTab {
+  z-index: 1;
   background-color: #fff;
   position: fixed;
   width: 100%;
@@ -506,12 +468,7 @@ export default {
 .mainSection {
   padding-top: 240px;
 }
-.imgBox {
-  @include flexCenter;
-  .fs-dropImg {
-    @include wh(11px, 6px);
-  }
-}
+
 .contractDetail {
   font-family: $fr;
 }

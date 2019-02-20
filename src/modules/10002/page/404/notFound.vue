@@ -1,7 +1,7 @@
 <template>
   <div class="notFound">
     <div>
-      <img src="../../assets/images/分组.png" alt>
+      <img src="../../assets/images/noData.png" alt>
     </div>
     <div>
       <svg class="icon" aria-hidden="true">

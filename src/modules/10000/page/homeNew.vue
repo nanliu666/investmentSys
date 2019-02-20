@@ -41,7 +41,7 @@ import { XHeader } from "vux";
 import { GetUserMessage, GetToDoDetailFromMsg } from "@/axios/api";
 // 引入下拉组件
 import MescrollVue from "mescroll.js/mescroll.vue";
-import imgSrc from "../assets/images/分组.png"; //无数据显示
+import imgSrc from "../assets/images/noData.png"; //无数据显示
 import topimgSrc from "../assets/images/gototop.png";
 export default {
   name: "homeNew",
@@ -96,7 +96,7 @@ export default {
       this.$router.go(-1);
     },
     getDetail(data) {
-      sessionStorage.setItem("affairDetail", JSON.stringify(data));
+      localStorage.setItem("affairDetail", JSON.stringify(data));
       if (typeof cordova === "object") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: `10002/index.html#/affairDetail/${data.Platformkey}` }

@@ -79,7 +79,7 @@ import { XHeader, Search, Popup, XInput } from "vux";
 import { GetBizOpportunity, GetCompanyies, GetPropertys } from "@/axios/api";
 // 引入下拉组件
 import MescrollVue from "mescroll.js/mescroll.vue";
-import imgSrc from "../../../../assets/images/分组.png";
+import imgSrc from "../../../../assets/images/noData.png";
 import topimgSrc from "../../assets/images/gototop.png";
 export default {
   name: "contractList",
@@ -179,6 +179,8 @@ export default {
     },
     FilterUpdate(data) {
       this.FilterCond = data;
+      this.dataList = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
+
       this.mescroll.resetUpScroll();
     },
     onEnter(value) {
@@ -209,6 +211,7 @@ export default {
       Object.assign(data.Urlpara, this.FilterCond);
       GetBizOpportunity(data)
         .then(res => {
+          // console.log(res)
           let arr = JSON.parse(res.Content);
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.dataList = [];
