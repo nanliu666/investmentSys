@@ -1,7 +1,6 @@
 <template>
   <div class="contractList">
     <div class="appTopOther"></div>
-
     <x-header
       :left-options="{backText: '', preventGoBack: true}"
       class="header"
@@ -171,11 +170,7 @@ export default {
   },
   methods: {
     goback() {
-      if (this.$route.query.type === "menu") {
         cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
-      } else {
-        this.$router.go(-1);
-      }
     },
     addBusiness() {
       this.$router.push({

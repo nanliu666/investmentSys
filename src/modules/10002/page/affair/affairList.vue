@@ -143,11 +143,7 @@ export default {
   },
   methods: {
     goback() {
-      if (this.$route.query.type === "menu") {
-        cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
-      } else {
-        this.$router.go(-1);
-      }
+      cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
     },
     onDeviceReady() {
       cordova.exec(
@@ -167,7 +163,7 @@ export default {
       console.log(data);
     },
     getDeatil(data) {
-      sessionStorage.setItem('affairDetail', JSON.stringify(data))
+      sessionStorage.setItem("affairDetail", JSON.stringify(data));
       this.$router.push({
         name: "affairDetail",
         params: {
@@ -205,7 +201,7 @@ export default {
           if (page.num === 1) this.affairList = [];
           // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
           this.affairList = this.affairList.concat(arr);
-          console.log('消息列表===>', this.affairList )
+          console.log("消息列表===>", this.affairList);
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
             mescroll.endByPage(arr.length, res.Total); //修复结束条件

@@ -259,11 +259,7 @@ export default {
 
   methods: {
     goback() {
-      if (this.$route.query.type === "menu") {
         cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
-      } else {
-        this.$router.go(-1);
-      }
     },
 
     getCompany() {

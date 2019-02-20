@@ -166,11 +166,7 @@ export default {
   },
   methods: {
     goback() {
-      if (this.$route.query.type === "menu") {
-        cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
-      } else {
-        this.$router.go(-1);
-      }
+      cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
     },
     addReserve() {
       this.$router.push({
@@ -217,7 +213,7 @@ export default {
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表
           this.dataList = this.dataList.concat(arr);
-          console.log( this.dataList)
+          console.log(this.dataList);
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
             mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件

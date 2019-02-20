@@ -93,24 +93,23 @@ export default {
   },
   methods: {
     goback() {
-      if (this.$route.query.type === "menu") {
-        cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
-      } else {
-        this.$router.go(-1);
-      }
+      this.$router.go(-1);
     },
     getDetail(data) {
-      sessionStorage.setItem('affairDetail', JSON.stringify(data))
+      sessionStorage.setItem("affairDetail", JSON.stringify(data));
       if (typeof cordova === "object") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: `10002/index.html#/affairDetail/${data.Platformkey}` }
         ]);
       } else {
-        //开发打开
-        window.open(
-          `http://10.122.10.59:8086/10002/index.html#/affairDetail/${
-            data.Platformkey
-          }`
+        document.addEventListener(
+          "deviceready",
+          () => {
+            cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+              { Url: `10002/index.html#/affairDetail/${data.Platformkey}` }
+            ]);
+          },
+          false
         );
       }
     },

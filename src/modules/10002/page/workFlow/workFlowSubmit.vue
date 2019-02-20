@@ -172,13 +172,13 @@ export default {
         Datakey: "", //预定id
         Selectedflows: [
           {
-            RuntFlowId: 0,
+            RuntFlowId: 0, //写死
             FlowName: "提交",
             FlowType: "Approve", //默认为顺序审批 Cosigner 同时审批 Approve
-            FlowType2: "Add",
-            ContextGuid: "",
-            ParentContextGuid: "",
-            Participants: [],
+            FlowType2: "Add", //加签为add
+            ContextGuid: "", //自己的ID
+            ParentContextGuid: "",//父节点ID
+            Participants: [],//选人ID数组
             AddMan: [],
             littleTittle: "提交人",
             hasDelete: false,
