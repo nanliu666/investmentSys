@@ -200,7 +200,6 @@
 
 
 <script>
-import unitJson from "./unit.json";
 import {
   GetCompanyies,
   GetUnitByBlockCompanyProject,
