@@ -2,7 +2,7 @@
   <div class="addSign">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
+      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="gobackByrouter()">
       同意
     </x-header>
     <section class="ApprovalFlow">
@@ -51,9 +51,6 @@ export default {
       this.CommentTemp.push(item);
       let A = this.CommentTemp.join(",");
       this.requestData.Comment = A;
-    },
-    goback() {
-      this.$router.back(-1);
     },
     onLoad() {
       this.requestData.Platformkey = this.$route.params.Platformkey;

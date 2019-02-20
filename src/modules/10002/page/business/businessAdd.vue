@@ -2,7 +2,7 @@
   <div class="reservePart">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
+      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="gobackByrouter()">
       <span v-if="hasDeatil">商机详情</span>
       <span v-if="!hasDeatil">新增商机</span>
     </x-header>
@@ -224,9 +224,6 @@ export default {
       this.hasStatus = !this.hasStatus;
     },
     ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
-    goback() {
-      this.$router.back(-1);
-    },
     getClient() {
       this.$router.replace({
         name: "clientList",

@@ -1,12 +1,14 @@
 <template>
   <div class="affairList">
     <div class="appTopOther"></div>
-    <x-header
-      class="header"
-      :left-options="{backText: '', preventGoBack: true}"
-      @on-click-back="goback"
-      v-if="!hasSearch"
-    >
+    <x-header class="header" :left-options="{showBack: false}" v-if="!hasSearch">
+      <img
+        src="../../assets/images/返回@3x.png"
+        slot="left"
+        class="fs-backICon"
+        alt
+        @click="goback()"
+      >
       事务管理
       <img
         class="searchImg"
@@ -142,9 +144,6 @@ export default {
     this.isFirstEnter = false;
   },
   methods: {
-    goback() {
-      cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
-    },
     onDeviceReady() {
       cordova.exec(
         this.successCallBack,

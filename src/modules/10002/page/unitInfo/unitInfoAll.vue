@@ -2,11 +2,14 @@
   <div class="unit">
     <div class="allHeader">
       <div class="appTopOther"></div>
-      <x-header
-        :left-options="{backText: '', preventGoBack: true}"
-        class="header"
-        @on-click-back="goback"
-      >
+      <x-header :left-options="{showBack: false}" class="header">
+        <img
+          src="../../assets/images/返回@3x.png"
+          slot="left"
+          class="fs-backICon"
+          alt
+          @click="goback()"
+        >
         <div class="headerTittle" @click="openProjecySelct">{{headerTittle}}</div>
         <span class="imgBox">
           <img
@@ -308,9 +311,6 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
-    goback() {
-      cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
-    },
     goTop() {
       this.goAnchor("#anchorScroll");
       this.gotoTop = !this.gotoTop;
@@ -711,10 +711,10 @@ export default {
     font-family: $fr;
     @include sc(34px, rgba(3, 3, 3, 1));
   }
-  img {
-    @include wh(26px, 11px);
-    margin-left: 8px;
-  }
+  // img {
+  //   @include wh(26px, 11px);
+  //   margin-left: 8px;
+  // }
 }
 .tab {
   margin-top: -2px;

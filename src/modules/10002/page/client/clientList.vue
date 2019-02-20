@@ -2,11 +2,14 @@
   <div>
     <div class="allHeader">
       <div class="appTopOther"></div>
-      <x-header
-        :left-options="{backText: '', preventGoBack: true}"
-        class="header"
-        @on-click-back="goback"
-      >
+      <x-header :left-options="{showBack: false}" class="header">
+        <img
+          src="../../assets/images/返回@3x.png"
+          slot="left"
+          class="fs-backICon"
+          alt
+          @click="goback()"
+        >
         客户管理
         <a class="add" slot="right" @click="gotoAdd">＋</a>
       </x-header>
@@ -129,9 +132,6 @@ export default {
     this.onLoad();
   },
   methods: {
-    goback() {
-      cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
-    },
     ...mapMutations(["CLIENT_DETAIL"]),
     //锚点跳转
     goAnchor(selector) {

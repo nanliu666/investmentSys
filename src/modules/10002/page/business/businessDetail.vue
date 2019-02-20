@@ -2,7 +2,7 @@
   <div class="reservePart">
     <div class="appTopHome"></div>
     <section class="businessHeader fs-header">
-      <div @click="goback">
+      <div @click="gobackByrouter()">
         <img src="../../assets/images/返回@2x.png" alt>
       </div>
       <div class="headerTitle">商机详情</div>
@@ -319,9 +319,6 @@ export default {
           this.hasliushi = !this.hasliushi;
           break;
       }
-    },
-    goback() {
-      this.$router.back(-1);
     },
     onCopy(e) {
       this.$vux.toast.show({

@@ -3,7 +3,16 @@
     <!-- <view-box ref="viewBox" class="viewBox"> -->
     <div class="headerTab">
       <div class="appTopOther"></div>
-      <x-header :left-options="{backText: ''}" class="header">审批详情</x-header>
+      <x-header :left-options="{showBack: false}" class="header">
+        <img
+          src="../../assets/images/返回@3x.png"
+          slot="left"
+          class="fs-backICon"
+          alt
+          @click="gobackByrouter()"
+        >
+        审批详情
+      </x-header>
       <!-- <sticky
           ref="sticky"
           :disabled="disabled"
@@ -429,10 +438,20 @@ export default {
           }
         ]);
       } else {
-        window.open(
-          `http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=${
-            data.FileUrl.split("&")[1].split("=")[1]
-          }`
+        document.addEventListener(
+          "deviceready",
+          () => {
+            cordova.exec(null, null, "ifcaPlugIns", "attachmentPreview", [
+              {
+                fileName: data.FileName,
+                fileUrl: this.toAbsURL(
+                  "http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=" +
+                    data.FileUrl.split("&")[1].split("=")[1]
+                )
+              }
+            ]);
+          },
+          false
         );
       }
     },

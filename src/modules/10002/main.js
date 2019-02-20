@@ -55,6 +55,16 @@ Vue.prototype.toAbsURL = function (url) {
   return a.href;
 };
 
+//在同一路由对象内返回上一级
+Vue.prototype.gobackByrouter = function (url) {
+  this.$router.back(-1);
+};
+
+//通过不同路由返回上一级
+Vue.prototype.goback = function (url) {
+  cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
+};
+
 
 
 //页面位置保存

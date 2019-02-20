@@ -2,11 +2,11 @@
   <div class="contractList">
     <div class="appTopOther"></div>
     <x-header
-      :left-options="{backText: '', preventGoBack: true}"
+      :left-options="{showBack: false}"
       class="header"
-      @on-click-back="goback"
       v-if="!hasSearch"
     >
+      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback()">
       商机管理
       <img
         class="fs-addNew"
@@ -169,9 +169,6 @@ export default {
     this.isFirstEnter = false;
   },
   methods: {
-    goback() {
-        cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
-    },
     addBusiness() {
       this.$router.push({
         name: "businessAdd",

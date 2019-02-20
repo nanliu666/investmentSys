@@ -2,11 +2,14 @@
   <div class="unitInfoAllMap">
     <div class="allHeader">
       <div class="appTopOther"></div>
-      <x-header
-        :left-options="{backText: '', preventGoBack: true}"
-        class="header"
-        @on-click-back="goback"
-      >
+      <x-header :left-options="{showBack: false}" class="header">
+        <img
+          src="../../assets/images/返回@3x.png"
+          slot="left"
+          class="fs-backICon"
+          alt
+          @click="goback()"
+        >
         <div class="headerTittle" @click="openProjecySelct">{{headerTittle}}</div>
         <span class="imgBox">
           <img
@@ -257,10 +260,6 @@ export default {
   },
 
   methods: {
-    goback() {
-        cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
-    },
-
     getCompany() {
       const data = {
         Companyid: 0
@@ -486,7 +485,7 @@ export default {
       this.floorList = [];
     },
     getUnitBlock() {
-      console.log(this.HOST)
+      console.log(this.HOST);
       let data = {
         Blockid: this.localStorageProject.Blockid,
         SystemCode: ""
@@ -546,7 +545,9 @@ export default {
     hasProject() {
       //项目数据
       this.blockSelect = this.allBlock.Blockname;
-      this.headerTittle = `${this.localStorageProject.Blockname}·${this.blockSelect}`;
+      this.headerTittle = `${this.localStorageProject.Blockname}·${
+        this.blockSelect
+      }`;
       this.allBlockFoorList = this.allBlock.Floorlist;
       this.getFloorData();
       this.floorListDisplay = this.FloorSelectlist[0].slice(0, 5);
@@ -662,10 +663,10 @@ export default {
     font-family: $fr;
     @include sc(34px, rgba(3, 3, 3, 1));
   }
-  img {
-    @include wh(26px, 11px);
-    margin-left: 8px;
-  }
+  // img {
+  //   @include wh(26px, 11px);
+  //   margin-left: 8px;
+  // }
 }
 .tab {
   margin-top: -2px;

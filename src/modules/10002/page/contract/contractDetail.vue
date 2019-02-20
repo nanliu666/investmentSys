@@ -2,7 +2,16 @@
   <div class="contractDetail">
     <div class="headerTab">
       <div class="appTopOther"></div>
-      <x-header :left-options="{backText: ''}" class="header">合同详情</x-header>
+      <x-header :left-options="{showBack: false}" class="header">
+        <img
+          src="../../assets/images/返回@3x.png"
+          slot="left"
+          class="fs-backICon"
+          alt
+          @click="gobackByrouter()"
+        >
+        合同详情
+      </x-header>
       <tab
         :line-width="1"
         custom-bar-width="60px"
@@ -125,7 +134,7 @@
               <li>
                 <span>首期结束日期:</span>
                 <span v-if="item.Paymentenddate === '1900-01-01T00:00:00'"></span>
-                <span  v-else>{{item.Paymentenddate | dataFrm('YYYY-MM-DD')}}</span>
+                <span v-else>{{item.Paymentenddate | dataFrm('YYYY-MM-DD')}}</span>
               </li>
               <li>
                 <span>计费周期:</span>
@@ -360,6 +369,37 @@ export default {
       return fileFormat;
     },
     getContractenclosure(data) {
+      //附件路径待解决
+      if (typeof cordova === "object") {
+        cordova.exec(null, null, "ifcaPlugIns", "attachmentPreview", [
+          {
+            fileName: data.FileName,
+            fileUrl: this.toAbsURL(
+              "http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=" +
+                data.Guid
+            )
+          }
+        ]);
+      } else {
+        document.addEventListener(
+          "deviceready",
+          () => {
+            cordova.exec(null, null, "ifcaPlugIns", "attachmentPreview", [
+              {
+                fileName: data.FileName,
+                fileUrl: this.toAbsURL(
+                  "http://10.122.10.244:82/ydzs/DocumentLibrary/Download.ashx?id=" +
+                    data.Guid
+                )
+              }
+            ]);
+          },
+          false
+        );
+      }
+    },
+    getContractenclosure(data) {
+      console.log("合同data===", data);
       switch (this.postfixFileName(data.Documentname)) {
         case "jpg" || "jpeg" || "png" || "gif" || "dwg":
           console.log("我是图片");
@@ -440,7 +480,7 @@ export default {
         this.Contactmain = JSON.parse(res.Contactmain); //合同主体
         this.ContractDeposit = JSON.parse(res.ContractDeposit); //保证金
         this.Contractcharges = JSON.parse(res.Contractcharges); //管理费用
-        console.log( this.Contractcharges)
+        console.log(this.Contractcharges);
         this.Contractrentfree = JSON.parse(res.Contractrentfree); //免租期
         this.Contractcommission = JSON.parse(res.Contractcommission); //抽成
         this.Contractoptions = JSON.parse(res.Contractoptions); //权利条款

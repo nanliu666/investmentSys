@@ -7,7 +7,7 @@
       :right-options="{showMore: showMore}"
       @on-click-more="showMenus = true"
     >
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
+      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="gobackByrouter()">
       预定详情
     </x-header>
     <actionsheet @on-click-menu="getMenu" :menus="menus" v-model="showMenus" show-cancel></actionsheet>
@@ -207,9 +207,6 @@ export default {
       }
     },
     ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
-    goback() {
-      this.$router.back(-1);
-    },
     onLoad() {
       if (
         JSON.parse(sessionStorage.getItem("reserveDetail")).Recordstatus !==

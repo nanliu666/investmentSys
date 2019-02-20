@@ -1,10 +1,14 @@
 <template>
   <div class="businessTrackList">
     <div class="appTopOther"></div>
-    <x-header
-      :left-options="{backText: ''}"
-      class="header"
-    >
+    <x-header :left-options="{showBack: false}" class="header">
+      <img
+        src="../../../assets/images/返回@3x.png"
+        slot="left"
+        class="fs-backICon"
+        alt
+        @click="gobackByrouter()"
+      >
       跟踪记录
       <img
         src="../../../assets/images/addNew.png"
@@ -100,29 +104,29 @@ export default {
     },
     addTrack() {
       this.$router.push({
-        name: 'businessTackAdd',
+        name: "businessTackAdd",
         query: {
-          from: 'businessTrackList'
+          from: "businessTrackList"
         },
         params: {
-          data: JSON.parse(sessionStorage.getItem('businessTrackList'))
+          data: JSON.parse(sessionStorage.getItem("businessTrackList"))
         }
-      })
+      });
     },
     EditTrack(index) {
       this.showMenus = index;
     },
     EditorTrack(data) {
       this.$router.push({
-        name: 'businessTackAdd',
+        name: "businessTackAdd",
         query: {
-          from: 'businessTrackDeatil'
+          from: "businessTrackDeatil"
         },
         params: {
           data: data,
           id: data.Prospectid
         }
-      })
+      });
     },
     deleteTrack(data) {
       let jsonData = {

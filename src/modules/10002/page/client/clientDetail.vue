@@ -2,11 +2,20 @@
   <div>
     <div class="appTopOther"></div>
     <x-header
-      :left-options="{backText: ''}"
+      :left-options="{showBack: false}"
       class="header"
       :right-options="{showMore: true}"
       @on-click-more="showMenus = true"
-    >客户详情</x-header>
+    >
+      <img
+        src="../../assets/images/返回@3x.png"
+        slot="left"
+        class="fs-backICon"
+        alt
+        @click="gobackByrouter()"
+      >
+      客户详情
+    </x-header>
     <section class="content" v-for="(item, index) in clientDeatil" :key="index">
       <div class="group">
         <div class="cientInfo">基本信息</div>
@@ -169,13 +178,16 @@ export default {
               });
               this.sexText = ATemp[0].Text;
             }
-            if(this.clientDeatil[0].Customertypeid !== 0) {
+            if (this.clientDeatil[0].Customertypeid !== 0) {
               let BTemp = this._.filter(this.comSource, item => {
                 return item.Value === this.clientDeatil[0].Customertypeid;
               });
               this.CustomertypeText = BTemp[0].Text;
             }
-            if(this.clientDeatil[0].Otherinfo.length !== 0 && this.clientDeatil[0].Otherinfo[0].Sexid !== 0) {
+            if (
+              this.clientDeatil[0].Otherinfo.length !== 0 &&
+              this.clientDeatil[0].Otherinfo[0].Sexid !== 0
+            ) {
               let CTemp = this._.filter(this.otherSexList, item => {
                 return item.Value === this.clientDeatil[0].Otherinfo[0].Sexid;
               });

@@ -2,7 +2,7 @@
   <div class="reservePart">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
+      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="gobackByrouter()">
       <span v-if="hasDeatil">预定详情</span>
       <span v-if="!hasDeatil">预定新增</span>
     </x-header>
@@ -229,9 +229,7 @@ export default {
       "UINT_DETAIL",
       "TO_PAGE_NAME"
     ]),
-    goback() {
-      this.$router.back(-1);
-    },
+
     getClient() {
       this.$router.replace({
         name: "clientList",

@@ -7,7 +7,7 @@
         slot="left"
         class="fs-backICon"
         alt
-        @click="goback"
+        @click="gobackByrouter()"
       >
       <span v-if="hasDeatil">跟踪详情</span>
       <span v-if="!hasDeatil">新增跟踪</span>
@@ -220,9 +220,6 @@ export default {
       });
     },
     ...mapMutations(["RESERVEADD", "TO_PAGE_NAME"]),
-    goback() {
-      this.$router.back(-1);
-    },
     TrackDeatilData() {
       //来自预定详情的数据
       this.hasDeatil = !this.hasDeatil;
