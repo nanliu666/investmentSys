@@ -286,8 +286,7 @@ html {
   }
 
   .group {
-
-    .groupLi,.groupLiT {
+    .groupLi {
       background-color: #fff;
       @include wh(100%, 106px);
       line-height: 106px;
@@ -314,10 +313,17 @@ html {
         @include flexHCenter;
         width: 64%;
 
+        .remark {
+          width: 100%;
+          text-align: right;
+          @include ellipsis;
+        }
+
         input {
           height: 96px;
           line-height: 96px;
         }
+
         .liRightContent {
           text-align: right;
           width: 100%;

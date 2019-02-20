@@ -121,6 +121,7 @@
             :class="[!!businessNewObj.Bookamt ? 'cellValueClass' : 'placeholderClass']"
           >
             <input
+              @input="BookamtChange"
               type="number"
               placeholder="请填写定金金额"
               style="text-align: right"
@@ -135,12 +136,15 @@
           <div
             class="liRight"
             :class="[!!businessNewObj.Remark ? 'cellValueClass' : 'placeholderClass']"
+            @click="getRemark"
           >
-            <textarea
-              v-model="businessNewObj.Remark"
-              placeholder="请填写备注"
-              style="vertical-align:top;outline:none;text-align: righ"
-            ></textarea>
+            <span class="remark">{{!!businessNewObj.Remark? businessNewObj.Remark: '请填写备注'}}</span>
+            <img
+              v-if="hasRemark"
+              src="../../assets/images/路径 2 copy.png"
+              class="fs-goaheadICon"
+              alt
+            >
           </div>
         </li>
       </div>
@@ -171,6 +175,7 @@ export default {
   name: "reserveAddFromUint",
   data() {
     return {
+      hasRemark: true,
       hasDanyuan: true,
       nowDate: "",
       nextDate: "",
@@ -186,9 +191,10 @@ export default {
         clientDataPhone: "", //客户手机
         Units: {
           //选择的单元信息
-          Jsondata: []
+          Jsondata: [{ Unitid: "", Unitno: "" }]
         }
       },
+      unitList: [],
       hasStatus: false
     };
   },
@@ -213,6 +219,14 @@ export default {
     ...mapState(["uintDetailList", "clientDetail", "reserveObj"])
   },
   methods: {
+    BookamtChange() {
+      this.RESERVEADD(this.businessNewObj);
+    },
+    getRemark() {
+      this.$router.push({
+        name: "reserveRemark"
+      });
+    },
     getStartTime() {
       this.$vux.datetime.show({
         cancelText: "取消",
@@ -222,6 +236,7 @@ export default {
         value: this.nowDate,
         onConfirm: val => {
           this.businessNewObj.Bookstartdate = val;
+          this.RESERVEADD(this.businessNewObj);
         }
       });
     },
@@ -234,7 +249,7 @@ export default {
         value: this.nextDate,
         onConfirm: val => {
           this.businessNewObj.Bookexpirydate = val;
-          console.log("shijian==", this.businessNewObj.Bookexpirydate);
+          this.RESERVEADD(this.businessNewObj);
         }
       });
     },
@@ -267,7 +282,6 @@ export default {
         }
       });
     },
-
     unitInfoData() {
       //来自单元信息的数据
       this.hasDanyuan = !this.hasDanyuan;
@@ -276,11 +290,8 @@ export default {
         this.$route.params.data
       );
       this.businessNewObj.Propertyid = this.$route.params.data.Projectid; //商机ID
-      this.businessNewObj.Units.Jsondata.push({
-        Unitid: this.$route.params.data.Unitid,
-        Unitno: this.$route.params.data.Unitno
-      });
-      console.log("cun==", this.businessNewObj);
+      this.businessNewObj.Units.Jsondata[0].Unitid = this.$route.params.data.Unitid;
+      this.businessNewObj.Units.Jsondata[0].Unitno = this.$route.params.data.Unitno;
       this.RESERVEADD(this.businessNewObj);
     },
     onLoad() {
@@ -327,11 +338,6 @@ export default {
           text: "开始时间必须小于等于结束时间",
           type: "warn"
         });
-      } else if (this.businessNewObj.Units.Jsondata.length === 0) {
-        this.$vux.toast.show({
-          text: "请选择意向单元",
-          type: "warn"
-        });
       } else {
         EditReserveMgmt(data).then(res => {
           if (res.Success !== false) {
@@ -358,20 +364,13 @@ export default {
       this.RESERVEADD(this.businessNewObj);
       let data = {
         Reservemgmt: this.businessNewObj,
-        Units: {
-          Jsondata: this.unitList
-        }
+        Units: this.businessNewObj.Units
       };
       if (
         this.businessNewObj.Bookstartdate >= this.businessNewObj.Bookexpirydate
       ) {
         this.$vux.toast.show({
           text: "开始时间必须小于等于结束时间",
-          type: "warn"
-        });
-      } else if (this.unitList.length === 0) {
-        this.$vux.toast.show({
-          text: "请选择意向单元",
           type: "warn"
         });
       } else {

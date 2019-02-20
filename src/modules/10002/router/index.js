@@ -10,6 +10,7 @@ const unitInfoAllMap = resolve => require(['../page/unitInfo/unitInfoAllMap'], r
 //预定模块
 const reserveList = resolve => require(['../page/reserve/reserveList'], resolve);
 const reserveDetail = resolve => require(['../page/reserve/reserveDetail'], resolve);
+const reserveRemark = resolve => require(['../page/reserve/reserveRemark'], resolve);
 const reserveAdd = resolve => require(['../page/reserve/reserveAdd'], resolve);
 const reserveAddFromUint = resolve => require(['../page/reserve/reserveAddFromUint'], resolve);
 
@@ -187,6 +188,12 @@ export default [{
       name: 'reserveDetail',
       component: reserveDetail,
     },
+    {
+      path: '/reserveRemark', //预定详情
+      name: 'reserveRemark',
+      component: reserveRemark,
+    },
+
     {
       path: '/reserveAdd', //预定新增
       name: 'reserveAdd',

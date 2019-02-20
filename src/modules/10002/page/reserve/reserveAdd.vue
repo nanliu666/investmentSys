@@ -116,6 +116,8 @@
             :class="[!!businessNewObj.Bookamt ? 'cellValueClass' : 'placeholderClass']"
           >
             <input
+              @input="BookamtChange"
+
               type="number"
               placeholder="请填写定金金额"
               style="text-align: right"
@@ -130,12 +132,15 @@
           <div
             class="liRight"
             :class="[!!businessNewObj.Remark ? 'cellValueClass' : 'placeholderClass']"
+            @click="getRemark"
           >
-            <textarea
-              v-model="businessNewObj.Remark"
-              placeholder="请填写备注"
-              style="outline:none;text-align: right"
-            ></textarea>
+            <span class="remark">{{!!businessNewObj.Remark? businessNewObj.Remark: '请填写备注'}}</span>
+            <img
+              v-if="hasRemark"
+              src="../../assets/images/路径 2 copy.png"
+              class="fs-goaheadICon"
+              alt
+            >
           </div>
         </li>
       </div>
@@ -166,6 +171,7 @@ export default {
   name: "reserve",
   data() {
     return {
+      hasRemark: true,
       hasDeatil: false,
       hasDanyuan: true,
       nowDate: "",
@@ -201,6 +207,14 @@ export default {
     ...mapState(["uintDetailList", "clientDetail", "reserveObj"])
   },
   methods: {
+    BookamtChange() {
+      this.RESERVEADD(this.businessNewObj);
+    },
+    getRemark() {
+      this.$router.push({
+        name: "reserveRemark"
+      });
+    },
     getStartTime() {
       this.$vux.datetime.show({
         cancelText: "取消",
@@ -210,7 +224,7 @@ export default {
         startDate: this.nowDate,
         onConfirm: val => {
           this.businessNewObj.Bookstartdate = val;
-          console.log(this.businessNewObj.Bookstartdate);
+          this.RESERVEADD(this.businessNewObj);
         }
       });
     },
@@ -223,6 +237,7 @@ export default {
         startDate: this.nextDate,
         onConfirm: val => {
           this.businessNewObj.Bookexpirydate = val;
+          this.RESERVEADD(this.businessNewObj);
         }
       });
     },
@@ -268,6 +283,9 @@ export default {
       this.RESERVEADD(this.businessNewObj);
     },
     onLoad() {
+      this.RESERVEADD(this.businessNewObj);
+
+      console.log("jiazai", this.reserveObj);
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
         .add(1, "months")
@@ -300,6 +318,7 @@ export default {
           this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
           this.businessNewObj.Userphone = this.clientDetail.Phone;
         }
+
         if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
           // 选择了单元信息
           this.unitList = this.uintDetailList;
