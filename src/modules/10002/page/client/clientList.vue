@@ -41,7 +41,12 @@
         v-for="(Item, index) in actualAlphabetList"
         :key="index"
       >
-        <div class="navTo" :id="'anchor-'+ Item">{{Item}}</div>
+        <a
+          :name="'anchor-' + Item"
+          style=" position: relative;top: -110px;display: block;height: 0;overflow: hidden;"
+        ></a>
+
+        <a class="navTo">{{Item}}</a>
         <section class="nameList">
           <li
             class="nameLi"
@@ -56,12 +61,12 @@
       </section>
     </div>
     <section class="rightNav">
-      <div
+      <a
         class="alphabet"
         v-for="(item, index) in alphabetList"
         :key="index"
-        @click="goAnchor('#anchor-'+item)"
-      >{{item}}</div>
+        :href="'#anchor-' + item"
+      >{{item}}</a>
     </section>
   </div>
 </template>
@@ -125,11 +130,7 @@ export default {
   },
   methods: {
     goback() {
-      if (this.$route.query.type === "menu") {
-        cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
-      } else if(this.$route.query.from === 'businessAdd' || 'reserveAdd')  {
-        this.$router.go(-1);
-      }
+      cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
     },
     ...mapMutations(["CLIENT_DETAIL"]),
     //锚点跳转
@@ -233,9 +234,7 @@ export default {
   z-index: 1;
   box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
 }
-.clientList {
-  margin-top: 230px;
-}
+
 .add {
   font-size: 44px !important;
   color: rgba(136, 136, 136, 1) !important;
@@ -280,9 +279,16 @@ export default {
     }
   }
 }
+.clientList {
+  margin-top: 240px;
+}
 .clientMain {
   .navTo {
-    padding: 20px 40px;
+    // margin-top: -80px;
+    // padding: 80px;
+    padding: 0px 40px;
+    height: 76px;
+    line-height: 76px;
     background-color: rgb(244, 246, 248);
     @include sc(28px, rgba(30, 30, 30, 1));
   }
