@@ -203,6 +203,7 @@ export default {
         confirmText: "确定",
         format: "YYYY-MM-DD",
         value: this.nowDate,
+        startDate: this.nowDate,
         onConfirm: val => {
           this.businessNewObj.Followupdate = val;
         }
@@ -214,6 +215,7 @@ export default {
         confirmText: "确定",
         format: "YYYY-MM-DD",
         value: this.nextDate,
+        startDate: this.nextDate,
         onConfirm: val => {
           this.businessNewObj.Nextfollowupdate = val;
         }
@@ -271,7 +273,7 @@ export default {
             text: "新增成功！",
             type: "success"
           });
-          this.$router.push({
+          this.$router.replace({
             name: "businessTrackList",
             params: {
               isLoad: true,

@@ -133,10 +133,10 @@ export default [{
       path: '/businessList', //商机管理
       name: 'businessList',
       component: businessList,
-      meta: {
-        keepAlive: true,
-        isBack: false
-      }
+      // meta: {
+      //   keepAlive: true,
+      //   isBack: false
+      // }
     },
 
     //客户模块
@@ -187,6 +187,9 @@ export default [{
       path: '/reserveDetail/:id', //预定详情
       name: 'reserveDetail',
       component: reserveDetail,
+      meta: {
+        isLoad: false, //是否需要重载
+      }
     },
     {
       path: '/reserveRemark', //预定详情

@@ -58,7 +58,7 @@
       </section>
     </div>
     <section class="noData" v-if="hasNodata">
-      <div class="imgBox">
+      <div class="NoImgBox">
         <img src="../../../assets/images/noData.png" alt>
         <div class="nodataTittle">暂无跟踪记录</div>
       </div>
@@ -103,7 +103,7 @@ export default {
       });
     },
     addTrack() {
-      this.$router.push({
+      this.$router.replace({
         name: "businessTackAdd",
         query: {
           from: "businessTrackList"
@@ -264,7 +264,7 @@ export default {
   }
   .noData {
     height: 80%;
-    .imgBox {
+    .NoImgBox {
       @include center;
       .nodataTittle {
         @include sc(30px, rgba(136, 136, 136, 1));

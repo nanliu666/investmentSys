@@ -307,7 +307,7 @@ export default {
         this.unitInfoData();
       }
       if (!!this.reserveObj) {
-        this.businessNewObj = this.reserveObj;
+        this.businessNewObj = Object.assign(this.businessNewObj,this.reserveObj);
       }
       if (this.clientDetail) {
         // 选择了联系人

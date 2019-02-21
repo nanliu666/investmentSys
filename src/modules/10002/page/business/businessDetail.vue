@@ -130,7 +130,7 @@ export default {
       }
     };
   },
-    beforeRouteEnter(to, from, next) {
+  beforeRouteEnter(to, from, next) {
     if (from.name === "businessTrackList") {
       to.meta.isBack = true;
     }
@@ -159,14 +159,20 @@ export default {
   },
   methods: {
     onLoad() {
+      // console.log(this.$route.params);
+      if (this.$route.params.Recordstatus !== "Active") {
+        delete this.menus.menu2;
+      }
       let jsonData = {
         Bizopportunity: {
           Prospectid: Number(this.$route.params.id)
         }
       };
       GetBizOpportunityDetail(jsonData).then(res => {
-        this.businessDetail = JSON.parse(res.Bizopprtunity).Datasource.slice(0, 1);
-        console.log(JSON.parse(res.Bizopprtunity))
+        this.businessDetail = JSON.parse(res.Bizopprtunity).Datasource.slice(
+          0,
+          1
+        );
       });
       GetAgentsDropdown("").then(res => {
         this.BizProspecttransferList = res.Option.Dropdowntoagentid;
@@ -257,11 +263,11 @@ export default {
       }
     },
     getTrack(data) {
-      sessionStorage.setItem('businessTrackList', JSON.stringify(data))
+      sessionStorage.setItem("businessTrackList", JSON.stringify(data));
       this.$router.push({
         name: "businessTrackList",
         params: {
-          id:data.Prospectid,
+          id: data.Prospectid,
           data: data
         }
       });
@@ -292,18 +298,11 @@ export default {
             Prospectid: this.$route.params.id
           };
           DeleteBizOpportunity(data).then(res => {
-            if (!!res.Success) {
-              this.$vux.toast.show({
-                text: "删除成功！",
-                type: "success"
-              });
-              this.gotobusinessList();
-            } else {
-              this.$vux.toast.show({
-                text: "删除失败！",
-                type: "warn"
-              });
-            }
+            this.$vux.toast.show({
+              text: "删除成功！",
+              type: "success"
+            });
+            this.gotobusinessList();
           });
           break;
         case "移交":

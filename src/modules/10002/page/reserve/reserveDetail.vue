@@ -7,7 +7,13 @@
       :right-options="{showMore: showMore}"
       @on-click-more="showMenus = true"
     >
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="gobackByrouter()">
+      <img
+        src="../../assets/images/返回@3x.png"
+        slot="left"
+        class="fs-backICon"
+        alt
+        @click="gobackByrouter()"
+      >
       预定详情
     </x-header>
     <actionsheet @on-click-menu="getMenu" :menus="menus" v-model="showMenus" show-cancel></actionsheet>
@@ -104,8 +110,9 @@
           </div>
         </li>
       </div>
-      <section class="button" v-if="hasSubmit">
-        <x-button class="submit" @click.native="submit">提交</x-button>
+      <section class="button">
+        <x-button v-if="hasSubmit" class="submit" @click.native="submit">提交</x-button>
+        <x-button v-if="hasVoid" class="submit" @click.native="Void">作废</x-button>
       </section>
     </section>
   </div>
@@ -124,13 +131,18 @@ import {
   Datetime,
   Popup
 } from "vux";
-import { GetReserveMgmtDetail, DeleteReserveMgmt } from "@/axios/api";
+import {
+  GetReserveMgmtDetail,
+  DeleteReserveMgmt,
+  VoidReserveMgmt
+} from "@/axios/api";
 import { mapMutations, mapState } from "vuex";
 export default {
   name: "reserve",
   data() {
     return {
       hasSubmit: true,
+      hasVoid: false,
       showMore: true,
       showMenus: false,
       menus: {
@@ -169,6 +181,19 @@ export default {
     this.onLoad();
   },
   methods: {
+    Void() {
+      let data = {
+        Bookid: this.reseveDetail[0].Bookid
+      };
+      VoidReserveMgmt(data).then(res => {
+        this.$vux.toast.show({
+          text: "成功！",
+          type: "success"
+        });
+        this.$router.meta.isLoad = true;
+        this.$router.push({ name: "reserveList" });
+      });
+    },
     submit() {
       this.$router.push({
         name: "workFlowSubmit",
@@ -214,7 +239,7 @@ export default {
       ) {
         this.hasSubmit = !this.hasSubmit;
         this.showMore = !this.showMore;
-        console.log(this.showMore)
+        this.hasVoid = !this.hasVoid;
       }
       const data = {
         Reservemgmt: {

@@ -135,7 +135,8 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === "reserveDetail") {
+    console.log(from)
+    if (from.name === "reserveDetail" && !!from.meta.isLoad ) {
       to.meta.isBack = true;
     }
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写

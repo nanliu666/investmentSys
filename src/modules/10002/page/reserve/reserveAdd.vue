@@ -117,7 +117,6 @@
           >
             <input
               @input="BookamtChange"
-
               type="number"
               placeholder="请填写定金金额"
               style="text-align: right"
@@ -285,7 +284,6 @@ export default {
     onLoad() {
       this.RESERVEADD(this.businessNewObj);
 
-      console.log("jiazai", this.reserveObj);
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
         .add(1, "months")
@@ -305,6 +303,7 @@ export default {
           this.businessNewObj,
           this.reserveObj
         );
+        // debugger
       }
       if (this.$route.query.from === "reserveDetail") {
         //从单元信息过来，商机部分有展示

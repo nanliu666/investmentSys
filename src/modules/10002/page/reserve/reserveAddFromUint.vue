@@ -307,6 +307,7 @@ export default {
       }
       //vux里面有预定对象，渲染数据使用vux的对象
       if (!!this.reserveObj) {
+        console.log('===',this.reserveObj)
         this.businessNewObj = Object.assign(
           this.businessNewObj,
           this.reserveObj
