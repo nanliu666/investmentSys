@@ -55,7 +55,7 @@
           </li>
           <li>
             <span class="mainTittle">备注</span>
-            <span class="mainContent">{{item.Remark}}</span>
+            <span  class="mainContent remark">{{item.Remark}}</span>
           </li>
         </ul>
         <div v-if="hasBook" class="reserveButton">

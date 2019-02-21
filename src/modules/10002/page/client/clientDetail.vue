@@ -59,7 +59,7 @@
             <span>备注</span>
           </div>
           <div class="liRight" :class="[!!item.Remark ? 'cellValueClass' : 'placeholderClass']">
-            <span>{{!!item.Remark ? item.Remark : '暂备注'}}</span>
+            <span>{{!!item.Remark ? item.Remark : '暂无备注'}}</span>
           </div>
         </li>
         <div class="cientInfo">其他联系人</div>

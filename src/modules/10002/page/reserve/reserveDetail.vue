@@ -102,10 +102,10 @@
         </li>
         <li class="groupLi">
           <div class="liLeft">
-            <span>备注</span>
+            <span >备注</span>
           </div>
           <div class="liRight" :class="[!!item.Remark ? 'cellValueClass' : 'placeholderClass']">
-            <span v-if="!!item.Remark">{{item.Remark }}</span>
+            <span class="remark" v-if="!!item.Remark">{{item.Remark }}</span>
             <span v-if="!item.Remark">暂无备注</span>
           </div>
         </li>

@@ -24,7 +24,7 @@
             class="liRight"
             :class="[!!businessNewObj.Followupdate ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span>{{!!businessNewObj.Followupdate ? businessNewObj.Followupdate : '请选择预定日期'}}</span>
+            <span>{{!!businessNewObj.Followupdate ? businessNewObj.Followupdate : '请选择跟踪日期'}}</span>
             <img src="../../../assets/images/路径 2 copy.png" class="fs-goaheadICon" alt>
           </div>
         </li>
