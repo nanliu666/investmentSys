@@ -3,13 +3,7 @@
     <div class="headerTab">
       <div class="appTopOther"></div>
       <x-header :left-options="{showBack: false}" class="header">
-        <img
-          src="../../assets/images/返回@3x.png"
-          slot="left"
-          class="fs-backICon"
-          alt
-          @click="back"
-        >
+        <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="back">
         审批详情
       </x-header>
       <tab
@@ -53,7 +47,7 @@
             <span>{{item.danyuan}}</span>
           </li>
           <li class="contractLi">
-            <span>预定日期</span>
+            <span>品牌名称</span>
             <span>{{item.yuding}}</span>
           </li>
           <li class="contractLi">
@@ -299,10 +293,10 @@ export default {
   },
   methods: {
     back() {
-      if(this.$route.query.from === 'affairList') {
-        this.gobackByrouter()
+      if (this.$route.query.from === "affairList") {
+        this.gobackByrouter();
       } else {
-        this.goback()
+        this.goback();
       }
     },
     WorkFlowAddSign() {
@@ -544,6 +538,7 @@ export default {
     padding: 20px 40px;
   }
   .contractLi {
+    width: 100%;
     background-color: #fff;
     @include fj(space-between);
     padding: 26px 40px;
@@ -553,9 +548,12 @@ export default {
     }
     span {
       &:first-child {
+        width: 20%;
         @include sc(30px, rgba(136, 136, 136, 1));
       }
       &:last-child {
+      text-align:right;
+        width: 80%;
         @include sc(30px, rgba(30, 30, 30, 1));
       }
     }

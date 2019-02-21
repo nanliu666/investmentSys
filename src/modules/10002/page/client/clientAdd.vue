@@ -325,7 +325,7 @@ export default {
 
     onLoad() {
       if (this.$route.query.from === "clientDetail") {
-        this.isDeatail = this.isDeatail
+        this.isDeatail = !this.isDeatail
         let clientDeatil = JSON.parse(localStorage.getItem('clientDeatilObj')).Datasource
         console.log(clientDeatil)
         // 数据加载函数

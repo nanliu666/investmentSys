@@ -148,6 +148,7 @@ export default {
           },
           false
         );
+        // window.open('http://10.122.10.59:8086/10002/index.html#/contractList?dateTime=currentMonth')
       }
     },
     gotoContranctExpire() {

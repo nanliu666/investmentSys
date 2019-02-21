@@ -9,7 +9,7 @@
         alt
         @click="gobackByrouter()"
       >
-      <span v-if="hasDeatil">预定详情</span>
+      <span v-if="hasDeatil">预定编辑</span>
       <span v-if="!hasDeatil">预定新增</span>
     </x-header>
     <section class="content">

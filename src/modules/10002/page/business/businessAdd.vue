@@ -3,7 +3,7 @@
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="gobackByrouter()">
-      <span v-if="hasDeatil">商机详情</span>
+      <span v-if="hasDeatil">商机编辑</span>
       <span v-if="!hasDeatil">新增商机</span>
     </x-header>
     <section class="content">

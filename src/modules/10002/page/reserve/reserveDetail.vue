@@ -239,6 +239,7 @@ export default {
         this.hasSubmit = !this.hasSubmit;
         this.showMore = !this.showMore;
       }
+      console.log(JSON.parse(sessionStorage.getItem("reserveDetail")).Recordstatus)
       if (
         JSON.parse(sessionStorage.getItem("reserveDetail")).Recordstatus ===
         "Approved"

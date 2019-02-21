@@ -102,15 +102,16 @@ export default {
           { Url: `10002/index.html#/affairDetail/${data.Platformkey}` }
         ]);
       } else {
-        document.addEventListener(
-          "deviceready",
-          () => {
-            cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: `10002/index.html#/affairDetail/${data.Platformkey}` }
-            ]);
-          },
-          false
-        );
+        // document.addEventListener(
+        //   "deviceready",
+        //   () => {
+        //     cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+        //       { Url: `10002/index.html#/affairDetail/${data.Platformkey}` }
+        //     ]);
+        //   },
+        //   false
+        // );
+        window.open(`http://10.122.10.59:8086/10002/index.html#/affairDetail/${data.Platformkey}`)
       }
     },
     // mescroll组件初始化的回调,可获取到mescroll对象 (如果this.mescroll并没有使用到,可不用写mescrollInit)

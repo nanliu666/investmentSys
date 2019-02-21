@@ -14,7 +14,7 @@
       </group>
     </section>
     <section class="button">
-      <button class="submit" @click="submit">保存</button>
+      <button class="submit" @click="submit">提交</button>
     </section>
   </div>
 </template>
