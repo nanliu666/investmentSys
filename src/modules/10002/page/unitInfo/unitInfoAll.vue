@@ -176,7 +176,7 @@
             <x-icon type="ios-arrow-down" class="icon"></x-icon>
           </div>
         </div>
-        <div class="bottom">
+        <div class="bottom" @click="goUint">
           <img src="../../assets/images/分组 9.png" alt>
         </div>
       </section>
@@ -284,7 +284,7 @@ export default {
     this.onLoad();
   },
   computed: {
-    ...mapState(["scrollTop", "toPageName", "uintDetailList", 'reserveObj'])
+    ...mapState(["scrollTop", "toPageName", "uintDetailList", "reserveObj"])
   },
   activated() {
     if (!this.$route.meta.isBack || this.isFirstEnter) {
@@ -311,6 +311,14 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
+    goUint() {
+      this.$router.push({
+        name: "unitInfoAllMap",
+        query: {
+          from: "unitInfoALL"
+        }
+      });
+    },
     goTop() {
       this.goAnchor("#anchorScroll");
       this.gotoTop = !this.gotoTop;

@@ -81,6 +81,9 @@ export const GetUserId = p => post(`${workFlowHead}Workflow/Api/WFServices.asmx/
 // export const GetBlockList = p => post(`/bingAPI/PlanLayout/WebService/MapBusiness.asmx/GetBlockList
 // `, p)
 
+export const GetBlockList = p => post(`http://10.122.10.244:81/ydzs/PlanLayout/WebService/MapBusiness.asmx/GetBlockList
+`, p)
+
 
 // 消息通知接口接口
 export const GetUserMessage = p => post(`${baseHead}Message.asmx/GetUserMessage`, p); //获取当前用户消息通知

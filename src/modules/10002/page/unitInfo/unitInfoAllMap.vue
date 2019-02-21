@@ -176,7 +176,7 @@
             <x-icon type="ios-arrow-down" class="icon"></x-icon>
           </div>
         </div>
-        <div class="bottom">
+        <div class="bottom" @click="goUint">
           <img src="../../assets/images/分组 9.png" alt>
         </div>
       </section>
@@ -207,7 +207,7 @@ import {
   GetCompanyies,
   GetUnitByBlockCompanyProject,
   GetBlocks,
-  // GetBlockList,
+  GetBlockList,
   GetPropertys
 } from "@/axios/api";
 import { XHeader, Tab, TabItem, Sticky, Popup } from "vux";
@@ -260,6 +260,14 @@ export default {
   },
 
   methods: {
+    goUint() {
+      this.$router.push({
+        name: "unitInfoALL",
+        query: {
+          from: "unitInfoAllMap"
+        }
+      });
+    },
     getCompany() {
       const data = {
         Companyid: 0
@@ -485,35 +493,50 @@ export default {
       this.floorList = [];
     },
     getUnitBlock() {
-      console.log(this.HOST);
+      // console.log(this.HOST);
       let data = {
         Blockid: this.localStorageProject.Blockid,
         SystemCode: ""
       };
-      this.$http
-        .post(
-          // `${this.HOST}PlanLayout/WebService/MapBusiness.asmx/GetBlockList`,
-          `http://gz.ifca.com.cn:9999/ydzs/PlanLayout/WebService/MapBusiness.asmx/GetBlockList`,
-          data
-        )
-        .then(res => {
-          this.allBlock = JSON.parse(res);
-          this.hasProject();
-          let NowDate = moment()
-            .format("YYYY-M-DD")
-            .toString();
-          console.log(this.allBlock);
-          var Map = new IFCA_VIEW("#unitInfoAllMap", this.allBlock, {
-            Range: NowDate,
-            Align: "center",
-            floorListOff: false,
-            MagnifierOff: false
-          });
-          Map.setScale(1);
-        })
-        .catch(err => {
-          console.log(err);
+      GetBlockList(data).then(res => {
+        this.allBlock = JSON.parse(res);
+        this.hasProject();
+        let NowDate = moment()
+          .format("YYYY-M-DD")
+          .toString();
+        console.log(this.allBlock);
+        var Map = new IFCA_VIEW("#unitInfoAllMap", this.allBlock, {
+          Range: NowDate,
+          Align: "center",
+          floorListOff: false,
+          MagnifierOff: false
         });
+        Map.setScale(1);
+      });
+      // this.$http
+      //   .post(
+      //     // `${this.HOST}PlanLayout/WebService/MapBusiness.asmx/GetBlockList`,
+      //     `http://gz.ifca.com.cn:9999/ydzs/PlanLayout/WebService/MapBusiness.asmx/GetBlockList`,
+      //     data
+      //   )
+      //   .then(res => {
+      //     this.allBlock = JSON.parse(res);
+      //     this.hasProject();
+      //     let NowDate = moment()
+      //       .format("YYYY-M-DD")
+      //       .toString();
+      //     console.log(this.allBlock);
+      //     var Map = new IFCA_VIEW("#unitInfoAllMap", this.allBlock, {
+      //       Range: NowDate,
+      //       Align: "center",
+      //       floorListOff: false,
+      //       MagnifierOff: false
+      //     });
+      //     Map.setScale(1);
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
     },
     getFloorData() {
       this.floorList = this._.chain(this.allBlockFoorList)
