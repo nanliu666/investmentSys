@@ -284,7 +284,7 @@ export default {
     this.onLoad();
   },
   computed: {
-    ...mapState(["scrollTop", "toPageName", "uintDetailList"])
+    ...mapState(["scrollTop", "toPageName", "uintDetailList", 'reserveObj'])
   },
   activated() {
     if (!this.$route.meta.isBack || this.isFirstEnter) {
@@ -385,7 +385,7 @@ export default {
       this.blockSelect = "";
     },
 
-    ...mapMutations(["UINT_DETAIL", "RESAVESCORLLTOP"]),
+    ...mapMutations(["UINT_DETAIL", "RESAVESCORLLTOP", "RESERVEADD"]),
     //单元详细信息
     getUnitDetail(data) {
       // debugger
@@ -468,12 +468,14 @@ export default {
           break;
       }
     },
+
     addReserve(data) {
+      this.RESERVEADD(data);
       this.$router.push({
         name: "reserveAddFromUint",
-        params: {
-          data: data
-        },
+        // params: {
+        //   data: data
+        // },
         query: {
           from: "unitInfoAll"
         }
@@ -651,7 +653,6 @@ export default {
   top: 0;
   z-index: 1;
   box-shadow: 0 4px 14px 0 rgba(126, 158, 230, 0.15);
-
 }
 .footer {
   position: fixed;

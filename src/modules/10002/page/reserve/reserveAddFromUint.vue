@@ -16,7 +16,7 @@
         <div class="danyuan">当前预定单元</div>
         <div
           class="qi"
-        >{{businessNewObj.Companyname}}·{{businessNewObj.Projectname}} &nbsp; {{businessNewObj.Units.Jsondata[0].Unitno}}</div>
+        >{{businessNewObj.Companyname}}·{{businessNewObj.Projectname}} &nbsp; {{businessNewObj.Unitno}}</div>
         <div class="shangji">
           <div>
             当前铺位已有
@@ -40,8 +40,6 @@
                 alt
               >
             </span>
-            <!-- <x-icon type="ios-arrow-down" size="25" v-show="!hasStatus" @click="openStatus"></x-icon> -->
-            <!-- <x-icon type="ios-arrow-up" size="25" v-show="hasStatus" @click="openStatus"></x-icon> -->
           </div>
         </div>
       </div>
@@ -176,7 +174,6 @@ export default {
   data() {
     return {
       hasRemark: true,
-      hasDanyuan: true,
       nowDate: "",
       nextDate: "",
       businessNewObj: {
@@ -224,7 +221,10 @@ export default {
     },
     getRemark() {
       this.$router.push({
-        name: "reserveRemark"
+        name: "reserveRemark",
+        params: {
+          data: this.businessNewObj
+        }
       });
     },
     getStartTime() {
@@ -282,48 +282,28 @@ export default {
         }
       });
     },
-    unitInfoData() {
-      //来自单元信息的数据
-      this.hasDanyuan = !this.hasDanyuan;
-      this.businessNewObj = Object.assign(
-        this.businessNewObj,
-        this.$route.params.data
-      );
-      this.businessNewObj.Propertyid = this.$route.params.data.Projectid; //商机ID
-      this.businessNewObj.Units.Jsondata[0].Unitid = this.$route.params.data.Unitid;
-      this.businessNewObj.Units.Jsondata[0].Unitno = this.$route.params.data.Unitno;
-      this.RESERVEADD(this.businessNewObj);
-    },
     onLoad() {
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
         .add(1, "months")
         .format("YYYY-MM-DD");
-      if (this.$route.query.from === "unitInfoAll") {
-        //从预订列表过来，完全新增，所有vux的都清除
-        this.CLIENT_DETAIL();
-        this.UINT_DETAIL();
-        this.RESERVEADD();
-      }
+
       //vux里面有预定对象，渲染数据使用vux的对象
       if (!!this.reserveObj) {
-        console.log('===',this.reserveObj)
         this.businessNewObj = Object.assign(
           this.businessNewObj,
           this.reserveObj
         );
+        // console.log("===", this.businessNewObj);
+        this.businessNewObj.Units.Jsondata[0].Unitid = this.reserveObj.Unitid;
+        this.businessNewObj.Units.Jsondata[0].Unitno = this.reserveObj.Unitno;
+        this.businessNewObj.Propertyid = this.reserveObj.Projectid; //项目ID
       }
-
-      if (this.$route.query.from === "unitInfoAll") {
-        //从单元信息过来，商机部分有展示
-        this.unitInfoData();
-      } else {
-        if (this.clientDetail) {
-          // 选择了联系人
-          this.businessNewObj.clientDataName = this.clientDetail.Name;
-          this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
-          this.businessNewObj.clientDataPhone = this.clientDetail.Phone;
-        }
+      if (this.clientDetail) {
+        // 选择了联系人
+        this.businessNewObj.clientDataName = this.clientDetail.Name;
+        this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
+        this.businessNewObj.clientDataPhone = this.clientDetail.Phone;
       }
     },
     submit() {

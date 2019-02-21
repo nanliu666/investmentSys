@@ -92,10 +92,6 @@ export default [{
       path: '/unitInfoALL', //单元信息所有
       name: 'unitInfoALL',
       component: unitInfoALL,
-      // meta: { //单元信息所有的模块的keepalive有问题
-      //   keepAlive: true,
-      //   isBack: false
-      // }
     },
     {
       path: '/unitInfoAllMap', //单元信息平面图
@@ -114,10 +110,6 @@ export default [{
       path: '/businessDetail/:id', //商机详情
       name: 'businessDetail',
       component: businessDetail,
-      meta: {
-        keepAlive: true,
-        isBack: false
-      }
     },
     {
       path: '/businessTrackList/:id', //商机跟踪记录
@@ -133,10 +125,6 @@ export default [{
       path: '/businessList', //商机管理
       name: 'businessList',
       component: businessList,
-      // meta: {
-      //   keepAlive: true,
-      //   isBack: false
-      // }
     },
 
     //客户模块
@@ -192,7 +180,7 @@ export default [{
       }
     },
     {
-      path: '/reserveRemark', //预定详情
+      path: '/reserveRemark', //预定详情备注
       name: 'reserveRemark',
       component: reserveRemark,
     },

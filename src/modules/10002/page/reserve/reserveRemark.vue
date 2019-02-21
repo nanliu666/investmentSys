@@ -14,9 +14,6 @@
     <section class="ApprovalFlow">
       <group>
         <x-textarea placeholder="请填写备注" class="textarea" :max="200" v-model="businessNewObj.Remark"></x-textarea>
-        <!-- <section class="tipsWord">
-          <span v-for="(item, index) in tipsWordList" :key="index" @click="getTip(item)">{{item}}</span>
-        </section>-->
       </group>
     </section>
     <section class="button">
@@ -34,11 +31,13 @@ export default {
   data() {
     return {
       CommentTemp: [],
-      // tipsWordList: ["同意", "收到"],
       businessNewObj: {
         Remark: ""
       }
     };
+  },
+  created() {
+    this.businessNewObj = this.$route.params.data
   },
   components: {
     XHeader,
@@ -52,10 +51,11 @@ export default {
   methods: {
     ...mapMutations(["RESERVEADD"]),
     submit() {
+console.log(this.businessNewObj)
       this.RESERVEADD(this.businessNewObj);
-      console.log(this.reserveObj);
+      // console.log(this.reserveObj);
       this.gobackByrouter();
-    }
+    },
   }
 };
 </script>

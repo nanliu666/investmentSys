@@ -177,6 +177,7 @@ export default {
   computed: {
     ...mapState(["uintDetailList", "clientDetail"])
   },
+
   created() {
     this.onLoad();
   },
@@ -209,14 +210,12 @@ export default {
     getMenu(menuKey, menuItem) {
       switch (menuItem) {
         case "编辑":
+        this.RESERVEADD(this.reseveDetail[0])
           this.$router.push({
             name: "reserveAdd",
             query: {
               from: "reserveDetail"
             },
-            params: {
-              data: this.reseveDetail[0]
-            }
           });
           break;
         case "删除":

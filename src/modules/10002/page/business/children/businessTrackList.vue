@@ -97,6 +97,7 @@ export default {
       };
       GetFollowUp(data).then(res => {
         this.TrackList = JSON.parse(res.Content);
+        console.log(this.TrackList)
         if (this.TrackList.length === 0) {
           this.hasNodata = !this.hasNodata;
         }

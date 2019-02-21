@@ -211,7 +211,10 @@ export default {
     },
     getRemark() {
       this.$router.push({
-        name: "reserveRemark"
+        name: "reserveRemark",
+        params: {
+          data: this.businessNewObj
+        }
       });
     },
     getStartTime() {
@@ -269,21 +272,7 @@ export default {
         }
       });
     },
-    reserveDetailData() {
-      //来自预定详情的数据
-      this.hasDeatil = !this.hasDeatil;
-      this.businessNewObj = this.$route.params.data;
-      this.unitList = JSON.parse(this.$route.params.data.Resunitinfjson);
-      this.RESERVEADD(this.businessNewObj);
-    },
-    businessDetailData() {
-      //来自商机详情的数据
-      this.businessNewObj = this.$route.params.data;
-      this.RESERVEADD(this.businessNewObj);
-    },
     onLoad() {
-      this.RESERVEADD(this.businessNewObj);
-
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
         .add(1, "months")
@@ -297,19 +286,19 @@ export default {
         this.UINT_DETAIL();
         this.RESERVEADD();
       }
+
       //vux里面有预定对象，渲染数据使用vux的对象
       if (!!this.reserveObj) {
         this.businessNewObj = Object.assign(
           this.businessNewObj,
           this.reserveObj
         );
-        // debugger
       }
+      // debugger
       if (this.$route.query.from === "reserveDetail") {
-        //从单元信息过来，商机部分有展示
-        this.reserveDetailData();
-      } else if (this.$route.query.from === "businessDetail") {
-        this.businessDetailData();
+        //来自预定详情的数据
+        this.hasDeatil = !this.hasDeatil;
+        this.unitList = JSON.parse(this.reserveObj.Resunitinfjson);
       } else {
         if (this.clientDetail) {
           // 选择了联系人

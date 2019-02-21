@@ -27,11 +27,12 @@
         <div class="tailTop">
           <div class="tailTopLi">
             <span class="tailTopLiTop">跟踪状态</span>
-            <span class="tailTopLiBottom" v-text="statusDetail[item.Recordstatus]">机会渺茫</span>
+            <!-- <span class="tailTopLiBottom" v-text="statusDetail[item.Recordstatus]">机会渺茫</span> -->
+            <span class="tailTopLiBottom" >{{item.Probability}}</span>
           </div>
           <div class="tailTopLi">
             <span class="tailTopLiTop">上次跟踪时间</span>
-            <span class="tailTopLiBottom">{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span>
+            <span class="tailTopLiBottom">{{item.Followupdate | dataFrm('YYYY-MM-DD')}}</span>
           </div>
         </div>
         <div class="tailBottom" @click="getTrack(item)">查看跟踪记录 >></div>
@@ -56,7 +57,7 @@
             <span class="mainContent">{{item.Remark}}</span>
           </li>
         </ul>
-        <div class="reserveButton">
+        <div v-if="hasBook" class="reserveButton">
           <button @click="getReserve">预定</button>
         </div>
       </section>
@@ -87,10 +88,13 @@ import {
   GetFailtypeDropdown
 } from "@/axios/api";
 import { Actionsheet, Confirm, Radio, Group } from "vux";
+import { mapMutations, mapState } from "vuex";
+
 export default {
   name: "businessDetail",
   data() {
     return {
+      hasBook: true,
       hasliushi: false,
       hasyijiao: false,
       FailtypeDropdownList: [],
@@ -130,26 +134,8 @@ export default {
       }
     };
   },
-  beforeRouteEnter(to, from, next) {
-    if (from.name === "businessTrackList") {
-      to.meta.isBack = true;
-    }
-    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
-    next();
-  },
-  activated() {
-    if (!this.$route.meta.isBack || this.isFirstEnter) {
-      // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
-      // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
-      this.businessDetail = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
-      this.onLoad(); // ajax获取数据方法
-    }
-    // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
-    this.$route.meta.isBack = false;
-    this.isFirstEnter = false;
-  },
   created() {
-    this.isFirstEnter = true;
+    this.onLoad();
   },
   components: {
     Actionsheet,
@@ -157,11 +143,31 @@ export default {
     Group,
     Radio
   },
+  mounted() {
+    GetAgentsDropdown("").then(res => {
+      this.BizProspecttransferList = res.Option.Dropdowntoagentid;
+      this.BizProspecttransferListDisplay = this.BizProspecttransferList.map(
+        item => {
+          return item.Text;
+        }
+      );
+    });
+    GetFailtypeDropdown("").then(res => {
+      this.FailtypeDropdownList = res.Option.Dropdownfailtypeid;
+      this.FailtypeDropdownListDisplay = this.FailtypeDropdownList.map(item => {
+        return item.Text;
+      });
+    });
+  },
+  computed: {
+    ...mapState([ "reserveObj"])
+  },
   methods: {
+    ...mapMutations(["RESERVEADD"]),
     onLoad() {
-      // console.log(this.$route.params);
-      if (this.$route.params.Recordstatus !== "Active") {
+      if (JSON.parse(localStorage.getItem('businessDetail')).Recordstatus !== "Active") {
         delete this.menus.menu2;
+        this.hasBook = !this.hasBook
       }
       let jsonData = {
         Bizopportunity: {
@@ -169,37 +175,20 @@ export default {
         }
       };
       GetBizOpportunityDetail(jsonData).then(res => {
+        console.log(JSON.parse(res.Bizopprtunity));
         this.businessDetail = JSON.parse(res.Bizopprtunity).Datasource.slice(
           0,
           1
         );
       });
-      GetAgentsDropdown("").then(res => {
-        this.BizProspecttransferList = res.Option.Dropdowntoagentid;
-        this.BizProspecttransferListDisplay = this.BizProspecttransferList.map(
-          item => {
-            return item.Text;
-          }
-        );
-      });
-      GetFailtypeDropdown("").then(res => {
-        this.FailtypeDropdownList = res.Option.Dropdownfailtypeid;
-        this.FailtypeDropdownListDisplay = this.FailtypeDropdownList.map(
-          item => {
-            return item.Text;
-          }
-        );
-      });
     },
     getReserve() {
+      this.RESERVEADD(this.businessDetail[0]);
       this.$router.push({
-        name: "reserveAdd",
+        name: "reserveAddFromUint",
         query: {
           from: "businessDetail"
         },
-        params: {
-          data: this.businessDetail[0]
-        }
       });
     },
     onLiushiChange(val) {

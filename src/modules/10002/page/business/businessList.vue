@@ -217,10 +217,10 @@ export default {
         });
     },
     gotoDetail(data) {
+      localStorage.setItem('businessDetail', JSON.stringify(data))
       this.$router.push({
         name: "businessDetail",
         params: {
-          data: data,
           id: data.Prospectid
         },
         query : {
