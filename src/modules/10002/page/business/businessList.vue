@@ -1,12 +1,14 @@
 <template>
   <div class="contractList">
     <div class="appTopOther"></div>
-    <x-header
-      :left-options="{showBack: false}"
-      class="header"
-      v-if="!hasSearch"
-    >
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback()">
+    <x-header :left-options="{showBack: false}" class="header" v-if="!hasSearch">
+      <img
+        src="../../assets/images/返回@3x.png"
+        slot="left"
+        class="fs-backICon"
+        alt
+        @click="goback()"
+      >
       商机管理
       <img
         class="fs-addNew"
@@ -31,7 +33,13 @@
         @on-enter="onEnter"
         class="searchInput fs-search"
       >
-        <img class="fs-addNew" src="../../../../assets/images/搜索.png" @click="onEnter" slot="right" alt>
+        <img
+          class="fs-addNew"
+          src="../../../../assets/images/搜索.png"
+          @click="onEnter"
+          slot="right"
+          alt
+        >
       </x-input>
       <div class="cancel" @click="searchCancel">取消</div>
     </section>
@@ -54,7 +62,7 @@
           <span>{{item.Accountname}}</span>
           <span
             :class="getbusinessStatus(item.Recordstatus)"
-            v-text="statusDetail[item.Recordstatus]"
+            v-text="getbusinessText(item.Recordstatus)"
           ></span>
         </div>
         <div class="bottom">
@@ -161,7 +169,7 @@ export default {
       this.$router.push({
         name: "businessAdd",
         query: {
-          from : 'businessList'
+          from: "businessList"
         }
       });
     },
@@ -205,7 +213,7 @@ export default {
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
           this.dataList = this.dataList.concat(arr);
-          console.log(this.dataList)
+          console.log(this.dataList);
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
             mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
@@ -217,20 +225,47 @@ export default {
         });
     },
     gotoDetail(data) {
-      localStorage.setItem('businessDetail', JSON.stringify(data))
+      localStorage.setItem("businessDetail", JSON.stringify(data));
       this.$router.push({
         name: "businessDetail",
         params: {
           id: data.Prospectid
         },
-        query : {
-          from: 'businessList'
+        query: {
+          from: "businessList"
         }
       });
     },
+    getbusinessText(data) {
+      let strDatd = this.$options.filters.firstUpperCase(data);
+      console.log(strDatd);
+      switch (strDatd) {
+        case "Active":
+          return "新商机";
+          break;
+        case "Lost":
+          return "已流失";
+          break;
+        case "Signed":
+          return "已签约";
+          break;
+        case "Quotation":
+          return "已报价";
+          break;
+        case "Booked":
+          return "已预订";
+          break;
+        case "INACTIVE":
+          return "已删除";
+          break;
+        case "Used":
+          return "已使用";
+          break;
+      }
+    },
     getbusinessStatus(data) {
       let strDatd = this.$options.filters.firstUpperCase(data);
-      let str = this;
+      console.log(strDatd);
       switch (strDatd) {
         case "Active":
           return "Active";
