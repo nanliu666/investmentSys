@@ -182,7 +182,7 @@ export default {
             break;
         }
         this.FilterCond = {
-          Filter: `${this.statusName}.in.${this.statusDetailSelect}`
+          Filter: `${this.statusDetailSelect}`
         };
       }
       this.$emit("FilterUpdate", this.FilterCond);
