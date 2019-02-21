@@ -28,11 +28,12 @@
           <div class="tailTopLi">
             <span class="tailTopLiTop">跟踪状态</span>
             <!-- <span class="tailTopLiBottom" v-text="statusDetail[item.Recordstatus]">机会渺茫</span> -->
-            <span class="tailTopLiBottom" >{{item.Probability}}</span>
+            <span class="tailTopLiBottom">{{!!item.Probability ? item.Probability : '未跟踪'}}</span>
           </div>
           <div class="tailTopLi">
             <span class="tailTopLiTop">上次跟踪时间</span>
-            <span class="tailTopLiBottom">{{item.Followupdate | dataFrm('YYYY-MM-DD')}}</span>
+            <span v-if="item.Followupdate === '1900-01-01T00:00:00'" class="tailTopLiBottom">-s</span>
+            <span class="tailTopLiBottom" v-else>{{item.Followupdate | dataFrm('YYYY-MM-DD')}}</span>
           </div>
         </div>
         <div class="tailBottom" @click="getTrack(item)">查看跟踪记录 >></div>
@@ -160,14 +161,17 @@ export default {
     });
   },
   computed: {
-    ...mapState([ "reserveObj"])
+    ...mapState(["reserveObj"])
   },
   methods: {
     ...mapMutations(["RESERVEADD"]),
     onLoad() {
-      if (JSON.parse(localStorage.getItem('businessDetail')).Recordstatus !== "Active") {
+      if (
+        JSON.parse(localStorage.getItem("businessDetail")).Recordstatus !==
+        "Active"
+      ) {
         delete this.menus.menu2;
-        this.hasBook = !this.hasBook
+        this.hasBook = !this.hasBook;
       }
       let jsonData = {
         Bizopportunity: {
@@ -185,10 +189,10 @@ export default {
     getReserve() {
       this.RESERVEADD(this.businessDetail[0]);
       this.$router.push({
-        name: "reserveAddFromUint",
+        name: "reserveAdd",
         query: {
           from: "businessDetail"
-        },
+        }
       });
     },
     onLiushiChange(val) {

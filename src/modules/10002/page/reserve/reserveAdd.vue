@@ -37,7 +37,7 @@
             class="liRight"
             :class="[!!businessNewObj.Userphone ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span>{{!!businessNewObj.Userphone ? businessNewObj.Userphone : '请选择联系人'}}</span>
+            <span>{{!!businessNewObj.Userphone ? businessNewObj.Userphone : '请填写联系电话'}}</span>
           </div>
         </li>
         <div class="cientInfo">单元信息</div>
@@ -294,7 +294,11 @@ export default {
           this.reserveObj
         );
       }
-      // debugger
+      if(this.$route.query.from === "businessDetail") {
+        this.unitList = JSON.parse(this.reserveObj.Unitinfjson);
+          this.businessNewObj.Userphone =this.reserveObj.Phone;
+
+      }
       if (this.$route.query.from === "reserveDetail") {
         //来自预定详情的数据
         this.hasDeatil = !this.hasDeatil;

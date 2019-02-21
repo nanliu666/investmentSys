@@ -4,8 +4,8 @@
     <x-header :left-options="{showBack: false}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="gobackByrouter()">
       提交
-      <span slot="right" v-if="hasAddSign" @click="getAddSgin(0)">取消</span>
-      <span slot="right" v-if="!hasAddSign" @click="getAddSgin(1)">加签</span>
+      <span slot="right" class="headerRight" v-if="hasAddSign" @click="getAddSgin(0)">取消</span>
+      <span slot="right" class="headerRight" v-if="!hasAddSign" @click="getAddSgin(1)">加签</span>
     </x-header>
     <section class="ApprovalFlow">
       <div class="contractTitle">审批流程</div>
@@ -435,6 +435,9 @@ export default {
 <style scoped lang="scss">
 @import "src/assets/sass/mixin";
 .addSign {
+  .headerRight {
+    color: #778899;
+  }
   height: 100%;
   .ApprovalFlow {
     .contractTitle {

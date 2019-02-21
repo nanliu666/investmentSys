@@ -18,6 +18,7 @@
         <li class="groupLi" @click="getStartTime">
           <div class="liLeft">
             <span>跟踪时间</span>
+            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
@@ -30,6 +31,7 @@
         <li class="groupLi" @click="getEndTime">
           <div class="liLeft">
             <span>下次跟踪时间</span>
+            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
@@ -42,6 +44,7 @@
         <li class="groupLi" @click="chancesource">
           <div class="liLeft">
             <span>跟踪方式</span>
+            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
@@ -54,6 +57,7 @@
         <li class="groupLi" @click="getUrgencySource">
           <div class="liLeft">
             <span>跟踪状态</span>
+            <span class="badge">*</span>
           </div>
           <div
             class="liRight"
