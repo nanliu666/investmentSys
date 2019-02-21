@@ -382,6 +382,7 @@ export default {
       if (this.affairDetail.Status !== 0) {
         this.hasHandle = false;
       }
+      // console.log(this.affairDetail)
       const jsonData = {
         Platformkey: this.$route.params.id
       };

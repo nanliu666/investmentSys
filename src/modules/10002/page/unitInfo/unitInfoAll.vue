@@ -176,7 +176,7 @@
             <x-icon type="ios-arrow-down" class="icon"></x-icon>
           </div>
         </div>
-        <div class="bottom" @click="goUint">
+        <div class="bottom" v-if="false" @click="goUint">
           <img src="../../assets/images/分组 9.png" alt>
         </div>
       </section>

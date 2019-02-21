@@ -2,7 +2,13 @@
   <div class="reservePart">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="gobackByrouter()">
+      <img
+        src="../../assets/images/返回@3x.png"
+        slot="left"
+        class="fs-backICon"
+        alt
+        @click="gobackByrouter()"
+      >
       <span v-if="hasDeatil">商机编辑</span>
       <span v-if="!hasDeatil">新增商机</span>
     </x-header>
@@ -101,12 +107,13 @@
           <div
             class="liRight"
             :class="[!!businessNewObj.Remark ? 'cellValueClass' : 'placeholderClass']"
+            @click="getRemark"
           >
-            <input
-              type="text"
-              placeholder="请填写备注"
-              style="text-align: right"
-              v-model="businessNewObj.Remark"
+            <span class="remark">{{!!businessNewObj.Remark? businessNewObj.Remark: '请填写备注'}}</span>
+            <img
+              src="../../assets/images/路径 2 copy.png"
+              class="fs-goaheadICon"
+              alt
             >
           </div>
         </li>
@@ -220,6 +227,14 @@ export default {
     this.onLoad();
   },
   methods: {
+    getRemark() {
+      this.$router.push({
+        name: "reserveRemark",
+        params: {
+          data: this.businessNewObj
+        }
+      });
+    },
     openStatus() {
       this.hasStatus = !this.hasStatus;
     },
@@ -284,8 +299,8 @@ export default {
     },
     unitInfoData() {
       //来自单元信息的数据
-      this.businessNewObj.Prospectid = 0, // 新增商机
-      this.businessNewObj.unitArea = this.$route.params.data.Builduparea; //面积
+      (this.businessNewObj.Prospectid = 0), // 新增商机
+        (this.businessNewObj.unitArea = this.$route.params.data.Builduparea); //面积
       this.businessNewObj.Propertyid = this.$route.params.data.Projectid; //项目ID
       this.businessNewObj.Companyid = this.$route.params.data.Companyid; //公司ID
       this.businessNewObj.Units.Jsondata.push({
@@ -307,7 +322,10 @@ export default {
         this.unitInfoData();
       }
       if (!!this.reserveObj) {
-        this.businessNewObj = Object.assign(this.businessNewObj,this.reserveObj);
+        this.businessNewObj = Object.assign(
+          this.businessNewObj,
+          this.reserveObj
+        );
       }
       if (this.clientDetail) {
         // 选择了联系人
@@ -361,12 +379,12 @@ export default {
       //     type: "warn"
       //   });
       // }
-   if (this.businessNewObj.Units.Jsondata.length === 0) {
+      if (this.businessNewObj.Units.Jsondata.length === 0) {
         this.$vux.toast.show({
           text: "请选择意向单元",
           type: "warn"
         });
-      }  else {
+      } else {
         EditBizOpportunity(data).then(res => {
           if (res.Success !== false) {
             this.$vux.toast.show({
