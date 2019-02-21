@@ -32,7 +32,7 @@
           </div>
           <div class="tailTopLi">
             <span class="tailTopLiTop">上次跟踪时间</span>
-            <span v-if="item.Followupdate === '1900-01-01T00:00:00'" class="tailTopLiBottom">-s</span>
+            <span v-if="item.Followupdate === '1900-01-01T00:00:00'" class="tailTopLiBottom">-</span>
             <span class="tailTopLiBottom" v-else>{{item.Followupdate | dataFrm('YYYY-MM-DD')}}</span>
           </div>
         </div>
@@ -55,7 +55,7 @@
           </li>
           <li>
             <span class="mainTittle">备注</span>
-            <span  class="mainContent remark">{{item.Remark}}</span>
+            <span class="mainContent remark">{{item.Remark}}</span>
           </li>
         </ul>
         <div v-if="hasBook" class="reserveButton">
@@ -64,7 +64,7 @@
       </section>
     </section>
     <actionsheet :menus="menus" v-model="showMenus" show-cancel @on-click-menu="businessAct"></actionsheet>
-    <confirm :title="confirmTittle" v-model="confirShow" @on-confirm="onConfirm">
+    <!-- <confirm :title="confirmTittle" v-model="confirShow" @on-confirm="onConfirm">
       <group>
         <radio v-if="hasliushi" :options="FailtypeDropdownListDisplay" @on-change="onLiushiChange"></radio>
         <radio
@@ -74,7 +74,7 @@
         ></radio>
         <input type="text" v-if="hasyijiao" v-model="yijiaoRemark" placeholder="请填写移交原因">
       </group>
-    </confirm>
+    </confirm>-->
   </div>
 </template>
 
@@ -83,10 +83,7 @@
 import {
   GetBizOpportunityDetail,
   DeleteBizOpportunity,
-  BizProspecttransfer,
-  DropProspecttransfer,
-  GetAgentsDropdown,
-  GetFailtypeDropdown
+  BizProspecttransfer
 } from "@/axios/api";
 import { Actionsheet, Confirm, Radio, Group } from "vux";
 import { mapMutations, mapState } from "vuex";
@@ -145,20 +142,12 @@ export default {
     Radio
   },
   mounted() {
-    GetAgentsDropdown("").then(res => {
-      this.BizProspecttransferList = res.Option.Dropdowntoagentid;
-      this.BizProspecttransferListDisplay = this.BizProspecttransferList.map(
-        item => {
-          return item.Text;
-        }
-      );
-    });
-    GetFailtypeDropdown("").then(res => {
-      this.FailtypeDropdownList = res.Option.Dropdownfailtypeid;
-      this.FailtypeDropdownListDisplay = this.FailtypeDropdownList.map(item => {
-        return item.Text;
-      });
-    });
+    // GetFailtypeDropdown("").then(res => {
+    //   this.FailtypeDropdownList = res.Option.Dropdownfailtypeid;
+    //   this.FailtypeDropdownListDisplay = this.FailtypeDropdownList.map(item => {
+    //     return item.Text;
+    //   });
+    // });
   },
   computed: {
     ...mapState(["reserveObj"])
@@ -230,29 +219,8 @@ export default {
           }
         });
       } else {
-        let data = {
-          Transfer: {
-            Prospectid: this.businessDetail[0].Prospectid,
-            Fromagentid: this.businessDetail[0].Agentid,
-            Toagentid: this.BizProspecttransferListSelect[0].Value,
-            Remark: this.yijiaoRemark
-          }
-        };
-        BizProspecttransfer(data).then(res => {
-          console.log(res);
-          if (!!res.Success) {
-            this.$vux.toast.show({
-              text: "移交失败！",
-              type: "warn"
-            });
-          } else {
-            this.$vux.toast.show({
-              text: "移交成功！",
-              type: "success"
-            });
-            this.gotobusinessList();
-          }
-        });
+        // sessionStorage.setItem('businessDetail', JSON.stringify(this.businessDetail[0]))
+        // this.$router.push({name: 'businessTransfer'})
       }
     },
     getTrack(data) {
@@ -274,6 +242,10 @@ export default {
       });
     },
     businessAct(key, item) {
+      sessionStorage.setItem(
+        "businessDetail",
+        JSON.stringify(this.businessDetail[0])
+      );
       switch (item) {
         case "编辑":
           this.$router.push({
@@ -299,16 +271,10 @@ export default {
           });
           break;
         case "移交":
-          this.confirShow = !this.confirShow;
-          this.hasyijiao = true;
-          this.confirmTittle = "请选择移交人员";
-
+          this.$router.push({ name: "businessTransfer" });
           break;
         case "流失":
-          this.confirmTittle = "请选择流失原因";
-          this.hasyijiao = false;
-          this.confirShow = !this.confirShow;
-          this.hasliushi = !this.hasliushi;
+          this.$router.push({ name: "businessLost" });
           break;
       }
     },

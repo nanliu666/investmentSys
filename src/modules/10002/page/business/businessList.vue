@@ -238,7 +238,7 @@ export default {
     },
     getbusinessText(data) {
       let strDatd = this.$options.filters.firstUpperCase(data);
-      console.log(strDatd);
+      // console.log(strDatd);
       switch (strDatd) {
         case "Active":
           return "新商机";

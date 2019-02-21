@@ -20,6 +20,8 @@ const businessDetail = resolve => require(['../page/business/businessDetail'], r
 const businessList = resolve => require(['../page/business/businessList'], resolve);
 const businessTrackList = resolve => require(['../page/business/children/businessTrackList'], resolve);
 const businessTackAdd = resolve => require(['../page/business/children/businessTackAdd'], resolve);
+const businessTransfer = resolve => require(['../page/business/children/businessTransfer'], resolve);
+const businessLost = resolve => require(['../page/business/children/businessLost'], resolve);
 
 // 客户模块
 const clientList = resolve => require(['../page/client/clientList'], resolve);
@@ -120,6 +122,16 @@ export default [{
       path: '/businessTackAdd', //商机跟踪记录新增
       name: 'businessTackAdd',
       component: businessTackAdd,
+    },
+    {
+      path: '/businessTransfer', //商机移交
+      name: 'businessTransfer',
+      component: businessTransfer,
+    },
+    {
+      path: '/businessLost', //商机流失
+      name: 'businessLost',
+      component: businessLost,
     },
     {
       path: '/businessList', //商机管理
