@@ -294,10 +294,14 @@ export default {
           this.businessNewObj,
           this.reserveObj
         );
-        // console.log("===", this.businessNewObj);
+        console.log("===", this.reserveObj);
         this.businessNewObj.Units.Jsondata[0].Unitid = this.reserveObj.Unitid;
         this.businessNewObj.Units.Jsondata[0].Unitno = this.reserveObj.Unitno;
         this.businessNewObj.Propertyid = this.reserveObj.Projectid; //项目ID
+      }
+      if (this.$route.query.from === "businessDetail") {
+        // this.businessNewObj.Units.Jsondata[0].Unitno = this.reserveObj.Unitno;
+        console.log("zheshicanshu====>", this.businessNewObj);
       }
       if (this.clientDetail) {
         // 选择了联系人

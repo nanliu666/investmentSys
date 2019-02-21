@@ -191,7 +191,7 @@ export default {
           text: "成功！",
           type: "success"
         });
-        this.$router.meta.isLoad = true;
+        // this.$router.meta.isLoad = true;
         this.$router.push({ name: "reserveList" });
       });
     },
@@ -210,12 +210,12 @@ export default {
     getMenu(menuKey, menuItem) {
       switch (menuItem) {
         case "编辑":
-        this.RESERVEADD(this.reseveDetail[0])
+          this.RESERVEADD(this.reseveDetail[0]);
           this.$router.push({
             name: "reserveAdd",
             query: {
               from: "reserveDetail"
-            },
+            }
           });
           break;
         case "删除":
@@ -238,6 +238,11 @@ export default {
       ) {
         this.hasSubmit = !this.hasSubmit;
         this.showMore = !this.showMore;
+      }
+      if (
+        JSON.parse(sessionStorage.getItem("reserveDetail")).Recordstatus ===
+        "Approved"
+      ) {
         this.hasVoid = !this.hasVoid;
       }
       const data = {

@@ -1,6 +1,5 @@
 <template>
   <div class="affairDetail">
-    <!-- <view-box ref="viewBox" class="viewBox"> -->
     <div class="headerTab">
       <div class="appTopOther"></div>
       <x-header :left-options="{showBack: false}" class="header">
@@ -9,16 +8,10 @@
           slot="left"
           class="fs-backICon"
           alt
-          @click="gobackByrouter()"
+          @click="back"
         >
         审批详情
       </x-header>
-      <!-- <sticky
-          ref="sticky"
-          :disabled="disabled"
-          scroll-box="vux_view_box_body"
-          :check-sticky-support="false"
-      >-->
       <tab
         :line-width="1"
         custom-bar-width="60px"
@@ -34,15 +27,13 @@
           @on-item-click="goAnchor(item)"
         >{{item}}</tab-item>
       </tab>
-      <!-- </sticky> -->
     </div>
-    <!-- <div class="vux-sticky-fill" style="height:44px;"></div> -->
     <div class="mainSection" id="main">
       <section>
         <section class="contractMain" v-for="(item, index) in contractMainList" :key="index">
           <div class="contractTitle" ref="main">单据详情</div>
           <li class="contractLi">
-            <span>预定单元</span>
+            <span>项目名称</span>
             <span class="Rentalid">{{item.companys}}</span>
           </li>
           <li class="contractLi">
@@ -58,7 +49,7 @@
             <span class="Rentalid">￥ {{item.deposit}}</span>
           </li>
           <li class="contractLi">
-            <span>租赁单元</span>
+            <span>预定单元</span>
             <span>{{item.danyuan}}</span>
           </li>
           <li class="contractLi">
@@ -307,6 +298,13 @@ export default {
     this.onLoad();
   },
   methods: {
+    back() {
+      if(this.$route.query.from === 'affairList') {
+        this.gobackByrouter()
+      } else {
+        this.goback()
+      }
+    },
     WorkFlowAddSign() {
       this.$router.push({
         name: "addSign",

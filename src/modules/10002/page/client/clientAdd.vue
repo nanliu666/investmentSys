@@ -3,7 +3,8 @@
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false, preventGoBack: true}" class="header">
       <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
-      客户新增
+      <span v-if="isDeatail">客户编辑</span>
+      <span v-if="!isDeatail">客户新增</span>
     </x-header>
     <section class="content">
       <div class="group">
@@ -214,6 +215,7 @@ export default {
   },
   data() {
     return {
+      isDeatail: false,
       hasToast: false,
       hasConfirm: false,
       hasMustConfirm: false,
@@ -322,8 +324,10 @@ export default {
     },
 
     onLoad() {
-      if (!!this.$route.params.clientDeatil) {
-        let clientDeatil = this.$route.params.clientDeatil.Datasource;
+      if (this.$route.query.from === "clientDetail") {
+        this.isDeatail = this.isDeatail
+        let clientDeatil = JSON.parse(localStorage.getItem('clientDeatilObj')).Datasource
+        console.log(clientDeatil)
         // 数据加载函数
         if (!!clientDeatil) {
           //从详情进来

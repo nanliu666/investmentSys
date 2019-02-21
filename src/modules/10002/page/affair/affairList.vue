@@ -168,6 +168,9 @@ export default {
         params: {
           id: data.ThirdPartyKey,
           data: data
+        },
+        query: {
+          from : 'affairList'
         }
       });
     },

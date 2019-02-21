@@ -215,7 +215,10 @@ export default {
     onEditor() {
       //todo 传入数据给新增
       const clientDeatilObj = this.clientDeatilObj;
-      this.$router.push({ name: "clientAdd", params: { clientDeatilObj } });
+      localStorage.setItem('clientDeatilObj', JSON.stringify(this.clientDeatilObj))
+      this.$router.push({ name: "clientAdd", params: { clientDeatilObj } ,query: {
+        from: 'clientDetail'
+      }});
     },
     // 删除
     onDelete() {
