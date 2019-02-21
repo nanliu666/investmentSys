@@ -294,7 +294,7 @@ export default {
           this.businessNewObj,
           this.reserveObj
         );
-        // console.log("===", this.reserveObj);
+        console.log("===", this.businessNewObj);
         this.businessNewObj.Units.Jsondata[0].Unitid = this.reserveObj.Unitid;
         this.businessNewObj.Units.Jsondata[0].Unitno = this.reserveObj.Unitno;
         this.businessNewObj.Propertyid = this.reserveObj.Projectid; //项目ID

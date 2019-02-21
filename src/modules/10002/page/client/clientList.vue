@@ -192,7 +192,12 @@ export default {
     },
     gotoAdd() {
       //去新增联系人页面
-      this.$router.push({ name: "clientAdd" });
+      this.$router.push({
+        name: "clientAdd",
+        query: {
+          from: "clientList"
+        }
+      });
     },
     getDeatil(data) {
       // 去联系人详情页面
@@ -216,7 +221,10 @@ export default {
       } else {
         this.$router.push({
           name: "clientDetail",
-          params: { id: selectData[0].Accountid }
+          params: { id: selectData[0].Accountid },
+          query: {
+            from: "clientList"
+          }
         });
       }
     }
