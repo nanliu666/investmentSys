@@ -227,11 +227,32 @@ html {
       @include wh(100%, 106px);
       @include flexHCenter;
       padding: 0 40px;
+      border-bottom: 1px solid #f4f6f8;
       font-family: $fr;
       @include sc(32px, rgba(136, 136, 136, 1));
 
       .shangjiNum {
         @include sc(32px, rgba(105, 167, 254, 1));
+      }
+    }
+
+    .shangjiLi {
+      padding: 0 40px;
+      font-family: $fr;
+      @include sc(30px, #000);
+
+      li {
+        border-bottom: 1px solid #f4f6f8;
+        height: 96px;
+        line-height: 96px;
+        @include fj;
+
+        .shangjiLiLeft {
+          .Probability {
+            @include sc(30px, rgba(136, 136, 136, 1));
+            margin-left: 20px;
+          }
+        }
       }
     }
   }

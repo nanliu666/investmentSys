@@ -247,9 +247,13 @@ export default {
       this.RESERVEADD(this.businessNewObj);
     },
     onLoad() {
-      this.nowDate = moment(new Date()).format("YYYY-MM-DD");
+      // this.nowDate = moment(new Date()).format("YYYY-MM-DD")
+
       this.nextDate = moment(new Date())
         .add(1, "months")
+        .format("YYYY-MM-DD");
+        this.nowDate = moment(new Date())
+        .add(1, "d")
         .format("YYYY-MM-DD");
       this.businessNewObj.Prospectid = this.$route.params.data.Prospectid;
       if (this.$route.query.from === "businessTrackDeatil") {
@@ -271,6 +275,7 @@ export default {
       let data = {
         Followup: this.businessNewObj
       };
+      console.log(this.businessNewObj)
       EditFollowUp(data).then(res => {
         if (res.Success !== false) {
           this.$vux.toast.show({
