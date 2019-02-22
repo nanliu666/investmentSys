@@ -4,7 +4,8 @@
       <div class="appTopOther"></div>
       <x-header :left-options="{showBack: false}" class="header">
         <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="back">
-        审批详情
+        <span v-if="isContract">合同审批详情</span>
+        <span v-if="!isContract">预定审批详情</span>
       </x-header>
       <tab
         :line-width="1"
@@ -28,7 +29,8 @@
     <div class="mainSection" id="main">
       <section>
         <section class="contractMain" v-for="(item, index) in contractMainList" :key="index">
-          <div class="contractTitle" ref="main">单据详情</div>
+          <div class="contractTitle" v-if="isContract" ref="main">合同主体</div>
+          <div class="contractTitle" v-if="!isContract" ref="main">单据详情</div>
           <li class="contractLi">
             <span>项目名称</span>
             <span class="Rentalid">{{item.companys}}</span>
@@ -41,27 +43,59 @@
             <span>面积</span>
             <span>{{item.area}}</span>
           </li>
-          <li class="contractLi">
+          <li v-if="isContract" class="contractLi">
+            <span>公司品牌</span>
+            <span class="Rentalid"> {{item.contractBrand }}</span>
+          </li>
+          <li v-if="isContract" class="contractLi">
+            <span>租赁开始时间</span>
+            <span class="Rentalid"> {{item.contractStart }}</span>
+          </li>
+          <li v-if="isContract" class="contractLi">
+            <span>租赁结束时间</span>
+            <span class="Rentalid"> {{item.contractEnd }}</span>
+          </li>
+          <li v-if="isContract" class="contractLi">
+            <span>租金总额</span>
+            <span class="Rentalid">￥ {{item.contractDeosit }}</span>
+          </li>
+          <li v-if="isContract" class="contractLi">
+            <span>管理费</span>
+            <span class="Rentalid">￥ {{item.contractCost }}</span>
+          </li>
+          <li v-if="isContract" class="contractLi">
+            <span>净租金</span>
+            <span class="Rentalid">￥ {{item.contractJingCost }}</span>
+          </li>
+          <li v-if="isContract" class="contractLi">
+            <span>表面租金</span>
+            <span class="Rentalid">￥ {{item.contractBiaoCost }}</span>
+          </li>
+          <li v-if="isContract" class="contractLi">
+            <span>首付款</span>
+            <span class="Rentalid">￥ {{item.contractShouCost }}</span>
+          </li>
+          <li v-if="!isContract" class="contractLi">
             <span>定金</span>
             <span class="Rentalid">￥ {{item.deposit}}</span>
           </li>
-          <li class="contractLi">
+          <li v-if="!isContract" class="contractLi">
             <span>预定单元</span>
             <span>{{item.danyuan}}</span>
           </li>
-          <li class="contractLi">
+          <li v-if="!isContract" class="contractLi">
             <span>品牌名称</span>
             <span>{{item.yuding}}</span>
           </li>
-          <li class="contractLi">
+          <li v-if="!isContract" class="contractLi">
             <span>预定开始日期</span>
             <span>{{item.yudingStart}}</span>
           </li>
-          <li class="contractLi">
+          <li v-if="!isContract" class="contractLi">
             <span>预定结束日期</span>
             <span>{{item.yudingEnd}}</span>
           </li>
-          <li class="contractLi">
+          <li v-if="!isContract" class="contractLi">
             <span>备注</span>
             <span>{{item.remask}}</span>
           </li>
@@ -275,6 +309,7 @@ export default {
   name: "contractList",
   data() {
     return {
+      isContract: false,
       hasHandle: true,
       affairDetail: {},
       haspopup: false,
@@ -394,21 +429,38 @@ export default {
       if (this.affairDetail.Status !== 0 || !!this.affairDetail.Platformkey) {
         this.hasHandle = false;
       }
-      // console.log(this.affairDetail)
+      if (
+        !!this.affairDetail.Title &&
+        this.affairDetail.Title.includes("合同")
+      ) {
+        this.isContract = !this.isContract;
+      }
       const jsonData = {
         Platformkey: this.$route.params.id
       };
       GetToDoDetail(jsonData).then(res => {
         let data = res[0].SectionTables[0].SectionRows;
-        this.$set(this.contractMain, "companys", data[0].Value);
-        this.$set(this.contractMain, "clientName", data[1].Value);
-        this.$set(this.contractMain, "area", data[3].Value);
-        this.$set(this.contractMain, "deposit", data[7].Value); //定金
+        this.$set(this.contractMain, "companys", data[0].Value); //项目名称
+        this.$set(this.contractMain, "clientName", data[1].Value); //客户名称
         this.$set(this.contractMain, "danyuan", data[2].Value); //租赁单元
-        this.$set(this.contractMain, "yuding", data[4].Value); //预定日期
-        this.$set(this.contractMain, "yudingStart", data[5].Value); //预定开始日期
-        this.$set(this.contractMain, "yudingEnd", data[6].Value); //预定介绍日期
-        this.$set(this.contractMain, "remask", data[8].Value); //备注
+        this.$set(this.contractMain, "area", data[3].Value); //单元面积
+        if (!!this.isContract) {
+          this.$set(this.contractMain, "contractBrand", data[4].Value); //公司品牌
+          this.$set(this.contractMain, "contractStart", data[5].Value); //租赁开始时间
+          this.$set(this.contractMain, "contractEnd", data[6].Value); //租赁结束时间
+          this.$set(this.contractMain, "contractDeosit", data[7].Value); //租金总额
+          this.$set(this.contractMain, "contractCost", data[8].Value); //管理费
+          this.$set(this.contractMain, "contractJingCost", data[9].Value); //净租金
+          this.$set(this.contractMain, "contractBiaoCost", data[10].Value); //表面租金
+          this.$set(this.contractMain, "contractShouCost", data[11].Value); //首付款
+        } else {
+          this.$set(this.contractMain, "deposit", data[7].Value); //定金
+          this.$set(this.contractMain, "danyuan", data[2].Value); //租赁单元
+          this.$set(this.contractMain, "yuding", data[4].Value); //预定日期
+          this.$set(this.contractMain, "yudingStart", data[5].Value); //预定开始日期
+          this.$set(this.contractMain, "yudingEnd", data[6].Value); //预定介绍日期
+          this.$set(this.contractMain, "remask", data[8].Value); //备注
+        }
         this.contractMainList.push(this.contractMain);
       });
       GetToDoHistory(jsonData).then(res => {
