@@ -51,7 +51,7 @@
           </li>
           <li>
             <span class="mainTittle">期望铺位面积(m²)</span>
-            <span class="mainContent">假数据，求后端给我</span>
+            <span class="mainContent">{{item.Expunitarea | formatNumber(0)}}</span>
           </li>
           <li>
             <span class="mainTittle">备注</span>
@@ -64,17 +64,6 @@
       </section>
     </section>
     <actionsheet :menus="menus" v-model="showMenus" show-cancel @on-click-menu="businessAct"></actionsheet>
-    <!-- <confirm :title="confirmTittle" v-model="confirShow" @on-confirm="onConfirm">
-      <group>
-        <radio v-if="hasliushi" :options="FailtypeDropdownListDisplay" @on-change="onLiushiChange"></radio>
-        <radio
-          v-if="hasyijiao"
-          :options="BizProspecttransferListDisplay"
-          @on-change="onYijiaoChange"
-        ></radio>
-        <input type="text" v-if="hasyijiao" v-model="yijiaoRemark" placeholder="请填写移交原因">
-      </group>
-    </confirm>-->
   </div>
 </template>
 

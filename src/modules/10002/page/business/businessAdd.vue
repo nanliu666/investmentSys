@@ -77,14 +77,13 @@
           </div>
           <div
             class="liRight"
-            :class="[!!businessNewObj.UnitArea ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!businessNewObj.Expunitarea ? 'cellValueClass' : 'placeholderClass']"
           >
             <input
-              readonly
               type="number"
               placeholder="请填写面积"
               style="text-align: right"
-              v-model="businessNewObj.UnitArea"
+              v-model="businessNewObj.Expunitarea"
             >
           </div>
         </li>
@@ -178,7 +177,7 @@ export default {
         Companyid: "", //公司id
         Accountid: "", //客户id
         Accountname: "", //客户名称
-        UnitArea: "", //面积
+        Expunitarea: "", //面积
         Phone: "", //客户手机
         Units: {
           //选择的单元信息
@@ -284,7 +283,7 @@ export default {
     unitInfoData() {
       //来自单元信息的数据
       (this.businessNewObj.Prospectid = 0), // 新增商机
-        (this.businessNewObj.UnitArea = this.$route.params.data.Builduparea); //面积
+        (this.businessNewObj.Expunitarea = this.$route.params.data.Builduparea); //面积
       this.businessNewObj.Propertyid = this.$route.params.data.Projectid; //项目ID
       this.businessNewObj.Companyid = this.$route.params.data.Companyid; //公司ID
       this.businessNewObj.Units.Jsondata.push({
@@ -327,12 +326,13 @@ export default {
         this.businessNewObj.Units.Jsondata = this.uintDetailList;
         this.businessNewObj.Propertyid = this.uintDetailList[0].Projectid; //项目ID
         this.businessNewObj.Companyid = this.uintDetailList[0].Companyid;
-        let A = this.uintDetailList.map(item => {
-          return Number(item.Builduparea);
-        });
-        this.businessNewObj.UnitArea = A.reduce(function(prev, curr, idx, arr) {
-          return prev + curr;
-        });
+        // this.businessNewObj.Expunitarea
+        // let A = this.uintDetailList.map(item => {
+        //   return Number(item.Builduparea);
+        // });
+        // this.businessNewObj.Expunitarea = A.reduce(function(prev, curr, idx, arr) {
+        //   return prev + curr;
+        // });
       }
       GetBizopprtunityDropdown("").then(res => {
         this.urgencySource = res.Option.Dropdownpriorityid; //紧急程度

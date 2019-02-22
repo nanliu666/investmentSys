@@ -1,12 +1,14 @@
 <template>
   <div class="contractList">
     <div class="appTopOther"></div>
-    <x-header
-      :left-options="{showBack: false}"
-      class="header"
-      v-if="!hasSearch"
-    >
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback()">
+    <x-header :left-options="{showBack: false}" class="header" v-if="!hasSearch">
+      <img
+        src="../../assets/images/返回@3x.png"
+        slot="left"
+        class="fs-backICon"
+        alt
+        @click="goback()"
+      >
       预定管理
       <img
         class="searchImg"
@@ -135,8 +137,7 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    console.log(from)
-    if (from.name === "reserveDetail" && !!from.meta.isLoad ) {
+    if (from.name === "reserveDetail" && !!from.meta.isLoad) {
       to.meta.isBack = true;
     }
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
@@ -166,7 +167,6 @@ export default {
     this.isFirstEnter = false;
   },
   methods: {
-
     addReserve() {
       this.$router.push({
         name: "reserveAdd",
