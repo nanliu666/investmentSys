@@ -348,17 +348,21 @@ export default {
           });
           this.Customer.CustomertypeText = BTemp[0].Text;
           // 其他联系人
-          this.Customer.Otherinfo[0].Name = clientDeatil[0].Otherinfo[0].Name;
-          this.Customer.Otherinfo[0].Contactid =
-            clientDeatil[0].Otherinfo[0].Contactid;
-          this.Customer.Otherinfo[0].Sexid = clientDeatil[0].Otherinfo[0].Sexid;
-          //其他联系人文本
-          let CTemp = this._.filter(this.otherSexList, item => {
-            return item.Value === clientDeatil[0].Otherinfo[0].Sexid;
-          });
-          this.Customer.Otherinfo[0].OtherSexText = CTemp[0].Text;
-          this.Customer.Otherinfo[0].Mobilephone =
-            clientDeatil[0].Otherinfo[0].Mobilephone;
+          // console.log(this.Customer.Otherinfo)
+          if(!!this.Customer.Otherinfo[0].Name) {
+
+            this.Customer.Otherinfo[0].Name = clientDeatil[0].Otherinfo[0].Name;
+            this.Customer.Otherinfo[0].Contactid =
+              clientDeatil[0].Otherinfo[0].Contactid;
+            this.Customer.Otherinfo[0].Sexid = clientDeatil[0].Otherinfo[0].Sexid;
+            //其他联系人文本
+            let CTemp = this._.filter(this.otherSexList, item => {
+              return item.Value === clientDeatil[0].Otherinfo[0].Sexid;
+            });
+            this.Customer.Otherinfo[0].OtherSexText = CTemp[0].Text;
+            this.Customer.Otherinfo[0].Mobilephone =
+              clientDeatil[0].Otherinfo[0].Mobilephone;
+          }
         }
       }
     },
