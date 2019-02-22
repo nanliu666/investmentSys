@@ -21,7 +21,7 @@
     <section class="searchPart" v-if="hasSearch">
       <x-input
         type="text"
-        placeholder="请输入合同关键字"
+        placeholder="请输入客户名称"
         v-model="enterText"
         @on-enter="onEnter"
         class="searchInput fs-search"
@@ -166,7 +166,8 @@ export default {
     },
     onEnter(value) {
       this.FilterCond = {
-        Filter: `Keyword.like.${this.enterText}`
+        Filter: `Debtorname like '%${this.enterText}%'`
+
       };
       this.mescroll.resetUpScroll();
     },

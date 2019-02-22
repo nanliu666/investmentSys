@@ -217,7 +217,7 @@ html {
 
     .qi {
       @include sc(34px, rgba(30, 30, 30, 1));
-      padding: 0 40px;
+      padding: 0 40px 20px;
       font-family: $fm;
       border-bottom: 2px solid rgb(244, 246, 248);
     }

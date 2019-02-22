@@ -155,7 +155,7 @@ export default {
       this.PropertysSelect = data.Propertyname;
       //选择项目，自定义搜索字段
       this.FilterCond = {
-        Filter: `Companyid.=.${data.Companyid}&Propertyid.=.${data.Propertyid}`
+        Filter: `Companyid=${data.Companyid}&Propertyid=${data.Propertyid}`
       };
       this.$emit("FilterUpdate", this.FilterCond);
       this.hasprojectStatus = !this.hasprojectStatus;
@@ -182,7 +182,7 @@ export default {
             break;
         }
         this.FilterCond = {
-          Filter: `${this.statusDetailSelect}`
+          Filter: `${this.statusName}= '${this.statusDetailSelect}'`
         };
       }
       this.$emit("FilterUpdate", this.FilterCond);

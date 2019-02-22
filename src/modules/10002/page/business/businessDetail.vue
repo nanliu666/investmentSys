@@ -43,7 +43,7 @@
         <ul class="infoMain">
           <li>
             <span class="mainTittle">意向单元</span>
-            <span class="mainContent">{{item.Unitdesc}}</span>
+            <span class="mainContent">{{`${item.Companyname}·${item.Projectname}·${item.Unitdesc}`}}</span>
           </li>
           <li>
             <span class="mainTittle">商机来源</span>
@@ -51,7 +51,7 @@
           </li>
           <li>
             <span class="mainTittle">期望铺位面积(m²)</span>
-            <span class="mainContent">500</span>
+            <span class="mainContent">假数据，求后端给我</span>
           </li>
           <li>
             <span class="mainTittle">备注</span>
@@ -248,14 +248,16 @@ export default {
       );
       switch (item) {
         case "编辑":
+      this.RESERVEADD(this.businessDetail[0]);
+// console.log('商机详情', this.businessDetail[0])
           this.$router.push({
-            name: "businessAdd",
+            name: "businessEdit",
             query: {
               from: "businessDetail"
             },
-            params: {
-              data: this.businessDetail[0]
-            }
+            // params: {
+            //   data: this.businessDetail[0]
+            // }
           });
           break;
         case "删除":

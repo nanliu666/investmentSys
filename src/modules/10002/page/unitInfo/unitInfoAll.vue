@@ -398,9 +398,9 @@ export default {
     getUnitDetail(data) {
       // debugger
       if (
-        //底部删选信息
+        //底部信息
         this.$route.query.from === "reserveAdd" ||
-        this.$route.query.from === "businessAdd"
+        this.$route.query.from === "businessAdd"|| this.$route.query.from === "businessEdit"
       ) {
         this.getUintID(data);
       } else {
@@ -434,7 +434,7 @@ export default {
       if (
         //底部删选信息
         this.$route.query.from === "reserveAdd" ||
-        this.$route.query.from === "businessAdd"
+        this.$route.query.from === "businessAdd" || this.$route.query.from === "businessEdit"
       ) {
         this.requestData.Statucode = "UnitAvailable";
         this.hasUintNumber = !this.hasUintNumber;
@@ -455,6 +455,9 @@ export default {
         this.$router.replace({ name: "reserveAdd" });
       } else if (this.toPageName === "businessAdd") {
         this.$router.replace({ name: "businessAdd" });
+      }
+      if (this.$route.query.from === "businessEdit") {
+        this.$router.replace({ name: "businessEdit" });
       }
     },
     openUnitDetail() {

@@ -16,6 +16,7 @@ const reserveAddFromUint = resolve => require(['../page/reserve/reserveAddFromUi
 
 // 商机模块
 const businessAdd = resolve => require(['../page/business/businessAdd'], resolve);
+const businessEdit = resolve => require(['../page/business/businessEdit'], resolve);
 const businessDetail = resolve => require(['../page/business/businessDetail'], resolve);
 const businessList = resolve => require(['../page/business/businessList'], resolve);
 const businessTrackList = resolve => require(['../page/business/children/businessTrackList'], resolve);
@@ -107,6 +108,11 @@ export default [{
       path: '/businessAdd', //新增商机
       name: 'businessAdd',
       component: businessAdd,
+    },
+    {
+      path: '/businessEdit', //商机编辑
+      name: 'businessEdit',
+      component: businessEdit,
     },
     {
       path: '/businessDetail/:id', //商机详情

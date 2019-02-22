@@ -17,7 +17,7 @@
         <div
           class="qi"
         >{{businessNewObj.Companyname}}·{{businessNewObj.Projectname}} &nbsp; {{businessNewObj.Unitno}}</div>
-        <div class="shangji" @click="openStatus">
+        <div class="shangji" v-if="false" @click="openStatus">
           <div>
             当前铺位已有
             <span class="shangjiNum">&nbsp;{{businessNewObj.Prospectnum}}&nbsp;</span>条可直接载入商机
@@ -42,7 +42,7 @@
             </span>
           </div>
         </div>
-        <div class="shangjiLi" v-show="hasStatus">
+        <div class="shangjiLi" v-if="false">
           <li v-for="(item, index) in businessNewObj.Prospect" :key="index">
             <div class="shangjiLiLeft">
               <span>{{item.Accountname}}</span>

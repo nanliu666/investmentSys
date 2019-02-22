@@ -174,6 +174,8 @@ export default {
             Pageindex: 1,
             Pagesize: 40,
             Filter: `Keyword.like.${val}`
+
+            // Filter: `Accountname like '%${val}%'`
           }
         };
         GetCustomer(data).then(res => {
@@ -204,20 +206,20 @@ export default {
       let selectData = this._.filter(this.clientAllData, item => {
         return item.Name === data;
       });
-      if (this.$route.query.from === "reserveAddFromUint") {
         this.CLIENT_DETAIL(selectData[0]);
+      if (this.$route.query.from === "reserveAddFromUint") {
         this.$router.replace({
           name: "reserveAddFromUint"
         });
       } else if (this.$route.query.from === "reserveAdd") {
         //如果是从预订新增进来，把联系人存起去vuex，并且回去预订新增
-        this.CLIENT_DETAIL(selectData[0]);
         this.$router.replace({
           name: "reserveAdd"
         });
       } else if (this.$route.query.from === "businessAdd") {
-        this.CLIENT_DETAIL(selectData[0]);
         this.$router.replace({ name: "businessAdd" });
+      } else if (this.$route.query.from === "businessEdit") {
+        this.$router.replace({ name: "businessEdit" });
       } else {
         this.$router.push({
           name: "clientDetail",
