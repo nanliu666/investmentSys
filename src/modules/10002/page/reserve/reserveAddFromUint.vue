@@ -17,13 +17,13 @@
         <div
           class="qi"
         >{{businessNewObj.Companyname}}·{{businessNewObj.Projectname}} &nbsp; {{businessNewObj.Unitno}}</div>
-        <div class="shangji">
+        <div class="shangji" @click="openStatus">
           <div>
             当前铺位已有
             <span class="shangjiNum">&nbsp;{{businessNewObj.Prospectnum}}&nbsp;</span>条可直接载入商机
           </div>
           <div>
-            <span class="imgBox" @click="openStatus">
+            <span class="imgBox">
               <img
                 src="../../assets/images/dropDown.png"
                 class="fs-dropDownImg"
@@ -31,7 +31,7 @@
                 alt
               >
             </span>
-            <span class="imgBox" @click="openStatus">
+            <span class="imgBox">
               <img
                 src="../../assets/images/dropDown.png"
                 class="fs-dropDownImg"
@@ -41,6 +41,15 @@
               >
             </span>
           </div>
+        </div>
+        <div class="shangjiLi" v-show="hasStatus">
+          <li v-for="(item, index) in businessNewObj.Prospect" :key="index">
+            <div class="shangjiLiLeft">
+              <span>{{item.Accountname}}</span>
+              <span class="Probability">{{item.Probability}}</span>
+            </div>
+            <span @click="goBusiness(item)">载入</span>
+          </li>
         </div>
       </div>
       <div class="group">
@@ -216,6 +225,9 @@ export default {
     ...mapState(["uintDetailList", "clientDetail", "reserveObj"])
   },
   methods: {
+    goBusiness(data) {
+      console.log(data)
+    },
     BookamtChange() {
       this.RESERVEADD(this.businessNewObj);
     },

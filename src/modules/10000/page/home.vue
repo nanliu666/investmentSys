@@ -1,24 +1,29 @@
 <template>
   <div style="height:100%;" class="home">
     <view-box ref="viewBox">
-      <div class="appTopHome"></div>
       <section class="homeTop">
+        <div class="appTopHome" style="height: 8%"></div>
         <div class="message" @click="gotoNew">
-          <img src="../assets/images/分组 12.png">
-          <span class="badge">{{messageNum}}</span>
+          <div class="imgBox">
+            <img src="../assets/images/分组 12.png">
+            <span class="badge">{{messageNum}}</span>
+          </div>
         </div>
         <div class="signCount">
-          <div class="signTT">
-            <span class="signTittle">本月签约金额</span>
-          </div>
-          <div class="signNum">
-            <span class="signMoeny">{{signMoeny}}</span>
-            <span class="getContranct" @click="gotoContranctMonth">
-              <span class="getContranctTittle">查看合同</span>
-              <div class="rightImgBox">
-                <img class="rightImg" src="../assets/images/路径 2.png" alt>
-              </div>
-            </span>
+          <div class="signTop">
+            <div class="signTT">
+              <span class="signTittle">本月签约金额</span>
+            </div>
+            <div class="signNum">
+              <span class="signMoeny">{{signMoeny}}</span>
+              <span class="getContranct" @click="gotoContranctMonth">
+                <span class="getContranctTittle">查看合同</span>
+                <div class="rightImgBox">
+                  <img class="rightImg" src="../assets/images/路径 2.png" alt>
+                </div>
+              </span>
+            </div>
+            <div class="signKONG"></div>
           </div>
           <div class="Expire">
             <div class="ExpireLeft">
@@ -225,7 +230,7 @@ export default {
           { Url: "10002/index.html#/affairList" }
         ]);
       } else {
-          document.addEventListener(
+        document.addEventListener(
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
@@ -360,7 +365,11 @@ export default {
 </style>
 <style lang="scss" scoped>
 @import "../assets/sass/mixin";
+.home {
+  min-height: 100vh;
+}
 .homeTop {
+  height: 40%;
   background: linear-gradient(
     to right,
     rgba(103, 185, 255, 1),
@@ -369,9 +378,15 @@ export default {
   color: $fc;
   font-family: $fr;
   .message {
-    position: relative;
-    @include fd(row-reverse);
-    padding: 40px 54px 0;
+    padding: 0px 54px 0;
+    height: 12%;
+
+      @include fd(row-reverse);
+    .imgBox {
+      position: relative;
+      @include flexHCenter;
+
+    }
     img {
       @include wh(42px, 32px);
     }
@@ -382,21 +397,29 @@ export default {
       @include flexCenter;
       @include wh(40px, 40px);
       border-radius: 20px;
-      right: 38px;
-      top: 22px;
+      right: -30%;
+      top: 10%;
     }
   }
   .signCount {
+    height: 80%;
+    .signTop {
+      height: 70%;
+    }
     .signTT {
-      padding: 90px 40px 0;
+      height: 30%;
+      padding: 0px 40px;
+      align-items: flex-end;
       font-size: 32px;
       @include fj;
     }
     .signNum {
       font-family: $fr;
-      padding: 20px 40px 90px;
+      height: 40%;
+      padding: 0px 40px;
       @include fj;
       align-items: flex-end;
+      // @include flexHCenter;
       .signMoeny {
         display: flex;
         flex-wrap: wrap;
@@ -418,6 +441,9 @@ export default {
         }
       }
     }
+    .signKONG {
+      height: 30%;
+    }
     .rightImgBox {
       @include flexCenter;
       margin-left: 10px;
@@ -428,7 +454,11 @@ export default {
     .Expire {
       @include fj;
       @include flexHCenter;
-      @include wh(100%, 120px);
+      // margin-top: 20%;
+
+      // @include wh(100%, 120px);
+      height: 30%;
+      width: 100%;
       padding: 0 40px;
       background: rgba(255, 255, 255, 0.2);
       font-size: 32px;
@@ -451,6 +481,7 @@ export default {
   }
 }
 .homeBottom {
+  // margin-top: 4%;
   height: 60%;
   background-color: rgba(244, 246, 248, 1);
   font-family: $fr;
