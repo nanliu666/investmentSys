@@ -162,6 +162,8 @@ export default {
           { Url: "10002/index.html#/contractList?dateTime=threeMonth" }
         ]);
       } else {
+        // window.open('http://10.122.10.59:8086/10002/index.html#/contractList?dateTime=threeMonth')
+
         document.addEventListener(
           "deviceready",
           () => {

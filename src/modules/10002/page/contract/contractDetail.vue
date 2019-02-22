@@ -19,13 +19,25 @@
         active-color="rgba(30, 30, 30, 1)"
         default-color="rgba(136, 136, 136, 1)"
       >
-        <tab-item
+        <!-- <tab-item
           class="vux-center"
           :selected="tabSelect === item"
           v-for="(item, index) in infoList"
           :key="index"
           @on-item-click="goAnchor(item)"
-        >{{item}}</tab-item>
+        >{{item}}</tab-item>       -->
+        <tab-item
+          class="vux-center"
+          @on-item-click="goAnchor('合同主体')"
+        >合同主体</tab-item>
+        <tab-item
+          class="vux-center"
+          @on-item-click="goAnchor('费用信息')"
+        >费用信息</tab-item>
+        <tab-item
+          class="vux-center"
+          @on-item-click="goAnchor('其他')"
+        >其他</tab-item>
       </tab>
     </div>
     <section id="main" class="mainSection">
@@ -77,8 +89,14 @@
           <span>{{item.Remark}}</span>
         </li>
       </section>
+      <a
+        id="const"
+        ref="const"
+        style=" position: relative;top: -110px;display: block;height: 0;overflow: hidden;"
+      ></a>
       <section class="contractCost">
-        <div class="contractTitle" ref="const" id="const">费用信息</div>
+        <!-- <div class="contractTitle" ref="const" id="const">费用信息</div> -->
+        <div class="contractTitle">费用信息</div>
         <div class="contractCostMain" v-if="Contractcharges.length !== 0">
           <div class="contractCostMainTitle">合同费用</div>
           <div class="contractClassify">
@@ -189,21 +207,30 @@
           </li>
         </div>
       </section>
+      <a
+        id="other"
+        style=" position: relative;top: -110px;display: block;height: 0;overflow: hidden;"
+      ></a>
       <section class="contractOther">
-        <div class="contractTitle" id="other">其他</div>
+        <div class="contractTitle">其他</div>
         <section class="otherMain" v-if="Contractoptions.length !== 0">
           <div class="otherMainTitle">权利条款</div>
           <div class="otherMainClassify">
             <span>条款名称</span>
             <span>条款内容</span>
           </div>
-          <li v-for="(item, index) in Contractoptions" :key="index">
+          <li class="quanli" v-for="(item, index) in Contractoptions" :key="index">
+            <div class="width50">{{item.Description }}</div>
+            <div class="width50">{{item.Remark }}</div>
+          </li>
+          <!-- <li v-for="(item, index) in Contractoptions" :key="index">
             <div class="contractSomeList">
               <span>{{item.Description }}</span>
               <span>{{item.Remark }}</span>
             </div>
-          </li>
+          </li>-->
         </section>
+
         <section class="otherMain" v-if="Contractenclosure.length !== 0">
           <div class="otherMainTitle">附件</div>
           <div class="otherfujianLi" v-for="(item) in Contractenclosure" :key="item.Guid">
@@ -411,9 +438,10 @@ export default {
           selector = "#other";
           break;
       }
-      this.$el
-        .querySelector(selector)
-        .scrollIntoView({ block: "start", behavior: "smooth" });
+      // this.$el
+      //   .querySelector(selector)
+      //   .scrollIntoView({ block: "start", behavior: "smooth" });
+      this.$el.querySelector(selector).scrollIntoView();
     },
     handleScroll() {
       //页面滚动高度
@@ -438,7 +466,7 @@ export default {
       GetContractMgmtDetail(data).then(res => {
         this.contractData = res;
         this.Contactmain = JSON.parse(res.Contactmain); //合同主体
-        console.log(this.Contactmain)
+        console.log(this.Contactmain);
         this.ContractDeposit = JSON.parse(res.ContractDeposit); //保证金
         this.Contractcharges = JSON.parse(res.Contractcharges); //管理费用
         // console.log(this.Contractcharges);
@@ -582,6 +610,16 @@ export default {
       padding: 18px 0px;
       span {
         @include sc(28px, rgba(136, 136, 136, 1));
+      }
+    }
+    .quanli {
+      background-color: #fff;
+      padding:18px 40px;
+      @include fj(space-around);
+
+      .width50 {
+        width: 50%;
+        @include flexWCenter;
       }
     }
     li {

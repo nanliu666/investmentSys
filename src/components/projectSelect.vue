@@ -2,11 +2,12 @@
   <section class="filter">
     <div class="projectFilter">
       <span class="filterTitle" @click="openProjectStatus">项目</span>
-      <span class="imgBox">
+      <span class="imgBox" @click="openProjectStatus">
         <img src="../assets/images/下拉@3x.png" class="fs-dropImg" v-show="!hasprojectStatus" alt>
       </span>
       <span class="imgBox">
         <img
+          @click="openProjectStatus"
           src="../assets/images/下拉@3x.png"
           class="fs-dropImg"
           style="transform:rotate(180deg);"
@@ -15,8 +16,8 @@
         >
       </span>
       <popup v-model="hasprojectStatus" :show-mask="showMask" class="nav">
-        <div class="close" @click="openProjectStatus">
-          <i class="iconfont icon-guanbi"></i>
+        <div class="close" @click="openProjectStatus">×
+          <!-- <i class="iconfont icon-guanbi"></i> -->
         </div>
         <section class="projectSelect">
           <div class="selectTitle">请选择</div>
@@ -106,7 +107,7 @@ export default {
   data() {
     return {
       activeClass: "所有状态",
-      statusDetailSelect: 'all',
+      statusDetailSelect: "all",
       showMask: false,
       hasStatus: false,
       hasprojectStatus: false,
@@ -170,7 +171,6 @@ export default {
     getStatus() {
       //点击状态，选择状态，自定义搜索字段
       if (this.statusDetailSelect === "all") {
-
         this.FilterCond = {};
       } else {
         switch (this.comName) {
@@ -225,7 +225,6 @@ export default {
       font-family: $fr;
       margin-right: 12px;
     }
-
   }
   .nav {
     height: 100% !important;
@@ -238,6 +237,9 @@ export default {
       justify-content: flex-end;
       margin-right: 50px;
       margin-top: 20px;
+      font-size: 50px;
+      color: rgba(136, 136, 136, 1);
+
       .iconfont {
         color: rgba(136, 136, 136, 1);
       }

@@ -13,13 +13,16 @@
         active-color="rgba(30, 30, 30, 1)"
         default-color="rgba(136, 136, 136, 1)"
       >
-        <tab-item
+        <!-- <tab-item
           class="vux-center"
           :selected="tabSelect === item"
           v-for="(item, index) in infoList"
           :key="index"
           @on-item-click="goAnchor(item)"
-        >{{item}}</tab-item>
+        >{{item}}</tab-item>-->
+        <tab-item class="vux-center" @on-item-click="goAnchor('单据详情')">单据详情</tab-item>
+        <tab-item class="vux-center" @on-item-click="goAnchor('审批流程')">审批流程</tab-item>
+        <tab-item class="vux-center" @on-item-click="goAnchor('附件')">附件</tab-item>
       </tab>
     </div>
     <div class="mainSection" id="main">
@@ -63,7 +66,12 @@
             <span>{{item.remask}}</span>
           </li>
         </section>
-        <section class="ApprovalFlow" id="const">
+        <a
+          id="const"
+          ref="const"
+          style=" position: relative;top: -110px;display: block;height: 0;overflow: hidden;"
+        ></a>
+        <section class="ApprovalFlow">
           <div class="contractTitle">
             审批流程
             <span class="approveHistory" @click="getHistoryDetail">审批历史&nbsp;>></span>
@@ -93,6 +101,10 @@
           <div class="getAll" @click="getFlowAll" v-if="!hasGetAll">查看全部</div>
           <div class="getAll" @click="getFlowPart" v-if="hasGetAll">隐藏部分</div>
         </section>
+        <a
+          id="other"
+          style=" position: relative;top: -110px;display: block;height: 0;overflow: hidden;"
+        ></a>
         <section class="contractOther" id="other">
           <div class="contractTitle">附件</div>
           <section v-if="fujianList.length === 0" class="noFujian">暂无附件</section>
@@ -379,7 +391,7 @@ export default {
     },
     onLoad() {
       this.affairDetail = JSON.parse(localStorage.getItem("affairDetail"));
-      if (this.affairDetail.Status !== 0) {
+      if (this.affairDetail.Status !== 0 || !!this.affairDetail.Platformkey) {
         this.hasHandle = false;
       }
       // console.log(this.affairDetail)
@@ -549,12 +561,12 @@ export default {
     }
     span {
       &:first-child {
-        width: 20%;
+        width: 30%;
         @include sc(30px, rgba(136, 136, 136, 1));
       }
       &:last-child {
-      text-align:right;
-        width: 80%;
+        text-align: right;
+        width: 70%;
         @include sc(30px, rgba(30, 30, 30, 1));
       }
     }
