@@ -79,7 +79,7 @@
 
         <li class="groupLi">
           <div class="liLeft">
-            <span>面积(m²)</span>
+            <span>租赁面积(m²)</span>
           </div>
           <div class="liRight" :class="[!!item.Rentalarea ? 'cellValueClass' : 'placeholderClass']">
             <input
@@ -210,9 +210,10 @@ export default {
     getMenu(menuKey, menuItem) {
       switch (menuItem) {
         case "编辑":
+        console.log(this.reseveDetail[0])
           this.RESERVEADD(this.reseveDetail[0]);
           this.$router.push({
-            name: "reserveAdd",
+            name: "reserveEdit",
             query: {
               from: "reserveDetail"
             }

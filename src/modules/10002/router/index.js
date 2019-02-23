@@ -12,6 +12,7 @@ const reserveList = resolve => require(['../page/reserve/reserveList'], resolve)
 const reserveDetail = resolve => require(['../page/reserve/reserveDetail'], resolve);
 const reserveRemark = resolve => require(['../page/reserve/reserveRemark'], resolve);
 const reserveAdd = resolve => require(['../page/reserve/reserveAdd'], resolve);
+const reserveEdit = resolve => require(['../page/reserve/reserveEdit'], resolve);
 const reserveAddFromUint = resolve => require(['../page/reserve/reserveAddFromUint'], resolve);
 
 // 商机模块
@@ -207,6 +208,11 @@ export default [{
       path: '/reserveAdd', //预定新增
       name: 'reserveAdd',
       component: reserveAdd,
+    },
+     {
+      path: '/reserveEdit', //预定编辑
+      name: 'reserveEdit',
+      component: reserveEdit,
     },
     {
       path: '/reserveAddFromUint', //预定新增

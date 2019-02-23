@@ -216,6 +216,11 @@ export default {
         this.$router.replace({
           name: "reserveAdd"
         });
+      } else if (this.$route.query.from === "reserveEdit") {
+        //如果是从预订新增进来，把联系人存起去vuex，并且回去预订新增
+        this.$router.replace({
+          name: "reserveEdit"
+        });
       } else if (this.$route.query.from === "businessAdd") {
         this.$router.replace({ name: "businessAdd" });
       } else if (this.$route.query.from === "businessEdit") {

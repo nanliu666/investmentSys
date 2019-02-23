@@ -399,7 +399,7 @@ export default {
       // debugger
       if (
         //底部信息
-        this.$route.query.from === "reserveAdd" ||
+        this.$route.query.from === "reserveAdd" ||this.$route.query.from === "reserveEdit" ||
         this.$route.query.from === "businessAdd"|| this.$route.query.from === "businessEdit"
       ) {
         this.getUintID(data);
@@ -433,7 +433,7 @@ export default {
       };
       if (
         //底部删选信息
-        this.$route.query.from === "reserveAdd" ||
+        this.$route.query.from === "reserveAdd" || this.$route.query.from === "reserveEdit" ||
         this.$route.query.from === "businessAdd" || this.$route.query.from === "businessEdit"
       ) {
         this.requestData.Statucode = "UnitAvailable";
@@ -458,6 +458,9 @@ export default {
       }
       if (this.$route.query.from === "businessEdit") {
         this.$router.replace({ name: "businessEdit" });
+      }
+      if (this.$route.query.from === "reserveEdit") {
+        this.$router.replace({ name: "reserveEdit" });
       }
     },
     openUnitDetail() {
