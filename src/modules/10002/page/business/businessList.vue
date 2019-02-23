@@ -46,7 +46,7 @@
     <projeceSelect
       :statusDetail="statusDetail"
       @FilterUpdate="FilterUpdate"
-      comName="contractList"
+      comName="businessList"
     />
     <!--mescroll滚动区域的基本结构-->
     <mescroll-vue
@@ -80,6 +80,10 @@
       </li>
     </mescroll-vue>
     <p id="NoData"></p>
+    <section class="ListNoData" v-if="hasData">
+      <img src="../../assets/images/noData.png" alt>
+      <div class="noDataTittle">暂无数据</div>
+    </section>
   </div>
 </template>
 <script>
@@ -90,9 +94,10 @@ import MescrollVue from "mescroll.js/mescroll.vue";
 import imgSrc from "../../../../assets/images/noData.png";
 import topimgSrc from "../../assets/images/gototop.png";
 export default {
-  name: "contractList",
+  name: "businessList",
   data() {
     return {
+      hasData: false,
       enterText: "",
       hasSearch: false,
       FilterCond: {},
@@ -207,17 +212,22 @@ export default {
       Object.assign(data.Urlpara, this.FilterCond);
       GetBizOpportunity(data)
         .then(res => {
-          // console.log(res)
-          let arr = JSON.parse(res.Content);
-          // 如果是第一页需手动制空列表
-          if (page.num === 1) this.dataList = [];
-          // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
-          this.dataList = this.dataList.concat(arr);
-          console.log(this.dataList);
-          // 数据渲染成功后,隐藏下拉刷新的状态
-          this.$nextTick(() => {
-            mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
-          });
+          if(!!res) {
+            let arr = JSON.parse(res.Content);
+            // 如果是第一页需手动制空列表
+            if (page.num === 1) this.dataList = [];
+            // 把请求到的数据添加到列表
+            this.dataList = this.dataList.concat(arr);
+            // console.log(this.dataList);
+            // 数据渲染成功后,隐藏下拉刷新的状态
+            this.$nextTick(() => {
+              mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
+            });
+          } else {
+            this.dataList = [];
+            this.hasData = !this.hasData
+            mescroll.endByPage(arr.length, res.Pagecount);
+          }
         })
         .catch(e => {
           // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;

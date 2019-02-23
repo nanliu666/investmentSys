@@ -208,17 +208,23 @@ export default {
       GetCustomerDetail(data).then(res => {
         this.clientDeatilObj = res;
         this.clientDeatil = res.Datasource;
-        // console.log(this.clientDeatil);
       });
     },
     // 编辑
     onEditor() {
       //todo 传入数据给新增
       const clientDeatilObj = this.clientDeatilObj;
-      localStorage.setItem('clientDeatilObj', JSON.stringify(this.clientDeatilObj))
-      this.$router.push({ name: "clientAdd", params: { clientDeatilObj } ,query: {
-        from: 'clientDetail'
-      }});
+      localStorage.setItem(
+        "clientDeatilObj",
+        JSON.stringify(this.clientDeatilObj)
+      );
+      this.$router.push({
+        name: "clientAdd",
+        params: { clientDeatilObj },
+        query: {
+          from: "clientDetail"
+        }
+      });
     },
     // 删除
     onDelete() {
@@ -232,6 +238,9 @@ export default {
             text: "客户已有业务数据",
             type: "warn"
           });
+          setTimeout(() => {
+            this.$router.push({ name: "clientList" });
+          }, 3000);
         } else {
           this.$vux.toast.show({
             //新增姓名相同

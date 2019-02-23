@@ -73,6 +73,10 @@
       </li>
     </mescroll-vue>
     <p id="NoData"></p>
+    <section class="ListNoData" v-if="hasData">
+      <img src="../../assets/images/noData.png" alt>
+      <div class="noDataTittle">暂无数据</div>
+    </section>
   </div>
 </template>
 <script>
@@ -86,6 +90,7 @@ export default {
   name: "reserveList",
   data() {
     return {
+      hasData: false,
       enterText: "",
       hasSearch: false,
       FilterCond: {},
@@ -207,16 +212,22 @@ export default {
       Object.assign(data.Urlpara, this.FilterCond);
       GetReserveMgmt(data)
         .then(res => {
-          let arr = JSON.parse(res.Content);
-          // 如果是第一页需手动制空列表
-          if (page.num === 1) this.dataList = [];
-          // 把请求到的数据添加到列表
-          this.dataList = this.dataList.concat(arr);
-          console.log(this.dataList);
-          // 数据渲染成功后,隐藏下拉刷新的状态
-          this.$nextTick(() => {
-            mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
-          });
+          if (!!res) {
+            let arr = JSON.parse(res.Content);
+            // 如果是第一页需手动制空列表
+            if (page.num === 1) this.dataList = [];
+            // 把请求到的数据添加到列表
+            this.dataList = this.dataList.concat(arr);
+            // console.log(this.dataList);
+            // 数据渲染成功后,隐藏下拉刷新的状态
+            this.$nextTick(() => {
+              mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
+            });
+          } else {
+            this.dataList = [];
+            this.hasData = !this.hasData;
+            mescroll.endByPage(arr.length, res.Pagecount);
+          }
         })
         .catch(e => {
           // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;

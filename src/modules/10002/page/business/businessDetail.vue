@@ -43,7 +43,7 @@
         <ul class="infoMain">
           <li>
             <span class="mainTittle">意向单元</span>
-            <span class="mainContent">{{`${item.Companyname}·${item.Projectname}·${item.Unitdesc}`}}</span>
+            <span class="mainContent">{{`${item.Unitdesc}`}}</span>
           </li>
           <li>
             <span class="mainTittle">商机来源</span>

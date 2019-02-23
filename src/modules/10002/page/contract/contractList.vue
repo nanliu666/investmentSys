@@ -78,6 +78,10 @@
       </li>
     </mescroll-vue>
     <p id="NoData"></p>
+    <section class="ListNoData" v-if="hasData">
+      <img src="../../assets/images/noData.png" alt>
+      <div class="noDataTittle">暂无数据</div>
+    </section>
   </div>
 </template>
 <script>
@@ -91,6 +95,7 @@ export default {
   name: "contractList",
   data() {
     return {
+      hasData: false,
       enterText: "",
       hasSearch: false,
       FilterCond: {},
@@ -161,13 +166,12 @@ export default {
   methods: {
     FilterUpdate(data) {
       this.FilterCond = data;
-      console.log('组件返回参数===', this.FilterCond)
+      console.log("组件返回参数===", this.FilterCond);
       this.mescroll.resetUpScroll();
     },
     onEnter(value) {
       this.FilterCond = {
         Filter: `Debtorname like '%${this.enterText}%'`
-
       };
       this.mescroll.resetUpScroll();
     },
@@ -210,16 +214,22 @@ export default {
       console.log(data);
       GetContractMgmt(data)
         .then(res => {
-          let arr = JSON.parse(res.Content);
-          console.log(arr);
-          // 如果是第一页需手动制空列表
-          if (page.num === 1) this.dataList = [];
-          // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
-          this.dataList = this.dataList.concat(arr);
-          // 数据渲染成功后,隐藏下拉刷新的状态
-          this.$nextTick(() => {
-            mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
-          });
+          if (!!res) {
+            let arr = JSON.parse(res.Content);
+            // 如果是第一页需手动制空列表
+            if (page.num === 1) this.dataList = [];
+            // 把请求到的数据添加到列表
+            this.dataList = this.dataList.concat(arr);
+            // console.log(this.dataList);
+            // 数据渲染成功后,隐藏下拉刷新的状态
+            this.$nextTick(() => {
+              mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
+            });
+          } else {
+            this.dataList = [];
+            this.hasData = !this.hasData;
+            mescroll.endByPage(arr.length, res.Pagecount);
+          }
         })
         .catch(e => {
           // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;

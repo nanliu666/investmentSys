@@ -207,7 +207,7 @@
         </li>
       </section>
     </section>
-    <section class="noData" v-if="noData">
+    <section class="ListNoData" v-if="noData">
       <img src="../../assets/images/noData.png" alt>
       <div class="noDataTittle">暂无数据</div>
     </section>
@@ -399,8 +399,10 @@ export default {
       // debugger
       if (
         //底部信息
-        this.$route.query.from === "reserveAdd" ||this.$route.query.from === "reserveEdit" ||
-        this.$route.query.from === "businessAdd"|| this.$route.query.from === "businessEdit"
+        this.$route.query.from === "reserveAdd" ||
+        this.$route.query.from === "reserveEdit" ||
+        this.$route.query.from === "businessAdd" ||
+        this.$route.query.from === "businessEdit"
       ) {
         this.getUintID(data);
       } else {
@@ -433,8 +435,10 @@ export default {
       };
       if (
         //底部删选信息
-        this.$route.query.from === "reserveAdd" || this.$route.query.from === "reserveEdit" ||
-        this.$route.query.from === "businessAdd" || this.$route.query.from === "businessEdit"
+        this.$route.query.from === "reserveAdd" ||
+        this.$route.query.from === "reserveEdit" ||
+        this.$route.query.from === "businessAdd" ||
+        this.$route.query.from === "businessEdit"
       ) {
         this.requestData.Statucode = "UnitAvailable";
         this.hasUintNumber = !this.hasUintNumber;
@@ -487,9 +491,6 @@ export default {
       this.RESERVEADD(data);
       this.$router.push({
         name: "reserveAddFromUint",
-        // params: {
-        //   data: data
-        // },
         query: {
           from: "unitInfoAll"
         }
@@ -593,9 +594,18 @@ export default {
     },
     getUnitBlock() {
       GetUnitByBlockCompanyProject(this.requestData).then(res => {
-        this.allBlock = res.Content;
-        console.log(this.allBlock);
-        this.hasProject();
+        if (!!res) {
+          this.allBlock = res.Content;
+          this.hasProject();
+        } else {
+          let projectSelect = JSON.parse(localStorage.getItem("project"));
+          this.headerTittle = `${this.PropertysSelect}·${
+            this.blockSelect
+          }`;
+          this.floorList = []
+          this.floorListDisplay = []
+          this.noData = true;
+        }
       });
     },
     getFloorData() {
@@ -931,14 +941,7 @@ export default {
     }
   }
 }
-.noData {
-  @include center;
-  .noDataTittle {
-    @include flexCenter;
-    @include sc(30px, rgba(136, 136, 136, 1));
-    font-family: $fr;
-  }
-}
+
 .gotoTop {
   position: fixed;
   bottom: 40px;

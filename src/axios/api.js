@@ -2,7 +2,6 @@ import {
   get,
   post
 } from './http'
-import axios from "axios"
 
 // 单元信息接口
 const baseHead = `http://gz.ifca.com.cn:9999/ydzs/WebService/MobileMerchants/`

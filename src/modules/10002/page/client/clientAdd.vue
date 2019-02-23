@@ -325,41 +325,51 @@ export default {
 
     onLoad() {
       if (this.$route.query.from === "clientDetail") {
-        this.isDeatail = !this.isDeatail
-        let clientDeatil = JSON.parse(localStorage.getItem('clientDeatilObj')).Datasource
-        console.log(clientDeatil)
+        this.isDeatail = !this.isDeatail;
+        let clientDeatil = JSON.parse(localStorage.getItem("clientDeatilObj"))
+          .Datasource;
+        console.log(clientDeatil);
         // 数据加载函数
         if (!!clientDeatil) {
           //从详情进来
           this.Customer.Accountid = clientDeatil[0].Accountid;
           this.Customer.Name = clientDeatil[0].Name;
           this.Customer.Phone = clientDeatil[0].Phone;
-          this.Customer.Remark = clientDeatil[0].Remark;
-          this.Customer.Sexid = clientDeatil[0].Sexid;
-          //性别文本
-          let ATemp = this._.filter(this.sexList, item => {
-            return item.Value === clientDeatil[0].Sexid;
-          });
-          this.Customer.sexText = ATemp[0].Text;
-          //公司文本
-          this.Customer.Customertypeid = clientDeatil[0].Customertypeid;
-          let BTemp = this._.filter(this.comSource, item => {
-            return item.Value === clientDeatil[0].Customertypeid;
-          });
-          this.Customer.CustomertypeText = BTemp[0].Text;
+          if (!!clientDeatil[0].Remark) {
+            this.Customer.Remark = clientDeatil[0].Remark;
+          }
+          if (clientDeatil[0].Sexid !== 0) {
+            this.Customer.Sexid = clientDeatil[0].Sexid;
+            //性别文本
+            let ATemp = this._.filter(this.sexList, item => {
+              return item.Value === clientDeatil[0].Sexid;
+            });
+            this.Customer.sexText = ATemp[0].Text;
+          }
+          if (clientDeatil[0].Customertypeid !== 0) {
+            //公司文本
+            this.Customer.Customertypeid = clientDeatil[0].Customertypeid;
+            let BTemp = this._.filter(this.comSource, item => {
+              return item.Value === clientDeatil[0].Customertypeid;
+            });
+            this.Customer.CustomertypeText = BTemp[0].Text;
+          }
           // 其他联系人
-          // console.log(this.Customer.Otherinfo)
-          if(!!this.Customer.Otherinfo[0].Name) {
-
+          if (!!clientDeatil[0].Otherinfo[0].Contactid) {
             this.Customer.Otherinfo[0].Name = clientDeatil[0].Otherinfo[0].Name;
             this.Customer.Otherinfo[0].Contactid =
               clientDeatil[0].Otherinfo[0].Contactid;
-            this.Customer.Otherinfo[0].Sexid = clientDeatil[0].Otherinfo[0].Sexid;
-            //其他联系人文本
+          }
+          if (clientDeatil[0].Otherinfo[0].Sexid !== 0) {
+            this.Customer.Otherinfo[0].Sexid =
+              clientDeatil[0].Otherinfo[0].Sexid;
             let CTemp = this._.filter(this.otherSexList, item => {
               return item.Value === clientDeatil[0].Otherinfo[0].Sexid;
             });
             this.Customer.Otherinfo[0].OtherSexText = CTemp[0].Text;
+          }
+          //其他联系人 电话
+          if (!!clientDeatil[0].Otherinfo[0].Mobilephone) {
             this.Customer.Otherinfo[0].Mobilephone =
               clientDeatil[0].Otherinfo[0].Mobilephone;
           }
@@ -382,20 +392,13 @@ export default {
           let data = {
             Customer: this.Customer
           };
+          console.log(data);
           EditCustomer(data).then(res => {
-            if (res.Httpstatucode !== 200) {
-              this.$vux.toast.show({
-                //编辑和新增成功 toast
-                text: "新增失败",
-                type: "warn"
-              });
-            } else {
-              this.$vux.toast.show({
-                text: "成功",
-                type: "success"
-              });
-              this.$router.replace({ name: "clientList" });
-            }
+            this.$vux.toast.show({
+              text: "成功",
+              type: "success"
+            });
+            this.$router.replace({ name: "clientList" });
           });
         }
       } else {

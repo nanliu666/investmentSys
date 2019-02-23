@@ -191,6 +191,17 @@ html {
   @include wh(6px, 10px);
 }
 
+// //无数据
+.ListNoData {
+  @include center;
+
+  .noDataTittle {
+    @include flexCenter;
+    @include sc(30px, rgba(136, 136, 136, 1));
+    font-family: $fr;
+  }
+}
+
 //存放图片
 .imgBox {
   @include flexCenter;

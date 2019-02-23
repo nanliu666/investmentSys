@@ -177,12 +177,15 @@ export default {
           case "reserveList":
             this.statusName = "Recordstatus";
             break;
+          case "businessList":
+            this.statusName = "Recordstatus";
+            break;
           case "contractList":
             this.statusName = "Contractstatushow";
             break;
         }
         this.FilterCond = {
-          Filter: `${this.statusName}= '${this.statusDetailSelect}'`
+          Filter: `${this.statusName}='${this.statusDetailSelect}'`
         };
       }
       this.$emit("FilterUpdate", this.FilterCond);

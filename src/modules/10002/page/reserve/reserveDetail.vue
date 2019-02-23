@@ -102,7 +102,7 @@
         </li>
         <li class="groupLi">
           <div class="liLeft">
-            <span >备注</span>
+            <span>备注</span>
           </div>
           <div class="liRight" :class="[!!item.Remark ? 'cellValueClass' : 'placeholderClass']">
             <span class="remark" v-if="!!item.Remark">{{item.Remark }}</span>
@@ -210,7 +210,7 @@ export default {
     getMenu(menuKey, menuItem) {
       switch (menuItem) {
         case "编辑":
-        console.log(this.reseveDetail[0])
+          console.log(this.reseveDetail[0]);
           this.RESERVEADD(this.reseveDetail[0]);
           this.$router.push({
             name: "reserveEdit",
@@ -234,16 +234,18 @@ export default {
     ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
     onLoad() {
       if (
-        JSON.parse(sessionStorage.getItem("reserveDetail")).Recordstatus !==
-        "ACTIVE"
+        this.$options.filters.firstUpperCase(
+          JSON.parse(sessionStorage.getItem("reserveDetail")).Recordstatus
+        ) !== "Active"
       ) {
         this.hasSubmit = !this.hasSubmit;
         this.showMore = !this.showMore;
       }
-      console.log(JSON.parse(sessionStorage.getItem("reserveDetail")).Recordstatus)
+      // console.log(JSON.parse(sessionStorage.getItem("reserveDetail")).Recordstatus)
       if (
-        JSON.parse(sessionStorage.getItem("reserveDetail")).Recordstatus ===
-        "Approved"
+        this.$options.filters.firstUpperCase(
+          JSON.parse(sessionStorage.getItem("reserveDetail")).Recordstatus
+        ) === "Approved"
       ) {
         this.hasVoid = !this.hasVoid;
       }
