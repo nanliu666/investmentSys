@@ -92,15 +92,16 @@
 
         <li class="groupLi">
           <div class="liLeft">
-            <span>面积(m²)</span>
+            <span>租赁面积(m²)</span>
           </div>
           <div
             class="liRight"
             :class="[!!businessNewObj.Rentalarea ? 'cellValueClass' : 'placeholderClass']"
           >
             <input
+              readonly
               type="number"
-              placeholder="请填写面积"
+              placeholder="请填写租赁面积"
               style="text-align: right"
               v-model="businessNewObj.Rentalarea"
             >
@@ -294,16 +295,13 @@ export default {
           this.reserveObj
         );
       }
-      if(this.$route.query.from === "businessDetail") {
+      if (this.$route.query.from === "businessDetail") {
         this.unitList = JSON.parse(this.reserveObj.Unitinfjson);
-          this.businessNewObj.Userphone =this.reserveObj.Phone;
+        this.businessNewObj.Userphone = this.reserveObj.Phone;
 
+        this.RESERVEADD(this.businessNewObj);
       }
-      if (this.$route.query.from === "reserveDetail") {
-        //来自预定详情的数据
-        this.hasDeatil = !this.hasDeatil;
-        this.unitList = JSON.parse(this.reserveObj.Resunitinfjson);
-      } else {
+
         if (this.clientDetail) {
           // 选择了联系人
           this.businessNewObj.Accountname = this.clientDetail.Name;
@@ -327,7 +325,6 @@ export default {
           ) {
             return prev + curr;
           });
-        }
       }
     },
     submit() {
@@ -375,6 +372,7 @@ export default {
     },
     save() {
       this.RESERVEADD(this.businessNewObj);
+
       let data = {
         Reservemgmt: this.businessNewObj,
         Units: {

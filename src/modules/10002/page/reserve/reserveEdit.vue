@@ -95,14 +95,14 @@
           </div>
           <div
             class="liRight"
-            :class="[!!businessNewObj.Expunitarea ? 'cellValueClass' : 'placeholderClass']"
+            :class="[!!businessNewObj.Rentalarea ? 'cellValueClass' : 'placeholderClass']"
           >
             <input
               readonly
               type="number"
               placeholder="请填写租赁面积"
               style="text-align: right"
-              v-model="businessNewObj.Expunitarea"
+              v-model="businessNewObj.Rentalarea"
             >
           </div>
         </li>
@@ -294,11 +294,9 @@ export default {
 
       //   this.RESERVEADD(this.businessNewObj);
       // }
-        this.businessNewObj.Expunitarea = Number(
+        this.businessNewObj.Rentalarea = Number(
           this.businessNewObj.Rentalarea
         ).toFixed(0);
-        this.businessNewObj.Rentalarea = this.businessNewObj.Expunitarea;
-        console.log(this.businessNewObj.Expunitarea);
         this.RESERVEADD(this.businessNewObj);
         if (this.clientDetail) {
           // 选择了联系人
@@ -315,7 +313,7 @@ export default {
           let A = this.uintDetailList.map(item => {
             return Number(item.Builduparea);
           });
-          this.businessNewObj.Expunitarea = A.reduce(function(
+          this.businessNewObj.Rentalarea = A.reduce(function(
             prev,
             curr,
             idx,
@@ -327,7 +325,7 @@ export default {
     },
     submit() {
       this.RESERVEADD(this.businessNewObj);
-      this.businessNewObj.Rentalarea = this.businessNewObj.Expunitarea;
+      this.businessNewObj.Rentalarea = this.businessNewObj.Rentalarea;
       console.log('mianki', this.businessNewObj.Rentalarea)
       let data = {
         Reservemgmt: this.businessNewObj,
@@ -372,7 +370,7 @@ export default {
     },
     save() {
       this.RESERVEADD(this.businessNewObj);
-      this.businessNewObj.Rentalarea = this.businessNewObj.Expunitarea;
+      this.businessNewObj.Rentalarea = this.businessNewObj.Rentalarea;
 
       let data = {
         Reservemgmt: this.businessNewObj,
