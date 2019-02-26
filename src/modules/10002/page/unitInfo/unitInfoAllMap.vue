@@ -133,25 +133,21 @@
       <div class="top">
         <div class="topLeft">
           <span class="unitNo">{{unitDetailSelect.Unitno}}</span>
-          <span
-            class="unitStatus"
-            v-text="getUintStatus(unitDetailSelect.Recordstatusstringcode)"
-            :class="getbusinessStatus(unitDetailSelect.Recordstatusstringcode)"
-          ></span>
+          <span class="unitStatus"></span>
         </div>
         <div class="topRight" @click="openUnitDetail">×</div>
       </div>
       <div class="main">
         <li>
           <span>租赁面积:</span>
-          <span>{{unitDetailSelect.Builduparea | formatNumber}}M²</span>
+          <span>{{unitDetailSelect.Usablearea | formatNumber(0)}}M²</span>
         </li>
-        <li>
+        <!-- <li>
           <span>当前商机数:</span>
           <span>{{unitDetailSelect.Prospectnum}}</span>
-        </li>
+        </li>-->
       </div>
-      <div class="bottom" v-if="getUintStatus(unitDetailSelect.Recordstatusstringcode) === '可租'">
+      <div class="bottom" v-if="unitDetailSelect.Status === 0">
         <button @click="addReserve(unitDetailSelect)">新增预定</button>
         <button @click="addNewBusiness(unitDetailSelect)">新增商机</button>
       </div>
@@ -180,6 +176,7 @@
           <img src="../../assets/images/分组 9.png" alt>
         </div>
       </section>
+      <div class="kong"></div>
       <section class="MapDiv">
         <div id="unitInfoAllMap"></div>
       </section>
@@ -215,6 +212,7 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      Map: {},
       localStorageProject: {},
       MapBlockList: [],
       hasUintNumber: false,
@@ -309,8 +307,13 @@ export default {
     },
     getPropertyBlock(data) {
       this.blockSelect = data.Blockname;
+      Object.assign(data, { Propertyname: this.PropertysSelect });
+      Object.assign(data, { Companyname: this.companysSelect });
       localStorage.setItem("project", JSON.stringify(data));
       this.localStorageProject = JSON.parse(localStorage.getItem("project"));
+      this.headerTittle = `${this.localStorageProject.Propertyname}·${
+        this.localStorageProject.Blockname
+      }`;
       this.getUnitBlock();
       this.hasprojectStatus = !this.hasprojectStatus;
     },
@@ -324,7 +327,6 @@ export default {
       this.blockSelect = "";
     },
 
-    ...mapMutations(["UINT_DETAIL"]),
     //单元详细信息
     getUnitDetail(data) {
       if (
@@ -355,6 +357,9 @@ export default {
 
       this.localStorageProject = JSON.parse(localStorage.getItem("project"));
       if (!!this.localStorageProject) {
+        this.headerTittle = `${this.localStorageProject.Propertyname}·${
+          this.localStorageProject.Blockname
+        }`;
         this.requestData.Companyid = this.localStorageProject.Companyid;
         this.requestData.Projectid = this.localStorageProject.Propertyid;
         this.getUnitBlock();
@@ -389,7 +394,10 @@ export default {
           break;
       }
     },
+    ...mapMutations(["RESERVEADD", 'UINT_DETAIL']),
+
     addReserve(data) {
+      this.RESERVEADD(data);
       this.$router.push({
         name: "reserveAddFromUint",
         params: {
@@ -401,6 +409,7 @@ export default {
       });
     },
     addNewBusiness(data) {
+      // console.log(data)
       this.$router.push({
         name: "businessAdd",
         params: {
@@ -453,7 +462,7 @@ export default {
     },
     floorLi(key, item) {
       this.allBlockFoorList = item;
-      this.getFloorData();
+      this.Map.init({ defaultFloor: key + 1 });
       this.activeClass = key;
     },
     getbusinessStatus(data) {
@@ -479,64 +488,81 @@ export default {
     },
     getStatus(index) {
       if (index === 0) {
-        this.requestData.Statucode = "UnitAvailable";
+        // this.requestData.Statucode = "UnitAvailable";
+        this.Map.colorPalette.fliterGraph(0);
       } else if (index === 1) {
-        this.requestData.Statucode = "RT_RentalStatus_Booked";
+        // this.requestData.Statucode = "RT_RentalStatus_Booked";
+        this.Map.colorPalette.fliterGraph(2);
       } else if (index === 2) {
-        this.requestData.Statucode = "UnitINACTIVE";
+        // this.requestData.Statucode = "UnitINACTIVE";
+        this.Map.colorPalette.fliterGraph(1);
       } else if (index === 3) {
-        this.requestData.Statucode = "UnitActive";
+        // this.requestData.Statucode = "UnitActive";
+        this.Map.colorPalette.fliterGraph(3);
       } else {
-        this.requestData.Statucode = "";
+        // this.requestData.Statucode = "";
+        this.Map.colorPalette.showAllGraph();
       }
-      this.getUnitBlock();
-      this.floorList = [];
     },
     getUnitBlock() {
-      // console.log(this.HOST);
       let data = {
         Blockid: this.localStorageProject.Blockid,
         SystemCode: ""
       };
+
       GetBlockList(data).then(res => {
         this.allBlock = JSON.parse(res);
+
         this.hasProject();
         let NowDate = moment()
           .format("YYYY-M-DD")
           .toString();
-        console.log(this.allBlock);
-        var Map = new IFCA_VIEW("#unitInfoAllMap", this.allBlock, {
+        this.Map = new IFCA_VIEW("#unitInfoAllMap", this.allBlock, {
           Range: NowDate,
           Align: "center",
           floorListOff: false,
           MagnifierOff: false
         });
-        Map.setScale(1);
+        this.Map.colorPalette.autoMapColor("Status", [
+          { Title: "可租", Value: 0, Color: "#97D6FF" },
+          { Title: "不可租", Value: 1, Color: "#CEDFEA" },
+          { Title: "预定", Value: 2, Color: "#69A7FE" },
+          { Title: "已租", Value: 3, Color: "#FFAB56" }
+        ]);
+        this.Map.OnDraw = floor => {
+          this.Map.bindData(floor.Unitlist);
+          this.Map.colorPalette.hide();
+          this.Map.on("ontouchend", msg => {
+            console.log(msg);
+            this.getUnitDetail(msg.msg);
+          });
+        };
       });
-      // this.$http
-      //   .post(
-      //     // `${this.HOST}PlanLayout/WebService/MapBusiness.asmx/GetBlockList`,
-      //     `http://gz.ifca.com.cn:9999/ydzs/PlanLayout/WebService/MapBusiness.asmx/GetBlockList`,
-      //     data
-      //   )
-      //   .then(res => {
-      //     this.allBlock = JSON.parse(res);
-      //     this.hasProject();
-      //     let NowDate = moment()
-      //       .format("YYYY-M-DD")
-      //       .toString();
-      //     console.log(this.allBlock);
-      //     var Map = new IFCA_VIEW("#unitInfoAllMap", this.allBlock, {
-      //       Range: NowDate,
-      //       Align: "center",
-      //       floorListOff: false,
-      //       MagnifierOff: false
-      //     });
-      //     Map.setScale(1);
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
+
+      //     this.$http
+      // .post(
+      //   // `${this.HOST}PlanLayout/WebService/MapBusiness.asmx/GetBlockList`,
+      //   `http://gz.ifca.com.cn:9999/ydzs/PlanLayout/WebService/MapBusiness.asmx/GetBlockList`,
+      //   data
+      // )
+      // .then(res => {
+      //   this.allBlock = JSON.parse(res);
+      //   this.hasProject();
+      //   let NowDate = moment()
+      //     .format("YYYY-M-DD")
+      //     .toString();
+      //   console.log(this.allBlock);
+      //   var Map = new IFCA_VIEW("#unitInfoAllMap", this.allBlock, {
+      //     Range: NowDate,
+      //     Align: "center",
+      //     floorListOff: false,
+      //     MagnifierOff: false
       //   });
+      //   Map.setScale(1);
+      // })
+      // .catch(err => {
+      //   console.log(err);
+      // });
     },
     getFloorData() {
       this.floorList = this._.chain(this.allBlockFoorList)
@@ -563,37 +589,13 @@ export default {
           return item[0].Unitlist.length !== 0;
         })
         .value();
-      console.log(this.FloorSelectlist);
     },
     hasProject() {
       //项目数据
-      this.blockSelect = this.allBlock.Blockname;
-      this.headerTittle = `${this.localStorageProject.Blockname}·${
-        this.blockSelect
-      }`;
       this.allBlockFoorList = this.allBlock.Floorlist;
+      console.log(this.allBlock);
       this.getFloorData();
       this.floorListDisplay = this.FloorSelectlist[0].slice(0, 5);
-
-      // let B = [];
-      // this.FloorSelectlist[0].map(item => {
-      //   B.push(item[0].Unitlist.length);
-      // });
-      // this.uintNumber = B.reduce(function(prev, cur) {
-      //   return prev + cur;
-      // }, 0);
-      // let unitNull = 0; //判断有没有数据
-      // this.FloorSelectlist[0].map(item => {
-      //   if (item[0].Unitlist.length === 0) {
-      //     unitNull += 1;
-      //   }
-      // });
-      // if (unitNull === this.FloorSelectlist[0].length) {
-      //   //没有数据展示
-      //   this.noData = true;
-      // } else {
-      //   this.noData = false;
-      // }
     },
     openProjecySelct() {
       this.hasprojectStatus = !this.hasprojectStatus;
@@ -612,7 +614,7 @@ export default {
     position: absolute;
     top: 230px;
     width: 100%;
-    height: 100%;
+    height: 80%;
     #unitInfoAllMap {
       width: 100%;
       height: 100%;
@@ -726,6 +728,10 @@ export default {
   background-color: #cedfea;
 }
 .uintInfoAll {
+  height: 100%;
+  .kong {
+    height: 20%;
+  }
   .navBar {
     position: fixed;
     z-index: 99;

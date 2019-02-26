@@ -176,7 +176,7 @@
             <x-icon type="ios-arrow-down" class="icon"></x-icon>
           </div>
         </div>
-        <div class="bottom" v-if="false" @click="goUint">
+        <div class="bottom" @click="goUint">
           <img src="../../assets/images/分组 9.png" alt>
         </div>
       </section>
@@ -375,6 +375,8 @@ export default {
     },
     getPropertyBlock(data) {
       this.blockSelect = data.Blockname;
+      Object.assign(data, { Propertyname: this.PropertysSelect });
+      Object.assign(data, { Companyname: this.companysSelect });
       this.requestData.Blockid = data.Blockid;
       localStorage.setItem("project", JSON.stringify(data));
       let projectSelect = JSON.parse(localStorage.getItem("project"));
@@ -599,11 +601,11 @@ export default {
           this.hasProject();
         } else {
           let projectSelect = JSON.parse(localStorage.getItem("project"));
-          this.headerTittle = `${this.PropertysSelect}·${
-            this.blockSelect
+          this.headerTittle = `${projectSelect.Propertyname}·${
+            projectSelect.Blockname
           }`;
-          this.floorList = []
-          this.floorListDisplay = []
+          this.floorList = [];
+          this.floorListDisplay = [];
           this.noData = true;
         }
       });
@@ -637,7 +639,10 @@ export default {
     hasProject() {
       //项目数据
       this.blockSelect = this.allBlock[0].Blockname;
-      this.headerTittle = `${this.allBlock[0].Projectname}·${this.blockSelect}`;
+      let projectSelect = JSON.parse(localStorage.getItem("project"));
+      this.headerTittle = `${projectSelect.Propertyname}·${
+        projectSelect.Blockname
+      }`;
       this.allBlockFoorList = this.allBlock[0].Floorlist;
       this.getFloorData();
       let B = [];

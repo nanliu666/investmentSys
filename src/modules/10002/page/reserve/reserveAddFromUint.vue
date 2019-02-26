@@ -16,7 +16,12 @@
         <div class="danyuan">当前预定单元</div>
         <div
           class="qi"
+          v-if="!!businessNewObj.Companyname"
         >{{businessNewObj.Companyname}}·{{businessNewObj.Projectname}} &nbsp; {{businessNewObj.Unitno}}</div>
+        <div
+          class="qi"
+          v-else
+        >{{localProject.Companyname}}·{{localProject.Propertyname}} &nbsp; {{businessNewObj.Unitno}}</div>
         <div class="shangji" v-if="false" @click="openStatus">
           <div>
             当前铺位已有
@@ -182,6 +187,7 @@ export default {
   name: "reserveAddFromUint",
   data() {
     return {
+      localProject: {},
       hasRemark: true,
       nowDate: "",
       nextDate: "",
@@ -225,9 +231,7 @@ export default {
     ...mapState(["uintDetailList", "clientDetail", "reserveObj"])
   },
   methods: {
-    goBusiness(data) {
-      console.log(data)
-    },
+    goBusiness(data) {},
     BookamtChange() {
       this.RESERVEADD(this.businessNewObj);
     },
@@ -295,6 +299,7 @@ export default {
       });
     },
     onLoad() {
+      this.localProject = JSON.parse(localStorage.getItem("project"));
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
         .add(1, "months")
@@ -306,18 +311,13 @@ export default {
           this.businessNewObj,
           this.reserveObj
         );
-        console.log("===", this.businessNewObj);
         this.businessNewObj.Units.Jsondata[0].Unitid = this.reserveObj.Unitid;
         this.businessNewObj.Units.Jsondata[0].Unitno = this.reserveObj.Unitno;
-        this.businessNewObj.Propertyid = this.reserveObj.Projectid; //项目ID
+        this.businessNewObj.Propertyid =
+          this.reserveObj.Projectid || this.localProject.Propertyid; //项目ID
+        this.businessNewObj.Companyid =
+          this.reserveObj.Companyid || this.localProject.Companyid; //公司ID
       }
-      // if (this.$route.query.from === "businessDetail") {
-      //   // this.businessNewObj.Units.Jsondata[0].Unitno = this.reserveObj.Unitno;
-      //   console.log("zheshicanshu====>", this.businessNewObj);
-      //   this.businessNewObj.Propertyid = this.reserveObj.Propertyid; //项目ID
-      // } else {
-
-      // }
       if (this.clientDetail) {
         // 选择了联系人
         this.businessNewObj.clientDataName = this.clientDetail.Name;

@@ -282,10 +282,14 @@ export default {
     },
     unitInfoData() {
       //来自单元信息的数据
-      (this.businessNewObj.Prospectid = 0), // 新增商机
-        (this.businessNewObj.Expunitarea = this.$route.params.data.Builduparea); //面积
-      this.businessNewObj.Propertyid = this.$route.params.data.Projectid; //项目ID
-      this.businessNewObj.Companyid = this.$route.params.data.Companyid; //公司ID
+      let localProject = JSON.parse(localStorage.getItem("project"));
+
+      this.businessNewObj.Expunitarea = this.$route.params.data.Builduparea;
+      this.businessNewObj.Prospectid = 0;
+      this.businessNewObj.Propertyid =
+        this.$route.params.data.Projectid || localProject.Companyid; //项目ID
+      this.businessNewObj.Companyid =
+        this.$route.params.data.Companyid || localProject.Propertyid; //公司ID
       this.businessNewObj.Units.Jsondata.push({
         Unitid: this.$route.params.data.Unitid,
         Unitno: this.$route.params.data.Unitno
