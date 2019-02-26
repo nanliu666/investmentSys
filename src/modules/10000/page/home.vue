@@ -2,7 +2,7 @@
   <div style="height:100%;" class="home">
     <view-box ref="viewBox">
       <section class="homeTop">
-        <div class="appTopHome" style="height: 8%"></div>
+        <div class="appTopHome" style="height: 12%"></div>
         <div class="message" @click="gotoNew">
           <div class="imgBox">
             <img src="../assets/images/分组 12.png">
@@ -381,7 +381,7 @@ export default {
   font-family: $fr;
   .message {
     padding: 0px 54px 0;
-    height: 12%;
+    height: 8%;
 
       @include fd(row-reverse);
     .imgBox {
@@ -400,7 +400,7 @@ export default {
       @include wh(40px, 40px);
       border-radius: 20px;
       right: -30%;
-      top: 10%;
+      top: -20%;
     }
   }
   .signCount {

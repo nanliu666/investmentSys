@@ -12,7 +12,7 @@
         slot="left"
         class="fs-backICon"
         alt
-        @click="gobackByrouter()"
+        @click="goback"
       >
       客户详情
     </x-header>
@@ -199,6 +199,9 @@ export default {
     }
   },
   methods: {
+    goback() {
+      this.$router.push({name: 'clientList'})
+    },
     onLoad() {
       let data = {
         Customer: {

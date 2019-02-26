@@ -101,7 +101,7 @@
         </div>
         <div class="selectCompanys" v-if="!!companysSelect && !PropertysSelect">
           <div>项目名称</div>
-          <ul>
+          <ul >
             <li
               v-for="item in PropertysList"
               :key="item.Propertyid"
@@ -790,7 +790,7 @@ export default {
   }
 }
 .nav {
-  height: 100% !important;
+  // height: 100% !important;
   top: 140px;
   background-color: #fff;
   box-shadow: 0 -4px 14px 0 rgba(126, 158, 230, 0.15);

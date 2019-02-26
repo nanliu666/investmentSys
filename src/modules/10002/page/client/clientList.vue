@@ -131,6 +131,9 @@ export default {
   created() {
     this.onLoad();
   },
+  beforeDestroy() {
+
+  },
   methods: {
     ...mapMutations(["CLIENT_DETAIL"]),
     //锚点跳转

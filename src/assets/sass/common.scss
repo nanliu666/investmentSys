@@ -190,6 +190,20 @@ html {
   margin-left: 4px;
   @include wh(6px, 10px);
 }
+.fs-backICon {
+  @include wh(8px, 15px);
+}
+.appTopOther {
+  @include wh(100%, 56px);
+  background-color: #fff;
+}
+
+.appTopHome {
+  @include wh(100%, 60px);
+  background: linear-gradient(to right,
+    rgba(103, 185, 255, 1),
+    rgba(92, 128, 255, 1));
+}
 
 // //无数据
 .ListNoData {

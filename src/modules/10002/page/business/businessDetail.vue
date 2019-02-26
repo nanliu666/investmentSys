@@ -3,7 +3,7 @@
     <div class="appTopHome"></div>
     <section class="businessHeader fs-header">
       <div @click="gobackByrouter()">
-        <img src="../../assets/images/返回@2x.png" alt>
+        <img src="../../assets/images/返回@2x.png"  class="fs-backICon" alt>
       </div>
       <div class="headerTitle">商机详情</div>
       <div @click="showMenus = true" class="more">···</div>
