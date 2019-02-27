@@ -46,8 +46,8 @@
       <!--内容...-->
       <li v-for="(item) in dataList" :key="item.Rentalid" @click="gotoDetail(item)">
         <div class="top">
-          <!-- <span>{{item.Companyname}} {{item.Projectname}}</span> -->
-          <span>月亮湾二期 1506</span>
+          <span>{{item.Projectname}} {{item.Unitdesc}}</span>
+          <!-- <span>月亮湾二期 1506</span> -->
           <span
             :class="getbusinessStatus(item.Contractstatushow)"
             v-text="statusDetail[item.Contractstatushow]"
@@ -220,7 +220,7 @@ export default {
             if (page.num === 1) this.dataList = [];
             // 把请求到的数据添加到列表
             this.dataList = this.dataList.concat(arr);
-            // console.log(this.dataList);
+            console.log(this.dataList);
             // 数据渲染成功后,隐藏下拉刷新的状态
             this.$nextTick(() => {
               mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
@@ -323,7 +323,7 @@ export default {
     @include cl;
     padding: 0 40px;
     position: fixed;
-    top: 250px;
+    top: 270px;
     bottom: 0;
     height: auto;
     li {

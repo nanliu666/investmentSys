@@ -3,7 +3,7 @@
     <div class="headerTab">
       <div class="appTopOther"></div>
       <x-header :left-options="{showBack: false}" class="header">
-        <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="back">
+        <img src="../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="back">
         <span v-if="isContract">合同审批详情</span>
         <span v-if="!isContract">预定审批详情</span>
       </x-header>
@@ -114,9 +114,9 @@
             <li v-for="(item, index) in flowListActual" :key="index">
               <div class="flowLeft">
                 <div class="flowFlag">
-                  <img v-if="hasCheckShow(item)" src="../../assets/images/椭圆形@2x.png" alt>
-                  <img v-if="hasRejectShow(item)" src="../../assets/images/椭圆形@2x (1).png" alt>
-                  <img v-if="hasAgreeShow(item)" src="../../assets/images/椭圆形@2x (2).png" alt>
+                  <img v-if="hasCheckShow(item)" src="../assets/images/椭圆形@2x.png" alt>
+                  <img v-if="hasRejectShow(item)" src="../assets/images/椭圆形@2x (1).png" alt>
+                  <img v-if="hasAgreeShow(item)" src="../assets/images/椭圆形@2x (2).png" alt>
                 </div>
                 <span class="iconTittle">{{item.SectionRows[0].Value}}</span>
                 <div class="shuxianBox">
@@ -260,7 +260,7 @@
           </section>
         </section>
       </section>
-      <section class="footer" v-if="hasHandle">
+      <section class="footer" v-if="false">
         <button class="addSign" @click="WorkFlowAddSign">加签</button>
         <button class="reject" @click="WorkFlowReject">驳回</button>
         <button class="submit" @click="WorkFlowAgree">同意</button>
@@ -274,9 +274,9 @@
           <li v-for="(item, index) in flowListActual" :key="index">
             <div class="flowLeft">
               <div class="flowFlag">
-                <img v-if="hasCheckShow(item)" src="../../assets/images/椭圆形@2x.png" alt>
-                <img v-if="hasRejectShow(item)" src="../../assets/images/椭圆形@2x (1).png" alt>
-                <img v-if="hasAgreeShow(item)" src="../../assets/images/椭圆形@2x (2).png" alt>
+                <img v-if="hasCheckShow(item)" src="../assets/images/椭圆形@2x.png" alt>
+                <img v-if="hasRejectShow(item)" src="../assets/images/椭圆形@2x (1).png" alt>
+                <img v-if="hasAgreeShow(item)" src="../assets/images/椭圆形@2x (2).png" alt>
               </div>
               <span class="iconTittle">{{item.SectionRows[0].Value}}</span>
               <div class="shuxianBox">
@@ -340,11 +340,12 @@ export default {
   },
   methods: {
     back() {
-      if (this.$route.query.from === "affairList") {
-        this.gobackByrouter();
-      } else {
-        this.goback();
-      }
+      history.go(-1)
+      // this.gobackByrouter();
+      // if (this.$route.query.from === "affairList") {
+      // } else {
+      //   this.goback();
+      // }
     },
     WorkFlowAddSign() {
       this.$router.push({
@@ -427,16 +428,10 @@ export default {
     onLoad() {
       this.affairDetail = JSON.parse(localStorage.getItem("affairDetail"));
       if (
-        !!this.affairDetail.Title &&
-        this.affairDetail.Title.includes("合同")
+        !!this.affairDetail.Messagecontent &&
+        this.affairDetail.Messagecontent.includes("合同")
       ) {
         this.isContract = !this.isContract;
-      }
-      if (
-        (!!this.affairDetail.Status && this.affairDetail.Status !== 0) ||
-        (!!this.affairDetail.Title && this.affairDetail.Title.includes("完成"))
-      ) {
-        this.hasHandle = false;
       }
       const jsonData = {
         Platformkey: this.$route.params.id

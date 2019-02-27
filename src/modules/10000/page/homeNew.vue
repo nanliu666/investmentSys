@@ -97,22 +97,16 @@ export default {
     },
     getDetail(data) {
       localStorage.setItem("affairDetail", JSON.stringify(data));
-      if (typeof cordova === "object") {
-        cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: `10002/index.html#/affairDetail/${data.Platformkey}` }
-        ]);
-      } else {
-        // window.open(`http://10.122.10.59:8086/10002/index.html#/affairDetail/${data.Platformkey}`)
-        document.addEventListener(
-          "deviceready",
-          () => {
-            cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: `10002/index.html#/affairDetail/${data.Platformkey}` }
-            ]);
-          },
-          false
-        );
-      }
+      this.$router.push({
+        name: "homeAffairDetail",
+        params: {
+          id: data.Platformkey,
+          data: data
+        },
+        query: {
+          from: "homeNew"
+        }
+      });
     },
     // mescroll组件初始化的回调,可获取到mescroll对象 (如果this.mescroll并没有使用到,可不用写mescrollInit)
     mescrollInit(mescroll) {

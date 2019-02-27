@@ -73,7 +73,9 @@
             </div>
             <div class="cycleText">
               <label>最后一次接触时间：</label>
-              <span class="text">{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span>
+              <span v-if="item.Lastdate === '1900-01-01T00:00:00'"></span>
+              <span v-else>{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span>
+              <!-- <span class="text">{{item.Lastdate | dataFrm('YYYY-MM-DD')}}</span> -->
             </div>
           </div>
         </div>
@@ -212,20 +214,20 @@ export default {
       Object.assign(data.Urlpara, this.FilterCond);
       GetBizOpportunity(data)
         .then(res => {
-          if(!!res) {
+          if (!!res) {
             let arr = JSON.parse(res.Content);
             // 如果是第一页需手动制空列表
             if (page.num === 1) this.dataList = [];
             // 把请求到的数据添加到列表
             this.dataList = this.dataList.concat(arr);
-            // console.log(this.dataList);
+            console.log("商机数组", this.dataList);
             // 数据渲染成功后,隐藏下拉刷新的状态
             this.$nextTick(() => {
               mescroll.endByPage(arr.length, res.Pagecount); //修复结束条件
             });
           } else {
             this.dataList = [];
-            this.hasData = !this.hasData
+            this.hasData = !this.hasData;
             mescroll.endByPage(arr.length, res.Pagecount);
           }
         })
