@@ -32,7 +32,7 @@
           </div>
           <div class="tailTopLi">
             <span class="tailTopLiTop">上次跟踪时间</span>
-            <span v-if="item.Followupdate === '1900-01-01T00:00:00'" class="tailTopLiBottom">--</span>
+            <span v-if="item.Followupdate === null" class="tailTopLiBottom">--</span>
             <span class="tailTopLiBottom" v-else>{{item.Followupdate | dataFrm('YYYY-MM-DD')}}</span>
           </div>
         </div>
