@@ -2,7 +2,9 @@
   <div>
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false, preventGoBack: true}" class="header">
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="goback">
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>
       <span v-if="isDeatail">客户编辑</span>
       <span v-if="!isDeatail">客户新增</span>
     </x-header>

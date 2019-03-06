@@ -1,8 +1,8 @@
 import App from '../App'
 
 //事务模块
-const affairList = resolve => require(['../page/affair/affairList'], resolve);
-const affairDetail = resolve => require(['../page/affair/affairDetail'], resolve);
+// const affairList = resolve => require(['../page/affair/affairList'], resolve);
+// const affairDetail = resolve => require(['../page/affair/affairDetail'], resolve);
 //单元模块
 const unitInfoALL = resolve => require(['../page/unitInfo/unitInfoALL'], resolve);
 const unitInfoAllMap = resolve => require(['../page/unitInfo/unitInfoAllMap'], resolve);
@@ -31,8 +31,8 @@ const clientAdd = resolve => require(['../page/client/clientAdd'], resolve);
 const clientDetail = resolve => require(['../page/client/clientDetail'], resolve);
 
 // 合同模块
-const contractDetail = resolve => require(['../page/contract/contractDetail'], resolve);
-const contractList = resolve => require(['../page/contract/contractList'], resolve);
+// const contractDetail = resolve => require(['../page/contract/contractDetail'], resolve);
+// const contractList = resolve => require(['../page/contract/contractList'], resolve);
 
 
 // 工作流审批流程
@@ -50,8 +50,9 @@ export default [{
 
     {
       path: '',
-      redirect: '/affairList'
+      redirect: '/businessList'
     },
+
     //工作流模块
     {
       path: '/addSign/:id', //审批加签
@@ -74,21 +75,21 @@ export default [{
       name: 'WorkFlowAgree'
     },
 
-    //事务管理模块
-    {
-      path: '/affairList', //事务列表
-      component: affairList,
-      name: 'affairList',
-      meta: {
-        keepAlive: true,
-        isBack: false
-      }
-    },
-    {
-      path: '/affairDetail/:id', //事务详情审批
-      component: affairDetail,
-      name: 'affairDetail'
-    },
+    // //事务管理模块
+    // {
+    //   path: '/affairList', //事务列表
+    //   component: affairList,
+    //   name: 'affairList',
+    //   // meta: {
+    //   //   keepAlive: true,
+    //   //   isBack: false
+    //   // }
+    // },
+    // {
+    //   path: '/affairDetail/:id', //事务详情审批
+    //   component: affairDetail,
+    //   name: 'affairDetail'
+    // },
 
 
     //单元模块
@@ -162,33 +163,29 @@ export default [{
       path: '/clientDetail/:id', //客户详情
       name: 'clientDetail',
       component: clientDetail,
-      meta: {
-        keepAlive: true, //此组件需要被缓存
-        isBack: false
-      }
     },
 
-    //合同模块
-    {
-      path: '/contractDetail/:id', //合同详情
-      name: 'contractDetail',
-      component: contractDetail,
-    },
-    {
-      path: '/contractList', //合同列表
-      name: 'contractList',
-      component: contractList,
-    },
+    // //合同模块
+    // {
+    //   path: '/contractDetail/:id', //合同详情
+    //   name: 'contractDetail',
+    //   component: contractDetail,
+    // },
+    // {
+    //   path: '/contractList', //合同列表
+    //   name: 'contractList',
+    //   component: contractList,
+    // },
 
     //预定模块
     {
       path: '/reserveList', //预定列表
       name: 'reserveList',
       component: reserveList,
-      meta: {
-        keepAlive: true,
-        isBack: false
-      }
+      // meta: {
+      //   keepAlive: true,
+      //   isBack: false
+      // }
     },
     {
       path: '/reserveDetail/:id', //预定详情
@@ -209,7 +206,7 @@ export default [{
       name: 'reserveAdd',
       component: reserveAdd,
     },
-     {
+    {
       path: '/reserveEdit', //预定编辑
       name: 'reserveEdit',
       component: reserveEdit,

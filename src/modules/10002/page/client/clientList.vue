@@ -3,14 +3,9 @@
     <div class="allHeader">
       <div class="appTopOther"></div>
       <x-header :left-options="{showBack: false}" class="header">
-        <img
-          src="../../assets/images/返回@3x.png"
-          slot="left"
-          class="fs-backICon"
-          alt
-          @click="goback()"
-        >
-        客户管理
+        <div slot="left" @click="goback()" class="fs-backBox">
+          <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+        </div>客户管理
         <a class="add" slot="right" @click="gotoAdd">＋</a>
       </x-header>
       <search
@@ -130,12 +125,43 @@ export default {
   },
   created() {
     this.onLoad();
+    // if (process.env.NODE_ENV !== "production") {
+    //   this.onLoad();
+    // }
   },
-  beforeDestroy() {
-
-  },
+  // mounted() {
+  //   if (typeof cordova === "object" && typeof cordova.exec === "function") {
+  //     cordova.exec(
+  //       this.successCallBack,
+  //       this.errorCallBack,
+  //       "ifcaPlugIns",
+  //       "getAppInfoFunc",
+  //       []
+  //     );
+  //   } else {
+  //     document.addEventListener("deviceready", this.onDeviceReady, false);
+  //   }
+  // },
   methods: {
-    ...mapMutations(["CLIENT_DETAIL"]),
+    // onDeviceReady() {
+    //   cordova.exec(
+    //     this.successCallBack,
+    //     this.errorCallBack,
+    //     "ifcaPlugIns",
+    //     "getAppInfoFunc",
+    //     []
+    //   );
+    // },
+    // successCallBack(data) {
+    //   localStorage.setItem("loginname", data["username"]);
+    //   this.LOGIN_NAME(data["username"]);
+    //   // alert(data["username"]);
+    //   this.onLoad();
+    // },
+    // errorCallBack() {
+    //   alert("失败");
+    // },
+    ...mapMutations(["CLIENT_DETAIL", "LOGIN_NAME"]),
     //锚点跳转
     goAnchor(selector) {
       this.$el.querySelector(selector).scrollIntoView();
@@ -177,7 +203,6 @@ export default {
             Pageindex: 1,
             Pagesize: 40,
             Filter: `Keyword.like.${val}`
-
             // Filter: `Accountname like '%${val}%'`
           }
         };
@@ -209,7 +234,7 @@ export default {
       let selectData = this._.filter(this.clientAllData, item => {
         return item.Name === data;
       });
-        this.CLIENT_DETAIL(selectData[0]);
+      this.CLIENT_DETAIL(selectData[0]);
       if (this.$route.query.from === "reserveAddFromUint") {
         this.$router.replace({
           name: "reserveAddFromUint"

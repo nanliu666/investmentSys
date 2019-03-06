@@ -2,8 +2,8 @@
   <div class="reservePart">
     <div class="appTopHome"></div>
     <section class="businessHeader fs-header">
-      <div @click="gobackByrouter()">
-        <img src="../../assets/images/返回@2x.png"  class="fs-backICon" alt>
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
       </div>
       <div class="headerTitle">商机详情</div>
       <div @click="showMenus = true" class="more">···</div>
@@ -237,13 +237,13 @@ export default {
       );
       switch (item) {
         case "编辑":
-      this.RESERVEADD(this.businessDetail[0]);
-// console.log('商机详情', this.businessDetail[0])
+          this.RESERVEADD(this.businessDetail[0]);
+          // console.log('商机详情', this.businessDetail[0])
           this.$router.push({
             name: "businessEdit",
             query: {
               from: "businessDetail"
-            },
+            }
             // params: {
             //   data: this.businessDetail[0]
             // }

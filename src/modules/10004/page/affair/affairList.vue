@@ -2,14 +2,9 @@
   <div class="affairList">
     <div class="appTopOther"></div>
     <x-header class="header" :left-options="{showBack: false}" v-if="!hasSearch">
-      <img
-        src="../../assets/images/返回@3x.png"
-        slot="left"
-        class="fs-backICon"
-        alt
-        @click="goback()"
-      >
-      事务管理
+      <div slot="left" @click="goback()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>事务管理
       <img
         class="searchImg"
         src="../../assets/images/搜索.png"
@@ -49,7 +44,7 @@
           <div class="topRight">审批</div>
         </div>
         <div class="bottom">
-          <div class="bottomLeft">提交人:{{item.Receiveuserloginname}}</div>
+          <div class="bottomLeft">提交人:{{item.Subscript}}</div>
           <div class="bottomRight">{{item.Senddatetime | dataFrm('YYYY-MM-DD')}}</div>
         </div>
       </li>
@@ -134,44 +129,12 @@ export default {
     this.$refs.mescroll && this.$refs.mescroll.beforeRouteLeave(); // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
     next();
   },
-  created() {
-    this.isFirstEnter = true;
-    if (typeof cordova === "object") {
-      this.affairCond.LoginName = data["username"];
-    } else {
-      document.addEventListener("deviceready", this.onDeviceReady, false);
-      this.affairCond.LoginName = "qw";
-    }
-  },
-  activated() {
-    if (!this.$route.meta.isBack || this.isFirstEnter) {
-      // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
-      // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
-      this.affairList = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
-      this.mescroll.resetUpScroll(); // ajax获取数据方法
-    }
-    // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
-    this.$route.meta.isBack = false;
-    this.isFirstEnter = false;
+  mounted() {
+    this.affairList = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
+    this.affairCond.LoginName = "yujing";
+    this.mescroll.resetUpScroll(); // ajax获取数据方法
   },
   methods: {
-    onDeviceReady() {
-      cordova.exec(
-        this.successCallBack,
-        this.errorCallBack,
-        "ifcaPlugIns",
-        "getAppInfoFunc",
-        []
-      );
-    },
-    successCallBack(data) {
-      // 用户名
-      this.affairCond.LoginName = data["username"];
-      this.mescroll.resetUpScroll();
-    },
-    errorCallBack(data) {
-      console.log(data);
-    },
     getDeatil(data) {
       localStorage.setItem("affairDetail", JSON.stringify(data));
       this.$router.push({

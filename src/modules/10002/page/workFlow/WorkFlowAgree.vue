@@ -2,8 +2,9 @@
   <div class="addSign">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="gobackByrouter()">
-      同意
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>同意
     </x-header>
     <section class="ApprovalFlow">
       <group>
@@ -59,7 +60,7 @@ export default {
       ActionApprove(this.requestData).then(res => {
         if (res === "") {
           this.$vux.toast.show({
-            text: '成功',
+            text: "成功",
             type: "success"
           });
           this.$router.push({ name: "affairList" });

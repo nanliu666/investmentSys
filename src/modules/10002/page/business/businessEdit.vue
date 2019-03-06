@@ -2,14 +2,9 @@
   <div class="reservePart">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img
-        src="../../assets/images/返回@3x.png"
-        slot="left"
-        class="fs-backICon"
-        alt
-        @click="gobackByrouter()"
-      >
-      商机编辑
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>商机编辑
     </x-header>
     <section class="content">
       <div class="group">
@@ -234,12 +229,30 @@ export default {
     },
     ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
     getClient() {
-      this.$router.replace({
-        name: "clientList",
-        query: {
-          from: "businessEdit"
-        }
-      });
+      // window.open(
+      //   "http://192.168.0.197:8086/10005/index.html#/clientList?from=businessAdd"
+      // );
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
+        cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+          { Url: "10005/index.html#/clientList?from=businessAdd" }
+        ]);
+      } else {
+        document.addEventListener(
+          "deviceready",
+          () => {
+            cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+              { Url: "10005/index.html#/clientList?from=businessAdd" }
+            ]);
+          },
+          false
+        );
+      }
+      // this.$router.replace({
+      //   name: "clientList",
+      //   query: {
+      //     from: "businessEdit"
+      //   }
+      // });
     },
     getUint() {
       this.$router.replace({
@@ -299,13 +312,9 @@ export default {
         this.businessNewObj.Units.Jsondata = this.uintDetailList;
         this.businessNewObj.Propertyid = this.uintDetailList[0].Projectid; //项目ID
         this.businessNewObj.Companyid = this.uintDetailList[0].Companyid;
-        this.businessNewObj.Expunitarea =  Number(this.businessNewObj.Expunitarea).toFixed(0)
-        // let A = this.uintDetailList.map(item => {
-        //   return Number(item.Builduparea);
-        // });
-        // this.businessNewObj.Expunitarea = A.reduce(function(prev, curr, idx, arr) {
-        //   return prev + curr;
-        // });
+        this.businessNewObj.Expunitarea = Number(
+          this.businessNewObj.Expunitarea
+        ).toFixed(0);
       }
       GetBizopprtunityDropdown("").then(res => {
         this.urgencySource = res.Option.Dropdownpriorityid; //紧急程度
@@ -325,17 +334,6 @@ export default {
         Bizopportunity: TempObj,
         Units: this.businessNewObj.Units
       };
-      //      if (!!this.businessNewObj.Sourceid === false) {
-      //   this.$vux.toast.show({
-      //     text: "请选择商机来源",
-      //     type: "warn"
-      //   });
-      // }else if (!!this.businessNewObj.Priorityid === false) {
-      //   this.$vux.toast.show({
-      //     text: "请选择成交几率",
-      //     type: "warn"
-      //   });
-      // }
       if (this.businessNewObj.Units.Jsondata.length === 0) {
         this.$vux.toast.show({
           text: "请选择意向单元",

@@ -2,13 +2,9 @@
   <div class="reservePart">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img
-        src="../../assets/images/返回@3x.png"
-        slot="left"
-        class="fs-backICon"
-        alt
-        @click="gobackByrouter()"
-      >
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>
       <span v-if="hasDeatil">预定编辑</span>
       <span v-if="!hasDeatil">预定新增</span>
     </x-header>
@@ -302,29 +298,29 @@ export default {
         this.RESERVEADD(this.businessNewObj);
       }
 
-        if (this.clientDetail) {
-          // 选择了联系人
-          this.businessNewObj.Accountname = this.clientDetail.Name;
-          this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
-          this.businessNewObj.Userphone = this.clientDetail.Phone;
-        }
+      if (this.clientDetail) {
+        // 选择了联系人
+        this.businessNewObj.Accountname = this.clientDetail.Name;
+        this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
+        this.businessNewObj.Userphone = this.clientDetail.Phone;
+      }
 
-        if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
-          // 选择了单元信息
-          this.unitList = this.uintDetailList;
-          this.businessNewObj.Propertyid = this.uintDetailList[0].Projectid; //项目ID
-          this.businessNewObj.Companyid = this.uintDetailList[0].Companyid;
-          let A = this.uintDetailList.map(item => {
-            return Number(item.Builduparea);
-          });
-          this.businessNewObj.Rentalarea = A.reduce(function(
-            prev,
-            curr,
-            idx,
-            arr
-          ) {
-            return prev + curr;
-          });
+      if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
+        // 选择了单元信息
+        this.unitList = this.uintDetailList;
+        this.businessNewObj.Propertyid = this.uintDetailList[0].Projectid; //项目ID
+        this.businessNewObj.Companyid = this.uintDetailList[0].Companyid;
+        let A = this.uintDetailList.map(item => {
+          return Number(item.Builduparea);
+        });
+        this.businessNewObj.Rentalarea = A.reduce(function(
+          prev,
+          curr,
+          idx,
+          arr
+        ) {
+          return prev + curr;
+        });
       }
     },
     submit() {

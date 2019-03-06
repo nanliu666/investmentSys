@@ -2,13 +2,9 @@
   <div class="reservePart">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img
-        src="../../../assets/images/返回@3x.png"
-        slot="left"
-        class="fs-backICon"
-        alt
-        @click="gobackByrouter()"
-      >
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>
       <span v-if="hasDeatil">跟踪详情</span>
       <span v-if="!hasDeatil">新增跟踪</span>
     </x-header>
@@ -252,7 +248,7 @@ export default {
       this.nextDate = moment(new Date())
         .add(1, "months")
         .format("YYYY-MM-DD");
-        this.nowDate = moment(new Date())
+      this.nowDate = moment(new Date())
         .add(1, "d")
         .format("YYYY-MM-DD");
       this.businessNewObj.Prospectid = this.$route.params.data.Prospectid;
@@ -275,7 +271,7 @@ export default {
       let data = {
         Followup: this.businessNewObj
       };
-      console.log(this.businessNewObj)
+      console.log(this.businessNewObj);
       EditFollowUp(data).then(res => {
         if (res.Success !== false) {
           this.$vux.toast.show({

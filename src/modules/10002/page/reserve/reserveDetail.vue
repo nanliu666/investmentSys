@@ -7,13 +7,9 @@
       :right-options="{showMore: showMore}"
       @on-click-more="showMenus = true"
     >
-      <img
-        src="../../assets/images/返回@3x.png"
-        slot="left"
-        class="fs-backICon"
-        alt
-        @click="gobackByrouter()"
-      >
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>
       预定详情
     </x-header>
     <actionsheet @on-click-menu="getMenu" :menus="menus" v-model="showMenus" show-cancel></actionsheet>

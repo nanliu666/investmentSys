@@ -1,11 +1,11 @@
 <template>
   <div class="contractList">
     <div class="appTopOther"></div>
-    <x-header
-      :left-options="{backText: '', preventGoBack: true}"
-      class="header"
-      @on-click-back="goback"
-    >消息列表</x-header>
+    <x-header :left-options="{showBack: false}" class="header">
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>消息列表
+    </x-header>
     <!--mescroll滚动区域的基本结构-->
     <mescroll-vue
       class="mescroll"
@@ -125,7 +125,7 @@ export default {
       GetUserMessage(data)
         .then(res => {
           let arr = JSON.parse(res.Content);
-          let timeList = []
+          let timeList = [];
           // let dataList = []
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.dataList = [];

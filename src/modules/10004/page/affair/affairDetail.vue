@@ -3,7 +3,9 @@
     <div class="headerTab">
       <div class="appTopOther"></div>
       <x-header :left-options="{showBack: false}" class="header">
-        <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="back">
+        <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+          <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+        </div>
         <span v-if="isContract">合同审批详情</span>
         <span v-if="!isContract">预定审批详情</span>
       </x-header>
@@ -433,8 +435,9 @@ export default {
         this.isContract = !this.isContract;
       }
       if (
-        (!!this.affairDetail.Status && this.affairDetail.Status !== 0) ||
-        (!!this.affairDetail.Title && this.affairDetail.Title.includes("完成"))
+        // (!!this.affairDetail.Status && this.affairDetail.Status !== 0) ||
+        !!this.affairDetail.Title &&
+        this.affairDetail.Title.includes("完成")
       ) {
         this.hasHandle = false;
       }
@@ -486,7 +489,7 @@ export default {
     },
     getContractenclosure(data) {
       //附件路径待解决
-      if (typeof cordova === "object") {
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "attachmentPreview", [
           {
             fileName: data.FileName,

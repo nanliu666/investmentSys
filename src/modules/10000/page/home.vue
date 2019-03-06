@@ -113,33 +113,39 @@ export default {
     XButton,
     VScale
   },
+  mounted() {
+    if (process.env.NODE_ENV === "production") {
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
+        cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [false]);
+      } else {
+        document.addEventListener("deviceready", this.onDeviceReady(), false);
+      }
+    }
+  },
   created() {
     this.onLoad();
-    if (typeof cordova === "object") {
-      cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [false]);
-    } else {
-      document.addEventListener("deviceready", this.onDeviceReady, false);
-    }
   },
   beforeRouteLeave(to, from, next) {
     this.TO_PAGE_NAME(from.name); //离开的时候在vuex存起来本组件的路由名称
     next();
   },
   beforeDestroy() {
-    cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [true]);
+    if (process.env.NODE_ENV === "production") {
+      cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [true]);
+    }
   },
   methods: {
     onDeviceReady() {
       cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [false]);
     },
-    ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
+    ...mapMutations(["TO_PAGE_NAME", "RESERVEADD", "LOGIN_NAME"]),
     gotoNew() {
       this.$router.push({
         name: "homeNew"
       });
     },
     gotoContranctMonth() {
-      if (typeof cordova === "object") {
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/contractList?dateTime=currentMonth" }
         ]);
@@ -148,22 +154,25 @@ export default {
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: "10002/index.html#/contractList?dateTime=currentMonth" }
+              { Url: "10003/index.html#/contractList?dateTime=currentMonth" }
             ]);
           },
           false
         );
-        // window.open('http://192.168.0.191:8086/10002/index.html#/contractList?dateTime=currentMonth')
+        // window.open(
+        //   "http://192.168.0.180:8086/10003/index.html#/contractList?dateTime=currentMonth"
+        // );
       }
     },
     gotoContranctExpire() {
-      if (typeof cordova === "object") {
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "10002/index.html#/contractList?dateTime=threeMonth" }
+          { Url: "10003/index.html#/contractList?dateTime=threeMonth" }
         ]);
       } else {
-        window.open('http://192.168.0.191:8086/10002/index.html#/contractList?dateTime=threeMonth')
-
+        // window.open(
+        //   "http://192.168.0.180:8086/10003/index.html#/contractList?dateTime=threeMonth"
+        // );
         document.addEventListener(
           "deviceready",
           () => {
@@ -176,7 +185,7 @@ export default {
       }
     },
     gounitInfoALL() {
-      if (typeof cordova === "object") {
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/unitInfoALL" }
         ]);
@@ -193,7 +202,7 @@ export default {
       }
     },
     goreserveList() {
-      if (typeof cordova === "object") {
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/reserveList" }
         ]);
@@ -210,7 +219,7 @@ export default {
       }
     },
     gobusinessList() {
-      if (typeof cordova === "object") {
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/businessList" }
         ]);
@@ -227,16 +236,19 @@ export default {
       }
     },
     goaffairList() {
-      if (typeof cordova === "object") {
+      // window.open(
+      //   "http://192.168.0.180:8086/10006/index.html#/affairList"
+      // );
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "10002/index.html#/affairList" }
+          { Url: "10006/index.html#/affairList" }
         ]);
       } else {
         document.addEventListener(
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: "10002/index.html#/affairList" }
+              { Url: "10006/index.html#/affairList" }
             ]);
           },
           false
@@ -296,6 +308,7 @@ export default {
           .format("YYYY-MM-DD HH:mm:ss")
       };
       GetAgentDefaultPageNEW(PageNEWData).then(res => {
+        console.log(res);
         if (res.Currmonthamt > 10000) {
           this.signMoeny = `${Math.round(parseInt(res.Currmonthamt) / 100) /
             100}万`;
@@ -305,7 +318,6 @@ export default {
         this.ExpireNum = res.Overduesoon;
       });
       GetAgentDefaultPageChartNEW(PageNEWData).then(res => {
-        // console.log('tuxing===', res)
         this.$set(this.data[0], "percent", res[0].Chartcompleteper);
         this.$set(this.data[1], "percent", res[0].Chartnotcompleteper);
         this.$set(this.data[2], "percent", res[1].Chartcompleteper);
@@ -383,11 +395,10 @@ export default {
     padding: 0px 54px 0;
     height: 8%;
 
-      @include fd(row-reverse);
+    @include fd(row-reverse);
     .imgBox {
       position: relative;
       @include flexHCenter;
-
     }
     img {
       @include wh(42px, 32px);

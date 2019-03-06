@@ -7,14 +7,9 @@
       :right-options="{showMore: true}"
       @on-click-more="showMenus = true"
     >
-      <img
-        src="../../assets/images/返回@3x.png"
-        slot="left"
-        class="fs-backICon"
-        alt
-        @click="goback"
-      >
-      客户详情
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>客户详情
     </x-header>
     <section class="content" v-for="(item, index) in clientDeatil" :key="index">
       <div class="group">
@@ -143,26 +138,11 @@ export default {
       hasToast: false
     };
   },
-  beforeRouteEnter(to, from, next) {
-    if (from.name === "clientAdd") {
-      to.meta.isBack = true;
-    }
-    next();
-  },
+
   created() {
-    this.isFirstEnter = true;
+    this.onLoad(); // ajax获取数据方法
   },
-  activated() {
-    if (!this.$route.meta.isBack || this.isFirstEnter) {
-      // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
-      // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
-      this.clientDeatil = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
-      this.onLoad(); // ajax获取数据方法
-    }
-    // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
-    this.$route.meta.isBack = false;
-    this.isFirstEnter = false;
-  },
+
   watch: {
     clientDeatil() {
       this.$nextTick(() => {
@@ -200,7 +180,7 @@ export default {
   },
   methods: {
     goback() {
-      this.$router.push({name: 'clientList'})
+      this.$router.push({ name: "clientList" });
     },
     onLoad() {
       let data = {
@@ -208,6 +188,7 @@ export default {
           Accountid: this.$route.params.id
         }
       };
+      console.log(1);
       GetCustomerDetail(data).then(res => {
         this.clientDeatilObj = res;
         this.clientDeatil = res.Datasource;

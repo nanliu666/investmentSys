@@ -26,46 +26,21 @@ export default {
       } else {
         script.setAttribute("src", "./static/js/android_cordova.js");
       }
-    }
-    var heads = document.getElementsByTagName("head");
-    if (heads.length) {
-      heads[0].appendChild(script);
-    } else {
-      document.documentElement.appendChild(script);
-    }
+      var heads = document.getElementsByTagName("head");
+      if (heads.length) {
+        heads[0].appendChild(script);
+      } else {
+        document.documentElement.appendChild(script);
+      }
 
-    document.addEventListener("deviceready", this.onDeviceReady, false);
+      document.addEventListener("deviceready", this.onDeviceReady(), false);
+    }
   },
-
   methods: {
     onDeviceReady() {
-      if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
-        console.log("IOS");
-      } else {
-        // 禁用安卓返回键
-        cordova.exec(null, null, "ifcaPlugIns", "enabledsystembackFunc", [
-          false
-        ]);
-        cordova.exec(
-          this.successCallBack,
-          this.errorCallBack,
-          "ifcaPlugIns",
-          "getAppInfoFunc",
-          []
-        );
-      }
-    },
-    successCallBack(data) {
-      //获取用户名
-      GetUserId({
-        loginName: data["username"]
-      }).then(res => {
-        console.log(res);
-        localStorage.setItem("username", username);
-        localStorage.setItem("userid", data);
-      });
-    },
-    errorCallBack() {}
+      // 禁用安卓返回键
+      cordova.exec(null, null, "ifcaPlugIns", "enabledsystembackFunc", [false]);
+    }
   }
 };
 </script>

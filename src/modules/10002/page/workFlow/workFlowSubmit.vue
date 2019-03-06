@@ -2,8 +2,9 @@
   <div class="addSign">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img src="../../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="gobackByrouter()">
-      提交
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>提交
       <span slot="right" class="headerRight" v-if="hasAddSign" @click="getAddSgin(0)">取消</span>
       <span slot="right" class="headerRight" v-if="!hasAddSign" @click="getAddSgin(1)">加签</span>
     </x-header>
@@ -177,8 +178,8 @@ export default {
             FlowType: "Approve", //默认为顺序审批 Cosigner 同时审批 Approve
             FlowType2: "Add", //加签为add
             ContextGuid: "", //自己的ID
-            ParentContextGuid: "",//父节点ID
-            Participants: [],//选人ID数组
+            ParentContextGuid: "", //父节点ID
+            Participants: [], //选人ID数组
             AddMan: [],
             littleTittle: "提交人",
             hasDelete: false,
@@ -426,8 +427,7 @@ export default {
       this.radio = this.radios[index].value;
       // 设置值，以供传递
       this.radios[index].isChecked = true;
-    },
-
+    }
   }
 };
 </script>

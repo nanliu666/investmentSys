@@ -2,14 +2,9 @@
   <div class="businessTrackList">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img
-        src="../../../assets/images/返回@3x.png"
-        slot="left"
-        class="fs-backICon"
-        alt
-        @click="gobackByrouter()"
-      >
-      跟踪记录
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>跟踪记录
       <img
         src="../../../assets/images/addNew.png"
         @click="addTrack"
@@ -97,7 +92,7 @@ export default {
       };
       GetFollowUp(data).then(res => {
         this.TrackList = JSON.parse(res.Content);
-        console.log(this.TrackList)
+        console.log(this.TrackList);
         if (this.TrackList.length === 0) {
           this.hasNodata = !this.hasNodata;
         }

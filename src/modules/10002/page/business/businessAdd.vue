@@ -2,13 +2,9 @@
   <div class="reservePart">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img
-        src="../../assets/images/返回@3x.png"
-        slot="left"
-        class="fs-backICon"
-        alt
-        @click="gobackByrouter()"
-      >
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>
       <span v-if="hasDeatil">商机编辑</span>
       <span v-if="!hasDeatil">新增商机</span>
     </x-header>
@@ -37,7 +33,7 @@
             class="liRight"
             :class="[!!businessNewObj.Phone ? 'cellValueClass' : 'placeholderClass']"
           >
-            <span>{{!!businessNewObj.Phone ? businessNewObj.Phone : '请选择联系人'}}</span>
+            <span>{{!!businessNewObj.Phone ? businessNewObj.Phone : '请填写电话号码'}}</span>
           </div>
         </li>
         <div class="cientInfo">商机信息</div>
@@ -235,6 +231,22 @@ export default {
     },
     ...mapMutations(["TO_PAGE_NAME", "RESERVEADD"]),
     getClient() {
+      // window.open("http://192.168.0.197:8086/10005/index.html#/clientList?from=businessAdd");
+      // if (typeof cordova === "object" && typeof cordova.exec === "function") {
+      //   cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+      //     { Url: "10005/index.html#/clientList?from=businessAdd" }
+      //   ]);
+      // } else {
+      //   document.addEventListener(
+      //     "deviceready",
+      //     () => {
+      //       cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+      //         { Url: "10005/index.html#/clientList?from=businessAdd" }
+      //       ]);
+      //     },
+      //     false
+      //   );
+      // }
       this.$router.replace({
         name: "clientList",
         query: {

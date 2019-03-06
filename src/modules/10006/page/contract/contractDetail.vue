@@ -3,14 +3,9 @@
     <div class="headerTab">
       <div class="appTopOther"></div>
       <x-header :left-options="{showBack: false}" class="header">
-        <img
-          src="../../assets/images/返回@3x.png"
-          slot="left"
-          class="fs-backICon"
-          alt
-          @click="gobackByrouter()"
-        >
-        合同详情
+        <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+          <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+        </div>合同详情
       </x-header>
       <tab
         :line-width="1"
@@ -25,19 +20,10 @@
           v-for="(item, index) in infoList"
           :key="index"
           @on-item-click="goAnchor(item)"
-        >{{item}}</tab-item>       -->
-        <tab-item
-          class="vux-center"
-          @on-item-click="goAnchor('合同主体')"
-        >合同主体</tab-item>
-        <tab-item
-          class="vux-center"
-          @on-item-click="goAnchor('费用信息')"
-        >费用信息</tab-item>
-        <tab-item
-          class="vux-center"
-          @on-item-click="goAnchor('其他')"
-        >其他</tab-item>
+        >{{item}}</tab-item>-->
+        <tab-item class="vux-center" @on-item-click="goAnchor('合同主体')">合同主体</tab-item>
+        <tab-item class="vux-center" @on-item-click="goAnchor('费用信息')">费用信息</tab-item>
+        <tab-item class="vux-center" @on-item-click="goAnchor('其他')">其他</tab-item>
       </tab>
     </div>
     <section id="main" class="mainSection">
@@ -397,7 +383,7 @@ export default {
     },
     getContractenclosure(data) {
       //附件路径待解决
-      if (typeof cordova === "object") {
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "attachmentPreview", [
           {
             fileName: data.FileName,
@@ -614,7 +600,7 @@ export default {
     }
     .quanli {
       background-color: #fff;
-      padding:18px 40px;
+      padding: 18px 40px;
       @include fj(space-around);
 
       .width50 {

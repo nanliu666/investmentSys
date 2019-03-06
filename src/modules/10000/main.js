@@ -5,7 +5,17 @@ import App from './App'
 import store from './store/index'
 import * as filters from './assets/js/filters'
 import _ from './assets/js/lodash' //loadsh待改进
+import axios from 'axios'
+import qs from 'qs'
+// 手机端控制台
+import VConsole from 'vconsole'
+if (process.env.NODE_ENV === 'production') {
+  new VConsole()
+}
+
 Vue.prototype._ = _
+Vue.prototype.$http = axios
+Vue.prototype.qs = qs
 import VueClipboard from 'vue-clipboard2';
 Vue.use(VueClipboard)
 //注册到vue原型上
@@ -41,11 +51,22 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
+
 //绝对路径
 Vue.prototype.toAbsURL = function (url) {
   var a = document.createElement('a');
   a.href = url;
   return a.href;
+};
+//在同一路由对象内返回上一级
+Vue.prototype.gobackByrouter = function (url) {
+  this.$router.back(-1);
+
+};
+
+//通过不同路由返回上一级
+Vue.prototype.goback = function (url) {
+  cordova.exec(null, null, "ifcaPlugIns", "goBackFunc", []);
 };
 
 

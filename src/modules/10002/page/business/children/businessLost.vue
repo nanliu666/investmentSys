@@ -2,14 +2,9 @@
   <div class="addSign">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img
-        src="../../../assets/images/返回@3x.png"
-        slot="left"
-        class="fs-backICon"
-        alt
-        @click="gobackByrouter()"
-      >
-      流失
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>流失
     </x-header>
     <section class="ApprovalFlow">
       <ul class="addContent">
@@ -67,7 +62,7 @@ export default {
     return {
       clientOptions: [], //联系人选择
       hasClient: false,
-      nowDate: '',
+      nowDate: "",
       CommentTemp: [],
       isNewGo: false,
       businessDetail: {},
@@ -132,7 +127,7 @@ export default {
       let data = {
         Transfer: this.requestData
       };
-      console.log(data)
+      console.log(data);
       DropProspecttransfer(data).then(res => {
         console.log(res);
         if (!!res.Success) {

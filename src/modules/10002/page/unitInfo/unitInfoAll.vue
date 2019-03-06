@@ -3,13 +3,9 @@
     <div class="allHeader">
       <div class="appTopOther"></div>
       <x-header :left-options="{showBack: false}" class="header">
-        <img
-          src="../../assets/images/返回@3x.png"
-          slot="left"
-          class="fs-backICon"
-          alt
-          @click="goback()"
-        >
+        <div slot="left" @click="goback()" class="fs-backBox">
+          <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+        </div>
         <div class="headerTittle" @click="openProjecySelct">{{headerTittle}}</div>
         <span class="imgBox">
           <img
@@ -279,38 +275,70 @@ export default {
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
     next();
   },
+  mounted() {
+    if (typeof cordova === "object" && typeof cordova.exec === "function") {
+      cordova.exec(
+        this.successCallBack,
+        this.errorCallBack,
+        "ifcaPlugIns",
+        "getAppInfoFunc",
+        []
+      );
+    } else {
+      document.addEventListener("deviceready", this.onDeviceReady, false);
+    }
+  },
   created() {
-    this.isFirstEnter = true;
-    this.onLoad();
+    if (process.env.NODE_ENV !== "production") {
+      this.onLoad();
+    }
   },
   computed: {
     ...mapState(["scrollTop", "toPageName", "uintDetailList", "reserveObj"])
   },
-  activated() {
-    if (!this.$route.meta.isBack || this.isFirstEnter) {
-      // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
-      // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
-      this.allBlock = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
-      this.onLoad(); // ajax获取数据方法
-    }
-    // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
-    this.$route.meta.isBack = false;
-    this.isFirstEnter = false;
-    //滚动条位置的监听放到activated是因为此页面被keep-alive缓存了
-    this.$refs.scroll.scrollTop = this.scrollTop; //this.$refs.scroll拿到滚动的dom，即scrollContainer，this.home_list_top是存入到vuex里的值
-    this.$refs.scroll.addEventListener("scroll", this.handleScroll); //添加绑定事件
-  },
-  deactivated() {
-    //keep-alive 的页面跳转时，移除scroll事件
-    this.$refs.scroll.removeEventListener("scroll", this.handleScroll); //清除绑定的scroll事件
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  destroyed() {
-    window.removeEventListener("scroll", this.handleScroll);
-  },
+  // activated() {
+  //   if (!this.$route.meta.isBack || this.isFirstEnter) {
+  //     // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
+  //     // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
+  //     this.allBlock = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
+  //     this.onLoad(); // ajax获取数据方法
+  //   }
+  //   // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
+  //   this.$route.meta.isBack = false;
+  //   this.isFirstEnter = false;
+  //   //滚动条位置的监听放到activated是因为此页面被keep-alive缓存了
+  //   this.$refs.scroll.scrollTop = this.scrollTop; //this.$refs.scroll拿到滚动的dom，即scrollContainer，this.home_list_top是存入到vuex里的值
+  //   this.$refs.scroll.addEventListener("scroll", this.handleScroll); //添加绑定事件
+  // },
+  // deactivated() {
+  //   //keep-alive 的页面跳转时，移除scroll事件
+  //   this.$refs.scroll.removeEventListener("scroll", this.handleScroll); //清除绑定的scroll事件
+  // },
+  // mounted() {
+  //   // window.addEventListener("scroll", this.handleScroll);
+  // },
+  // destroyed() {
+  //   // window.removeEventListener("scroll", this.handleScroll);
+  // },
   methods: {
+    onDeviceReady() {
+      cordova.exec(
+        this.successCallBack,
+        this.errorCallBack,
+        "ifcaPlugIns",
+        "getAppInfoFunc",
+        []
+      );
+    },
+    successCallBack(data) {
+      localStorage.setItem("loginname", data["username"]);
+
+      this.LOGIN_NAME(data["username"]);
+      this.onLoad();
+    },
+    errorCallBack() {
+      alert("失败");
+    },
     goUint() {
       this.$router.push({
         name: "unitInfoAllMap",
@@ -394,8 +422,12 @@ export default {
       this.PropertysSelect = "";
       this.blockSelect = "";
     },
-
-    ...mapMutations(["UINT_DETAIL", "RESAVESCORLLTOP", "RESERVEADD"]),
+    ...mapMutations([
+      "UINT_DETAIL",
+      "RESAVESCORLLTOP",
+      "RESERVEADD",
+      "LOGIN_NAME"
+    ]),
     //单元详细信息
     getUnitDetail(data) {
       // debugger

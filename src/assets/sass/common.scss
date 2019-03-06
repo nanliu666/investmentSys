@@ -45,7 +45,6 @@ ul {
   }
 }
 
-
 // input占位符颜色
 input::-webkit-input-placeholder,
 textarea::-webkit-input-placeholder {
@@ -64,8 +63,6 @@ textarea::-moz-placeholder {
   /* Mozilla Firefox 19+ */
   @include sc(32px, rgba(209, 209, 209, 1));
 }
-
-
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar {
@@ -149,7 +146,6 @@ html {
 .paddingTop {
   padding-top: 1.95rem;
 }
-
 @keyframes backOpacity {
   0% {
     opacity: 1;
@@ -190,9 +186,17 @@ html {
   margin-left: 4px;
   @include wh(6px, 10px);
 }
+
+.fs-backBox {
+  width: 50px;
+  height: 100%;
+
+}
+
 .fs-backICon {
   @include wh(8px, 15px);
 }
+
 .appTopOther {
   @include wh(100%, 56px);
   background-color: #fff;
@@ -200,9 +204,7 @@ html {
 
 .appTopHome {
   @include wh(100%, 60px);
-  background: linear-gradient(to right,
-    rgba(103, 185, 255, 1),
-    rgba(92, 128, 255, 1));
+  background: linear-gradient(to right, rgba(103, 185, 255, 1), rgba(92, 128, 255, 1));
 }
 
 // //无数据
@@ -381,7 +383,6 @@ html {
             margin-left: 5px;
           }
         }
-
 
       }
     }

@@ -19,6 +19,7 @@
     "mescroll.js": "^1.4.0",
     "postcss-plugin-px2rem": "^0.8.1",
     "px2rem-loader": "^0.1.9",
+    "vconsole": "^3.3.0",
     "vue": "^2.5.2",
     "vue-clipboard2": "^0.2.1",
     "vue-router": "^3.0.1",

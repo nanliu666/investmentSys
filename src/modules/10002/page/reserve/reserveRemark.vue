@@ -2,13 +2,9 @@
   <div class="addSign">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img
-        src="../../assets/images/返回@3x.png"
-        slot="left"
-        class="fs-backICon"
-        alt
-        @click="gobackByrouter()"
-      >
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>
       备注
     </x-header>
     <section class="ApprovalFlow">
@@ -37,7 +33,7 @@ export default {
     };
   },
   created() {
-    this.businessNewObj = this.$route.params.data
+    this.businessNewObj = this.$route.params.data;
   },
   components: {
     XHeader,
@@ -51,11 +47,11 @@ export default {
   methods: {
     ...mapMutations(["RESERVEADD"]),
     submit() {
-console.log(this.businessNewObj)
+      console.log(this.businessNewObj);
       this.RESERVEADD(this.businessNewObj);
       // console.log(this.reserveObj);
       this.gobackByrouter();
-    },
+    }
   }
 };
 </script>

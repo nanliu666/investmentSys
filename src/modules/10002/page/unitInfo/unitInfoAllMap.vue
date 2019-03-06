@@ -3,13 +3,9 @@
     <div class="allHeader">
       <div class="appTopOther"></div>
       <x-header :left-options="{showBack: false}" class="header">
-        <img
-          src="../../assets/images/返回@3x.png"
-          slot="left"
-          class="fs-backICon"
-          alt
-          @click="goback()"
-        >
+        <div slot="left" @click="goback()" class="fs-backBox">
+          <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+        </div>
         <div class="headerTittle" @click="openProjecySelct">{{headerTittle}}</div>
         <span class="imgBox">
           <img
@@ -101,7 +97,7 @@
         </div>
         <div class="selectCompanys" v-if="!!companysSelect && !PropertysSelect">
           <div>项目名称</div>
-          <ul >
+          <ul>
             <li
               v-for="item in PropertysList"
               :key="item.Propertyid"
@@ -394,7 +390,7 @@ export default {
           break;
       }
     },
-    ...mapMutations(["RESERVEADD", 'UINT_DETAIL']),
+    ...mapMutations(["RESERVEADD", "UINT_DETAIL"]),
 
     addReserve(data) {
       this.RESERVEADD(data);

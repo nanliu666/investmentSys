@@ -2,13 +2,9 @@
   <div class="reservePart">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header">
-      <img
-        src="../../assets/images/返回@3x.png"
-        slot="left"
-        class="fs-backICon"
-        alt
-        @click="gobackByrouter()"
-      >
+      <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>
       预定编辑
     </x-header>
     <section class="content">
@@ -276,7 +272,7 @@ export default {
       this.nowDate = moment(new Date()).format("YYYY-MM-DD");
       this.nextDate = moment(new Date())
         .add(1, "months")
-        .format("YYYY-MM-DD")
+        .format("YYYY-MM-DD");
 
       //vux里面有预定对象，渲染数据使用vux的对象
       if (!!this.reserveObj) {
@@ -294,39 +290,39 @@ export default {
 
       //   this.RESERVEADD(this.businessNewObj);
       // }
-        this.businessNewObj.Rentalarea = Number(
-          this.businessNewObj.Rentalarea
-        ).toFixed(0);
-        this.RESERVEADD(this.businessNewObj);
-        if (this.clientDetail) {
-          // 选择了联系人
-          this.businessNewObj.Accountname = this.clientDetail.Name;
-          this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
-          this.businessNewObj.Userphone = this.clientDetail.Phone;
-        }
+      this.businessNewObj.Rentalarea = Number(
+        this.businessNewObj.Rentalarea
+      ).toFixed(0);
+      this.RESERVEADD(this.businessNewObj);
+      if (this.clientDetail) {
+        // 选择了联系人
+        this.businessNewObj.Accountname = this.clientDetail.Name;
+        this.businessNewObj.Accountid = this.clientDetail.Accountid; //存起来客户ID
+        this.businessNewObj.Userphone = this.clientDetail.Phone;
+      }
 
-        if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
-          // 选择了单元信息
-          this.unitList = this.uintDetailList;
-          this.businessNewObj.Propertyid = this.uintDetailList[0].Projectid; //项目ID
-          this.businessNewObj.Companyid = this.uintDetailList[0].Companyid;
-          let A = this.uintDetailList.map(item => {
-            return Number(item.Builduparea);
-          });
-          this.businessNewObj.Rentalarea = A.reduce(function(
-            prev,
-            curr,
-            idx,
-            arr
-          ) {
-            return prev + curr;
-          });
+      if (!!this.uintDetailList && this.uintDetailList.length !== 0) {
+        // 选择了单元信息
+        this.unitList = this.uintDetailList;
+        this.businessNewObj.Propertyid = this.uintDetailList[0].Projectid; //项目ID
+        this.businessNewObj.Companyid = this.uintDetailList[0].Companyid;
+        let A = this.uintDetailList.map(item => {
+          return Number(item.Builduparea);
+        });
+        this.businessNewObj.Rentalarea = A.reduce(function(
+          prev,
+          curr,
+          idx,
+          arr
+        ) {
+          return prev + curr;
+        });
       }
     },
     submit() {
       this.RESERVEADD(this.businessNewObj);
       this.businessNewObj.Rentalarea = this.businessNewObj.Rentalarea;
-      console.log('mianki', this.businessNewObj.Rentalarea)
+      console.log("mianki", this.businessNewObj.Rentalarea);
       let data = {
         Reservemgmt: this.businessNewObj,
         Units: {

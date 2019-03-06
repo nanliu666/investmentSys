@@ -2,14 +2,9 @@
   <div class="contractList">
     <div class="appTopOther"></div>
     <x-header :left-options="{showBack: false}" class="header" v-if="!hasSearch">
-      <img
-        src="../../assets/images/返回@3x.png"
-        slot="left"
-        class="fs-backICon"
-        alt
-        @click="goback()"
-      >
-      合同管理
+      <div slot="left" @click="goback()" class="fs-backBox">
+        <img src="../../assets/images/返回@3x.png" class="fs-backICon" alt>
+      </div>合同管理
       <img
         class="searchImg"
         src="../../assets/images/搜索.png"
@@ -85,6 +80,7 @@
   </div>
 </template>
 <script>
+import { mapMutations, mapState } from "vuex";
 import { XHeader, Search, Popup, XInput } from "vux";
 import { GetContractMgmt, GetCompanyies, GetPropertys } from "@/axios/api";
 // 引入下拉组件
@@ -152,21 +148,60 @@ export default {
       require(["../../../../components/projectSelect.vue"], resolve);
     }
   },
-  beforeRouteEnter(to, from, next) {
-    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
-    next(vm => {
-      vm.$refs.mescroll.beforeRouteEnter(); // 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置
-    });
-  },
-  beforeRouteLeave(to, from, next) {
-    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
-    this.$refs.mescroll.beforeRouteLeave(); // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
-    next();
+  // beforeRouteEnter(to, from, next) {
+  //   // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
+  //   next(vm => {
+  //     vm.$refs.mescroll.beforeRouteEnter(); // 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置
+  //   });
+  // },
+  // beforeRouteLeave(to, from, next) {
+  //   // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
+  //   this.$refs.mescroll.beforeRouteLeave(); // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
+  //   next();
+  // },
+  // created() {
+  //   if (process.env.NODE_ENV !== "production") {
+  //     this.isFirstEnter = true;
+  //     this.dataList = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
+  //     this.mescroll.resetUpScroll(); // ajax获取数据方法
+  //   }
+  // },
+  mounted() {
+    if (typeof cordova === "object" && typeof cordova.exec === "function") {
+      cordova.exec(
+        this.successCallBack,
+        this.errorCallBack,
+        "ifcaPlugIns",
+        "getAppInfoFunc",
+        []
+      );
+    } else {
+      document.addEventListener("deviceready", this.onDeviceReady, false);
+    }
   },
   methods: {
+    ...mapMutations(["LOGIN_NAME"]),
+
+    onDeviceReady() {
+      cordova.exec(
+        this.successCallBack,
+        this.errorCallBack,
+        "ifcaPlugIns",
+        "getAppInfoFunc",
+        []
+      );
+    },
+    successCallBack(data) {
+      localStorage.setItem("loginname", data["username"]);
+      this.LOGIN_NAME(data["username"]);
+      this.mescrollInit.resetUpScroll(); // ajax获取数据方法
+    },
+    errorCallBack() {
+      alert("失败");
+    },
     FilterUpdate(data) {
       this.FilterCond = data;
-      console.log("组件返回参数===", this.FilterCond);
+      // console.log("组件返回参数===", this.FilterCond);
       this.mescroll.resetUpScroll();
     },
     onEnter(value) {
@@ -200,13 +235,15 @@ export default {
             .locale("zh-cn")
             .format("YYYY-MM");
           Object.assign(data.Urlpara, {
-            Showmonthdata: nowTime
+            Showmonthdata: nowTime,
+            Filter: `Flag=main`
           });
           break;
         case "threeMonth": //近3个月到期
           let MONTH_NUMBER = 3; //常量3
           Object.assign(data.Urlpara, {
-            Showexpiresoon: MONTH_NUMBER
+            Showexpiresoon: MONTH_NUMBER,
+            Filter: `Flag=main`
           });
           break;
       }

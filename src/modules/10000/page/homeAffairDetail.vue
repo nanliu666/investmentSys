@@ -3,7 +3,9 @@
     <div class="headerTab">
       <div class="appTopOther"></div>
       <x-header :left-options="{showBack: false}" class="header">
-        <img src="../assets/images/返回@3x.png" slot="left" class="fs-backICon" alt @click="back">
+        <div slot="left" @click="gobackByrouter()" class="fs-backBox">
+          <img src="../assets/images/返回@3x.png" class="fs-backICon" alt>
+        </div>
         <span v-if="isContract">合同审批详情</span>
         <span v-if="!isContract">预定审批详情</span>
       </x-header>
@@ -14,13 +16,6 @@
         active-color="rgba(30, 30, 30, 1)"
         default-color="rgba(136, 136, 136, 1)"
       >
-        <!-- <tab-item
-          class="vux-center"
-          :selected="tabSelect === item"
-          v-for="(item, index) in infoList"
-          :key="index"
-          @on-item-click="goAnchor(item)"
-        >{{item}}</tab-item>-->
         <tab-item class="vux-center" @on-item-click="goAnchor('单据详情')">单据详情</tab-item>
         <tab-item class="vux-center" @on-item-click="goAnchor('审批流程')">审批流程</tab-item>
         <tab-item class="vux-center" @on-item-click="goAnchor('附件')">附件</tab-item>
@@ -339,14 +334,6 @@ export default {
     this.onLoad();
   },
   methods: {
-    back() {
-      history.go(-1)
-      // this.gobackByrouter();
-      // if (this.$route.query.from === "affairList") {
-      // } else {
-      //   this.goback();
-      // }
-    },
     WorkFlowAddSign() {
       this.$router.push({
         name: "addSign",
@@ -481,7 +468,7 @@ export default {
     },
     getContractenclosure(data) {
       //附件路径待解决
-      if (typeof cordova === "object") {
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "attachmentPreview", [
           {
             fileName: data.FileName,
