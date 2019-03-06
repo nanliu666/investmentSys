@@ -2,6 +2,7 @@ import {
   TO_PAGE_NAME,
   FROM_PAGE_NAME,
   RESERVEADD,
+  LOGIN_NAME,
   RESAVESCORLLTOP,
   CLIENT_DETAIL,
   UINT_DETAIL,
@@ -10,6 +11,10 @@ import _ from '../assets/js/lodash'
 export default {
   [TO_PAGE_NAME](state, value) {
     state.toPageName = value
+  },
+  //登陆名称
+  [LOGIN_NAME](state, value) {
+    state.loginname = value
   },
   [FROM_PAGE_NAME](state, value) {
     state.formPageName = value

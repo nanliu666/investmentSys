@@ -9,6 +9,7 @@ Vue.use(Vuex)
 // 存放着组件中信息的状态
 const state = {
   toPageName: '', //页面返回的路由名字
+  loginname: '', //用户名称
   formPageName: '', //页面来的路由名字
   clientDetail: '', //获取的联系人详情
   uintDetailList: [], //获取单元列表

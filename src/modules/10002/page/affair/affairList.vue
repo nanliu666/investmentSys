@@ -55,6 +55,10 @@
       </li>
     </mescroll-vue>
     <p id="NoData"></p>
+    <section class="ListNoData" v-if="hasData">
+      <img src="../../assets/images/noData.png" alt>
+      <div class="noDataTittle">暂无数据</div>
+    </section>
   </div>
 </template>
 
@@ -68,6 +72,8 @@ export default {
   name: "affairList",
   data() {
     return {
+      hasData: false,
+
       hasActive: false,
       affairList: [],
       affairCond: {
@@ -201,16 +207,22 @@ export default {
       this.affairCond.PageSize = page.size;
       getTodoList(this.affairCond)
         .then(res => {
-          let arr = res.Content;
-          // 如果是第一页需手动制空列表
-          if (page.num === 1) this.affairList = [];
-          // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
-          this.affairList = this.affairList.concat(arr);
-          console.log("消息列表===>", this.affairList);
-          // 数据渲染成功后,隐藏下拉刷新的状态
-          this.$nextTick(() => {
-            mescroll.endByPage(arr.length, res.Total); //修复结束条件
-          });
+          if (!!res) {
+            let arr = res.Content;
+            // 如果是第一页需手动制空列表
+            if (page.num === 1) this.affairList = [];
+            // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
+            this.affairList = this.affairList.concat(arr);
+            console.log("消息列表===>", this.affairList);
+            // 数据渲染成功后,隐藏下拉刷新的状态
+            this.$nextTick(() => {
+              mescroll.endByPage(arr.length, res.Total); //修复结束条件
+            });
+          } else {
+            this.dataList = [];
+            this.hasData = !this.hasData;
+            mescroll.endByPage(arr.length, res.Pagecount);
+          }
         })
         .catch(e => {
           // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;

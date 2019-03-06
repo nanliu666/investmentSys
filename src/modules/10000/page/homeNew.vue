@@ -73,6 +73,7 @@ export default {
           tip: "暂无相关数据~" //提示
         }
       },
+      newsList: [],
       dataList: [] //所有的合同列表数据
     };
   },
@@ -124,14 +125,15 @@ export default {
       GetUserMessage(data)
         .then(res => {
           let arr = JSON.parse(res.Content);
+          let timeList = []
+          // let dataList = []
           // 如果是第一页需手动制空列表
           if (page.num === 1) this.dataList = [];
           // 把请求到的数据添加到列表 过滤未提交状态--因为合同没有未提交的状态
-          this.dataList = this.dataList.concat(arr);
-          this.dataList = this._.groupBy(this.dataList, function(item) {
+          this.newsList = this.newsList.concat(arr);
+          this.dataList = this._.groupBy(this.newsList, function(item) {
             return moment(item.Senddate).format("YYYY-MM");
           });
-          console.log(this.dataList);
           this.timeList = Object.keys(this.dataList);
           // 数据渲染成功后,隐藏下拉刷新的状态
           this.$nextTick(() => {
