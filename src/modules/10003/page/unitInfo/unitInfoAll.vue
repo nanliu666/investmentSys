@@ -235,6 +235,7 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      localFloors: {},
       hasUintNumber: false,
       uintVuexList: [],
       uintNumber: "",
@@ -276,19 +277,11 @@ export default {
     next();
   },
   mounted() {
-    if (typeof cordova === "object" && typeof cordova.exec === "function") {
-      cordova.exec(
-        this.successCallBack,
-        this.errorCallBack,
-        "ifcaPlugIns",
-        "getAppInfoFunc",
-        []
-      );
-    } else {
-      document.addEventListener("deviceready", this.onDeviceReady, false);
-    }
+    // if (process.env.NODE_ENV !== "production") return;
+    // this.getLocalFloor();
   },
   created() {
+    this.onLoad();
     if (process.env.NODE_ENV !== "production") {
       this.onLoad();
     }
@@ -296,49 +289,55 @@ export default {
   computed: {
     ...mapState(["scrollTop", "toPageName", "uintDetailList", "reserveObj"])
   },
-  // activated() {
-  //   if (!this.$route.meta.isBack || this.isFirstEnter) {
-  //     // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
-  //     // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
-  //     this.allBlock = []; // 把数据清空，可以稍微避免让用户看到之前缓存的数据
-  //     this.onLoad(); // ajax获取数据方法
-  //   }
-  //   // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
-  //   this.$route.meta.isBack = false;
-  //   this.isFirstEnter = false;
-  //   //滚动条位置的监听放到activated是因为此页面被keep-alive缓存了
-  //   this.$refs.scroll.scrollTop = this.scrollTop; //this.$refs.scroll拿到滚动的dom，即scrollContainer，this.home_list_top是存入到vuex里的值
-  //   this.$refs.scroll.addEventListener("scroll", this.handleScroll); //添加绑定事件
-  // },
-  // deactivated() {
-  //   //keep-alive 的页面跳转时，移除scroll事件
-  //   this.$refs.scroll.removeEventListener("scroll", this.handleScroll); //清除绑定的scroll事件
-  // },
-  // mounted() {
-  //   // window.addEventListener("scroll", this.handleScroll);
-  // },
-  // destroyed() {
-  //   // window.removeEventListener("scroll", this.handleScroll);
-  // },
+
   methods: {
-    onDeviceReady() {
+    saveLocalFloor() {
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
+        this.saveFloors();
+      } else {
+        document.addEventListener("deviceready", this.saveFloors(), false);
+      }
+    },
+    getLocalFloor() {
+      if (typeof cordova === "object" && typeof cordova.exec === "function") {
+        console.log("获取楼层，有cordova");
+        this.getFloors();
+      } else {
+        console.log("获取楼层，异步获取cordova");
+        document.addEventListener("deviceready", this.getFloors(), false);
+      }
+    },
+    saveFloors() {
       cordova.exec(
-        this.successCallBack,
-        this.errorCallBack,
+        this.successCallBack(),
+        this.errorCallBack(),
         "ifcaPlugIns",
-        "getAppInfoFunc",
-        []
+        "nativeStorage",
+        [{ action: "setItem", key: "localFloors", value: this.localFloors }]
       );
     },
-    successCallBack(data) {
-      localStorage.setItem("loginname", data["username"]);
-
-      this.LOGIN_NAME(data["username"]);
+    getFloors() {
+      console.log("进入获取楼层的函数");
+      console.log("进入获取楼层的函数,有cordova===>", typeof cordova);
+      cordova.exec(
+        this.getFloosSuccess(),
+        this.getFloosError(),
+        "ifcaPlugIns",
+        "nativeStorage",
+        [{ action: "getItem", key: "localFloors" }]
+      );
+    },
+    getFloosSuccess(data) {
+      console.log("成功", data);
+      this.allBlock = JSON.parse(data.setItem);
+      this.hasProject();
+    },
+    getFloosError(data) {
+      console.log("失败", data);
       this.onLoad();
     },
-    errorCallBack() {
-      alert("失败");
-    },
+    successCallBack() {},
+    errorCallBack() {},
     goUint() {
       this.$router.push({
         name: "unitInfoAllMap",
@@ -630,8 +629,14 @@ export default {
       GetUnitByBlockCompanyProject(this.requestData).then(res => {
         if (!!res) {
           this.allBlock = res.Content;
+          if (process.env.NODE_ENV === "production") {
+            this.localFloors = JSON.stringify(res.Content);
+            //  先不做缓存处理
+            // this.saveLocalFloor(); //调用cordova接口存起来，楼层列表
+          }
           this.hasProject();
         } else {
+          //无数据返回
           let projectSelect = JSON.parse(localStorage.getItem("project"));
           this.headerTittle = `${projectSelect.Propertyname}·${
             projectSelect.Blockname

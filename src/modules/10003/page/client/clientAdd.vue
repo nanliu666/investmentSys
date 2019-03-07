@@ -357,6 +357,7 @@ export default {
             this.Customer.CustomertypeText = BTemp[0].Text;
           }
           // 其他联系人
+          if(!clientDeatil[0].Otherinfo[0]) return
           if (!!clientDeatil[0].Otherinfo[0].Contactid) {
             this.Customer.Otherinfo[0].Name = clientDeatil[0].Otherinfo[0].Name;
             this.Customer.Otherinfo[0].Contactid =

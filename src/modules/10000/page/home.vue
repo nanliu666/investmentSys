@@ -154,25 +154,19 @@ export default {
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: "10003/index.html#/contractList?dateTime=currentMonth" }
+              { Url: "10002/index.html#/contractList?dateTime=currentMonth" }
             ]);
           },
           false
         );
-        // window.open(
-        //   "http://192.168.0.180:8086/10003/index.html#/contractList?dateTime=currentMonth"
-        // );
       }
     },
     gotoContranctExpire() {
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "10003/index.html#/contractList?dateTime=threeMonth" }
+          { Url: "10002/index.html#/contractList?dateTime=threeMonth" }
         ]);
       } else {
-        // window.open(
-        //   "http://192.168.0.180:8086/10003/index.html#/contractList?dateTime=threeMonth"
-        // );
         document.addEventListener(
           "deviceready",
           () => {
@@ -187,14 +181,14 @@ export default {
     gounitInfoALL() {
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "10002/index.html#/unitInfoALL" }
+          { Url: "10003/index.html#/unitInfoALL" }
         ]);
       } else {
         document.addEventListener(
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: "10002/index.html#/unitInfoALL" }
+              { Url: "10003/index.html#/unitInfoALL" }
             ]);
           },
           false
@@ -204,14 +198,14 @@ export default {
     goreserveList() {
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "10002/index.html#/reserveList" }
+          { Url: "10003/index.html#/reserveList" }
         ]);
       } else {
         document.addEventListener(
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: "10002/index.html#/reserveList" }
+              { Url: "10003/index.html#/reserveList" }
             ]);
           },
           false
@@ -221,14 +215,14 @@ export default {
     gobusinessList() {
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "10002/index.html#/businessList" }
+          { Url: "10003/index.html#/businessList" }
         ]);
       } else {
         document.addEventListener(
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: "10002/index.html#/businessList" }
+              { Url: "10003/index.html#/businessList" }
             ]);
           },
           false
@@ -236,19 +230,16 @@ export default {
       }
     },
     goaffairList() {
-      // window.open(
-      //   "http://192.168.0.180:8086/10006/index.html#/affairList"
-      // );
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "10006/index.html#/affairList" }
+          { Url: "10001/index.html#/affairList" }
         ]);
       } else {
         document.addEventListener(
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: "10006/index.html#/affairList" }
+              { Url: "10001/index.html#/affairList" }
             ]);
           },
           false

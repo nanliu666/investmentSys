@@ -5,9 +5,8 @@
       <span class="imgBox" @click="openProjectStatus">
         <img src="../assets/images/下拉@3x.png" class="fs-dropImg" v-show="!hasprojectStatus" alt>
       </span>
-      <span class="imgBox">
+      <span class="imgBox" @click="openProjectStatus">
         <img
-          @click="openProjectStatus"
           src="../assets/images/下拉@3x.png"
           class="fs-dropImg"
           style="transform:rotate(180deg);"
@@ -59,10 +58,10 @@
     </div>
     <div class="projectStatus">
       <span class="filterTitle" @click="openStatus">状态</span>
-      <span class="imgBox">
+      <span class="imgBox" @click="openStatus">
         <img src="../assets/images/下拉@3x.png" class="fs-dropImg" v-show="!hasStatus" alt>
       </span>
-      <span class="imgBox">
+      <span class="imgBox" @click="openStatus">
         <img
           src="../assets/images/下拉@3x.png"
           class="fs-dropImg"

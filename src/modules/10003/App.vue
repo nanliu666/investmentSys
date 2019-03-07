@@ -38,6 +38,7 @@ export default {
   },
   methods: {
     onDeviceReady() {
+    console.log('cordova传入===',cordova)
       // 禁用安卓返回键
       cordova.exec(null, null, "ifcaPlugIns", "enabledsystembackFunc", [false]);
     }
