@@ -145,11 +145,14 @@ export default {
       });
     },
     gotoContranctMonth() {
+      console.log('crodva类型',typeof cordova);
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
+        console.log("有cordova");
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10002/index.html#/contractList?dateTime=currentMonth" }
         ]);
       } else {
+        console.log("有cordova");
         document.addEventListener(
           "deviceready",
           () => {

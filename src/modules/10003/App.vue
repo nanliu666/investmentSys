@@ -33,12 +33,12 @@ export default {
         document.documentElement.appendChild(script);
       }
 
-      document.addEventListener("deviceready", this.onDeviceReady(), false);
     }
+      document.addEventListener("deviceready", this.onDeviceReady(), false);
   },
   methods: {
     onDeviceReady() {
-    console.log('cordova传入===',cordova)
+      console.log("cordova传入===", cordova);
       // 禁用安卓返回键
       cordova.exec(null, null, "ifcaPlugIns", "enabledsystembackFunc", [false]);
     }
