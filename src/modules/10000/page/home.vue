@@ -11,7 +11,7 @@
         </div>
         <div class="signCount">
           <div class="signTop">
-            <div class="signTT">
+            <div class="signTT" @click="goTest">
               <span class="signTittle">本月签约金额</span>
             </div>
             <div class="signNum">
@@ -99,7 +99,8 @@ import { mapMutations, mapState } from "vuex";
 import {
   GetAgentDefaultPageNEW,
   GetAgentDefaultPageChartNEW,
-  GetUserMessageTotal
+  GetUserMessageTotal,
+  queryuserbytoken
 } from "@/axios/api";
 export default {
   components: {
@@ -116,8 +117,10 @@ export default {
   mounted() {
     if (process.env.NODE_ENV === "production") {
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
+        this.getToken();
         cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [false]);
       } else {
+        this.getToken();
         document.addEventListener("deviceready", this.onDeviceReady(), false);
       }
     }
@@ -135,6 +138,18 @@ export default {
     }
   },
   methods: {
+    goTest() {
+      cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
+        { Url: "http://192.168.0.180/index.html" }
+      ]);
+    },
+    getToken() {
+      console.log(this.$route.query);
+      let AppToken = this.$route.query.AppToken;
+      queryuserbytoken(AppToken).then(res => {
+        console.log(res);
+      });
+    },
     onDeviceReady() {
       cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [false]);
     },
@@ -145,7 +160,7 @@ export default {
       });
     },
     gotoContranctMonth() {
-      console.log('crodva类型',typeof cordova);
+      console.log("crodva类型", typeof cordova);
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
         console.log("有cordova");
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
