@@ -67,7 +67,7 @@
           </li>
         </ul>
         <div class="performance">
-          <div class="performanceTitle">我的业绩完成率</div>
+          <div class="performanceTitle">我的业绩完成率111</div>
           <div class="performanceSheet">
             <v-chart ref="demo" :data="data">
               <v-legend disabled/>
