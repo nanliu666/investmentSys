@@ -92,3 +92,6 @@ export const DocumentLibrary = p => get(`DocumentLibrary/Download.ashx`, p)
 
 // 待办列表
 export const getTodoList = p => get(`${platformHead}Message/getTodoList`, p)
+
+// 单点登录查询Token
+export const queryuserbytoken = p => get(`http://gz.ifca.com.cn:9999/YDZSAPP/queryuserbytoken`, p)
