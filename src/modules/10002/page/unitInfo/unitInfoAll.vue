@@ -251,7 +251,15 @@ export default {
       companysList: [],
       blocksList: [],
       activeClass: 0,
-      requestData: {},
+      requestData: {
+        Blockid: 0,
+        Statucode: "",
+        Floorno: "",
+        Startdate: "",
+        Companyid: "",
+        Bropertyid: "",
+        Enddate: ""
+      },
       allBlock: [],
       allBlockFoorList: [],
       floorList: [],
@@ -277,13 +285,13 @@ export default {
     next();
   },
   mounted() {
+    this.getCompany();
     if (process.env.NODE_ENV !== "production") return;
     setTimeout(() => {
       this.getLocalFloor();
     }, 1500);
   },
   created() {
-    this.onLoad();
     if (process.env.NODE_ENV !== "production") {
       this.onLoad();
     }
@@ -302,10 +310,10 @@ export default {
     },
     getLocalFloor() {
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
-        // console.log("刚进来有");
+        console.log("刚进来有");
         this.getFloors();
       } else {
-        // console.log("刚进来没有");
+        console.log("刚进来没有");
         document.addEventListener("deviceready", this.getFloors(), false);
       }
     },
@@ -330,23 +338,23 @@ export default {
     },
     getFloosSuccess(data) {
       if (!!data) {
-        // console.log("成功有数据", data);
-        this.allBlock = JSON.parse(data.setItem);
+        console.log("成功有数据");
+        this.allBlock = JSON.parse(data);
         this.hasProject();
       } else {
-        // console.log("成功但是没数据", data);
+        console.log("成功但是没数据");
         this.onLoad();
       }
     },
     getFloosError(data) {
-      // console.log("获取失败", data);
-        this.onLoad();
+      console.log("获取失败", data);
+      this.onLoad();
     },
     successCallBack(data) {
-      // console.log("存成功==", data);
+      console.log("存成功==");
     },
     errorCallBack(data) {
-      // console.log("存失败==", data);
+      console.log("存失败==");
     },
     goUint() {
       this.$router.push({
@@ -467,15 +475,6 @@ export default {
     },
     onLoad() {
       this.UINT_DETAIL();
-      this.requestData = {
-        Blockid: 0,
-        Statucode: "",
-        Floorno: "",
-        Startdate: "",
-        Companyid: "",
-        Bropertyid: "",
-        Enddate: ""
-      };
       if (
         //底部删选信息
         this.$route.query.from === "reserveAdd" ||
@@ -495,7 +494,6 @@ export default {
       } else {
         this.openProjecySelct();
       }
-      this.getCompany();
     },
     getUintList() {
       if (this.toPageName === "reserveAdd") {
@@ -685,11 +683,21 @@ export default {
     },
     hasProject() {
       //项目数据
+
       this.blockSelect = this.allBlock[0].Blockname;
-      let projectSelect = JSON.parse(localStorage.getItem("project"));
-      this.headerTittle = `${projectSelect.Propertyname}·${
-        projectSelect.Blockname
-      }`;
+      console.log("进入项目选取===", this.allBlock);
+      if (!!JSON.parse(localStorage.getItem("project"))) {
+        //选择了项目，不是初始加载
+        let projectSelect = JSON.parse(localStorage.getItem("project"));
+        this.headerTittle = `${projectSelect.Propertyname}·${
+          projectSelect.Blockname
+        }`;
+      } else {
+        this.headerTittle = `${this.allBlock[0].Projectname}·${
+          this.allBlock[0].Blockname
+        }`;
+        console.log(this.headerTittle);
+      }
       this.allBlockFoorList = this.allBlock[0].Floorlist;
       this.getFloorData();
       let B = [];

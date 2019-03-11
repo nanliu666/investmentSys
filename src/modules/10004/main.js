@@ -9,9 +9,9 @@ import _ from './assets/js/lodash' //loadsh待改进
 
 // 手机端控制台
 import VConsole from 'vconsole'
-if (process.env.NODE_ENV === 'production') {
-  new VConsole()
-}
+// if (process.env.NODE_ENV === 'production') {
+//   new VConsole()
+// }
 
 Vue.prototype._ = _
 Vue.prototype.$http = axios

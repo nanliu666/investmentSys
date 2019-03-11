@@ -50,7 +50,7 @@ export default [{
 
     {
       path: '',
-      redirect: '/clientList'
+      redirect: '/businessList'
     },
 
     //工作流模块

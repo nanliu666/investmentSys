@@ -149,7 +149,7 @@ export default {
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
         console.log("有cordova");
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "10002/index.html#/contractList?dateTime=currentMonth" }
+          { Url: "10006/index.html#/contractList?dateTime=currentMonth" }
         ]);
       } else {
         console.log("有cordova");
@@ -157,7 +157,7 @@ export default {
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: "10002/index.html#/contractList?dateTime=currentMonth" }
+              { Url: "10006/index.html#/contractList?dateTime=currentMonth" }
             ]);
           },
           false
@@ -167,14 +167,14 @@ export default {
     gotoContranctExpire() {
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "10002/index.html#/contractList?dateTime=threeMonth" }
+          { Url: "10006/index.html#/contractList?dateTime=threeMonth" }
         ]);
       } else {
         document.addEventListener(
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: "10002/index.html#/contractList?dateTime=threeMonth" }
+              { Url: "10006/index.html#/contractList?dateTime=threeMonth" }
             ]);
           },
           false
@@ -184,14 +184,14 @@ export default {
     gounitInfoALL() {
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "10003/index.html#/unitInfoALL" }
+          { Url: "10001/index.html#/unitInfoALL" }
         ]);
       } else {
         document.addEventListener(
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: "10003/index.html#/unitInfoALL" }
+              { Url: "10001/index.html#/unitInfoALL" }
             ]);
           },
           false
@@ -201,14 +201,14 @@ export default {
     goreserveList() {
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "10003/index.html#/reserveList" }
+          { Url: "10002/index.html#/reserveList" }
         ]);
       } else {
         document.addEventListener(
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: "10003/index.html#/reserveList" }
+              { Url: "10002/index.html#/reserveList" }
             ]);
           },
           false
@@ -235,14 +235,14 @@ export default {
     goaffairList() {
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-          { Url: "10001/index.html#/affairList" }
+          { Url: "10004/index.html#/affairList" }
         ]);
       } else {
         document.addEventListener(
           "deviceready",
           () => {
             cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-              { Url: "10001/index.html#/affairList" }
+              { Url: "10004/index.html#/affairList" }
             ]);
           },
           false
