@@ -1,8 +1,38 @@
-import {
-  get,
-  post
-} from './http'
+// import {
+//   get,
+//   post
+// } from './http'
+import instance from './http'
 
+function get(url, params) {
+  return new Promise((resolve, reject) => {
+    instance.get(url, {
+        params: params
+      })
+      .then(res => {
+        resolve(res);
+      })
+      .catch(err => {
+        reject(err)
+      })
+  });
+}
+// /**
+//  * post方法，对应post请求
+//  * @param {String} url [请求的url地址]
+//  * @param {Object} params [请求时携带的参数]
+//  */
+function post(url, params) {
+  return new Promise((resolve, reject) => {
+    instance.post(url, params)
+      .then(res => {
+        resolve(res);
+      })
+      .catch(err => {
+        reject(err.data)
+      })
+  });
+}
 // 单元信息接口
 const baseHead = `http://gz.ifca.com.cn:9999/ydzs/WebService/MobileMerchants/`
 const platformHead = ` http://gz.ifca.com.cn:9999/RMSApp6.0/api/`

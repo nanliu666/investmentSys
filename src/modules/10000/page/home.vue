@@ -11,13 +11,13 @@
         </div>
         <div class="signCount">
           <div class="signTop">
-            <div class="signTT" @click="goTest">
+            <div class="signTT">
               <span class="signTittle">本月签约金额</span>
             </div>
             <div class="signNum">
               <span class="signMoeny">{{signMoeny}}</span>
               <span class="getContranct" @click="gotoContranctMonth">
-                <span class="getContranctTittle">查看合同</span>
+                <span class="getContranctTittle">查看合同aaaa</span>
                 <div class="rightImgBox">
                   <img class="rightImg" src="../assets/images/路径 2.png" alt>
                 </div>
@@ -26,7 +26,7 @@
             <div class="signKONG"></div>
           </div>
           <div class="Expire">
-            <div class="ExpireLeft">
+            <div class="ExpireLeft" @click="goTest">
               <span>近三个月将到期合同数</span>
               <span class="ExpireNum">{{ExpireNum }}</span>
             </div>
@@ -99,9 +99,9 @@ import { mapMutations, mapState } from "vuex";
 import {
   GetAgentDefaultPageNEW,
   GetAgentDefaultPageChartNEW,
-  GetUserMessageTotal,
-  queryuserbytoken
+  GetUserMessageTotal
 } from "@/axios/api";
+import instance from "@/axios/http";
 export default {
   components: {
     ViewBox,
@@ -126,6 +126,8 @@ export default {
     }
   },
   created() {
+    // 这是业务token
+    // instance.defaults.headers.common["Authorization"] = '111';
     this.onLoad();
   },
   beforeRouteLeave(to, from, next) {
@@ -139,16 +141,17 @@ export default {
   },
   methods: {
     goTest() {
-      cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
-        { Url: "http://192.168.0.180/index.html" }
-      ]);
+      window.location.href = "http://192.168.0.180/index.html";
     },
     getToken() {
-      console.log(this.$route.query);
+      console.log("这是token===>", this.$route.query);
       let AppToken = this.$route.query.AppToken;
-      queryuserbytoken(AppToken).then(res => {
-        console.log(res);
-      });
+      instance.defaults.headers.common["apptoken"] = AppToken;
+      if (AppToken) {
+        console.log(instance.defaults.headers.common["apptoken"]);
+        //请求业务接口，兑换业务token成功
+        //把业务返回的token加入headers里面，请求业务数据
+      }
     },
     onDeviceReady() {
       cordova.exec(null, null, "ifcaPlugIns", "setHiddenTabbarFunc", [false]);
@@ -160,14 +163,11 @@ export default {
       });
     },
     gotoContranctMonth() {
-      console.log("crodva类型", typeof cordova);
       if (typeof cordova === "object" && typeof cordova.exec === "function") {
-        console.log("有cordova");
         cordova.exec(null, null, "ifcaPlugIns", "openWebviewFunc", [
           { Url: "10006/index.html#/contractList?dateTime=currentMonth" }
         ]);
       } else {
-        console.log("有cordova");
         document.addEventListener(
           "deviceready",
           () => {
@@ -317,7 +317,6 @@ export default {
           .format("YYYY-MM-DD HH:mm:ss")
       };
       GetAgentDefaultPageNEW(PageNEWData).then(res => {
-        console.log(res);
         if (res.Currmonthamt > 10000) {
           this.signMoeny = `${Math.round(parseInt(res.Currmonthamt) / 100) /
             100}万`;
@@ -350,12 +349,10 @@ export default {
         {
           country: "完成率",
           year: "交易金额"
-          // percent: 1.1
         },
         {
           country: "未完成率",
           year: "交易金额"
-          // percent: 0
         },
         {
           country: "完成率",

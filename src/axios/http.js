@@ -4,9 +4,14 @@ import Vue from 'vue'
 import store from '@/modules/10000/store/index';
 // let loginname = store.loginname || localStorage.getItem('loginname') || 'yujing'
 let loginname = 'yujing' //todo  等平台接口过来，先写死
-axios.defaults.timeout = 7000;
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
-axios.interceptors.request.use(
+// let apptoken = store.state.loginname
+var instance = axios.create({
+  timeout: 7000,
+  headers: {'Content-Type': 'application/json;charset=UTF-8'}
+});
+// axios.defaults.timeout = 7000;
+// axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+instance.interceptors.request.use(
   config => {
     Vue.$vux.loading.show({
       text: '加载中' //以plugin形式调用
@@ -35,7 +40,7 @@ function isJsonString(str) {
 }
 
 //请求响应器
-axios.interceptors.response.use(
+instance.interceptors.response.use(
   response => {
     if (!!response.data.d) { //黄鑫的接口
       if (response.data.d && response.data.d !== undefined) {
@@ -65,37 +70,39 @@ axios.interceptors.response.use(
     return Promise.reject(err)
   }
 )
-/**
- * get方法，对应get请求
- * @param {String} url [请求的url地址]
- * @param {Object} params [请求时携带的参数]
- */
-export function get(url, params) {
-  return new Promise((resolve, reject) => {
-    axios.get(url, {
-        params: params
-      })
-      .then(res => {
-        resolve(res);
-      })
-      .catch(err => {
-        reject(err)
-      })
-  });
-}
-/**
- * post方法，对应post请求
- * @param {String} url [请求的url地址]
- * @param {Object} params [请求时携带的参数]
- */
-export function post(url, params) {
-  return new Promise((resolve, reject) => {
-    axios.post(url, params)
-      .then(res => {
-        resolve(res);
-      })
-      .catch(err => {
-        reject(err.data)
-      })
-  });
-}
+// /**
+//  * get方法，对应get请求
+//  * @param {String} url [请求的url地址]
+//  * @param {Object} params [请求时携带的参数]
+//  */
+// export function get(url, params) {
+//   return new Promise((resolve, reject) => {
+//     axios.get(url, {
+//         params: params
+//       })
+//       .then(res => {
+//         resolve(res);
+//       })
+//       .catch(err => {
+//         reject(err)
+//       })
+//   });
+// }
+// /**
+//  * post方法，对应post请求
+//  * @param {String} url [请求的url地址]
+//  * @param {Object} params [请求时携带的参数]
+//  */
+// export function post(url, params) {
+//   return new Promise((resolve, reject) => {
+//     axios.post(url, params)
+//       .then(res => {
+//         resolve(res);
+//       })
+//       .catch(err => {
+//         reject(err.data)
+//       })
+//   });
+// }
+export default instance
+
